@@ -4,9 +4,9 @@ Reports relating to my MSc. Computational Science Master's Thesis, completed ove
 These can be [viewed online](#view-online), or [built locally](#building-reports-locally).
 
 ## View online
-Whenever `main` receives new changes, all reports are recompiled in GitHub CI, and published 
-at static links, to ensure current versions are easily accessible. These are available as 
-follows:
+
+Whenever `main` receives new changes, all reports are recompiled in GitHub CI and published 
+at the following static links to ensure current versions are easily accessible:
 - [Thesis proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
 
 
