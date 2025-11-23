@@ -7,6 +7,7 @@
 #show: proposal.with(
   title: title, 
   author: author, 
+  pdf_title: pdf_title,
   header_logo: image("uva_logo_nl.svg", width: 60%),
 )
 
