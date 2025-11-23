@@ -1,4 +1,5 @@
 # Publish GitHub Pages site consisting of compiled example PDFs
+# https://forum.typst.app/t/publish-example-pdfs-using-github-pages/5781
 name: Publish thesis proposal
 
 on:
