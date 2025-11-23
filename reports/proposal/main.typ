@@ -2,6 +2,7 @@
 
 #let title = "Thesis Proposal: "
 #let author = "Henry Zwart"
+#let pdf_title = "thesis_proposal"
 
 #show: proposal.with(
   title: title, 

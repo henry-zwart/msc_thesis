@@ -5,9 +5,15 @@
   header_logo: none,
   bibliography: none,
   bib_style: "ieee",
+  pdf_title: none,
   body
 ) = {
-  set document(author: author, title: title)
+  set document(
+    author: author, 
+    title: {
+      if pdf_title == none {title} else {pdf_title}
+    },
+  )
   
   // Page setup
   set page(
