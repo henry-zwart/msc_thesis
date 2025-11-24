@@ -1,6 +1,6 @@
-# Master's Thesis: 2025--2026
+# Master's Thesis: 2025-2026
 
-Reports relating to my MSc. Computational Science Master's Thesis, completed over 2025--2026.
+Reports relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 These can be [viewed online](#view-online), or [built locally](#building-reports-locally).
 
 ## View online
