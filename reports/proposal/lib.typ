@@ -3,6 +3,7 @@
   subtitle: none, 
   author: none, 
   header_logo: none,
+  abstract: none,
   bibliography: none,
   bib_style: "ieee",
   pdf_title: none,
@@ -76,6 +77,10 @@
         })
       )
     })
+
+  if abstract != none {
+    [#text(weight: "semibold", [Abstract]) #h(0.5em) #{emph(abstract)}]
+  }
 
   body
 
