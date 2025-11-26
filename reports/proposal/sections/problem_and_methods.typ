@@ -23,14 +23,19 @@ should one target, and in which individuals, to promote a particular behaviour?'
 
 or conversely, 
 
-#align(center)[_'Could targetting certain beliefs, or in certain individuals, result in 
+#align(center)[_'Could targeting certain beliefs, or in certain individuals, result in 
 a behavioural rebound?'_]
 
-In this context, however, simplifying assumptions regarding the structure
+For this purpose, however, simplifying assumptions regarding the structure
 and causal relations between beliefs are on significantly weaker footing. As illustrated 
 in @fig:stargraph, if beliefs are causally supported by other beliefs, then the direction 
 of this causality and the general structure of the belief network can potentially decide 
 the effectiveness of an intervention.
+
+We propose to investigate the extent to which these structural and causal assumptions influence 
+the dynamics of internal belief networks, in the context of a longitudinal survey on climate 
+attitudes in the US. We will extend and/or modify existing Ising models of internal belief 
+to include directed relations. 
 
 #figure(
   grid(
@@ -46,19 +51,20 @@ the effectiveness of an intervention.
   ]
 ) <fig:stargraph>
 
-#{
-  set text(fill: luma(140))
-  [
-    - What do we plan to do?
-      - Extend/modify existing internal belief models to support directed relations.
-      - Investigate implications of structural and causal assumptions on belief networks
-        inferred from climate attitudes data:
-        - Undirected Ising model, directed, directed with arcs obtained via causal 
-          discovery.
-        - Variation across population groups.
-        - Implications for intervention (*expand on this*)
-  ]
-}
+
+// #{
+//   set text(fill: luma(140))
+//   [
+//     - What do we plan to do?
+//       - Extend/modify existing internal belief models to support directed relations.
+//       - Investigate implications of structural and causal assumptions on belief networks
+//         inferred from climate attitudes data:
+//         - Undirected Ising model, directed, directed with arcs obtained via causal 
+//           discovery.
+//         - Variation across population groups.
+//         - Implications for intervention (*expand on this*)
+//   ]
+// }
 
 *Research context:*
 - Internal belief models:
