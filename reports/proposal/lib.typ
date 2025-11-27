@@ -83,9 +83,9 @@
       grid(
         columns: (auto, auto), 
         align: (right, left), 
-      gutter: 1em,
-        [*Author:*], author,
-        [*Supervisor:*], supervisor,
+        gutter: 1em,
+          [*Author:*], author,
+          [*Supervisor:*], supervisor,
       )
     })
 
