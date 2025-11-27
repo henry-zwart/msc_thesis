@@ -2,6 +2,7 @@
   title: "Proposal title", 
   subtitle: none, 
   author: none, 
+  supervisor: none,
   header_logo: none,
   abstract: none,
   bibliography: none,
@@ -28,7 +29,13 @@
         size: 11pt, 
         weight: 100, 
         font: "Libertinus Serif", 
-        author,
+        context {
+          if counter(page).get().first() == 1 {
+              [Thesis proposal]
+          } else {
+              author
+          }
+        },
       )
       grid(
         columns: (auto, 1fr, auto),
@@ -66,15 +73,19 @@
     scope: "parent",
     clearance: 20pt,
     {
+      set par(justify: false)
       block(width: 100%,
         align(center, {
-          text(22pt, weight: "bold", title)
-          linebreak()
-          if subtitle != none {
-            v(0.5em)
-            text(16pt, subtitle)
-          }
+          text(18pt, weight: "bold", title)
         })
+      )
+      v(1.5em)
+      grid(
+        columns: (auto, auto), 
+        align: (right, left), 
+      gutter: 1em,
+        [*Author:*], author,
+        [*Supervisor:*], supervisor,
       )
     })
 
