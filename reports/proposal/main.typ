@@ -9,12 +9,13 @@
   author: author, 
   pdf_title: pdf_title,
   header_logo: image("uva_logo_nl.svg", width: 60%),
-  //abstract: include("sections/abstract.typ"),
   bibliography: bibliography("references.bib", full: true, style: "apa"),
 )
 
 
-#include "sections/problem_and_methods.typ"
+#include "sections/problem.typ"
+
+#include "sections/methods.typ"
 
 == Proposed timeline
 #include "sections/timeline.typ"
