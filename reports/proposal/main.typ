@@ -3,7 +3,7 @@
 #let title = "(Placeholder) Behavioural implications of intervening on asymmetric internal belief networks"
 #let author = "Henry Zwart"
 #let supervisor = "Vítor V. Vasconcelos"
-#let pdf_title = [Thesis proposal (#datetime.today())]
+#let pdf_title = [Thesis proposal (#datetime.today().display())]
 
 #show: proposal.with(
   title: title, 
