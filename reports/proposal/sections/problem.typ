@@ -32,8 +32,7 @@ or conversely,
 For this purpose, however, simplifying assumptions regarding the structure
 and causal relations between beliefs are on significantly weaker footing. 
 As illustrated in @fig:stargraph, if beliefs causally support one another, 
-then the direction of this causality and the general structure of the belief 
-network can decide the effectiveness of intervention.
+then the direction of this causality can decide the effectiveness of intervention.
 
 
 #figure(
@@ -95,19 +94,6 @@ network can decide the effectiveness of intervention.
   ]
 }
 
-We propose an empirical investigation into the nature of real belief networks in 
-the context of a longitudinal survey on climate attitudes in the US.  We intend 
-to characterise the extent to which structural and causal assumptions can alter 
-the outcome or effectiveness of intervention at the level of individuals' beliefs 
-(e.g., as in Figures @fig:stargraph[] and @fig:vaccination-intervention[]).
-
-This work will extend the undirected Networks of Belief model introduced by 
-#cite(<dalege_networks_2025>, form: "author") to include directed relations. We 
-will also consider a restricted class of directed models, where the set of relations 
-and their directions are inferred via causal discovery. We refer to the respective 
-model variations as *undirected*, *directed*, and *directed-causal*. More loosely,
-we refer to these variations as 'structural assumptions'.
-
 #{
   set text(fill: luma(140))
   [
@@ -132,6 +118,33 @@ we refer to these variations as 'structural assumptions'.
   ]
 }
 
+We propose an empirical investigation into the nature of real belief networks in 
+the context of a longitudinal survey on climate attitudes in the US.  We intend 
+to characterise the extent to which structural and causal assumptions can alter 
+the outcome or effectiveness of intervention at the level of individuals' beliefs 
+(e.g., as in Figures @fig:stargraph[] and @fig:vaccination-intervention[]). 
+More specifically, we will address the following research questions:
+
+#{
+  set enum(numbering: "RQ1.", indent: 1em)
+  block(width: 97%, [
+    +  How do beliefs about climate change, and the relations between beliefs, 
+      vary across population groups and under different structural and causal 
+      assumptions regarding belief dynamics? <RQ1>
+
+    + To what degree are the implications (outcome, effectiveness) of belief-level 
+      interventions influenced by structural and causal assumptions regarding belief 
+      dynamics?
+
+    + How do predictions regarding belief-level intervention effectiveness compare 
+      with classical theories of belief change?
+  ])
+}
+
+#let rq1 = link(<RQ1>)[*RQ1*]
+#let rq2 = link(<RQ2>)[*RQ2*]
+#let rq3 = link(<RQ3>)[*RQ3*]
+
 #{
   set text(fill: luma(140))
   [
@@ -141,4 +154,47 @@ we refer to these variations as 'structural assumptions'.
     - Beliefs as edges vs beliefs as nodes
   ]
 }
+
+Among the diversity of internal belief models that have been proposed in recent 
+years, those inspired by statistical physics theories -- in particular, the Ising 
+model -- have proved adept at capturing the coupled dynamics of beliefs and social 
+interactions. Our proposed research direction concerns belief dynamics, so we 
+focus here on comparing these models along this dimension only. Nevertheless, we 
+are motivated by _behavioural_ implications of intervention, and since collective 
+behaviour is sensitive to individuals' beliefs, by restricting our view to such models
+we leave the door open to future work. 
+
+
+Models in this class typically represent beliefs and their relations as weighted
+networks, and can be categorised according to whether they represent beliefs as 
+_edges_ (*BAE*) @rodriguez_collective_2016 @aiyappa_emergence_2024 or as _nodes_ 
+(*BAN*) @dalege_attitudinal_2018, @dalege_networks_2025. 
+
+In BAE models, beliefs (edges) are signed 'associations' relating pairs of concepts
+#footnote[
+  #cite(<aiyappa_emergence_2024>, form: "prose") adopt an inclusive definition with 
+  nodes representing concepts, entities, and general notions such 'good' or 
+  'dangerous' @aiyappa_emergence_2024[p.~2].
+] (nodes). Each concept can feature in arbitrarily-many belief relations, and 
+belief updates are interpreted as changes in associations between concepts. On the other 
+hand, in BAN models, signed values describe the strength and direction of beliefs
+#footnote[
+  #cite(<dalege_networks_2025>, form: "prose") adopt a similarly inclusive definition 
+  of _beliefs_, encompassing 'assumptions about the state of the world, views on moral
+  and political issues, evaluations of attitudes, or [individuals'] own preferences.' 
+  @dalege_networks_2025[p.~2] @galesic_integrating_2021.
+] (nodes), while 
+weighted edges describe correlation beween related or conflicting beliefs. Belief 
+updates are interpreted as changes in the strength an individual ascribes to a particular
+belief. 
+
+Both categories take 'cognitive dissonance reduction' as the core mechanism driving 
+individuals' belief dynamics. Updates to individuals beliefs act (in expectation) to 
+reduce cognitive dissonance --- inconsistencies among beliefs or their relations --- 
+captured by the energy of a belief system. The BAE models considered here measure dissonance
+as proportional to the number of 'unstable triads' in a belief system, while the Networks of 
+Belief BAN model adopts the classical network Ising model energy function, comprising 
+interaction (misalignments between related beliefs) and field (exogenous influences on 
+specific beliefs, e.g., life factors, personal experience) terms.
+
 
