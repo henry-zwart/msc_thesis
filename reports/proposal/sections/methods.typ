@@ -1,17 +1,16 @@
+#import "../lib.typ": plan
+
 #let rq1 = link(<RQ1>)[*RQ1*]
 #let rq2 = link(<RQ2>)[*RQ2*]
 #let rq3 = link(<RQ3>)[*RQ3*]
 
-#{
-  set text(fill: luma(140))
-  [
-    *Methods:*
-    1. Base model (beliefs-as-nodes):
-      - Motivation
-      - Potential dissonance between personal beliefs given by @dalege_networks_2025 
-        $ H_"pers" = sum_i tau_i b_i - sum_(i j) omega_(i j) b_i b_j $
-  ]
-}
+#plan[
+  *Methods:*
+  1. Base model (beliefs-as-nodes):
+    - Motivation
+    - Potential dissonance between personal beliefs given by @dalege_networks_2025 
+      $ H_"pers" = sum_i tau_i b_i - sum_(i j) omega_(i j) b_i b_j $
+]
 
 For these reasons, we consider the beliefs-as-nodes approach a more appropriate foundation
 for this study. In particular, we will extend the 'Networks of Belief' (*NB*) model recently 
@@ -31,29 +30,26 @@ by $H$ and a temperature parameter. In the original model $omega_(i j)$ is symme
 reflecting undirected associations between beliefs, thus we can extend the model to support 
 directed relations by allowing each $omega_(i j)$ and $omega_(j i)$ to vary.
 
-#{
-  set text(fill: luma(140))
-  [
-    2. Causal discovery:
+#plan[
+  2. Causal discovery:
 
-    3. Dataset:
-      - Description: longitudinal study on climate attitudes in the US, collected between ... and .... 
-      - Source
-      - Intention
-      - Two dimensions: population and time.
-        - Time
-          - Six waves
-          - Each individual is present in a subset of the waves. These can be not noncontiguous.
-        - Population: 
-          - Unsure about key statistics ($n$, sampling methods)
-      - Questions:
-        - Demographic/population groups
-        - Experiences
-        - Beliefs/attitudes
-      - No relationship information (as far as I am aware), so we will disregard social connections in 
-        model for purposes of model-fitting.
-  ]
-}
+  3. Dataset:
+    - Description: longitudinal study on climate attitudes in the US, collected between ... and .... 
+    - Source
+    - Intention
+    - Two dimensions: population and time.
+      - Time
+        - Six waves
+        - Each individual is present in a subset of the waves. These can be not noncontiguous.
+      - Population: 
+        - Unsure about key statistics ($n$, sampling methods)
+    - Questions:
+      - Demographic/population groups
+      - Experiences
+      - Beliefs/attitudes
+    - No relationship information (as far as I am aware), so we will disregard social connections in 
+      model for purposes of model-fitting.
+]
 
 In #rq1 we plan to fit the NB model and its directed variants to empirical data, to 
 investigate the relational structure of beliefs in real individuals, and how this varies

@@ -1,3 +1,5 @@
+#import "../lib.typ": plan
+
 The sensitivity of individuals' behaviour to their underlying preferences,
 attitudes, and beliefs is well-entrenched in common knowledge. However, 
 recent work in collective dynamics has shown that the internal states of 
@@ -80,19 +82,16 @@ then the direction of this causality can decide the effectiveness of interventio
   [#vacc_intervention_fig <fig:vaccination-intervention> ],
 )
 
-#{
-  set text(fill: luma(140))
-  [
-    *Research intent:*
-    - Investigate implications of structural and causal assumptions on belief networks
-      inferred from climate attitudes data.
-    - Note that fitting the models to empirical data is interesting in itself. Previous 
-      papers have mostly used empirical proxies (e.g. correlations) or manually-set 
-      parameters.
-    - Broader programme of work: controlled experiments testing behaviour change 
-      resulting from belief intervention.
-  ]
-}
+#plan[
+  *Research intent:*
+  - Investigate implications of structural and causal assumptions on belief networks
+    inferred from climate attitudes data.
+  - Note that fitting the models to empirical data is interesting in itself. Previous 
+    papers have mostly used empirical proxies (e.g. correlations) or manually-set 
+    parameters.
+  - Broader programme of work: controlled experiments testing behaviour change 
+    resulting from belief intervention.
+]
 
 We propose an empirical investigation into the nature of real belief networks in 
 the context of a longitudinal survey on climate attitudes in the US.  We intend 
@@ -101,9 +100,7 @@ the outcome or effectiveness of intervention at the level of individuals' belief
 (e.g., as in Figures @fig:stargraph[] and @fig:vaccination-intervention[]). 
 More specifically, we will address the following research questions:
 
-#{
-  set text(fill: luma(140))
-  [
+#plan[
   *Present research questions/intented contributions: *
   - _(Contribution)_: Framework for inferring belief relations from data; studying 
     behavioural effects of intervening on beliefs.
@@ -121,9 +118,7 @@ More specifically, we will address the following research questions:
   - _(RQ3)_: 'Something about identifying effective interventions, or ones whose outcomes 
     differ from those predicted by undirected models; possibly also considering alignment with
     theories of persuasion (e.g., focusing on shared community values @the_workshop_how_2024)'.
-
-  ]
-}
+]
 
 
 #{
@@ -146,15 +141,12 @@ More specifically, we will address the following research questions:
 #let rq2 = link(<RQ2>)[*RQ2*]
 #let rq3 = link(<RQ3>)[*RQ3*]
 
-#{
-  set text(fill: luma(140))
-  [
-    *Research context:*
-    - Coupled system, social network and internal beliefs
-    - Social conformity and cognitive dissonance
-    - Beliefs as edges vs beliefs as nodes
-  ]
-}
+#plan[
+  *Research context:*
+  - Coupled system, social network and internal beliefs
+  - Social conformity and cognitive dissonance
+  - Beliefs as edges vs beliefs as nodes
+]
 
 While the present study specifically concerns the dynamics of belief networks,
 we consider recent models of coupled _social_ and belief dynamics inspired by 
