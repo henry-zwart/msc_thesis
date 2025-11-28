@@ -94,6 +94,13 @@ then the direction of this causality can decide the effectiveness of interventio
   ]
 }
 
+We propose an empirical investigation into the nature of real belief networks in 
+the context of a longitudinal survey on climate attitudes in the US.  We intend 
+to characterise the extent to which structural and causal assumptions can alter 
+the outcome or effectiveness of intervention at the level of individuals' beliefs 
+(e.g., as in Figures @fig:stargraph[] and @fig:vaccination-intervention[]). 
+More specifically, we will address the following research questions:
+
 #{
   set text(fill: luma(140))
   [
@@ -118,12 +125,6 @@ then the direction of this causality can decide the effectiveness of interventio
   ]
 }
 
-We propose an empirical investigation into the nature of real belief networks in 
-the context of a longitudinal survey on climate attitudes in the US.  We intend 
-to characterise the extent to which structural and causal assumptions can alter 
-the outcome or effectiveness of intervention at the level of individuals' beliefs 
-(e.g., as in Figures @fig:stargraph[] and @fig:vaccination-intervention[]). 
-More specifically, we will address the following research questions:
 
 #{
   set enum(numbering: "RQ1.", indent: 1em)
@@ -180,7 +181,7 @@ in BAN approaches correspond to implications _between_ beliefs,
 $cal(b)_i (w) => cal(b)_i (x)$, while in BAE approaches they correspond to beliefs _about_ 
 implications, $cal(b)_i (y => z)$.
 
-This difference highlights an additional distinction with particular relevance to 
+This contrast highlights an additional distinction with particular relevance to 
 inferring realised beliefs (#rq1). In BAN models a set of beliefs is judged 
 unstable if some $cal(b)_i (w) => cal(b)_i (x)$ is contradicted by $i$'s other beliefs, 
 which depends on the realised values of $cal(b)_i (w), cal(b)_i (x)$. On the other hand, 
@@ -193,9 +194,7 @@ stability is distinct from individuals' concrete beliefs, and rather concerns th
 satisfiability of relations between concepts. So, assuming these notions of stability, 
 BAN models are better-suited to inferring actual (realised) beliefs.
 
-For these reasons, we consider the beliefs-as-nodes approach a more appropriate foundation
-for this study. In particular, we will extend the 'Networks of Belief' model recently 
-proposed by #cite(<dalege_networks_2025>, form: "author") to include directed relations.
+
 
 
 // Among the diversity of internal belief models that have been proposed in recent 
