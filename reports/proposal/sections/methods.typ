@@ -37,4 +37,22 @@
   ]
 }
 
+For these reasons, we consider the beliefs-as-nodes approach a more appropriate foundation
+for this study. In particular, we will extend the 'Networks of Belief' (*NB*) model recently 
+proposed by #cite(<dalege_networks_2025>, form: "author") to include directed relations.
+The NB model measures the cognitive dissonance of a collection of beliefs using the standard
+network Ising model energy function (ibid.):
+
+$ 
+   H(bold(b)) := sum_i tau_i b_i - sum_(i j) omega_(i j) b_i b_j 
+$ <eq:nb-internal-dissonance>
+
+where $b_i$ is the belief associated with node $i$, $tau_i$ is a 'field' term (reflecting 
+exogenous influence), and $omega_(i j)$ is the signed interaction strength between beliefs 
+which are connected by an edge. Individuals update their beliefs to minimise cognitive 
+dissonance. This is modelled by repeated samples from a Boltzmann distribution parameterised
+by $H$ and a temperature parameter.
+
+
+
 
