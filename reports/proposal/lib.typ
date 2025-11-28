@@ -8,6 +8,8 @@
   bibliography: none,
   bib_style: "ieee",
   pdf_title: none,
+  hide_plan: false,
+  plan_font_fill: luma(140),
   body
 ) = {
   set document(
@@ -62,6 +64,15 @@
     it
   }
 
+  // Planning/draft text
+  // Show in a different colour to main text, or hide
+  show <plan>: it => {
+    set text(fill: plan_font_fill)
+    if not hide_plan {
+      it
+    }
+  }
+
   set math.equation(numbering: "(1)")
 
   show std.bibliography: set text(size: 10pt)
@@ -97,3 +108,8 @@
 
   bibliography
 }
+
+// Wrap content in 'plan' environment
+// - Shows in a different colour from main text (luma(140), grey)
+// - Can be hidden by passing `hide_plan: true` to proposal template
+#let plan(body) = [#text(body) <plan>]
