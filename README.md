@@ -27,3 +27,27 @@ make reports/proposal.pdf
 ```
 
 The compiled PDFs are located at `reports/<REPORT>.pdf`.
+
+## Contributing
+
+This project uses [pre-commit](https://pre-commit.com/) to ensure no pesky typos 
+or PEP8-violating code chunks make it through into GitHub. Pre-commit will run 
+automatically whenever you commit code, but only if it is installed _and_ initialised 
+for this repo. Note, the following instructions assume you are using [uv](https://docs.astral.sh/uv/) 
+to handle your Python environments (we strongly recommend you do). If this isn't the case, 
+substitute the first step for the instructions on the pre-commit [installation page](https://pre-commit.com/#install). 
+
+```sh
+# We can use uv to install pre-commit!
+$ uv tool install pre-commit --with pre-commit-uv --force-reinstall
+
+# Check that pre-commit installed alright (should say 4.5.0 or similar)
+$ pre-commit --version
+
+# After installing pre-commit, you'll need to initialise it.
+# This installs all pre-commit hooks, the scripts which run before a commit.
+$ pre-commit install
+
+# It's a good idea to run pre-commit now on all files.
+$ pre-commit run --all-files
+```
