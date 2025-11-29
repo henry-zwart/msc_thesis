@@ -8,15 +8,15 @@
   *Methods:*
   1. Base model (beliefs-as-nodes):
     - Motivation
-    - Potential dissonance between personal beliefs given by @dalege_networks_2025 
+    - Potential dissonance between personal beliefs given by @dalegeNetworksBeliefsIntegrative2025 
       $ H_"pers" = sum_i tau_i b_i - sum_(i j) omega_(i j) b_i b_j $
 ]
 
-For these reasons, we consider the beliefs-as-nodes approach a more appropriate foundation
-for this study. In particular, we will extend the 'Networks of Belief' (*NB*) model recently 
-proposed by #cite(<dalege_networks_2025>, form: "author") to include directed relations.
-The NB model measures the cognitive dissonance of a collection of beliefs using the standard
-network Ising model energy function (ibid.):
+We consider the BAN approach an appropriate foundation for this study, on account of its natural 
+extension to directed relations and amenability to inferring beliefs from data (discussed above). 
+In particular, we will extend the 'Networks of Belief' (*NB*) model recently proposed by 
+#cite(<dalegeNetworksBeliefsIntegrative2025>, form: "author"). The NB model measures the cognitive dissonance of 
+a collection of beliefs using the standard network Ising model energy function (ibid.):
 
 $ 
    H(bold(b)) := sum_i tau_i b_i - sum_(i j) omega_(i j) b_i b_j 
@@ -24,11 +24,11 @@ $ <eq:nb-internal-dissonance>
 
 where $b_i$ is the belief associated with node $i$, $tau_i$ is a 'field' term (reflecting 
 exogenous influence), and $omega_(i j)$ is the signed interaction strength between beliefs 
-which are connected by an edge. Individuals update their beliefs to minimise cognitive 
-dissonance. This is modelled by repeated samples from a Boltzmann distribution parameterised
-by $H$ and a temperature parameter. In the original model $omega_(i j)$ is symmetric, 
-reflecting undirected associations between beliefs, thus we can extend the model to support 
-directed relations by allowing each $omega_(i j)$ and $omega_(j i)$ to vary.
+related beliefs. Individuals update their beliefs to decrease cognitive 
+dissonance, as modelled by iterative samples from a Boltzmann distribution parameterised
+by $H$ and a temperature parameter. In the NB model each $omega_(i j)$ is symmetric, 
+thus we can support directed relations by allowing each $omega_(i j)$ and $omega_(j i)$ pair 
+to vary separately.
 
 #plan[
   2. Causal discovery:
@@ -51,15 +51,12 @@ directed relations by allowing each $omega_(i j)$ and $omega_(j i)$ to vary.
       model for purposes of model-fitting.
 ]
 
-In #rq1 we plan to fit the NB model and its directed variants to empirical data, to 
-investigate the relational structure of beliefs in real individuals, and how this varies
-across population groups or different experiences. For this purpose we have access to a 
-longitudinal survey on climate attitudes in the US. The survey comprises six waves of 
-responses collected between *DATE 1* and *DATE 2*. Each participant has responded to a 
-subset of the waves, which may not be contiguous (e.g., a person may have responded in 
-waves 1 and 3, but not 2). Questions cover demographic information about participants,
-their past experience with extreme weather events, beliefs regarding the causes of 
-severe weather, attitudes about climate change and related policy, among other categories.
+To answer #rq1 we intend to fit the NB model (and its directed variants) to empirical 
+data from a longitudinal survey on climate attitudes in the US. The survey comprises 
+six waves of responses collected between *DATE 1* and *DATE 2*, with questions covering
+demographic information, experience and beliefs related to extreme weather, attitudes 
+about climate change and related policy, among other categories. Each participant has 
+responded to a (possibly noncontiguous, possibly singular) subset of waves. 
 
 Inferring belief networks from this data will require an initial analysis stage to 
 identify factors and questions that are relevant to the present study.

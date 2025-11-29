@@ -1,20 +1,19 @@
 #import "../lib.typ": plan
 
-The sensitivity of individuals' behaviour to their underlying preferences,
-attitudes, and beliefs is well-entrenched in common knowledge. However, 
-recent work in collective dynamics has shown that the internal states of 
-select individuals can also influence population-level behaviour in dramatic, 
-and qualitatively predictable ways @mittal_anticonformists_2024. These 
-findings underscore the risk to model realism imposed by neglecting internal state 
-dynamics in models of collective behaviour. 
+The sensitivity of individuals' behaviour to their underlying preferences, attitudes, 
+and beliefs is well-entrenched in common knowledge. However, recent work in collective 
+dynamics has shown that the internal states of select individuals can also dramatically 
+influence _population-level_ behaviour @mittalAnticonformistsCatalyzeSocietal2024. These 
+findings underscore the risk to model realism imposed by neglecting internal state dynamics 
+in models of collective behaviour. 
 
-Recent efforts to model such internal belief dynamics are primarily motivated 
+Recent efforts to model internal belief dynamics are primarily motivated 
 to explain how known phenomena such as polarisation or minority influence may 
 arise, often through conflicting social conformity and dissonance reduction 
-pressures @rodriguez_collective_2016 @aiyappa_emergence_2024 @dalege_networks_2025. 
-To this end they have been largely successful, even under considerable simplifying 
-assumptions regarding the structure and causal directionality of beliefs and their 
-relations.
+pressures @rodriguezCollectiveDynamicsBelief2016 @aiyappaEmergenceSimpleComplex2024 
+@dalegeNetworksBeliefsIntegrative2025. To this end they have been largely successful, 
+even under considerable simplifying assumptions regarding the structure and causal 
+directionality of beliefs and their relations.
 
 A separate, but particularly salient, class of questions concerns the behavioural 
 implications of _intervening_ on individuals' beliefs. For instance,
@@ -34,7 +33,7 @@ or conversely,
 For this purpose, however, simplifying assumptions regarding the structure
 and causal relations between beliefs are on significantly weaker footing. 
 As illustrated in @fig:stargraph, if beliefs causally support one another, 
-then the direction of this causality can decide the effectiveness of intervention.
+then the direction of this causality can dictate the effectiveness of intervention.
 
 
 #figure(
@@ -117,7 +116,7 @@ More specifically, we will address the following research questions:
     vary under different structural assumptions. 
   - _(RQ3)_: 'Something about identifying effective interventions, or ones whose outcomes 
     differ from those predicted by undirected models; possibly also considering alignment with
-    theories of persuasion (e.g., focusing on shared community values @the_workshop_how_2024)'.
+    theories of persuasion (e.g., focusing on shared community values)'.
 ]
 
 
@@ -159,9 +158,9 @@ These models tend to describe the evolution of individuals' beliefs as actions t
 reduce cognitive dissonance within a network of internal states, and can be further 
 subcategorised according to whether they treat beliefs as edges (*BAE*) or as nodes 
 (*BAN*). The former consider beliefs as associations between concepts 
-@rodriguez_collective_2016 @aiyappa_emergence_2024, while the latter consider 
+@rodriguezCollectiveDynamicsBelief2016 @aiyappaEmergenceSimpleComplex2024, while the latter consider 
 (typically undirected, signed, and weighted) edges between nodes as correlations 
-between related or conflicting beliefs @dalege_attitudinal_2018 @dalege_networks_2025.
+between related or conflicting beliefs @dalegeAttitudinalEntropyAE2018 @dalegeNetworksBeliefsIntegrative2025.
 
 The causal assumptions of interest in #rq1 and #rq2 take the form of implied
 beliefs. That is, a directed relation $A -> B$ indicates that belief in $A$ implies 
