@@ -17,6 +17,7 @@
 
 #include "sections/problem.typ"
 
+== Research methods
 #include "sections/methods.typ"
 
 == Proposed timeline
