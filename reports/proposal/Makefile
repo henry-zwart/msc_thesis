@@ -2,7 +2,7 @@ COMPILE_ARGS ?= --root "$$(pwd)"
 
 .PHONY: clean preview
 
-REPORT_FILES = main.typ 
+REPORT_FILES = main.typ sections/problem.typ sections/methods.typ sections/timeline.typ lib.typ
 
 all: main.pdf 
 
