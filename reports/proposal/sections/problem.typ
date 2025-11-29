@@ -174,16 +174,16 @@ implications, $cal(b)_i (y => z)$.
 
 This contrast highlights an additional distinction with particular relevance to 
 inferring realised beliefs (#rq1). In BAN models a set of beliefs is judged 
-unstable if some $cal(b)_i (w) => cal(b)_i (x)$ is contradicted by $i$'s other beliefs, 
+unstable if some $cal(b)_i (w) <=> cal(b)_i (x)$ is contradicted by $i$'s other beliefs, 
 which depends on the realised values of $cal(b)_i (w), cal(b)_i (x)$. On the other hand, 
-in BAE models a set of beliefs is unstable if $cal(b)_i (y => z)$ is contradicted by $i$'s 
-beliefs regarding a set of other implications. Since $y => z$ is satisfied#footnote[
+in BAE models a set of beliefs is unstable if $cal(b)_i (y <=> z)$ is contradicted by $i$'s 
+beliefs regarding a set of other implications. Since $y <=> z$ is satisfied#footnote[
   Assuming an intelligible interpretation of what it means for a concept to be true or false.
-] by #box[$not y or z$], 
-a stable belief configuration can, in general, be realised in multiple ways. Hence BAE 
-stability is distinct from individuals' concrete beliefs, and rather concerns the logical 
+] by #box[$(y and z) or (not y and not z)$], 
+stable belief configurations can in-general be realised in multiple ways. Hence BAE 
+stability is distinct from individuals' concrete beliefs, and concerns the logical 
 satisfiability of relations between concepts. So, assuming these notions of stability, 
-BAN models are better-suited to inferring actual (realised) beliefs.
+BAN models are better-suited to inferring realised beliefs.
 
 
 
