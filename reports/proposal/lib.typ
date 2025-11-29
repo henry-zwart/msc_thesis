@@ -107,6 +107,8 @@
 
   body
 
+  // Show bibliography on a new page
+  pagebreak()
   bibliography
 }
 
