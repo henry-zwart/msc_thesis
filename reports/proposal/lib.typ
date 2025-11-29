@@ -2,7 +2,7 @@
   title: "Proposal title", 
   subtitle: none, 
   author: none, 
-  supervisor: none,
+  supervisors: (),
   header_logo: none,
   abstract: none,
   bibliography: none,
@@ -91,12 +91,13 @@
         })
       )
       v(1.5em)
+
       grid(
         columns: (auto, auto), 
         align: (right, left), 
         gutter: 1em,
           [*Author:*], author,
-          [*Supervisor:*], supervisor,
+          [*Supervision team:*], supervisors.join(", ", last: ", and "),
       )
     })
 
