@@ -58,5 +58,15 @@ demographic information, experience and beliefs related to extreme weather, atti
 about climate change and related policy, among other categories. Each participant has 
 responded to a (possibly noncontiguous, possibly singular) subset of waves. 
 
-Inferring belief networks from this data will require an initial analysis stage to 
-identify factors and questions that are relevant to the present study.
+Given the considerable extent of available data and computational limitations associated 
+with fitting large spin models (see #cite(<nguyenInverseStatisticalProblems2017>, form: "prose")), 
+an initial analysis stage is necessary to identify the factors and questions most relevant to 
+the present study. 
+
+Inferring belief relations consists in the inverse problem of determining the values of $tau_i$ 
+and $omega_(i j)$, for each pair of beliefs $i,j$, such that the resulting network reproduces 
+the observed empirical distribution. This problem is underdetermined in-general; however, it is 
+common practice to further constrain the solution to have maximum entropy among candidate 
+parameterisations, i.e., that which imposes minimal structural assumptions beyond reproducing the 
+data @leeStatisticalMechanicsUS2015 @nguyenInverseStatisticalProblems2017.
+
