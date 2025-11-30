@@ -1,6 +1,6 @@
 #import "lib.typ": proposal, plan
 
-#let title = "(Placeholder) Behavioural implications of intervening on asymmetric internal belief networks"
+#let title = "Interventions on Asymmetric Belief Networks"
 #let author = "Henry Zwart"
 #let supervisors = ("Vítor V. Vasconcelos", "Kyuri Park", "Johan Bollen", "Sara Constantino")
 #let pdf_title = [Thesis proposal (#datetime.today().display())]
