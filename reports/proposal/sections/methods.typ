@@ -53,7 +53,7 @@ to vary separately.
 
 To answer #rq1 we intend to fit the NB model (and its directed variants) to empirical 
 data from a longitudinal survey on climate attitudes in the US. The survey comprises 
-six waves of responses collected between *DATE 1* and *DATE 2*, with questions covering
+six waves of responses collected over recent years (roughly 2023--2024), with questions covering
 demographic information, experience and beliefs related to extreme weather, attitudes 
 about climate change and related policy, among other categories. Each participant has 
 responded to a (possibly noncontiguous, possibly singular) subset of waves. 
