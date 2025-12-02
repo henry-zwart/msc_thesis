@@ -1,13 +1,22 @@
 # Master's Thesis: 2025-2026
 
 Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
-Whenever `main` receives new changes, all reports are recompiled in GitHub CI and published 
+
+Whenever `main` receives new changes, all _completed_ reports are recompiled in GitHub CI and published 
 at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
-are easily accessible.
+are easily accessible. 
 
-They can also be accessed directly at the following pages:
+Ongoing or draft reports must be compiled locally, or accessed via the links below:
 
-- [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+- <text color=green>(Public)</text>[Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+
+> [!IMPORTANT]
+> While this repository is private, the associated static site is *publicly-accessible*. 
+> Access to unfinished/ongoing work is restricted by means of access to this repository.
+> Such work should not be published to the static site; however, it is okay to publish 
+> links which refer to documents stored directly in the repo, i.e., for which access is 
+> authenticated by GitHub.
+
 
 ## Building reports locally
 
