@@ -1,4 +1,4 @@
-A project in service of the MSc. Computational Science at the University of 
+Master's project in service of the MSc. Computational Science at the University of 
 Amsterdam. 
 
 We are investigating structured internal belief networks in the context of 
@@ -14,6 +14,11 @@ of belief-level interventions.
 
 **Assessor:** Sara Constantino
 
-View the [project proposal](proposal.pdf) or associated 
-[GitHub repository](https://github.com/henry-zwart/msc_thesis) (requires access).
+This site serves as a central point for notes, reports, and information regarding the
+project. Access to ongoing work (such as drafts) is restricted, and requires access to 
+the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
+
+### Available reports:
+
+- [Project proposal](proposal.pdf)
 
