@@ -8,10 +8,11 @@ are easily accessible.
 
 Ongoing or draft reports must be compiled locally, or accessed via the links below:
 
-- $$\color{green}\text{(Public)}$$ [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+- [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
 
 > [!IMPORTANT]
-> While this repository is private, the associated static site is *publicly-accessible*. 
+> While this repository is private, the associated static site is *publicly-accessible*.  
+>
 > Access to unfinished/ongoing work is restricted by means of access to this repository.
 > Such work should not be published to the static site; however, it is okay to publish 
 > links which refer to documents stored directly in the repo, i.e., for which access is 
