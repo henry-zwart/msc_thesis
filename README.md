@@ -14,7 +14,7 @@ Ongoing or draft reports must be compiled locally, or accessed via the links bel
 > While this repository is private, the associated static site is *publicly-accessible*.  
 >
 > Access to unfinished/ongoing work is restricted by means of access to this repository.
-> Such work should not be published to the static site; however, it is okay to publish 
+> Such work should not be published to the static site. However, it is okay to publish 
 > links which refer to documents stored directly in the repo, i.e., for which access is 
 > authenticated by GitHub.
 
