@@ -8,7 +8,7 @@ are easily accessible.
 
 Ongoing or draft reports must be compiled locally, or accessed via the links below:
 
-- <text color=green>(Public)</text>[Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+- $$\color{green}\text{(Public)}$$ [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
 
 > [!IMPORTANT]
 > While this repository is private, the associated static site is *publicly-accessible*. 
