@@ -1,0 +1,54 @@
+name: Publish static site
+
+on:
+  push: 
+    branches:
+      - main
+      - 'ci/**'
+  workflow_dispatch:
+
+permissions:  {}
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Install Typst
+      uses: typst-community/setup-typst@v4
+      with:
+        typst-version: 0.14.0
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+
+    - name: Build site
+      run: make
+
+    - name: Upload site artefacts
+      id: deployment
+      uses: actions/upload-pages-artifact@v4
+      with:
+        path: github-pages-temp
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
