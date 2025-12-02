@@ -8,6 +8,8 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 
 all: site/site/index.html
 
+all-reports: $(REPORTS)
+
 # Serve site locally
 serve:
 	uv run --group docs mkdocs serve -f site/mkdocs.yml
