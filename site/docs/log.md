@@ -2,7 +2,9 @@
 ### Tuesday
 - Confirmed that I already have access to the climate attitudes data.
   - RData files on Vitor's OneDrive under `Climate\ Attitudes/Data`.
-- Created (this) project log to track progress, identify issues.
+- Created project log to track progress, identify issues.
+- Created (this) static site to collate information & reports related to 
+  the project.
 
 ### Monday
 #### Week overview:
@@ -21,7 +23,6 @@
 ------
 
 ## Nov 24 - Nov 30 2025
-
 ### Sunday
 - Submitted project proposal
 - Project proposal accepted
