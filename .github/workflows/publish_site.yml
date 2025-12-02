@@ -10,7 +10,7 @@ on:
 permissions:  {}
 
 jobs:
-  build-site:
+  build:
     runs-on: ubuntu-latest
     permissions: 
       contents: read
