@@ -5,6 +5,10 @@ Whenever `main` receives new changes, all reports are recompiled in GitHub CI an
 at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
 are easily accessible.
 
+They can also be accessed directly at the following pages:
+
+- [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+
 ## Building reports locally
 
 **Requirements:**
