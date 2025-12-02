@@ -1,7 +1,6 @@
 ## Dec 1 - Dec 7 2025 
 ### Tuesday
-- Confirmed that I already have access to the climate attitudes data.
-    - RData files on Vitor's OneDrive under `Climate\ Attitudes/Data`.
+- Confirmed that I already have access to the climate attitudes data (on OneDrive).
 - Created project log to track progress, identify issues.
 - Created (this) static site to collate information & reports related to 
   the project.
