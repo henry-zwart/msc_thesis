@@ -1,9 +1,11 @@
 site_name: Intervening on Asymmetric Models of Internal Beliefs 
+site_url: https://henry-zwart.github.io/msc_thesis/
+repo_url: https://github.com/henry-zwart/msc_thesis/
 nav:
   - Home: index.md
   - Research log: log.md
-extra_css: 
-  - style.css
+theme:
+  name: material
 markdown_extensions:
   - toc:
-      baselevel: 2
+      toc_depth: 2

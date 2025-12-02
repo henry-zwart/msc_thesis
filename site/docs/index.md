@@ -1,19 +1,19 @@
-# Welcome to MkDocs
+A project in service of the MSc. Computational Science at the University of 
+Amsterdam. 
 
-View the [project proposal](proposal.pdf).
+We are investigating structured internal belief networks in the context of 
+climate attitudes in the US, as well as the behavioural implications structural 
+and causal assumptions regarding belief networks on the outcome and effectiveness
+of belief-level interventions.
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+**Student:** Henry Zwart
 
-## Commands
+**Supervisors:** Vítor Vasconcelos, Kyuri Park
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+**Examiner:** Johan Bollen
 
-## Project layout
+**Assessor:** Sara Constantino
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+View the [project proposal](proposal.pdf) or associated 
+[GitHub repository](https://github.com/henry-zwart/msc_thesis) (requires access).
+

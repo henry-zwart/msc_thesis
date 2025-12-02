@@ -1,26 +1,26 @@
 # Master's Thesis: 2025-2026
 
-Reports relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
-These can be [viewed online](#view-online), or [built locally](#building-reports-locally).
-
-## View online
-
+Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 Whenever `main` receives new changes, all reports are recompiled in GitHub CI and published 
-at the following static links to ensure current versions are easily accessible:
-- [Thesis proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
-
+at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
+are easily accessible.
 
 ## Building reports locally
 
-The reports are compiled using [Typst](https://github.com/typst/typst), and the 
-compilation is orchestrated using Make. So long as you have Typst (v0.14.0) installed 
-locally, you can rebuild all reports by running:
+**Requirements:**
+- [Typst](https://github.com/typst/typst) (>= v0.14.0)
+- [uv](https://docs.astral.sh/uv/) (>= 0.9.0)
+
+Report compilation is orchestrated with Make, so reproducing them is straightforward. 
+To compile all reports, just run:
 
 ```sh
-make
+# The `-j` flag is used to compile the reports in parallel
+make all-reports -j
 ```
 
-Or any individual report by running `make reports/<REPORT>.pdf`. For instance:
+Alternatively, you can generate an individual report by running `make reports/<REPORT>.pdf`. 
+For instance:
 
 ```sh
 make reports/proposal.pdf
