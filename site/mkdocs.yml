@@ -1,0 +1,9 @@
+site_name: Intervening on Asymmetric Models of Internal Beliefs 
+nav:
+  - Home: index.md
+  - Research log: log.md
+extra_css: 
+  - style.css
+markdown_extensions:
+  - toc:
+      baselevel: 2
