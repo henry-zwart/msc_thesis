@@ -1,3 +1,15 @@
+## Dec 8 - Dec 14 2025
+### Monday
+#### Week overview:
+- Confirmed that I have access to the climate attitudes data already.
+- Set up research log to track progress and issues, and static site to collate information 
+  on the project.
+- Started thinking about literature review; read paper[^1] on the topic. 
+
+#### Next week:
+- Identify areas to explore in literature review; questions to answer.
+- Continue reading.
+
 ## Dec 1 - Dec 7 2025 
 ### Sunday
 - Read paper on how to write literature reviews[^1].
