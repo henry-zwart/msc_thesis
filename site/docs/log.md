@@ -1,4 +1,9 @@
 ## Dec 1 - Dec 7 2025 
+### Sunday
+- Read paper on how to write literature reviews[^1].
+
+[^1]: J. W. Knopf, “Doing a Literature Review,” APSC, vol. 39, no. 1, pp. 127–132, Jan. 2006, doi: 10.1017/S1049096506060264 
+
 ### Tuesday
 - Confirmed that I already have access to the climate attitudes data (on OneDrive).
 - Created project log to track progress, identify issues.

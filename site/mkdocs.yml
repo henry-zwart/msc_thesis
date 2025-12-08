@@ -6,7 +6,10 @@ nav:
   - Research log: log.md
 theme:
   name: material
+  features:
+    - content.footnote.tooltips
 markdown_extensions:
   - toc:
       toc_depth: 2
   - admonition
+  - footnotes
