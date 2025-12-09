@@ -4,6 +4,7 @@ repo_url: https://github.com/henry-zwart/msc_thesis/
 nav:
   - Home: index.md
   - Research log: log.md
+  - Glossary: glossary.md
 theme:
   name: material
   features:
@@ -13,3 +14,4 @@ markdown_extensions:
       toc_depth: 2
   - admonition
   - footnotes
+  - def_list
