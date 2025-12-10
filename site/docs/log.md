@@ -1,5 +1,18 @@
 ## Dec 8 - Dec 14 2025
+
+### Tuesday
+- Began working on a short presentation for Friday.
+
 ### Monday
+- Looking at cognitive theories of belief and belief change
+  - Appears to be support for the notion that in order to change a belief, it 
+    is not always necessary to intervene directly on that belief (i.e., causal 
+    relations are important). Furthermore that intervening on a belief directly 
+    can cause a blow-back effect, since this 'reactivates' the prior belief.
+- Have started a [glossary][glossary.md] to keep track of relevant terminology.
+
+## Dec 1 - Dec 7 2025 
+### Summary
 #### Week overview:
 - Confirmed that I have access to the climate attitudes data already.
 - Set up research log to track progress and issues, and static site to collate information 
@@ -10,7 +23,6 @@
 - Identify areas to explore in literature review; questions to answer.
 - Continue reading.
 
-## Dec 1 - Dec 7 2025 
 ### Sunday
 - Read paper on how to write literature reviews[^1].
 
@@ -22,7 +34,8 @@
 - Created (this) static site to collate information & reports related to 
   the project.
 
-### Monday
+## Nov 24 - Nov 30 2025
+### Summary
 #### Week overview:
 - Submitted thesis proposal, and had it accepted
 - Confirmed examiner (Johan Bollen) and assessor (Sara Constantino)
@@ -36,9 +49,6 @@
 - Working part-time on project while I finish my final course. I expect to 
     be full-time on research from January.
 
-------
-
-## Nov 24 - Nov 30 2025
 ### Sunday
 - Submitted project proposal
 - Project proposal accepted
