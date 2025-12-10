@@ -5,10 +5,10 @@
 
 ### Monday
 - Looking at cognitive theories of belief and belief change
-  - Appears to be support for the notion that in order to change a belief, it 
-    is not always necessary to intervene directly on that belief (i.e., causal 
-    relations are important). Furthermore that intervening on a belief directly 
-    can cause a blow-back effect, since this 'reactivates' the prior belief.
+    - Appears to be support for the notion that in order to change a belief, it 
+      is not always necessary to intervene directly on that belief (i.e., causal 
+      relations are important). Furthermore that intervening on a belief directly 
+      can cause a blow-back effect, since this 'reactivates' the prior belief.
 - Have started a [glossary][glossary.md] to keep track of relevant terminology.
 
 ## Dec 1 - Dec 7 2025 
