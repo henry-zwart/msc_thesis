@@ -22,3 +22,6 @@ the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 
 - [Project proposal](proposal.pdf)
 
+### Available presentations:
+
+- [Project plan](project_plan.html)
