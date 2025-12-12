@@ -1,5 +1,10 @@
 ## Dec 8 - Dec 14 2025
 
+### Friday
+- Finished presentation
+- Presented project plan
+- Reading: cognitive science + philosophical theories of belief
+
 ### Tuesday
 - Began working on a short presentation for Friday.
 

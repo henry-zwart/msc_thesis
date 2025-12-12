@@ -10,3 +10,27 @@ relevant to the project:
 
 : Unconscious evaluation of new information by an individual, with respect to 
   consistency with pre-existing beliefs.
+
+`Causal Attitude Network Model`
+
+: TODO
+
+`Network of Beliefs Model`
+
+: TODO
+
+`Constraint-satisfaction models of attitudes`
+
+: TODO
+
+`Attitude`
+
+: TODO
+
+`Belief`
+
+: TODO
+
+`Behaviour`
+
+: TODO
