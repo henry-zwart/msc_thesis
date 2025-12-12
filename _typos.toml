@@ -1,2 +1,2 @@
 [files]
-extend-exclude = ["reports/references.bib"]
+extend-exclude = ["reports/references.bib", "**/**.html"]
