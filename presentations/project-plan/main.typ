@@ -48,7 +48,7 @@ e.g. healthy eating; transportation; mask-wearing; vaccination; ...
   columns: (0.91fr, 0.09fr),
   [
     #pause
-    $ P_A_i (a) = op("logit")(#pin(1)alpha_(i,a)#pin(2) + #pin(3)beta_("cost", a)#pin(4) + #pin(5)beta_("peer", a))#pin(6) $
+    $ P_A_i (a) = op("logistic")(#pin(1)alpha_(i,a)#pin(2) + #pin(3)beta_("cost", a)#pin(4) + #pin(5)beta_("peer", a))#pin(6) $
 
     #pause
     #pinit-point-from((3,4), pin-dx: 0em, pin-dy: -1.5em, body-dx: -1em, body-dy: -1.3em, offset-dx: 0em, offset-dy: -6em, thickness: 1.5pt)[e.g. strategic games]
