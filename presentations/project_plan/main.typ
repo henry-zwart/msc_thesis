@@ -9,7 +9,7 @@
 #import gantty.drawers: default-drawer
 
 // Check if 'hand-out' mode specified in sys inputs. If so, collapse slide animations.
-#let handout = json.decode(sys.inputs.at("handout", default: "true"))
+#let handout = json.decode(sys.inputs.at("handout", default: "false"))
 
 #show: university-theme.with(
   aspect-ratio: "16-9",
