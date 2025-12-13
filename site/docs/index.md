@@ -18,10 +18,11 @@ This site serves as a central point for notes, reports, and information regardin
 project. Access to ongoing work (such as drafts) is restricted, and requires access to 
 the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 
-### Available reports:
+### Reports:
 
-- [Project proposal](proposal.pdf)
+- [Project proposal](reports/proposal.pdf)
 
-### Available presentations:
+### Presentations:
+Each presentation is available in both HTML (for presenting) and PDF (e.g. for handouts).
 
-- [Project plan](project_plan.html)
+- Project plan ([pdf](slides/project_plan.pdf), [html](slides/project_plan.html))

@@ -1,8 +1,12 @@
+# Each recipe runs in a single shell.
+.ONESHELL:
+
 REPORT_TYPES := proposal
 PRESENTATION_TYPES := project_plan
 REPORTS = \
-		$(patsubst %,reports/%.pdf, $(REPORT_TYPES)) \
-		$(patsubst %,presentations/%.html, $(PRESENTATION_TYPES))
+		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
+		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
+		$(patsubst %,outputs/slides/%.pdf, $(PRESENTATION_TYPES))
 
 
 SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
@@ -20,22 +24,49 @@ serve:
 
 # Build site
 site/site/index.html: $(REPORTS) $(SITE_SOURCES)
-	cp $(REPORTS) site/docs && uv run --group docs mkdocs build -f site/mkdocs.yml
+	@printf "Site    → Copying sources...\n"
+	@for d in site/docs/reports site/docs/slides; do \
+	  if [ -e "$d" ]; then \
+	    printf "Site    → Error: $d already exists" >&2; \
+	    exit 1; \
+	  fi; \
+	done
+	@cp -r outputs/* site/docs
+	@printf "Site    → Building site...\n"
+	@uv run --group docs mkdocs build -f site/mkdocs.yml
+	@printf "Site    → Done.\n"
 
 
-# Compile project proposal
-reports/proposal.pdf: 
-	$(MAKE) -C reports/proposal && cp reports/proposal/main.pdf $@
+# Compile project reports
+outputs/reports/%.pdf: | outputs/reports
+	@printf "Compile → Report '$*'.\n"
+	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
 
-# Compile project-plan presentation
-presentations/project_plan.html:
-	$(MAKE) -C presentations/project-plan && cp presentations/project-plan/main.html $@
+# Compile project presentations to PDF
+outputs/slides/%.pdf: | outputs/slides
+	@printf "Compile → Presentation '$*' to PDF.\n"
+	@$(MAKE) -C presentations/$* main.pdf && cp presentations/$*/main.pdf $@
 
+# Compile project presentations to HTML (for presenting)
+outputs/slides/%.html: | outputs/slides
+	@printf "Compile → Presentation '$*' to HTML.\n"
+	@$(MAKE) -C presentations/$* main.html && cp presentations/$*/main.html $@
+
+
+# == Create results and output directories
+outputs/slides: outputs
+	@mkdir outputs/slides
+
+outputs/reports: outputs
+	@mkdir outputs/reports
+
+outputs:
+	@mkdir outputs
 
 # Remove all generated files 
 clean: 
-	rm $(REPORTS) 
+	rm -rf outputs
 	rm -rf site/site
-	$(MAKE) clean -C reports/proposal
-	$(MAKE) clean -C presentations/project-plan
+	@$(MAKE) clean -C reports/proposal
+	@$(MAKE) clean -C presentations/project_plan
 

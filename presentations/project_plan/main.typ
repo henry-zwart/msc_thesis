@@ -8,11 +8,13 @@
 #import gantty.milestones: default-milestones-drawer
 #import gantty.drawers: default-drawer
 
+// Check if 'hand-out' mode specified in sys inputs. If so, collapse slide animations.
+#let handout = json.decode(sys.inputs.at("handout", default: "true"))
+
 #show: university-theme.with(
   aspect-ratio: "16-9",
   align: horizon,
-  //config-common(handout: true),
-  //config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
+  config-common(handout: handout),
   config-info(
     title: [Asymmetric Networks of Belief],
     subtitle: [Inverse problems and intervention],

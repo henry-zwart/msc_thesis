@@ -8,7 +8,7 @@ all: main.pdf
 
 # ==== Report
 main.pdf: $(REPORT_FILES)
-	typst compile $<
+	@typst compile $<
 
 preview:
 	typst compile main.typ $(COMPILE_ARGS) && \
