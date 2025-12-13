@@ -4,12 +4,12 @@ COMPILE_ARGS ?= --root "$$(pwd)"
 
 REPORT_FILES = main.typ
 
-all: main.html 
+all: main.html main.pdf
 
 # ==== Report
-main.html: $(REPORT_FILES)
-	uvx touying compile $<
+main.%: $(REPORT_FILES)
+	uvx touying compile $< --format $*
 
 clean:
-	rm main.html 
+	rm main.html main.pdf
 
