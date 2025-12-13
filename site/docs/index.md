@@ -20,9 +20,9 @@ the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 
 ### Reports:
 
-- [Project proposal](reports/proposal.pdf)
+- [Project proposal](reports/proposal.pdf){:target="_blank"}
 
 ### Presentations:
 Each presentation is available in both HTML (for presenting) and PDF (e.g. for handouts).
 
-- Project plan ([pdf](slides/project_plan.pdf), [html](slides/project_plan.html))
+- Project plan ([pdf](slides/project_plan.pdf){:target="_blank"}, [html](slides/project_plan.html){:target="_blank"})
