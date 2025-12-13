@@ -30,17 +30,18 @@ To compile all reports, just run:
 
 ```sh
 # The `-j` flag is used to compile the reports in parallel
-make all-reports -j
+make -j
 ```
 
-Alternatively, you can generate an individual report by running `make reports/<REPORT>.pdf`. 
+Alternatively, you can generate an individual report by running `make outputs/reports/<REPORT>.pdf`
+or `make outputs/slides/<PRESENTATION>.{html, pdf}`. 
 For instance:
 
 ```sh
-make reports/proposal.pdf
+make outputs/report/proposal.pdf
 ```
 
-The compiled PDFs are located at `reports/<REPORT>.pdf`.
+The compiled PDFs are located in an auto-generated generated `outputs` directory.
 
 ## Contributing
 
