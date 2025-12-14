@@ -1,4 +1,15 @@
 ## Dec 8 - Dec 14 2025
+### Summary
+#### Week overview:
+- Prepared and presented a (not-so-)short presentation on project plan
+- Reading up on cog. psychological and philosophical theories of belief
+- Set up a few additional workflows in repo (glossary, presentations)
+- Thinking about representing causal implications in Ising model 
+
+#### Next week:
+- Mostly exam prep Monday + Tuesday, then done with courses from Wednesday!
+- After that, continue reading for literature review 
+- Ask about example literature reviews, e.g., from past students, or in general.
 
 ### Sunday
 #### Representing causal implication in an Ising model
