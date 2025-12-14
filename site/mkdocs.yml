@@ -12,6 +12,7 @@ theme:
 markdown_extensions:
   - toc:
       toc_depth: 2
+      permalink: true
   - admonition
   - footnotes
   - def_list
