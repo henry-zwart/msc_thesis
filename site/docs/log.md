@@ -18,24 +18,42 @@ to vary independently. Suppose for beliefs $p$ and $q$ that we wish for the mode
 
 $$p \implies q$$
 
-This is captured iff $p \vee \neg q$. That is, if the belief state is one of $\{(\neg p, \neg q), (\neg p, q), (p, q)\}$,
-and is not $(p, \neg q)$. Suppose that beliefs take on the values $0$ (not believed) and $1$ (believed). Then for any 
-asymmetric interaction weight $\omega_{p\to q} \cdot p\cdot q = 1 \Leftrightarrow p = q = 1$. In particular
-the interaction energy is zero whenever one of the beliefs is not held, so is semantically different to the causal implication
-we are trying to model.
+The interaction energy with weight $\omega_{p \to q}$ is typically modelled as
 
-Instead, we would like the interaction energy to be $1 \Leftrightarrow \neg p \vee q$. This can be achieved by redefining the 
-interaction term as
+$$h_{p\to q} = \omega_{p\to q} \cdot p\cdot q$$
 
-$$\omega_{p\to q} \cdot [1 - p(1-q)]$$
+We also consider the following alternative formulation, derived according to de Morgan's law to explicitly 
+preserve the relationship $(p \implies q) \Leftrightarrow (\neg p \vee q)$:
 
-Which follows from de Morgan's law, $\neg p \vee q \Leftrightarrow \neg (p \wedge \neg q)$. By inspection we see that the above
-interaction term is $1$ whenever $p = 0$ or $q = 1$, satisfying the semantics of implication.
+$$h_{p\to q}' = \omega_{p\to q} \cdot [1 - p(1-q)]$$
+
+Suppose that belief states are $1$ (believes) and $0$ (doesn't believe), then these relations are defined by 
+the following truth table
+
+<div class="center-table" markdown>
+
+| $p$   | $q$   | $p \implies q$   | $h_{p\to q}$ | $h_{p\to q}'$ |
+| :---: | :---: | :--------------: | :---:        | :---:         |
+| $1$   | $1$   | $1$              | $1$          | $1$           |
+| $1$   | $0$   | $0$              | $0$          | $0$           |
+| $0$   | $1$   | $1$              | $0$          | $1$           |
+| $0$   | $0$   | $1$              | $0$          | $1$           |
+
+</div>
+
+Thus $h_{p\to q}$ fails to capture the semantics of implication, while $h_{p\to q}'$ does capture these 
+for belief states of $\{0, 1\}$. 
 
 #### Distinction between not-believing and no-belief
-While the meaning of "$X$ believes in $p$" is unambiguous, its converse is not. To say that $X$ does not believe in $p$ could 
-either mean that they believe in $\neg p$ (e.g., $X$ believes that cats are the ideal pet, contrasts $X$ believes that cats are 
-terrible pets), or that they have no strong beliefs concerning $p$ (e.g., $X$ has never owned a cat, so has no opinions either way).
+While the meaning of "$X$ believes in $p$" is unambiguous, its converse is not. Suppose $p$ is the belief:
+
+  _"Cats are the ideal pet."_
+
+To say that $X$ does not believe in $p$ could either mean that they believe in $\neg p$:
+
+  _"Cats are terrible pets."_
+
+or that they have no strong beliefs, either way, concerning cats as pets.
 
 This raises the question of whether we can simply collapse these two interpretations for modelling purposes. However, this seems 
 unlikely. For instance, an individual can "hold a belief without subscribing to all of its consequents" (need to find where this 
