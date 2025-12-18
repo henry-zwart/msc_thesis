@@ -1,3 +1,30 @@
+## Dec 15 - Dec 21 2025
+### Wednesday
+- Information theory exam - now finished with courses!
+- Meeting with Vitor, Katinka, Kyuri, and Sara.
+
+Meeting:
+
+- Discussing this project and broader context of work for internal belief models/interventions.
+- Fortnightly meetings planned with Vitor, Sara. Thursdays, 5-6pm, starting 22 January.
+
+To-do:
+
+- Identifying relevant variables in climate attitudes dataset, for comparison with existing belief state 
+  models [#26](https://github.com/henry-zwart/msc_thesis/issues/26).
+    - Read papers Sara sent regarding internal belief models of climate policy; identify other relevant literature.
+    - Assess whether the climate attitudes dataset contains similar variables/factors to those used in this work. 
+- EDA on climate attitudes dataset [#27](https://github.com/henry-zwart/msc_thesis/issues/27).
+- Given variables identified above, which (causal/directed) structures make sense theoretically (e.g., star graphs as 
+  'attractor' vs 'repeller').
+
+Other notes:
+
+- One of Vitor's previous students (Gabriela Torres) looked at causal relations in the climate 
+  attitudes dataset, relating beliefs regarding (i) COVID-19 and (ii) climate policy, with trust in
+  institutions(?) as a shared influence. Will be good to read her thesis.
+
+
 ## Dec 8 - Dec 14 2025
 ### Summary
 #### Week overview:
