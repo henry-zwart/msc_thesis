@@ -1,3 +1,22 @@
+## Jan 5 - Jan 11 2026
+
+### Monday
+#### Weekly standup
+Completed over holiday:
+
+- R&R!
+- Started planning literature review scope.
+
+This week:
+
+- Follow-up work from meeting with Sara:
+    - Reading papers shared during meeting [#26](https://github.com/henry-zwart/msc_thesis/issues/26).
+    - EDA on climate attitudes dataset (load data, understand content; assess for similar variables as used in papers 
+      mentioned above) [#27](https://github.com/henry-zwart/msc_thesis/issues/27).
+- Continue broader literature review reading [#28](https://github.com/henry-zwart/msc_thesis/issues/28).
+- Add Gabriela Torres' thesis to reading list [#29](https://github.com/henry-zwart/msc_thesis/issues/29).
+
+
 ## Dec 15 - Dec 21 2025
 ### Wednesday
 - Information theory exam - now finished with courses!
