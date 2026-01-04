@@ -29,6 +29,9 @@ Report compilation is orchestrated with Make, so reproducing them is straightfor
 To compile all reports, just run:
 
 ```sh
+# Create virtual environment with required dependencies 
+uv sync
+
 # The `-j` flag is used to compile the reports in parallel
 make -j
 ```
@@ -38,6 +41,10 @@ or `make outputs/slides/<PRESENTATION>.{html, pdf}`.
 For instance:
 
 ```sh
+# Create virtual environment with required dependencies 
+uv sync
+
+# Compile project proposal (for example)
 make outputs/report/proposal.pdf
 ```
 
