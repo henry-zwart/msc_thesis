@@ -1,7 +1,7 @@
 # Each recipe runs in a single shell.
 .ONESHELL:
 
-REPORT_TYPES := proposal
+REPORT_TYPES := proposal reading_summary
 PRESENTATION_TYPES := project_plan
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
@@ -68,5 +68,6 @@ clean:
 	rm -rf outputs
 	rm -rf site/site
 	@$(MAKE) clean -C reports/proposal
+	@$(MAKE) clean -C reports/reading_summary
 	@$(MAKE) clean -C presentations/project_plan
 
