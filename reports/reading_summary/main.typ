@@ -18,3 +18,4 @@
   bibliography: bibliography("references.bib", full: false, style: "apa"),
 )
 
+#include "sections/papers.typ"
