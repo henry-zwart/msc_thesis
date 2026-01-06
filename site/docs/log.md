@@ -1,5 +1,10 @@
 ## Jan 5 - Jan 11 2026
 
+### Tuesday
+- Mostly reading, summarising notes on Brandt et al. 2019
+- Started on Brandt 2022
+- Set up a new report for literature review reading summaries (`make outputs/reading_summary.pdf`)
+
 ### Monday
 - Slow start, as I took the morning off to explore snowy Amsterdam.
 - Started working through the papers Sara shared before the break. Today I've read Brandt et al. (2019).

@@ -16,6 +16,9 @@
 
 == What is Central to Political Belief System Networks @brandtWhatCentralPolitical2019
 
+*Tasks:*
+- Look into partial correlation networks, and contrast with Ising model
+
 *Audience:* Quantitative political science and sociology
 
 *Problem:* Prior attempts to determine central components of political belief systems do not typically consider the global network structure of belief systems, so may falsely identify peripheral relationships between beliefs/attitudes as central.
@@ -51,7 +54,8 @@
 
 - The measurement interval (2009-2016) does not include a change in government.
 
-*Summary:* Problem context, research questions/intentions, methods, findings, possible limitations, connections to other research.
+- The networks do not attempt to describe belief systems of individuals, but rather variation across the population.
+
 
 #definition(title: [Strength centrality @brandtWhatCentralPolitical2019])[
   For a node in a belief system, the sum of absolute edge weights connecting directly to the node.
