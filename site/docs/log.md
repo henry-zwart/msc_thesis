@@ -1,6 +1,10 @@
 ## Jan 5 - Jan 11 2026
 
 ### Monday
+- Slow start, as I took the morning off to explore snowy Amsterdam.
+- Started working through the papers Sara shared before the break. Today I've read Brandt et al. (2019).
+- Katinka sent me Gabriela's thesis, and I've added this to my reading list in Zotero.
+
 #### Weekly standup
 Completed over holiday:
 
