@@ -70,3 +70,46 @@
   this node.
 ] <def:brandt-betweenness-centrality>
 
+== Measuring the belief system of a person @brandtMeasuringBeliefSystem2022
+
+
+*Tasks*
+- Possibly re-run analysis with suggested fix for controls.
+- Brandt mentions a measure for 'attitude consistency', which I do not yet understand. See 'Procedures and 
+  Methods', page 835.
+- Consider risks of excluding data from climate attitudes survey due to missing responses or participants. 
+  This is likely not missing-at-random.
+
+*Audience:* Political belief systems/sociology
+
+*Problem:* Typical empirical studies on belief systems consider data aggregated at the population level, 
+while theories of belief systems assume these to be individual-level constructs. In other words, such
+empirical studies violate a core assumption of their underlying theory.
+
+*Research questions:* To what degree are conceptual similarity reports a reliable and valid approach to 
+estimating individual belief system structure in a political belief context?
+
+*Claims and contributions:*
+- (Contribution) Conceptual similarity as a method for estimating individual's belief system structures.
+- (Claim) Conceptual similarity ratings accurately track true similarity between political attitudes
+- (Claim) Conceptual similarity observations are consistent with behaviour predicted by theoretical 
+  computational models (Brandt-Sleegers, Goldberg-Stein)
+  - *Note:* This is subject to the statistical controls limitation discussed below.
+
+*Limitations*
+- Possible issues in statistical controls may invalidate some results from studies 1---3
+- Multiple realisability may compromise ability to draw structural conclusions from pairwise
+  belief survey questions (cf. Guest)
+- Conceptual similarity does not capture causal directionality
+- They classify attitude pairs as ideologically consistent or inconsistent. However, this 
+  (i) assumes a single dimension for ideological, and (ii) dichotomises each pair, when we could 
+  reasonable speak of degrees, and expect differing degrees to affect dynamics.
+
+*Connections to other research*
+- Reflecting on two theoretical/computational models of belief systems (Brandt-Sleegers, Goldberg-Stein).
+
+*Possible error in choice of Controls*
+- Causal DAG
+- Interpreted estimands and required controls, versus actual controls
+- Implications for results
+

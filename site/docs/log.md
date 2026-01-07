@@ -1,5 +1,11 @@
 ## Jan 5 - Jan 11 2026
 
+### Wednesday
+- Started on EDA/extraction of climate attitudes dataset
+- Finished reading Brandt 2022
+    - Found some possible issues in their statistical analysis due to choice of controls. Will
+      detail in reading summaries report.
+
 ### Tuesday
 - Mostly reading, summarising notes on Brandt et al. 2019
 - Started on Brandt 2022
