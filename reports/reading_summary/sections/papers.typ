@@ -108,8 +108,5 @@ estimating individual belief system structure in a political belief context?
 *Connections to other research*
 - Reflecting on two theoretical/computational models of belief systems (Brandt-Sleegers, Goldberg-Stein).
 
-*Possible error in choice of Controls*
-- Causal DAG
-- Interpreted estimands and required controls, versus actual controls
-- Implications for results
+*Possible error in choice of Controls* (Notes, causal DAG on iPad)
 
