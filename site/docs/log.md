@@ -1,4 +1,57 @@
+## Jan 12 - Jan 18 2026
+### Monday
+
+#### Weekly standup
+
 ## Jan 5 - Jan 11 2026
+### Summary
+#### Week overview
+- A somewhat slow week, on account of a snowy Amsterdam, and easing back into study.
+- Mostly working through the papers Sara shared prior to the holiday [#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26):
+    - Progress: $3.5/5$ read, with plan to finish the remaining ones before Monday.
+    - I noticed some potential methodological issues in Brandt et al. 
+      2019[@brandtWhatCentralPolitical2019]. To discuss with Vitor?
+- Some minor workflow updates:
+    - Started writing short summaries for each paper, including some critical reflection, with 
+      the intention that these feed into my writing later down the track (to view: 
+      `make outputs/reports/reading_summary.pdf`).
+    - Switched to using the ['mkdocs-bibtex'](https://github.com/shyamd/mkdocs-bibtex) plugin to 
+      handle references in the project site (e.g., in the 
+      [glossary](https://henry-zwart.github.io/msc_thesis/glossary/)), where I had previously been 
+      using footnotes. This has a caveat that the plugin is no longer maintained. Given that there 
+      exist no other plugins for this purpose, if I run into issues I may consider writing my own plugin,
+      or potentially taking over maintenance of this one.
+
+#### Next week
+- Reviewing the nature of the beliefs/attitudes studied in the papers Sara has shared, and assessing
+  the climate attitudes dataset for similar variables.
+- Review model families used for modelling belief systems (e.g., Ising model, Bayesian network, partial 
+  correlation network). Describe each and compare/contrast. Write up a short summary. 
+
+
+### Friday
+- Caught up with Shania over coffee
+- Finished reading Powell et al. (2023), made summary
+- Started reading van Noord et al. (2025)
+- Read through document from Vitor regarding thesis introduction
+- Thinking about writing plan going forward
+
+#### Thoughts on writing plan
+My project proposal had a tentative due date for my literature review of Feb 2. However, since both
+the literature review and introduction should be targeted and overwhelmingly relevant to my thesis 
+research, it doesn't make much sense to start properly drafting these until I have made progress on
+my own work. 
+
+Instead I should focus on the reading summaries I have started on this week, with the intention that
+these should eventually feed into my writing. It is also safe to begin writing contained descriptions
+of relevant background models (e.g., the Ising model, Bayesian networks, etc.) with the same intent.
+
+To help ensure my summaries will be sufficient to inform my later writing it may also be worth reviewing
+some texts on literature reviews and thesis writing.
+
+### Thursday
+- Reading Powell et al. (2023)
+- Tried (unsuccessfully) to fix Typst autoformatting in neovim
 
 ### Wednesday
 - Started on EDA/extraction of climate attitudes dataset
