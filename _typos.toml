@@ -1,2 +1,8 @@
 [files]
 extend-exclude = ["reports/references.bib", "**/**.html"]
+
+[default]
+locale = "en-gb"
+
+[default.extend-words]
+Vitor = "Vítor"
