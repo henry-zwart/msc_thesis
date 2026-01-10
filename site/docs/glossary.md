@@ -13,6 +13,18 @@ relevant to the project:
 
 : TODO
 
+`Belief system`
+
+: The[@vannoordNatureStructureEuropean2025] configuration of ideas and attitudes in which the elements 
+  are bounds together by some form of constraint or functional interdependence. They describe _how_ beliefs
+  are related to one another, _but not_ the extent to which the beliefs are endorsed \[by an individual 
+  or at a population-aggregate level\].
+
+  **Structure:** Belief systems are said to be _structured_ if they have typically strong correlations 
+  between beliefs, and _unstructured_ if they have weak or no discernible correlations. We can also speak 
+  of the degree to which the relations between beliefs _constrain_ the values those beliefs are likely to 
+  obtain (ibid.).
+
 `Behaviour`
 
 : TODO
@@ -25,15 +37,23 @@ relevant to the project:
 
 : TODO
 
+`Correlational class analysis`
+
+: TODO[@boutylineImprovingMeasurementShared2017 @vannoordNatureStructureEuropean2025]
+
 `Credence`
 
 : Acceptance (of a proposition, belief, [theory](#intuitive-theory), object) as true or real.
 
+`Cronbach's alpha`
+
+: TODO
+
 `Intuitive theory`{ #intuitive-theory }
 
-: (Paraphrased from footnote[^1]) A generative mental model that entails 
-  probabilistic dependencies among states of affairs \[such as particular belief or 
-  issue positions\], such that for any pair of beliefs:
+: A generative mental model that entails probabilistic dependencies among states of affairs 
+  \[such as particular belief or issue positions\], such that for any pair of 
+  beliefs[@powellModelingLeveragingIntuitive2023]:
   
     1. If they are related by the intuitive theory, then evidence which directly affects
       one of the beliefs will also affect the other in accordance with their relationship
@@ -67,7 +87,7 @@ relevant to the project:
 `Preregistration`
 
 : "The practice of registering the hypotheses, methods, or analyses of a scientific study before 
-  it is conducted."[^2] 
+  it is conducted."[@wikipediacontributorsPreregistrationScienceWikipedia2025]
 
 `Regularised partial correlation network`
 
@@ -76,20 +96,24 @@ relevant to the project:
 `Representational Similarity Analysis (RSA)`
 
 : A method for comparing representations of a phenomenon exhibiting various states, with respect to 
-  the dissimilarity in representation between each pair of states.[^3]
+  the dissimilarity in representation between each pair of states.[@kriegeskorteRepresentationalSimilarityAnalysis2008]
 
 `Symbolic component`
 
 : In a belief system, an affective attachment to a group or label (e.g., party-centric voting).
 
-`Validation`
+`Validation (in a belief system)`
 
 : Unconscious evaluation of new information by an individual, with respect to 
   consistency with pre-existing beliefs.
 
-[^1]: D. Powell, K. Weisman, and E. M. Markman, “Modeling and leveraging intuitive theories to improve vaccine attitudes.,” Journal of Experimental Psychology: General, vol. 152, no. 5, pp. 1379–1395, May 2023, doi: 10.1037/xge0001324.
+`Validation (in evaluation)`
 
-[^2]: Wikipedia contributors, “Preregistration (science) — Wikipedia, the free encyclopedia.” 2025. \[Online\]. Available: <https://en.wikipedia.org/w/index.php?title=Preregistration_(science)&oldid=1328560416>
+: The practice of ensuring that a model is in acceptable correspondence with the relevant parts or features
+  of the phenomenon or system that it is intended to represent.  
 
-[^3]: N. Kriegeskorte, M. Mur, and P. Bandettini, “Representational Similarity Analysis – Connecting the Branches of Systems Neuroscience,” Front Syst Neurosci, vol. 2, p. 4, Nov. 2008, doi: 10.3389/neuro.06.004.2008.
+`Verification (in evaluation)`
 
+: Checks to ensure a model has been correctly implemented.
+
+\bibliography

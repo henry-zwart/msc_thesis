@@ -7,5 +7,6 @@ dependencies = []
 [dependency-groups]
 docs = [
     "mkdocs>=1.6.1",
+    "mkdocs-bibtex>=4.4.0",
     "mkdocs-material>=9.7.0",
 ]
