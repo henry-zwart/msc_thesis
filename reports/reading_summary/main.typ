@@ -18,4 +18,13 @@
   bibliography: bibliography("references.bib", full: false, style: "apa"),
 )
 
+#show table.cell.where(y: 0): set text(weight: "bold")
+
+#outline()
+
+#show heading.where(level: 1): it => {
+  pagebreak()
+  it
+}
+
 #include "sections/papers.typ"
