@@ -60,6 +60,13 @@
     set text(size: 9pt)
     it
   }
+  show figure.where(kind: table): it => {
+    set text(size: 9pt)
+    it
+  }
+
+  // Make urls blue
+  show link: set text(fill: blue)
 
   // Planning/draft text
   // Show in a different colour to main text, or hide
