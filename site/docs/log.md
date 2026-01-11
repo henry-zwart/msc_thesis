@@ -10,7 +10,7 @@
 - Mostly working through the papers Sara shared prior to the holiday [#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26):
     - Progress: $3.5/5$ read, with plan to finish the remaining ones before Monday.
     - I noticed some potential methodological issues in Brandt et al. 
-      2019[@brandtWhatCentralPolitical2019]. To discuss with Vitor?
+      2019[@brandtWhatCentralPolitical2019]. To discuss with Vítor?
 - Some minor workflow updates:
     - Started writing short summaries for each paper, including some critical reflection, with 
       the intention that these feed into my writing later down the track (to view: 
@@ -28,12 +28,15 @@
 - Review model families used for modelling belief systems (e.g., Ising model, Bayesian network, partial 
   correlation network). Describe each and compare/contrast. Write up a short summary. 
 
+### Sunday
+- Finished van Noord et al. (2025)
+- Wrote standup paragraph for upcoming week
 
 ### Friday
 - Caught up with Shania over coffee
 - Finished reading Powell et al. (2023), made summary
 - Started reading van Noord et al. (2025)
-- Read through document from Vitor regarding thesis introduction
+- Read through document from Vítor regarding thesis introduction
 - Thinking about writing plan going forward
 
 #### Thoughts on writing plan
@@ -88,12 +91,12 @@ This week:
 ## Dec 15 - Dec 21 2025
 ### Wednesday
 - Information theory exam - now finished with courses!
-- Meeting with Vitor, Katinka, Kyuri, and Sara.
+- Meeting with Vítor, Katinka, Kyuri, and Sara.
 
 Meeting:
 
 - Discussing this project and broader context of work for internal belief models/interventions.
-- Fortnightly meetings planned with Vitor, Sara. Thursdays, 5-6pm, starting 22 January.
+- Fortnightly meetings planned with Vítor, Sara. Thursdays, 5-6pm, starting 22 January.
 
 To-do:
 
@@ -107,7 +110,7 @@ To-do:
 
 Other notes:
 
-- One of Vitor's previous students (Gabriela Torres) looked at causal relations in the climate 
+- One of Vítor's previous students (Gabriela Torres) looked at causal relations in the climate 
   attitudes dataset, relating beliefs regarding (i) COVID-19 and (ii) climate policy, with trust in
   institutions(?) as a shared influence. Will be good to read her thesis.
 
@@ -144,7 +147,7 @@ $$h_{p\to q}' = \omega_{p\to q} \cdot [1 - p(1-q)]$$
 Suppose that belief states are $1$ (believes) and $0$ (doesn't believe), then these relations are defined by 
 the following truth table
 
-<div class="center-table" markdown>
+<div class="centre-table" markdown>
 
 | $p$   | $q$   | $p \implies q$   | $h_{p\to q}$ | $h_{p\to q}'$ |
 | :---: | :---: | :--------------: | :---:        | :---:         |
