@@ -37,7 +37,7 @@ relevant to the project:
 
 : TODO
 
-`Correlational class analysis`
+`Correlational class analysis` { #cca }
 
 : TODO[@boutylineImprovingMeasurementShared2017 @vannoordNatureStructureEuropean2025]
 
@@ -48,6 +48,11 @@ relevant to the project:
 `Cronbach's alpha`
 
 : TODO
+
+`Density (of a belief system)` { #density-of-belief-system }
+
+: A measure of structure, or constraint in a belief system. The average absolute correlation between 
+  pairs of beliefs. (cf. [@vannoordNatureStructureEuropean2025])
 
 `Intuitive theory`{ #intuitive-theory }
 
@@ -71,7 +76,7 @@ relevant to the project:
 
 : TODO
 
-`Operational component`
+`Operational component` { #operational-component }
 
 : In a belief system, a position on a particular issue (e.g., low taxes).
 
@@ -98,7 +103,7 @@ relevant to the project:
 : A method for comparing representations of a phenomenon exhibiting various states, with respect to 
   the dissimilarity in representation between each pair of states.[@kriegeskorteRepresentationalSimilarityAnalysis2008]
 
-`Symbolic component`
+`Symbolic component` { #symbolic-component }
 
 : In a belief system, an affective attachment to a group or label (e.g., party-centric voting).
 

@@ -4,6 +4,8 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
+#let glossary(term, body) = link("https://henry-zwart.github.io/msc_thesis/glossary/#" + term, body)
+
 // // A paragraph or two describing what the authors intention was, their method, findings, and any important notes, limitations, 
 // // or implications.
 // *Overview:*
@@ -134,7 +136,7 @@ estimating individual belief system structure in a political belief context?
 
 *Possible error in choice of Controls* (Notes, causal DAG on iPad)
 
-= Modeling and leveraging intuitive theories to improve vaccine attitudes @powellModelingLeveragingIntuitive2023
+= Modelling and leveraging intuitive theories to improve vaccine attitudes @powellModelingLeveragingIntuitive2023
 
 *Overview:* Per the Duhem-Quine underdetermination thesis, when an individual's beliefs on a particular topic
 are put to question (e.g., after observing relevant evidence, or following a targeted intervention), the degree 
@@ -235,7 +237,7 @@ understanding here is limited.
     table.hline(stroke: 0.7pt),
     [Parenting and medicine], [Parental protectiveness], [],
     [], [Parental expertise], [i.e., that parents usually know more about their children's health than medical experts],
-    [], [Medical skepticism], [Including concerns about pharmaceutical companies and corruption in the medical community],
+    [], [Medical scepticism], [Including concerns about pharmaceutical companies and corruption in the medical community],
     table.hline(stroke: 0.7pt),
     [Worldviews], [Naturalism], [Preference for natural over artificial things],
     [], [Holistic balance], [Related to attitudes toward alternative medicine],
@@ -246,7 +248,9 @@ understanding here is limited.
 
 = The nature and structure of European belief systems: exploring the varieties of belief systems across 23 European countries @vannoordNatureStructureEuropean2025
 
-*Overview:*
+*Overview:* The authors present a 'bottom-up' method for identifying (population-aggregate) belief systems 
+within and between populations, based on shared correlational structures rather than particular belief 
+states. They use this method to analyse existence and similarity of belief systems across Europe. 
 
 *Tasks:*
 - They use correlational class analysis @boutylineImprovingMeasurementShared2017 to identify groups of people 
@@ -257,10 +261,11 @@ understanding here is limited.
     what would a positive result in the CCA imply if we permit causal relations for the same data?
 - Review the Bayesian phylogenetic tree inference. Could a similar approach be used to identify connections in how
   the belief systems identified by CCA have evolved? Or perhaps a more standard phylogenetic tree inference algorithm? 
+- Their analysis is quite complex. Will need to re-read this paper in detail, and make notes on their methods.
+- Review Statistical Rethinking on Latent Factor analysis. Possibly another approach to identifying 
+  common threads?
 
-*Audience:* 
-
-*Problem context:* 
+*Audience:* Social psychology, cognitive modelling
 
 *Problem:* Belief system research has predominantly focused on single countries, and often the US. We have 
 limited insight into whether and how belief systems vary between countries.
@@ -274,9 +279,62 @@ limited insight into whether and how belief systems vary between countries.
 - Which demographic groups are likely to have similar belief systems _within_ countries?
 - How are belief systems related to voting behaviour?
 
-*Claims and contributions:*
+*Methods:*
+- _Identifying belief systems:_ #link("https://henry-zwart.github.io/msc_thesis/glossary/#cca")[Correlational class analysis (CCA)]
+  per country to identify *clusters of individuals* based on how their beliefs relate to one another 
+  (i.e., they may not hold the same beliefs, but their beliefs are correlated in the same ways). The clusters represent belief systems.
+- _Structure of a belief system:_ For each correlational class (cluster of individuals), authors produce
+  a correlation matrix relating beliefs to beliefs. This can be viewed as a network, where strong positive
+  (negative) edges reflect strong positive (negative) correlations between beliefs.
+- _Identifying similar belief systems:_ Authors calculate Pearson correlation between each pair of belief 
+  systems, across all countries. The resulting correlation matrix reflects the similarity between each 
+  pair of belief systems. Authors cluster the corresponding network to identify groups of similar belief 
+  systems.
+- _How many dimensions per belief system:_ PCA on each belief system separately. Then factor analysis to 
+  determine possible number of "meta-dimensions" that organise the identified principal components.
+- _What are the underlying dimensions:_ Finding little support for a 1D belief-system, authors consider 
+  the two-factor solution to factor analysis (above), counting how often two beliefs have $> 0.3$ loading 
+  on the same dimension (factor).
+- _How are the dimensions related to one another:_ *Didn't quite understand, as it relied on 
+  understanding the prior analysis classifying the underlying dimensions, and I did not quite 
+  get this.*
+
+*Findings:*
+- _Number of belief systems:_ 70 across 23 countries, with 2---5 per country. 
+- _Groups of systems:_ Two clusters of belief systems.
+- _Similarity between belief systems:_ Across all countries, between-belief system correlation is 
+  in $[-0.053, 0.792]$ with a mean of $0.326$. So some similar belief systems, but lots of variation.
+- _Within-cluster similarity:_ Group 1 more similar than Group 2.
+- _Constraint (structuredness):_ Similar mean #glossary("density")[density] between the groups. 
+  Within each group there exists more variation in density. Key finding: main difference between groups 
+  is not their structuredness.
+- _How many dimensions per belief system:_ 
+  - PCA: Between 6 and 9 per belief system with eigenvalues $> 1$.
+  - Factor analysis: Almost all belief systems in Europe multidimensional.
+- _What are the underlying dimensions:_ Belief-pairs with high loading ($> 0.3$) on a given factor 
+  typically both economic or both cultural. Suggests factors describe economic or cultural dimensions 
+  rather than a mix.
+  - *Struggled to understand this section --- to review*
+- _How do dimensions relate to each other:_ In Group 1 right-wing cultural beliefs tend to go with 
+  right-wing economic beliefs, while in Group 2 right-wing cultural beliefs tend to go with left-wing 
+  economic beliefs. However, the correlations are small. Likely due to many factors not classified as 
+  cultural or economic --- if these follow a different logic then their correlations are unlikely to be 
+  in-line with cultural or economic factors.
+
+*Claims and contributions:* 
+- (Contribution) A 'bottom-up' method for analysing the belief systems held _within_ a population 
+  and _between_ populations.
+- (Contribution) Qualitative analysis of the variation in, and types of belief systems present across 
+  Europe.
+- (Claim) Belief systems in Europe can be broadly categorised into two groups, one of which exhibits 
+  positive correlation between cultural and economic dimensions (i.e., right-wing goes with right-wing), 
+  and one of which exhibits negative correlation. These types were also associated with various 
+  demographic features (in particular *education*), and geographic location in Europe.
 
 *Limitations:*
+- Only considers bidirectional correlations
+- Some potential statistical methodological issues in analysis (treating demographic variables as 
+  independent; excluding data with 'zeroes' rather than modelling it)
 
 *Connections to other research:*
 - Mark Brandt is a co-author, and authored several other papers we consider here @brandtWhatCentralPolitical2019 
@@ -284,3 +342,6 @@ limited insight into whether and how belief systems vary between countries.
 - Cites Converse, like many of the other papers we have considered. 
 
 *Other notes:*
+- Survey questions selected from the 2016 European Social Survey, comprising question to test both 
+  #glossary("operational-component")[operational] and #glossary("symbolic-component")[symbolic] components
+  of belief systems.
