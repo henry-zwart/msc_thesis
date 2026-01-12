@@ -259,5 +259,7 @@ and negative antecedents is identical, and equal to the interaction energy of a 
 - Confirm examiner (Johan Bollen) and assessor (Sara Constantino)
 - Final draft of project proposal
 
+# References
+
 \bibliography
 
