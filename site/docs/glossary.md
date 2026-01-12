@@ -37,6 +37,18 @@ relevant to the project:
 
 : Reliance on carbon-based resources [@leeVariationsClimateChange2025].
 
+`Centrality (of a node in a network)` { #network-node-centrality }
+
+: Brandt et al.[@brandtWhatCentralPolitical2019] (2019) use three measures of node centrality 
+  in the context of a network belief system. 
+  
+    + Strength centrality: The sum of absolute edge weights connecting directly to the node.
+
+    + Closeness centrality: The inverse sum of (shortest) distances to every other node.
+
+    + Betweenness centrality: The number of shortest paths between _other_ pairs of nodes, which 
+      contain this node.
+
 `Constraint-satisfaction models of attitudes`
 
 : TODO
