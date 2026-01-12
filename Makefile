@@ -12,7 +12,7 @@ REPORTS = \
 SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
           $(wildcard site/**/*.css) $(wildcard site/**/*.js)
 
-.PHONY: clean serve
+.PHONY: clean serve extract-rdata all-reports
 
 all: site/site/index.html
 
@@ -62,6 +62,12 @@ outputs/reports: outputs
 
 outputs:
 	@mkdir outputs
+
+
+# Extract climate attitudes Rdata 
+extract-rdata: analysis/extract_ca_data.r
+	@$(MAKE) results -C analysis
+
 
 # Remove all generated files 
 clean: 
