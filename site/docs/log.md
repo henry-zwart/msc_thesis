@@ -1,10 +1,12 @@
 ## Jan 12 - Jan 18 2026
 ### Monday
+- Finished reading papers from Sara ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26)).
+- Assessing for similar variables in climate attitudes dataset ([#27](https://github.com/henry-zwart/msc_thesis/issues/27)).
 
 #### Weekly standup
 Completed last week:
 
-- Reading papers from Sara; ongoing, completed 4.5/5 ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26))
+- Reading papers from Sara; ongoing, completed $4.5/5$ ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26))
 - Started 'reading summaries' document for critical reflection and notes on papers
 
 This week:
@@ -256,3 +258,6 @@ and negative antecedents is identical, and equal to the interaction energy of a 
 ### Saturday
 - Confirm examiner (Johan Bollen) and assessor (Sara Constantino)
 - Final draft of project proposal
+
+\bibliography
+
