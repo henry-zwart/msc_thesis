@@ -2,6 +2,15 @@
 ### Monday
 
 #### Weekly standup
+Completed last week:
+- Reading papers from Sara; ongoing, completed 4.5/5 ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26))
+- Started 'reading summaries' document for critical reflection and notes on papers
+
+This week:
+- Finish reading papers from Sara ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26))
+- Assess climate attitudes data for similar vars/beliefs as in above papers [#27](https://github.com/henry-zwart/msc_thesis/issues/27)
+- Review, summarise model families for belief modelling [#31](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=148672585&issue=henry-zwart%7Cmsc_thesis%7C31)
+- Continue broader literature review reading [#28](https://github.com/henry-zwart/msc_thesis/issues/28)
 
 ## Jan 5 - Jan 11 2026
 ### Summary

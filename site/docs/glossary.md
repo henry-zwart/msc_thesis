@@ -20,10 +20,10 @@ relevant to the project:
   are related to one another, _but not_ the extent to which the beliefs are endorsed \[by an individual 
   or at a population-aggregate level\].
 
-  **Structure:** Belief systems are said to be _structured_ if they have typically strong correlations 
-  between beliefs, and _unstructured_ if they have weak or no discernible correlations. We can also speak 
-  of the degree to which the relations between beliefs _constrain_ the values those beliefs are likely to 
-  obtain (ibid.).
+    **Structure:** Belief systems are said to be _structured_ if they have typically strong correlations 
+    between beliefs, and _unstructured_ if they have weak or no discernible correlations. We can also speak 
+    of the degree to which the relations between beliefs _constrain_ the values those beliefs are likely to 
+    obtain (ibid.).
 
 `Behaviour`
 
@@ -51,8 +51,15 @@ relevant to the project:
 
 `Density (of a belief system)` { #density-of-belief-system }
 
-: A measure of structure, or constraint in a belief system. The average absolute correlation between 
-  pairs of beliefs. (cf. [@vannoordNatureStructureEuropean2025])
+: A measure of structure, or constraint in a belief system. Defined variously:
+    - The average absolute correlation between pairs of beliefs [@vannoordNatureStructureEuropean2025].
+    - The summed absolute correlation between pairs of beliefs, as a proportion of maximum possible 
+      value [@leeVariationsClimateChange2025].
+
+`Inconsistency (of a belief system)` { #inconsistency-of-belief-system }
+
+: A measure of conflict within a belief system. Measured as the sum of absolute negative edge weights
+  between pairs of beliefs, as a proportion of the maximum possible value [@leeVariationsClimateChange2025].
 
 `Intuitive theory`{ #intuitive-theory }
 
@@ -94,7 +101,7 @@ relevant to the project:
 : "The practice of registering the hypotheses, methods, or analyses of a scientific study before 
   it is conducted."[@wikipediacontributorsPreregistrationScienceWikipedia2025]
 
-`Regularised partial correlation network`
+`Regularised partial correlation network` { #partial-correlation-network }
 
 : TODO
 
