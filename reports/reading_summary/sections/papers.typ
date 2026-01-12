@@ -6,35 +6,47 @@
 
 #let glossary(term, body) = link("https://henry-zwart.github.io/msc_thesis/glossary/#" + term, body)
 
-// // A paragraph or two describing what the authors intention was, their method, findings, and any important notes, limitations, 
+// // A paragraph or two describing what the authors intention was, their method, 
+// // findings, and any important notes, limitations, 
 // // or implications.
 // *Overview:*
 //
-// // Follow-up tasks for me to do, based on reading of this paper. Excluding additional reading (see tagged notes on Zotero).
+// // Follow-up tasks for me to do, based on reading of this paper. Excluding 
+// // additional reading (see tagged notes on Zotero).
 // *Tasks:*
 //
-// // Who are the intended readers of the paper? i.e., whose minds are the authors attempting to change?
+// // Who are the intended readers of the paper? i.e., whose minds are the 
+// // authors attempting to change?
 // *Audience:* 
 //
-// // If necessary, what extra info is necessary to understand the problem (below)?
+// // If necessary, what extra info is necessary to understand the problem 
+// // (below)?
 // *Problem context:* 
 //
-// // What problem, conflict, or gap have the authors identified in the literature?
+// // What problem, conflict, or gap have the authors identified in the 
+// // literature?
 // *Problem:* 
 //
 // // What do the authors hope to learn?
 // *Intent:* 
 //
-// // What specific questions are they asking, in order to satisfy the intent? 
+// // What specific questions are they asking, in order to satisfy the 
+// // intent? 
 // *Research questions:* 
 //
-// // What conclusions did they draw based on their results? What other contributions were made (e.g., a method for evaluation, or a new model)?
+// // Outline of main methods/analysis
+// *Methods:*
+//
+// // What conclusions did they draw based on their results? What other 
+// // contributions were made (e.g., a method for evaluation, or a new model)?
 // *Claims and contributions:*
 //
-// // What were the key (relevant) limitations of the study? Did you identify any potential issues?
+// // What were the key (relevant) limitations of the study? Did you 
+// // identify any potential issues?
 // *Limitations:*
 //
-// // Whose research did they build on? Did they compare to anyone in particular?
+// // Whose research did they build on? Did they compare to anyone in 
+// // particular?
 // *Connections to other research:*
 //
 // *Other notes:*
@@ -345,3 +357,109 @@ limited insight into whether and how belief systems vary between countries.
 - Survey questions selected from the 2016 European Social Survey, comprising question to test both 
   #glossary("operational-component")[operational] and #glossary("symbolic-component")[symbolic] components
   of belief systems.
+
+= Variations in climate change belief systems across 110 geographic areas @leeVariationsClimateChange2025
+
+// A paragraph or two describing what the authors intention was, their method, 
+// findings, and any important notes, limitations, or implications.
+*Overview:* The authors infer population-aggregate climate change belief systems for countries around 
+the globe, modelled as regularised partial correlation networks. They analyse differences in belief 
+system stability (#glossary("density-of-belief-system")[density]) and 
+#glossary("inconsistency-of-belief-system")[inconsistency], to illuminate possible areas for belief 
+intervention. They find geographic variation in density (higher in the global north), and inconsistencies
+particularly relating to fossil fuel usage. Density is positively correlated with education and GDP, while 
+inconsistency correlates positively with #glossary("carbon-resource-rent")[carbon resource rent] and 
+negatively with education.
+
+// Follow-up tasks for me to do, based on reading of this paper. Excluding 
+// additional reading (see tagged notes on Zotero).
+*Tasks:*
+- Read about problems with inferring individual-level insights from population-level 
+  belief models @brandtBetweenpersonMethodsProvide2022.
+- Consider differences between causal belief relations and implication relations.
+- Review Statistical rethinking chapter on social networks, or network inference work from 
+  McElreath. May be applicable to inferring networks of belief.
+- Consider different intentions for intervention. Could attempt to change beliefs (node values), 
+  or to change belief system (edge values).
+- Authors hypothesise that lack of association between education and density may be due to 
+  population aggregation. We should consider this in our work.
+
+// Who are the intended readers of the paper? i.e., whose minds are the 
+// authors attempting to change?
+*Audience:* Cognitive modelling, social psychology
+
+// What problem, conflict, or gap have the authors identified in the 
+// literature?
+*Problem:* Population-level climate action requires individual belief systems to be aligned with 
+this. Conflicting beliefs or doubt about climate change can hinder this. Furthermore, the structure
+and resilience of belief systems can affect the effectiveness and outcome of interventions. However, 
+there is limited research on these properties, and even less considering possible geographical variation.
+This limits our ability to understand the effects of intervention, and how these may vary in different 
+contexts or locations.
+
+// What do the authors hope to learn?
+*Intent:* Identify cross-societal differences in the stability and coherence of climate change 
+belief systems around the globe.
+
+// What specific questions are they asking, in order to satisfy the 
+// intent? 
+*Research questions:* 
+- How does density (reflecting stability) of belief systems vary by country, global north/south 
+  divide, and other societal factors (below)
+- How does inconsistency (reflecting belief-pair conflicts) of belief systems vary by country, global north/south 
+  divide, and other societal factors (below)
+Additional factors: education level, exposure to climate change information, GDP, 
+#glossary("carbon-resource-rent")[carbon resource rent].
+
+*Methods:*
+- A belief system for each area was estimated using eight key climate-related 
+  beliefs and attitudes commonly assessed in public surveys.
+- Network edges were determined through 
+  #glossary("partial-correlation-network")[partial correlations] among these 
+  elements.
+- Uses proportional measures of belief system #glossary("density-of-belief-system")[density]
+  and #glossary("inconsistency-of-belief-system")[inconsistency].
+- Data from survey of Facebook users (n=99,074)
+
+// What conclusions did they draw based on their results? What other 
+// contributions were made (e.g., a method for evaluation, or a new model)?
+*Claims and contributions:*
+- Countries in the global north exhibit more interconnected belief systems (more large edges) 
+  than those in other regions.
+- Density varies significantly by region; typically higher in global north, reflecting more stable 
+  belief systems.
+- Level of interconnection correlates negatively with pro-climate beliefs and attitudes. i.e., 
+  - More stable (population-level) belief systems are typically more anti-climate, typically in the 
+    global north.
+  - Low density, pro-climate is more typical in the global south, reflecting supportive but less 
+    stable systems.
+- Inconsistencies centre around fossil fuel use, and:
+  - Renewable energy support (Nigeria, Zambia, the Philippines, and Jordan), suggesting support for 
+    renewable energy use, but not for reducing fossil fuel usage.
+  - Support for governmental climate priority (Laos, Kuwait, Vietnam, Jordan), suggesting support for 
+    the government making climate change a priority, but not for reducing fossil fuel usage.
+- Belief system stability (density) is positively correlated with information exposure relating to 
+  climate change, and GDP. It is not correlated with education or carbon resource rent.
+- Belief system inconsistency is correlated _negatively_ with information exposure relating to climate 
+  change, and _positively_ with carbon resource rent. Suggests higher economic dependence on carbon 
+  resources begets more inconsistency.
+
+// What were the key (relevant) limitations of the study? Did you identify 
+// any potential issues?
+*Limitations:*
+- Population-level aggregate belief-systems.
+- No causal model in analysis of factors, though some could reasonably be hypothesised to be causally 
+  related (e.g., education and information exposure).
+- Their 'inconsistency' measure is taken as the absolute proportion of negative correlations. This 
+  assumes all beliefs are coded such that high or low values all correspond to the same situation (pro- 
+  or anti-climate). Hence this measure only measures inconsistency with respect to the variable of 
+  interest, and is not applicable when beliefs may conflict on other dimensions (e.g., cost, social 
+  impact, ideology).
+
+// Whose research did they build on? Did they compare to anyone in 
+// particular?
+*Connections to other research:*
+- Cross-regional variation in belief systems also considered for European nations in 
+  @vannoordNatureStructureEuropean2025, though they were more concerned with meta-level similarity and 
+  relationships between belief systems, and qualitative 'dimensions', than structural properties.
+

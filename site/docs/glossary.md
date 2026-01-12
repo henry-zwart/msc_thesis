@@ -33,6 +33,10 @@ relevant to the project:
 
 : TODO
 
+`Carbon resource rent`
+
+: Reliance on carbon-based resources [@leeVariationsClimateChange2025].
+
 `Constraint-satisfaction models of attitudes`
 
 : TODO
