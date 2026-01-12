@@ -1,7 +1,7 @@
 ## Jan 12 - Jan 18 2026
 ### Monday
 - Finished reading papers from Sara ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26)).
-- Assessing for similar variables in climate attitudes dataset ([#27](https://github.com/henry-zwart/msc_thesis/issues/27)).
+- Assessing for similar variables in climate attitudes dataset ([#32](https://github.com/henry-zwart/msc_thesis/issues/32)).
 
 #### Weekly standup
 Completed last week:
