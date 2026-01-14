@@ -70,7 +70,7 @@ pairwise.
   caption: [Model, context, and intentions of (considered) papers on data-driven belief models. Models: #strong[R]egularised #strong[p]artial #strong[c]orrelation #strong[n]etwork (*R-PCN*), #strong[C]onceptual #strong[S]imilarity #strong[N]etwork (*CSN*), #strong[B]ayesian #strong[N]etwork (*BN*). Belief systems aggregated at varying levels --- non-individual aggregations to be thought of as general trends/statistical associations.],
 ) <tab:data-driven-belief-models-overview>
 
-== Brandt (2022) statistical control issues
+=== Brandt (2022) statistical control issues
 We identified potential methodological issues in the choice of control variables for the statistical analysis 
 in #cite(<brandtMeasuringBeliefSystem2022>, form: "prose"). In this study the authors regress survey 
 participants' conceptual association ratings for belief pairs on a number of individual difference factors 
@@ -142,9 +142,13 @@ variables. We will summarise the estimands, choice of controls, and correct cont
 they separate the the analysis according to belief-pair ideological consistency ($T_p$) and experimental 
 condition ($C_i$), controlling for both factors. 
 
+Importantly, we stress that this is one plausible DAG for which the discussed issues may be problematic. 
+It is possible that the authors have different causal assumptions for which these controls are correct. Our 
+critique is that unless these assumptions are made explicit, some results have ambiguous interpretation and 
+significance.
 
 
-=== $E_i --> R_(i,p)$
+==== 1. $E_i --> R_(i,p)$
 The authors first investigate the effect of political engagement 
 on rating. They control for $E_i$, but leave open a backdoor path through $I_i$ (according to our assumed model 
 in @fig:brandt-2022-dag). If political engagement varies with ideological identification then the measured 
@@ -152,13 +156,13 @@ effect will be biased. The correct control set to estimate the _total_ effect is
 intend to measure the _direct_ effect (i.e., excluding the portion of the effect due to influence of political 
 engagement on political knowledge), they should also control for $K_i$.
 
-=== $K_i --> R_(i,p)$
+==== 2. $K_i --> R_(i,p)$
 They then estimate the effect of political _knowledge_ on rating, controlling for $K_i$, leaving open a 
 backdoor path through $E_i$. The correct control set is ${K_i, E_i, I_i}$. They observe a similar effect 
 here as in the first study; however, since this includes the effect of political engagement this is not 
 measuring the effect of interest. 
 
-=== $I_i --> R_(i,p)$ and $X^I_i --> R_(i,p)$
+==== 3. $I_i --> R_(i,p)$ and $X^I_i --> R_(i,p)$
 Thirdly, they investigate two estimands with the same model, i.e., the effects of ideological 
 identification and partisan identification, controlling for $I_i$ and $X^I_i$. These controls are correct 
 for estimating the effect of $X^I_i$, but not for $I_i$. 
@@ -169,7 +173,7 @@ political engagement, etc.). If they intend to measure the _direct_ effect, then
 ${I_i, P_i, E_i, X^I_i}$. If they intend to measure the _total_ effect, then the correct control set 
 ${I_i}$ excludes $X^I_i$.
 
-=== $P_i --> R_(i,p)$ and $X^P_i --> R_(i,p)$
+==== 4. $P_i --> R_(i,p)$ and $X^P_i --> R_(i,p)$
 As above, they investigate two estimands with a single model, controlling for $P_i$ and $X^P_i$. We treat 
 these two estimands separately.
 
