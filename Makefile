@@ -1,3 +1,6 @@
+# Expand prerequisites twice, so that we capture the '%' in wildcards
+.SECONDEXPANSION:
+
 # Each recipe runs in a single shell.
 .ONESHELL:
 
@@ -8,13 +11,20 @@ REPORTS = \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
 		$(patsubst %,outputs/slides/%.pdf, $(PRESENTATION_TYPES))
 
+SITE_REPORT_TYPES := proposal
+SITE_PRESENTATION_TYPES := project_plan
+SITE_REPORTS = \
+		$(patsubst %,outputs/reports/%.pdf, $(SITE_REPORT_TYPES)) \
+		$(patsubst %,outputs/slides/%.html, $(SITE_PRESENTATION_TYPES)) \
+		$(patsubst %,outputs/slides/%.pdf, $(SITE_PRESENTATION_TYPES))
+
 
 SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
           $(wildcard site/**/*.css) $(wildcard site/**/*.js)
 
 .PHONY: clean serve extract-rdata all-reports
 
-all: site/site/index.html
+all: site/site/index.html all-reports
 
 all-reports: $(REPORTS)
 
@@ -23,7 +33,7 @@ serve:
 	uv run --group docs mkdocs serve -f site/mkdocs.yml
 
 # Build site
-site/site/index.html: $(REPORTS) $(SITE_SOURCES)
+site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 	@printf "Site    → Copying sources...\n"
 	@for d in site/docs/reports site/docs/slides; do \
 	  if [ -e "$d" ]; then \
@@ -38,7 +48,9 @@ site/site/index.html: $(REPORTS) $(SITE_SOURCES)
 
 
 # Compile project reports
-outputs/reports/%.pdf: | outputs/reports
+outputs/reports/%.pdf: reports/%/main.typ \
+			$$(wildcard reports/%/sections/*.typ) \
+			| outputs/reports
 	@printf "Compile → Report '$*'.\n"
 	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
 
