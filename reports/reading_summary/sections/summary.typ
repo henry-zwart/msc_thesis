@@ -82,12 +82,12 @@ linear regression (which would imply an independence assumption).
 
 Let $i$ refer to some survey participant, and $p$ a pair of beliefs. The response variable is the individual's conceptual 
 similarity rating for the belief pair ($R_(i,p)$). Individuals are characterised by:
-- #strong[I]deological identification (liberal $<-->$ conservative): $I_i$, 
-- #strong[I]deological e#strong[X]tremity: $X^I_(i)$,
-- #strong[P]arty identification (democrat $<-->$ republican): $P_i$,
-- #strong[P]artisan e#strong[X]tremity: $X^P_(i)$,
-- Political #strong[E]ngagement level: $E_i$, and
-- Political #strong[K]nowledge: $K_i$.
+- $I_i$: #strong[I]deological identification (liberal $<-->$ conservative), 
+- $X^I_i$: #strong[I]deological e#strong[X]tremity,
+- $P_i$: #strong[P]arty identification (democrat $<-->$ republican),
+- $X^P_i$: #strong[P]artisan e#strong[X]tremity,
+- $E_i$: Political #strong[E]ngagement level, and
+- $K_i$: Political #strong[K]nowledge.
 Ideological and partisan extremity factors are constructed from the corresponding identification factors by 
 '"folding over" the measure' @brandtMeasuringBeliefSystem2022[p.~838]. Participants are assigned randomly to 
 one of two experimental #strong[C]onditions#footnote[
