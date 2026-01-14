@@ -53,9 +53,6 @@
 
 == What is Central to Political Belief System Networks @brandtWhatCentralPolitical2019
 
-*Tasks:*
-- Look into partial correlation networks, and contrast with Ising model
-
 *Audience:* Quantitative political science and sociology
 
 *Problem:* Prior attempts to determine central components of political belief systems do not typically consider the global network structure of belief systems, so may falsely identify peripheral relationships between beliefs/attitudes as central.
@@ -96,13 +93,6 @@
 
 == Measuring the belief system of a person @brandtMeasuringBeliefSystem2022
 
-
-*Tasks*
-- Possibly re-run analysis with suggested fix for controls.
-- Brandt mentions a measure for 'attitude consistency', which I do not yet understand. See 'Procedures and 
-  Methods', page 835.
-- Consider risks of excluding data from climate attitudes survey due to missing responses or participants. 
-  This is likely not missing-at-random.
 
 *Audience:* Political belief systems/sociology
 
@@ -154,15 +144,6 @@ Using the fit model, the authors perform several experiments testing its adequac
 intervention, and observation of evidence, on both the target belief and auxiliary beliefs. This includes replicating
 an existing study shown to be effective at shifting vaccination intentions, and a novel study for the same purpose, 
 where the authors instead intervened on a belief predicted by the model to be promising for intervention.
-
-
-*Tasks:*
-- Fit directed Ising model to same dataset --- do we get the same graph?
-- Review interaction models in Statistical Rethinking textbook
-- Investigate differences between Bayesian networks and Ising models. How are they representationally different?
-  What are the implications? Perhaps summarise the two model families in a separate document.
-- In the 'broader implications' section, the authors suggest questions we might ask to infer belief networks 
-  related to climate change. Compare this list against the variables in our data.
 
 *Audience:* Cognitive modelling, applied and theoretical psychology
 
@@ -249,19 +230,6 @@ understanding here is limited.
 *Overview:* The authors present a 'bottom-up' method for identifying (population-aggregate) belief systems 
 within and between populations, based on shared correlational structures rather than particular belief 
 states. They use this method to analyse existence and similarity of belief systems across Europe. 
-
-*Tasks:*
-- They use correlational class analysis @boutylineImprovingMeasurementShared2017 to identify groups of people 
-  whose beliefs are correlated similarly (but who may differ in what those beliefs are). 
-  + Could we modify this method to identify such groups in a causal setting? i.e., considering implication rather 
-    than correlation?
-  + Alternatively, could the correlational analysis results be used to inform a subsequent causal analysis. i.e.,
-    what would a positive result in the CCA imply if we permit causal relations for the same data?
-- Review the Bayesian phylogenetic tree inference. Could a similar approach be used to identify connections in how
-  the belief systems identified by CCA have evolved? Or perhaps a more standard phylogenetic tree inference algorithm? 
-- Their analysis is quite complex. Will need to re-read this paper in detail, and make notes on their methods.
-- Review Statistical Rethinking on Latent Factor analysis. Possibly another approach to identifying 
-  common threads?
 
 *Audience:* Social psychology, cognitive modelling
 
@@ -359,16 +327,6 @@ negatively with education.
 
 // Follow-up tasks for me to do, based on reading of this paper. Excluding 
 // additional reading (see tagged notes on Zotero).
-*Tasks:*
-- Read about problems with inferring individual-level insights from population-level 
-  belief models @brandtBetweenpersonMethodsProvide2022.
-- Consider differences between causal belief relations and implication relations.
-- Review Statistical rethinking chapter on social networks, or network inference work from 
-  McElreath. May be applicable to inferring networks of belief.
-- Consider different intentions for intervention. Could attempt to change beliefs (node values), 
-  or to change belief system (edge values).
-- Authors hypothesise that lack of association between education and density may be due to 
-  population aggregation. We should consider this in our work.
 
 // Who are the intended readers of the paper? i.e., whose minds are the 
 // authors attempting to change?
