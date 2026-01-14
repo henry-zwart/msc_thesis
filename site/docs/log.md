@@ -1,4 +1,14 @@
 ## Jan 12 - Jan 18 2026
+
+### Wednesday
+- ([#33](https://github.com/henry-zwart/msc_thesis/issues/33)) Finished general overview of papers from 
+  Sara, sent to Vítor. Still need to write about survey questions in light of climate attitudes dataset.
+- Catch-up with Kyuri.
+
+### Tuesday
+- ([#33](https://github.com/henry-zwart/msc_thesis/issues/33)) Overview writeup of the papers from Sara, 
+  including the possible methodological issue in Brandt (2022)[@brandtMeasuringBeliefSystem2022].
+
 ### Monday
 - Finished reading papers from Sara ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26)).
 - Assessing for similar variables in climate attitudes dataset ([#32](https://github.com/henry-zwart/msc_thesis/issues/32)).
@@ -22,8 +32,8 @@ This week:
 - A somewhat slow week, on account of a snowy Amsterdam, and easing back into study.
 - Mostly working through the papers Sara shared prior to the holiday ([#26](https://github.com/users/henry-zwart/projects/5?pane=issue&itemId=145733292&issue=henry-zwart%7Cmsc_thesis%7C26)):
     - Progress: $3.5/5$ read, with plan to finish the remaining ones before Monday.
-    - I noticed some potential methodological issues in Brandt et al. 
-      2019[@brandtWhatCentralPolitical2019]. To discuss with Vítor?
+    - I noticed some potential methodological issues in Brandt 
+      2022[@brandtMeasuringBeliefSystem2022]. To discuss with Vítor?
 - Some minor workflow updates:
     - Started writing short summaries for each paper, including some critical reflection, with 
       the intention that these feed into my writing later down the track (to view: 
@@ -160,7 +170,7 @@ $$h_{p\to q}' = \omega_{p\to q} \cdot [1 - p(1-q)]$$
 Suppose that belief states are $1$ (believes) and $0$ (doesn't believe), then these relations are defined by 
 the following truth table
 
-<div class="centre-table" markdown>
+<div class="center-table" markdown>
 
 | $p$   | $q$   | $p \implies q$   | $h_{p\to q}$ | $h_{p\to q}'$ |
 | :---: | :---: | :--------------: | :---:        | :---:         |
