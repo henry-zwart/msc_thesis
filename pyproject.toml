@@ -2,7 +2,9 @@
 name = "msc-thesis"
 version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "polars>=1.37.1",
+]
 
 [dependency-groups]
 docs = [
