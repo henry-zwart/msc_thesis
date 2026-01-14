@@ -5,7 +5,7 @@ relevant to the project:
 
 : TODO
 
-`Bayesian network model`
+`Bayesian network model` { #bayesian-network }
 
 : TODO
 
