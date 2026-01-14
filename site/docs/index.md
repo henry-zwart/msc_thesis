@@ -20,7 +20,9 @@ the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 
 ### Reports:
 
+<!-- INFO: The {:target="_blank"} part ensures the file opens in a separate tab.-->
 - [Project proposal](reports/proposal.pdf){:target="_blank"}
+- Reading summaries ([Draft](https://github.com/henry-zwart/msc_thesis/blob/main/outputs/reports/reading_summary.pdf){:target="_blank"})
 
 ### Presentations:
 Each presentation is available in both HTML (for presenting) and PDF (e.g. for handouts).
