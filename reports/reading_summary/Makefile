@@ -2,7 +2,7 @@ COMPILE_ARGS ?= --root "$$(pwd)"
 
 .PHONY: clean preview
 
-REPORT_FILES = main.typ lib.typ
+REPORT_FILES = main.typ lib.typ $(wildcard sections/*.typ)
 
 all: main.pdf 
 

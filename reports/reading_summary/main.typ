@@ -21,10 +21,12 @@
 #show table.cell.where(y: 0): set text(weight: "bold")
 
 #outline()
+#pagebreak()
 
-#show heading.where(level: 1): it => {
-  pagebreak()
-  it
-}
 
+= Research summaries
+#include "sections/summary.typ"
+#pagebreak()
+
+= Critical reflection
 #include "sections/papers.typ"

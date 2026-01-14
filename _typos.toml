@@ -10,3 +10,5 @@ Vitor = "Vítor"
 [default.extend-identifiers]
 powellModelingLeveragingIntuitive2023 = "powellModelingLeveragingIntuitive2023"
 powellModellingLeveragingIntuitive2023 = "powellModelingLeveragingIntuitive2023"
+center = "center"
+centre = "center"

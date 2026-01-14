@@ -51,8 +51,7 @@
 //
 // *Other notes:*
 
-
-= What is Central to Political Belief System Networks @brandtWhatCentralPolitical2019
+== What is Central to Political Belief System Networks @brandtWhatCentralPolitical2019
 
 *Tasks:*
 - Look into partial correlation networks, and contrast with Ising model
@@ -95,20 +94,7 @@
 - The networks do not attempt to describe belief systems of individuals, but rather variation across the population.
 
 
-#definition(title: [Strength centrality @brandtWhatCentralPolitical2019])[
-  For a node in a belief system, the sum of absolute edge weights connecting directly to the node.
-] <def:brandt-strength-centrality>
-
-#definition(title: [Closeness centrality @brandtWhatCentralPolitical2019])[
-  For a node in a belief system, the inverse sum of (shortest) distances to each other node.
-] <def:brandt-closeness-centrality>
-
-#definition(title: [Betweenness centrality @brandtWhatCentralPolitical2019])[
-  For a node in a belief system, the number of shortest paths between other pairs of nodes, which contain
-  this node.
-] <def:brandt-betweenness-centrality>
-
-= Measuring the belief system of a person @brandtMeasuringBeliefSystem2022
+== Measuring the belief system of a person @brandtMeasuringBeliefSystem2022
 
 
 *Tasks*
@@ -148,7 +134,7 @@ estimating individual belief system structure in a political belief context?
 
 *Possible error in choice of Controls* (Notes, causal DAG on iPad)
 
-= Modelling and leveraging intuitive theories to improve vaccine attitudes @powellModelingLeveragingIntuitive2023
+== Modelling and leveraging intuitive theories to improve vaccine attitudes @powellModelingLeveragingIntuitive2023
 
 *Overview:* Per the Duhem-Quine underdetermination thesis, when an individual's beliefs on a particular topic
 are put to question (e.g., after observing relevant evidence, or following a targeted intervention), the degree 
@@ -258,7 +244,7 @@ understanding here is limited.
   caption: [Psychometric scales used in a Study 1 of @powellModelingLeveragingIntuitive2023.]
 )
 
-= The nature and structure of European belief systems: exploring the varieties of belief systems across 23 European countries @vannoordNatureStructureEuropean2025
+== The nature and structure of European belief systems: exploring the varieties of belief systems across 23 European countries @vannoordNatureStructureEuropean2025
 
 *Overview:* The authors present a 'bottom-up' method for identifying (population-aggregate) belief systems 
 within and between populations, based on shared correlational structures rather than particular belief 
@@ -358,7 +344,7 @@ limited insight into whether and how belief systems vary between countries.
   #glossary("operational-component")[operational] and #glossary("symbolic-component")[symbolic] components
   of belief systems.
 
-= Variations in climate change belief systems across 110 geographic areas @leeVariationsClimateChange2025
+== Variations in climate change belief systems across 110 geographic areas @leeVariationsClimateChange2025
 
 // A paragraph or two describing what the authors intention was, their method, 
 // findings, and any important notes, limitations, or implications.
@@ -433,7 +419,7 @@ Additional factors: education level, exposure to climate change information, GDP
     global north.
   - Low density, pro-climate is more typical in the global south, reflecting supportive but less 
     stable systems.
-- Inconsistencies centre around fossil fuel use, and:
+- Inconsistencies center around fossil fuel use, and:
   - Renewable energy support (Nigeria, Zambia, the Philippines, and Jordan), suggesting support for 
     renewable energy use, but not for reducing fossil fuel usage.
   - Support for governmental climate priority (Laos, Kuwait, Vietnam, Jordan), suggesting support for 

@@ -167,3 +167,5 @@
 // - Shows in a different colour from main text (luma(140), grey)
 // - Can be hidden by passing `hide_plan: true` to proposal template
 #let plan(body) = [#text(body) <plan>]
+
+#let glossary(term, body) = link("https://henry-zwart.github.io/msc_thesis/glossary/#" + term, body)
