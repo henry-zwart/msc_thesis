@@ -3,7 +3,12 @@ name = "msc-thesis"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "fastexcel>=0.18.0",
+    "jupyterlab>=4.5.2",
+    "pandas>=2.3.3",
     "polars>=1.37.1",
+    "pyarrow>=22.0.0",
+    "sqlalchemy>=2.0.45",
 ]
 
 [dependency-groups]
