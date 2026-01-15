@@ -1,5 +1,18 @@
 ## Jan 12 - Jan 18 2026
 
+### Thursday
+- Loaded climate attitudes dataset into a database with tables for: 
+    - Waves, 
+    - Survey items: concepts assessed by the survey, 
+    - Survey questions: questions for a single 'item' may vary between waves or with experimental conditions; 
+      this table holds the question text and response format, and describes the conditions/waves for which it 
+      is shown,
+    - Participants: describes which waves they respond to, and when they joined the survey
+    - Responses: for each participant, groups their answers to a single wave of the survey
+    - Question-responses: Participants' answers to individual survey questions.
+- The database is available as both a sqlite database and a collection of parquets. 
+
+
 ### Wednesday
 - ([#33](https://github.com/henry-zwart/msc_thesis/issues/33)) Finished general overview of papers from 
   Sara, sent to Vítor. Still need to write about survey questions in light of climate attitudes dataset.
