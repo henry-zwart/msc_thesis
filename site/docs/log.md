@@ -1,7 +1,71 @@
+## Jan 19 - Jan 25 2026
+### Monday
+#### Weekly standup
+##### Last week: 
+- _(Meetings)_ Caught up with Kyuri on Wednesday to discuss reading 
+  ([#26](https://github.com/henry-zwart/msc_thesis/issues/26)) and priorities for 
+  EDA prior to meeting on Thursday (this week).
+- _(Lit review; [#26](https://github.com/henry-zwart/msc_thesis/issues/26), 
+  [#33](https://github.com/henry-zwart/msc_thesis/issues/33))_ Finished reading papers
+  from Sara, summarised in [report](https://github.com/henry-zwart/msc_thesis/blob/main/outputs/reports/reading_summary.pdf).
+- _(Lit review; [#32](https://github.com/henry-zwart/msc_thesis/issues/32))_ Assessed (above) 
+  papers for factors similar to those assessed in the climate attitudes survey. Only 
+  one study is directly comparable. Others examine different context (but may be useful 
+  for comparison at abstract level), or ask different kinds of questions (e.g., conceptual similarity
+  ratings).
+- _(EDA; [#50](https://github.com/henry-zwart/msc_thesis/issues/50))_ Loaded climate attitudes dataset
+  into a database; started on some enrichment, categorising survey items according to topic (e.g., climate change, 
+  demographics), mode (e.g., beliefs, experiences, risk perception), or similarity with papers from 
+  [#26](https://github.com/henry-zwart/msc_thesis/issues/26).
+- _(EDA; [#27](https://github.com/henry-zwart/msc_thesis/issues/27)) Started high-level EDA, looking at
+  participation patterns across survey waves, response distributions, etc.
+
+##### This week:
+- _(Data enrichment; [#52](https://github.com/henry-zwart/msc_thesis/issues/52))_ Categorise survey 
+  items' relevance to Lee et al. (2025) belief topics.
+- _(EDA; [#54](https://github.com/henry-zwart/msc_thesis/issues/54))_ Investigate responses to items from [#52](https://github.com/henry-zwart/msc_thesis/issues/52).
+    - Compare within-person variability and between-person variability.
+    - Consistency in responses to related questions.
+    - ...
+- _(Lit review; [#53](https://github.com/henry-zwart/msc_thesis/issues/53))_ Methods for estimating within-person belief relations.
+    - Population-aggregate data can indicate pairwise belief correlations which don't exist/are different
+      at individual level. This would be a problem for reasoning about intervention.
+    - Brandt et al (2022) propose using conceptual similarity ratings to estimate individuals' belief 
+      structures, as an alternative to longitudinal studies. However, I haven't read any studies using 
+      longitudinal studies for this purpose.
+- _(Lit review; [#31](https://github.com/henry-zwart/msc_thesis/issues/31))_ Reviewing model families used to model belief systems (Ising model, regularised 
+  partial correlation networks (is this the same/related?), Bayesian networks, ...?)
+- _(Meetings)_ Meeting with Vítor and Sara on Thursday (17:00--18:00).
+
+
 ## Jan 12 - Jan 18 2026
+### Summary
+- ([#26](https://github.com/henry-zwart/msc_thesis/issues/26)) Finished reading papers 
+  (suggested by Sara) on data-driven models of belief. 
+- ([#33](https://github.com/henry-zwart/msc_thesis/issues/33)) Outlined relevant 
+  takeaways from [#26](https://github.com/henry-zwart/msc_thesis/issues/26) in 
+  'reading summaries' report.
+- ([#32](https://github.com/henry-zwart/msc_thesis/issues/32)) Assessed papers from 
+  [#26](https://github.com/henry-zwart/msc_thesis/issues/26) for variables similar to 
+  those in climate attitudes dataset.
+      - Lee et al (2025) is sufficiently similar.
+      - The rest are either different in context (political beliefs; vaccination),
+        or in survey question type (e.g., conceptual similarity ratings). 
+      - Studies with different context may still be useful at an abstract level.
+- ([#50](https://github.com/henry-zwart/msc_thesis/issues/50)) Loaded climate attitudes 
+  dataset into a database to simplify querying data by participation, examining changes
+  in question text across waves, subsetting items by category, etc.
+- ([#27](https://github.com/henry-zwart/msc_thesis/issues/27)) Started basic high-level 
+  EDA. Looking at participation patterns across waves, response distributions, etc.
+
+### Friday
+- ([#32](https://github.com/henry-zwart/msc_thesis/issues/32)) Assessing papers for similar variables to those in climate attitudes dataset
+    - Only Lee et al (2025) is sufficiently similar. Rest are either non-CC-related, or ask different/specialised 
+      questions (e.g., conceptual similarity ratings).
+- ([#27](https://github.com/henry-zwart/msc_thesis/issues/27)) Started EDA on climate attitudes dataset. So far just looking at overview, e.g., participance across waves.
 
 ### Thursday
-- Loaded climate attitudes dataset into a database with tables for: 
+- ([#50](https://github.com/henry-zwart/msc_thesis/issues/50)) Loaded climate attitudes dataset into a database with tables for: 
     - Waves, 
     - Survey items: concepts assessed by the survey, 
     - Survey questions: questions for a single 'item' may vary between waves or with experimental conditions; 
