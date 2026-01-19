@@ -1,5 +1,26 @@
 ## Jan 19 - Jan 25 2026
 ### Monday
+#### Categorising CA items
+I have been categorising the CA survey items to reflect their similarity/comparability
+with the beliefs assessed in Lee et al (2025)[@leeVariationsClimateChange2025].
+- Many of the items reflect more than one belief. For instance, when we ask whether a 
+  participant takes action "X" in order to help address climate change, how they respond 
+  reflects both whether they believe climate change is happening, and whether it is human-caused.
+  At the moment I am labelling items with the belief(s) they are most directly associated with,
+  but may need to go back through and create boolean columns for each belief, to ensure comprehensivity.
+    - _Scratch that:_ I've switched to the boolean method
+- Some of the concepts assessed by Lee et al could reasonably be considered consequents of others. 
+  For instance, the degree to which an individual thinks government should prioritise climate change 
+  depends on their beliefs regarding the existence of climate change, its causes, and their perceived 
+  risk. If an individual believes in climate change, but also believes individuals can avoid its affects
+  through their own actions, they may not support government policy prioritising climate change. This 
+  affects my labelling somewhat, as some beliefs marked as "true" for a survey item are considered causes
+  of the participant's response, while others may be considered consequents. 
+- In my labelling, I write "T" to indicate a measurable relation, "T!" to indicate a relation whose 
+  direction can't be accurately determined (e.g., "have impacts of climate change influenced you to 
+  change your vote", doesn't say _how_ they changed their vote).
+
+
 #### Weekly standup
 ##### Last week: 
 - _(Meetings)_ Caught up with Kyuri on Wednesday to discuss reading 
@@ -22,7 +43,7 @@
 
 ##### This week:
 - _(Data enrichment; [#52](https://github.com/henry-zwart/msc_thesis/issues/52))_ Categorise survey 
-  items' relevance to Lee et al. (2025) belief topics.
+  items' relevance to Lee et al. (2025)[@leeVariationsClimateChange2025] belief topics.
 - _(EDA; [#54](https://github.com/henry-zwart/msc_thesis/issues/54))_ Investigate responses to items from [#52](https://github.com/henry-zwart/msc_thesis/issues/52).
     - Compare within-person variability and between-person variability.
     - Consistency in responses to related questions.
