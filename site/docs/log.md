@@ -1,4 +1,20 @@
 ## Jan 19 - Jan 25 2026
+
+### Thursday
+#### Meeting with Vítor
+Tasks:
+- Classify survey questions according to category (e.g., experience, belief, attitude, behaviour)
+    - Look for an existing classification framework, ideally with established causal relation directions
+- Lee et al. use P-CRNs which are frequency-dependent(?). 
+
+Could look again at a model of the question responses in terms of latent beliefs:
+- Belief that CC happening depends on belief that it is a scam (or maybe on trust in science, belief that climate change 
+  could cause worse extreme weather, and exposure to extreme weather; belief that it is a scam could be an alternative 
+  belief which is inconsistent with the belief that CC happening) and belief that human actions can cause climate change.
+- Beliefs may be clustered by individual (across waves), as well as age, gender, ...
+- Question is how to justify directed relations between beliefs, since this is something we wish to infer. 
+
+
 ### Monday
 #### Categorising CA items
 I have been categorising the CA survey items to reflect their similarity/comparability
