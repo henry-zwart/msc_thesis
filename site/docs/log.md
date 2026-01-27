@@ -1,3 +1,17 @@
+## Jan 26 - Feb 1  2026
+
+### Tuesday
+- Finished implementing validation code for response data (waves 1 --- 5).
+- Identified columns, from the subset related to Lee et al. 2025 variables, which have schema problems. 
+- Sent list of Lee et al. 2025 variables and related survey items to Kyuri.
+
+#### Schema problems
+A number of columns have unexpected null/non-null values. Likely most of these are due to errors in the 
+codebook, which should be straightforward to resolve. It is possible that some are related to the null-PID
+individuals, as we observe a small number of cases where questions intended only for repeat participants 
+are answered by seemingly new participants. 
+
+
 ## Jan 19 - Jan 25 2026
 
 ### Thursday
