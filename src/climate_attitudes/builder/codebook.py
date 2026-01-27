@@ -73,7 +73,7 @@ def _reorder_columns(codebook: pl.DataFrame) -> pl.DataFrame:
 def build_codebook(config: Config) -> pl.DataFrame:
     codebook = pl.read_excel(
         RawDataFile.Codebook.filepath(config),
-        schema_overrides={"Display Logic": pl.String, "Randomisation": pl.String},
+        schema_overrides={"Display Logic": pl.String, "Randomization": pl.String},
     )
     codebook = _fix_schema(codebook)
     codebook = _normalise_item_names(codebook, config)
