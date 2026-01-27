@@ -46,3 +46,5 @@ RUN apt-get install -y --no-install-recommends \
 	r-cran-data.table r-cran-dotenv && \
 	apt upgrade --yes && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN R -e 'Sys.setenv("NOT_CRAN" = TRUE); install.packages("arrow")'
