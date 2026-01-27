@@ -1,3 +1,5 @@
+include .env
+
 # Expand prerequisites twice, so that we capture the '%' in wildcards
 .SECONDEXPANSION:
 
@@ -22,11 +24,20 @@ SITE_REPORTS = \
 SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
           $(wildcard site/**/*.css) $(wildcard site/**/*.js)
 
-.PHONY: clean serve extract-rdata all-reports
+ASSETS := \
+		${CA_BUILT_ASSETS}/item.parquet \
+		${CA_BUILT_ASSETS}/question.parquet \
+		${CA_BUILT_ASSETS}/item_columns.parquet \
+		${CA_BUILT_ASSETS}/participant.parquet \
+		${CA_BUILT_ASSETS}/response.parquet 
+
+.PHONY: clean serve data-assets all-reports
 
 all: site/site/index.html all-reports
 
 all-reports: $(REPORTS)
+
+data-assets: $(ASSETS)
 
 # Serve site locally
 serve:
@@ -76,10 +87,50 @@ outputs:
 	@mkdir outputs
 
 
-# Extract climate attitudes Rdata 
-extract-rdata: analysis/extract_ca_data.r
-	@$(MAKE) results -C analysis
+# Build climate attitudes data assets
+# data-assets: 
+# 	@$(MAKE) -C extract-data 
+${CA_BUILT_ASSETS}/response.parquet: src/climate_attitudes/builder/response.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_BUILT_ASSETS}/question.parquet
+	uv run cadata build response
 
+
+${CA_BUILT_ASSETS}/participant.parquet: src/climate_attitudes/builder/participant.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet
+	uv run cadata build participant
+
+${CA_BUILT_ASSETS}/item_columns.parquet: src/climate_attitudes/builder/item_columns.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_STATIC_ASSETS}/item_columns.json \
+			${CA_BUILT_ASSETS}/codebook.parquet 
+	uv run cadata build item-columns
+
+
+${CA_BUILT_ASSETS}/question.parquet: src/climate_attitudes/builder/question.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_BUILT_ASSETS}/codebook.parquet \
+			${CA_BUILT_ASSETS}/item.parquet
+	uv run cadata build question
+
+${CA_BUILT_ASSETS}/item.parquet: src/climate_attitudes/builder/item.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_BUILT_ASSETS}/codebook.parquet \
+			${CA_STATIC_ASSETS}/error_items.parquet \
+			${CA_STATIC_ASSETS}/ideology_type.parquet \
+			${CA_STATIC_ASSETS}/lee_2025_items.parquet
+	uv run cadata build item
+
+${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/codebook.py \
+			src/climate_attitudes/builder/schema.py \
+			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
+			| ${CA_BUILT_ASSETS}
+	uv run cadata build codebook
+
+${CA_BUILT_ASSETS}: 
+	mkdir -p $@
 
 # Remove all generated files 
 clean: 
@@ -89,4 +140,5 @@ clean:
 	@$(MAKE) clean -C reports/reading_summary
 	@$(MAKE) clean -C reports/climate-attitudes-eda
 	@$(MAKE) clean -C presentations/project_plan
+	@$(MAKE) clean -C extract-data
 

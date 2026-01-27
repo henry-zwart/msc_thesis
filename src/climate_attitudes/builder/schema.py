@@ -1,0 +1,1198 @@
+"""
+Errors:
+-------
+
+- PID: Sometimes null.
+- Null values where there shouldn't be: ew1, ew1_apr, ew1_jun, cc_impact_1, cc5_world,
+    cc5_wealthUS, cc5_poorUS, cc5_comm, cc_pol_RE__research, cc_pol_tax, cc_pol_car,
+    cc_pol_subs, cc11, cc13, cc13_apr, cc_behaviorchange, dustin_ques_64,
+    dustin_ques_256, cv__priority2
+- We also have null values in cvcc7a. Wave 3, GroupGreenInfrastructure == 1 but
+    response is null.
+- ew1: Responses contain both null and "0" (none of the above) responses. On closer
+    inspection, at least some of the null respondents responded to the ew1_apr or
+    ew1_jun questions instead, even though these are only for repeating participants,
+    and these respondents had no prior recorded waves. Filtering out any
+    participants whose first recorded wave has a response to a "repeating-only"
+    question, and vice-versa, fixes all of the above columns except: cc_impact_1,
+    cc_behaviorchange, dustin_ques_64, dustin_ques_256.
+- cc13: Codebook says both variants asked in wave 1 (note that only first variant
+    options are observed in wave 1)
+- WTP: Codebook says `WTP` condition column used for ccComp10 in wave 2. But column
+    doesn't exist. Currently using `WTP10` instead; following pattern from other vars.
+- GroupInfrastructure: Codebook doesn't specify when this is used. Presumably it is
+    an alternative to GroupGreenInfrastructure.
+
+To check:
+---------
+
+- cc_timeframe_w4new: Codebook says originally coded as Q423. Check if this also means the question was asked prior to wave 4.
+- pol7_DO: Is this question ordering? Entries are of form "1|2", "2|1"
+"""
+
+from __future__ import annotations
+from climate_attitudes.settings import Config, BuiltAsset
+import polars as pl
+import polars.selectors as cs
+import pandera.polars as pa
+from pandera.polars import PolarsData
+
+US_STATES = [
+    ("Alabama", "AL"),
+    ("Alaska", "AK"),
+    ("Arizona", "AZ"),
+    ("Arkansas", "AR"),
+    ("American Samoa", "AS"),
+    ("California", "CA"),
+    ("Colorado", "CO"),
+    ("Connecticut", "CT"),
+    ("Delaware", "DE"),
+    ("District of Columbia", "DC"),
+    ("Florida", "FL"),
+    ("Georgia", "GA"),
+    ("Guam", "GU"),
+    ("Hawaii", "HI"),
+    ("Idaho", "ID"),
+    ("Illinois", "IL"),
+    ("Indiana", "IN"),
+    ("Iowa", "IA"),
+    ("Kansas", "KS"),
+    ("Kentucky", "KY"),
+    ("Louisiana", "LA"),
+    ("Maine", "ME"),
+    ("Maryland", "MD"),
+    ("Massachusetts", "MA"),
+    ("Michigan", "MI"),
+    ("Minnesota", "MN"),
+    ("Mississippi", "MS"),
+    ("Missouri", "MO"),
+    ("Montana", "MT"),
+    ("Nebraska", "NE"),
+    ("Nevada", "NV"),
+    ("New Hampshire", "NH"),
+    ("New Jersey", "NJ"),
+    ("New Mexico", "NM"),
+    ("New York", "NY"),
+    ("North Carolina", "NC"),
+    ("North Dakota", "AND"),
+    ("Northern Mariana Islands", "MP"),
+    ("Ohio", "OH"),
+    ("Oklahoma", "OK"),
+    ("Oregon", "OR"),
+    ("Pennsylvania", "PA"),
+    ("Puerto Rico", "PR"),
+    ("Rhode Island", "RI"),
+    ("South Carolina", "SC"),
+    ("South Dakota", "SD"),
+    ("Tennessee", "TN"),
+    ("Texas", "TX"),
+    ("Trust Territories", "TT"),
+    ("Utah", "UT"),
+    ("Vermont", "VT"),
+    ("Virginia", "VA"),
+    ("Virgin Islands", "VI"),
+    ("Washington", "WA"),
+    ("West Virginia", "WV"),
+    ("Wisconsin", "WI"),
+    ("Wyoming", "WY"),
+]
+
+DISPLAY_LOGIC_COLUMNS = [
+    "ew_attribution",
+    "ew_attribution_apr",
+    "ew_attribution_jun",
+    "ew_attribution_nov",
+    "ccComp100",
+    "ccComp50",
+    "ccComp25",
+    "ccComp10",
+    "ccComp1",
+    "ccComp0",
+    "ccSolve100",
+    "ccSolve50",
+    "ccSolve10",
+    "ccSolve1",
+    "ccSolve0",
+    "ccIO",
+    "ccIOinterest",
+    "ccGovt",
+    "ccGovtinterest",
+    "dustin_support",
+    "dustin_oppose",
+    "cvcc6",
+    "cvcc7a",
+    "cvcc8a__opp",
+    "cvcc8a__supp",
+    "cvccAirDemHealth",
+    "cvccAirRepHealth",
+    "cvccAirHealth",
+    "cvccAirDemCC",
+    "cvccAirRepCC",
+    "cvccAirCC",
+    "cvcc10_cc",
+    "pol_lean",
+    "pol_vote_CCdem",
+    "pol_vote_CCrep",
+]
+
+WAVES = [1, 2, 3, 4, 5, 6]
+
+GROUP_COLUMNS = pl.col(r"^Group.*$", r"^WTP.*$")
+
+
+# Columns with nulls where there should exist no nulls
+NULL_ERROR_COLUMNS = [
+    "ew1",
+    "ew1_apr",
+    "ew1_jun",
+    "cc_impact_1",
+    "cc5_world",
+    "cc5_wealthUS",
+    "cc5_poorUS",
+    "cc5_comm",
+    "cc_pol_RE__research",
+    "cc_pol_tax",
+    "cc_pol_car",
+    "cc_pol_subs",
+    "cc11",
+    "cc13",
+    "cc13_apr",
+    "cc_behaviorchange",
+    "dustin_ques_64",
+    "dustin_ques_256",
+    "cv__priority2",
+]
+
+NULL_ERROR_CONDITIONAL_COLUMNS = [
+    "cvcc7a",
+]
+
+QUESTION_EXTRA_COLUMNS = {
+    "dem_stcount_1": ["dem_stcount_1_char"],
+    "dem_stcount_2": ["dem_stcount_2_char"],
+}
+
+
+class NullableColumn:
+    """
+    Column can be null if:
+    - Not asked in given wave
+    - Only asked to new respondents or repeating respondents
+    - Asked conditional on another response
+    - Asked conditional on experimental condition
+
+    The first two can be checked simply by joining the Question table and performing
+    some column checks (question_id null; only asked to new/repeating and respondent
+    is repeating/new).
+
+    The remaining two require specifying manual conditions.
+    """
+
+    def __init__(self, name: str):
+        self.name = name
+        self.conditional_waves = set()
+        self.conditions = []
+
+    def add_cond(
+        self, waves: int | list[int] | None = None, *, expr: pl.Expr
+    ) -> NullableColumn:
+        match waves:
+            case int():
+                waves_cond = pl.col("wave") == waves
+                self.conditional_waves.add(waves)
+            case list():
+                waves_cond = pl.col("wave").is_in(waves)
+                self.conditional_waves |= set(waves)
+            case None:
+                waves_cond = True
+                self.conditional_waves = set(WAVES)
+
+        self.conditions.append(waves_cond & expr)
+        return self
+
+    def show_condition(self) -> pl.Expr:
+        unconditional_waves_cond = ~pl.col("wave").is_in(self.conditional_waves)
+        return unconditional_waves_cond | pl.any_horizontal(*self.conditions)
+
+
+class ClimateAttitudesNullResponses:
+    ignore_columns = ["start_date", "end_date"]
+
+    # Columns which are allowed to be null, even if presented to participant.
+    null_allowed: list[str] = [
+        "dem_male_77_TEXT",
+        "attr_storm_6_TEXT",
+        "attr_outage_13_TEXT",
+        "cvcc8a__opp_6_TEXT",
+        "cvcc8a__supp_8_TEXT",
+    ]
+
+    null_checks: list[NullableColumn] = [
+        NullableColumn("dem_male_77_TEXT").add_cond(expr=pl.col("dem_male") == 77),
+        NullableColumn("ew_attribution").add_cond(expr=pl.col("ew1") != [0]),
+        NullableColumn("ew_attribution_apr").add_cond(expr=pl.col("ew1_apr") != [0]),
+        NullableColumn("ew_attribution_jun").add_cond(expr=pl.col("ew1_jun") != [0]),
+        NullableColumn("ew_attribution_nov").add_cond(expr=pl.col("ew1_nov") != [0]),
+        NullableColumn("attr_storm_6_TEXT").add_cond(
+            expr=pl.col("attr_storm").list.contains(6)
+        ),
+        NullableColumn("attr_outage_13_TEXT").add_cond(
+            expr=pl.col("attr_outage").list.contains(13)
+        ),
+        NullableColumn("ccComp100").add_cond(expr=pl.col("WTP100") == 1),
+        NullableColumn("ccComp50")
+        .add_cond(waves=[2, 3], expr=pl.col("WTP50") == 1)
+        .add_cond(1, expr=pl.col("WTP10") == 1),
+        NullableColumn("ccComp25").add_cond(expr=pl.col("WTP5") == 1),
+        NullableColumn("ccComp10")
+        .add_cond(waves=[2, 3], expr=pl.col("WTP10") == 1)
+        .add_cond(1, expr=pl.col("WTP3") == 1),
+        NullableColumn("ccComp1").add_cond(expr=pl.col("WTP1") == 1),
+        NullableColumn("ccComp0").add_cond(expr=pl.col("WTP0") == 1),
+        NullableColumn("ccSolve100").add_cond(expr=pl.col("WTP100") == 1),
+        NullableColumn("ccSolve50").add_cond(expr=pl.col("WTP50") == 1),
+        NullableColumn("ccSolve10").add_cond(expr=pl.col("WTP10") == 1),
+        NullableColumn("ccSolve1").add_cond(expr=pl.col("WTP1") == 1),
+        NullableColumn("ccSolve0").add_cond(expr=pl.col("WTP0") == 1),
+        NullableColumn("ccIO")
+        .add_cond(
+            1, expr=(pl.col("GroupCCIO") == 1) & (pl.col("GroupNoUSinterest") == 1)
+        )
+        .add_cond([2, 4], expr=pl.col("GroupCCIO") == 1),
+        NullableColumn("ccIOinterest").add_cond(
+            expr=pl.all_horizontal(pl.col("GroupCCIO", "GroupUSinterest") == 1)
+        ),
+        NullableColumn("ccGovt")
+        .add_cond(
+            1, expr=(pl.col("GroupCCGovt") == 1) & (pl.col("GroupNoUSinterest") == 1)
+        )
+        .add_cond([2, 4], expr=pl.col("GroupCCGovt") == 1),
+        NullableColumn("ccGovtinterest").add_cond(
+            expr=pl.all_horizontal(pl.col("GroupCCGovt", "GroupUSinterest") == 1)
+        ),
+        NullableColumn("dustin_support").add_cond(
+            expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
+        ),
+        NullableColumn("dustin_oppose").add_cond(
+            expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
+        ),
+        NullableColumn("cvcc6").add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1),
+        NullableColumn("cvcc8a__opp").add_cond(expr=pl.col("cvcc7a").is_in([1, 2])),
+        NullableColumn("cvcc8a__supp").add_cond(expr=pl.col("cvcc7a").is_in([4, 5])),
+        NullableColumn("cvcc8a__opp_6_TEXT").add_cond(
+            expr=pl.col("cvcc8a__opp").list.contains(6)
+        ),
+        NullableColumn("cvcc8a__supp_8_TEXT").add_cond(
+            expr=pl.col("cvcc8a__supp").list.contains(8)
+        ),
+        NullableColumn("cvccAirDemHealth").add_cond(
+            expr=pl.col("GroupAirDemHealth") == 1
+        ),
+        NullableColumn("cvccAirRepHealth").add_cond(
+            expr=pl.col("GroupAirRepHealth") == 1
+        ),
+        NullableColumn("cvccAirHealth").add_cond(expr=pl.col("GroupAirHealth") == 1),
+        NullableColumn("cvccAirDemCC").add_cond(expr=pl.col("GroupAirDemCC") == 1),
+        NullableColumn("cvccAirRepCC").add_cond(expr=pl.col("GroupAirRepCC") == 1),
+        NullableColumn("cvccAirCC").add_cond(expr=pl.col("GroupAirCC") == 1),
+        NullableColumn("cvcc10_cc").add_cond(2, expr=pl.col("Groupcvcc10") == 1),
+        NullableColumn("cv__priority_7_TEXT").add_cond(
+            expr=pl.col("cv__priority") == 7
+        ),
+        NullableColumn("cv__priority2_7_TEXT").add_cond(
+            expr=pl.col("cv__priority2") == 7
+        ),
+        NullableColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3),
+        NullableColumn("pol_vote_CCdem").add_cond(
+            expr=(pl.col("GroupVoteCC") == 1)
+            & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2)
+        ),
+        NullableColumn("pol_vote_CCrep").add_cond(
+            expr=(pl.col("GroupVoteCC") == 1)
+            & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1)
+        ),
+    ]
+
+    @classmethod
+    def validate(cls, response: pl.LazyFrame, config: Config):
+        """
+        Should have:
+
+        response not null <==>  question in wave &
+                                question shown to respondent type &
+                                question conditions satisfied
+
+        or equivalently:
+
+        response is null  <==>  question not in wave |
+                                question not shown to participant type |
+                                question conditions not satisfied
+
+        a V b V c ==> d
+        ~(a V b V c) V d
+        (~a & ~b & ~c) V d
+        (~a V d) & (~b V d) & (~c V d)
+        (a ==> d) & (b ==> d) & (c ==> d)
+
+        So we can test the implications separately
+
+        Going other way,
+        d ==> (a V b V c)
+        ~d V a V b V c
+
+        Must check all together.
+        However, we can simplify by doing unconditional questions separately.
+
+        So:
+        1. Check not in wave ==> response is null
+        2. Check not shown to participant type ==> response is null
+        3. Check question conditions not satisfied ==> response is null
+        4. For unconditional questions, check response is null ==> not in wave OR not shown to participant type
+        5. For conditional questions, check response is null ==> not in wave OR not shown to participant type OR conditions not met.
+
+        """
+
+        # Remove unnecessary non-question survey/metadata columns
+        response = response.drop(cls.ignore_columns)
+
+        # For each response, determine whether respondent is new or repeating
+        response = response.with_columns(
+            (pl.col("wave") == pl.col("wave").min().over("participant_id")).alias(
+                "is_new"
+            ),
+            (pl.col("wave") != pl.col("wave").min().over("participant_id")).alias(
+                "is_repeating"
+            ),
+        )
+
+        # Check (question not in wave ==> response is null)
+        cls.validate_null_if_not_in_wave(response, config)
+
+        # Check (invalid for participant type ==> response is null)
+        cls.validate_null_if_invalid_respondent_type(response, config)
+
+        # Check (conditions not satisfied ==> response is null)
+        cls.validate_null_if_conditions_not_met(response, config)
+
+        # Check unconditional (response is null ==> not shown)
+        cls.validate_unconditional_shown_implies_not_null(response, config)
+
+        # Check conditional (response is null ==> not shown)
+        cls.validate_conditional_shown_implies_not_null(response, config)
+
+    @classmethod
+    def join_response_to_question_long(
+        cls, response: pl.LazyFrame, config: Config
+    ) -> pl.LazyFrame:
+        """Convert wide response to long format by question; join Question table."""
+        # Convert list columns to string so we can unpivot on them
+        response = response.with_columns(
+            cs.list().cast(pl.List(pl.String)).list.join(",")
+        )
+
+        # Unpivot response to long format, with one row per question
+        response_long = response.unpivot(
+            index=["participant_id", "wave", "is_new", "is_repeating"],
+            variable_name="column_name",
+            value_name="response",
+        )
+
+        # Get associated item name for each column
+        item_columns = BuiltAsset.ItemColumns.scan(config)
+        response_long = response_long.join(item_columns, on="column_name", how="left")
+
+        # Join against Question table so we can identify conditions to show question
+        question = BuiltAsset.Question.scan(config)
+        return response_long.join(
+            question.select(
+                "question_id",
+                "item_name",
+                "item_id",
+                "wave",
+                "new_participants",
+                "repeating_participants",
+            ),
+            on=("item_name", "wave"),
+            how="left",
+        )
+
+    @classmethod
+    def validate_null_if_not_in_wave(
+        cls,
+        response: pl.LazyFrame,
+        config: Config,
+    ):
+        """Ensure (question not in wave) ==> (response is null)."""
+
+        response = cls.join_response_to_question_long(
+            response.drop(GROUP_COLUMNS), config
+        )
+
+        # Question ID is null if question is not asked in given wave
+        not_in_wave = response.filter(pl.col("question_id").is_null())
+
+        # Find items, waves for which responses are not null (potential errors)
+        items_not_null = (
+            not_in_wave.filter(pl.col("response").is_not_null())
+            .select("column_name", "item_id", "wave")
+            .unique()
+            .group_by("column_name")
+            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
+        ).collect()
+
+        if not items_not_null.is_empty():
+            print(
+                "One or more columns failed check: 'not in wave ==> response is null':"
+            )
+            for colname, _, waves in items_not_null.sort(by="item_id").iter_rows():
+                print(f"  - {waves}: {colname}")
+            print()
+
+    @classmethod
+    def validate_null_if_invalid_respondent_type(
+        cls,
+        response: pl.LazyFrame,
+        config: Config,
+    ):
+        """Ensure response is null when question not presented to respondent type.
+
+        For instance, if question is only asked to new respondents, the response
+        should be null for repeating respondents.
+        """
+        response = cls.join_response_to_question_long(
+            response.drop(GROUP_COLUMNS), config
+        )
+
+        # Identify rows where question is invalid for respondent type
+        invalid_respondent_type = response.filter(
+            (pl.col("is_new") & ~pl.col("new_participants"))
+            | (pl.col("is_repeating") & ~pl.col("repeating_participants"))
+        )
+
+        # Find items, waves for which responses are not null (potential errors)
+        items_not_null = (
+            invalid_respondent_type.filter(pl.col("response").is_not_null())
+            .select("column_name", "item_id", "wave")
+            .unique()
+            .group_by("column_name")
+            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
+        ).collect()
+
+        if not items_not_null.is_empty():
+            print(
+                "One or more columns failed check: 'invalid respondent type ==> "
+                "response is null':"
+            )
+
+            # items_not_null = items_not_null.join()
+            for colname, _, waves in items_not_null.sort(by="item_id").iter_rows():
+                print(f"  - {waves}: {colname}")
+            print()
+
+    @classmethod
+    def validate_null_if_conditions_not_met(
+        cls,
+        response: pl.LazyFrame,
+        config: Config,
+    ):
+        """Ensure response null for conditional questions when cond not satisfied.
+
+        Can be either a question which is conditionally shown based on a respondent's
+        answers to other questions, or one which is shown according to experimental
+        condition.
+        """
+        failed_checks = []
+
+        for column in cls.null_checks:
+            cond_not_met = response.filter(~column.show_condition())
+            waves_not_null = (
+                cond_not_met.filter(pl.col(column.name).is_not_null())
+                .select(pl.col("wave").unique().sort())
+                .collect()
+                .to_series()
+            )
+            if not waves_not_null.is_empty():
+                failed_checks.append((column.name, waves_not_null.to_list()))
+
+        if failed_checks:
+            print(
+                "One or more conditional columns failed check: 'condition not "
+                "satisfied ==> response is null':"
+            )
+            for colname, waves in failed_checks:
+                print(f"  - {waves}: {colname}")
+            print()
+
+    @classmethod
+    def validate_unconditional_shown_implies_not_null(
+        cls,
+        response: pl.LazyFrame,
+        config: Config,
+    ):
+        """Ensure displayed unconditional questions have non-null responses."""
+        response = cls.join_response_to_question_long(
+            response.drop(GROUP_COLUMNS, *[col.name for col in cls.null_checks]), config
+        )
+
+        # Filter out cases where question not shown:
+        #  - question_id null, or
+        #  - only for new, and participant is repeating, or
+        #  - only for repeating, and participant is new.
+        displayed_questions = response.filter(
+            pl.col("question_id").is_not_null()
+            & pl.any_horizontal(
+                pl.col("repeating_participants") & pl.col("is_repeating"),
+                pl.col("new_participants") & pl.col("is_new"),
+            )
+        )
+
+        # Find items, waves for which responses are null (potential errors)
+        items_null = (
+            displayed_questions.filter(pl.col("response").is_null())
+            .select("column_name", "item_id", "wave")
+            .unique()
+            .group_by("column_name")
+            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
+            # Disregard items where null is okay
+            .filter(~pl.col("column_name").is_in(cls.null_allowed))
+        ).collect()
+
+        if not items_null.is_empty():
+            print(
+                "One or more columns failed check: 'question displayed ==> "
+                "response is not null':"
+            )
+
+            # items_not_null = items_not_null.join()
+            for colname, _, waves in items_null.sort(by="item_id").iter_rows():
+                print(f"  - {waves}: {colname}")
+            print()
+
+    @classmethod
+    def validate_conditional_shown_implies_not_null(
+        cls,
+        response: pl.LazyFrame,
+        config: Config,
+    ):
+        """Ensure displayed unconditional questions have non-null responses."""
+        item_columns = BuiltAsset.ItemColumns.scan(config)
+        question = (
+            BuiltAsset.Question.scan(config)
+            .select(
+                "item_name",
+                "question_id",
+                "wave",
+                "new_participants",
+                "repeating_participants",
+            )
+            .join(item_columns, on="item_name", how="left")
+        )
+
+        failed_checks = []
+        for column in cls.null_checks:
+            # Disregard items where null is okay
+            if column.name in cls.null_allowed:
+                continue
+
+            cond_met = response.filter(column.show_condition())
+
+            # Join on question to filter out waves/participants not asked
+            # TODO: Check that column name is in question table
+            displayed = (
+                cond_met.select("wave", column.name, "is_new", "is_repeating")
+                .join(
+                    question.filter(pl.col("column_name") == column.name),
+                    on="wave",
+                    how="left",
+                )
+                .filter(
+                    pl.col("question_id").is_not_null()
+                    & pl.any_horizontal(
+                        pl.col("repeating_participants") & pl.col("is_repeating"),
+                        pl.col("new_participants") & pl.col("is_new"),
+                    )
+                )
+            )
+
+            waves_null = (
+                displayed.filter(pl.col(column.name).is_null())
+                .select(pl.col("wave").unique().sort())
+                .collect()
+                .to_series()
+            )
+            if not waves_null.is_empty():
+                failed_checks.append((column.name, waves_null.to_list()))
+
+        if failed_checks:
+            print(
+                "One or more conditional columns failed check: 'question displayed "
+                "==> response is not null':"
+            )
+            for colname, waves in failed_checks:
+                print(f"  - {waves}: {colname}")
+            print()
+
+
+class ClimateAttitudesSchema(pa.DataFrameModel):
+    wave: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
+    participant_id: int = pa.Field(nullable=False)
+    start_date: pl.Datetime = pa.Field(nullable=False)
+    end_date: pl.Datetime = pa.Field(nullable=False)
+
+    # Demographic columns
+    dem_stcount_1: int = pa.Field(nullable=False)  # State
+    dem_stcount_1_char: str = pa.Field(
+        isin=[name for state, name in US_STATES], nullable=False
+    )
+    dem_stcount_2: int = pa.Field(nullable=False)  # County
+    dem_stcount_2_char: str = pa.Field(nullable=False)
+    dem_zip: str = pa.Field(nullable=False)  # Zip code
+    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
+    dem_male: int = pa.Field(isin=[0, 1, 77], nullable=False)
+    dem_male_77_TEXT: str = pa.Field(nullable=True)  # Nonempty if dem_male == 77
+    dem_age: int = pa.Field(gt=0, le=99, nullable=False)
+    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
+
+    # Extreme weather
+    ew1: list[int] = pa.Field(nullable=True)
+    ew1_apr: list[int] = pa.Field(nullable=True)
+    ew1_jun: list[int] = pa.Field(nullable=True)
+    ew1_nov: list[int] = pa.Field(nullable=True)
+    ew_attribution: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew5: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+    attr_storm: list[int] = pa.Field(nullable=True)
+    attr_storm_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
+    attr_outage: list[int] = pa.Field(nullable=True)
+    attr_outage_13_TEXT: str = pa.Field(
+        nullable=True
+    )  # Non-null only if response is 13
+    # TODO: ew_attr_fires_drag: Drag-and-drop
+
+    # ===== Climate change (cc) columns =====
+    # Climate change happening
+    cc1: int = pa.Field(isin=[0, 1, 99], nullable=True)
+
+    # Climate change causes/anthropogenic CC
+    cc2: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Climate change is a scam
+    cc_scam: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Seriousness of climate change problem
+    cc3: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Current harms from climate change
+    cc4_world: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc4_wealthcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc4_poorcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc4_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
+    cc4_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
+    cc4_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
+    cc4_person: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc4_famheal: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    cc4_famecon: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    cc4_raceUS: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Total impact of climate change on participant and family
+    cc_impact_1: int = pa.Field(in_range=(0, 10), nullable=True)
+
+    # Learn to live with CC vs. target with interventions until 'gone'
+    cc_endemic: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Future generation harm from climate change
+    cc5_world: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc5_wealthcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc5_poorcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc5_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc5_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+    cc5_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
+
+    # Level of worry about climate change
+    cc6: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+
+    # Should <PERSON/ENTITY> be doing more/less to address current and future CC
+    cc7_pres: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_cong: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_gov: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_local: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_ordcoun: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_ordcomm: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_corp: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_epa: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_fema: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc7_IO: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Support for data collection policy concerning personal emissions
+    cc8: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # How much should <PERSON/ENTITY> be doing to address current and future CC
+    cc8_pres: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_cong: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_gov: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_ordinary: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_corp: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_epa: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_fema: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_IO: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc8_otherctry: int = pa.Field(isin=[1, 2, 3], nullable=True)
+
+    # How often think about/discuss climate change in last month
+    cc_think: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Threat assessments of climate change
+    cc9_globecon: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_globstab: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_USecond: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_commday: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_famheal: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_famecon: int = pa.Field(isin=[1, 2, 3], nullable=True)
+
+    # Willingness to pay X amt. for policy to compensate climate-affected communities
+    ccComp100: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccComp50: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccComp25: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccComp10: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccComp1: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccComp0: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Willingness to pay X amt. for policy to response to/solve climate-affected communities
+    ccSolve100: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccSolve50: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccSolve10: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccSolve1: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccSolve0: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Support US financially supporting international orgs launch global response to fight climate change
+    ccIO: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccIOinterest: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Support US financially supporting other countries to launch global response to fight climate change
+    ccGovt: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    ccGovtinterest: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Support international climate agreement committing US (and others) to reduce carbon emissions
+    cc_ica: int = pa.Field(isin=[0, 1, 2], nullable=True)
+
+    # Support $10B for climate change investments
+    cc_fedinvest: int = pa.Field(isin=[0, 1, 2], nullable=True)
+
+    # If an international agreement is made to reduce emissions, what commitments should US make relative to other countries
+    cc_commit: int = pa.Field(isin=[0, 1, 2], nullable=True)
+
+    # Policy support
+    cc_pol_RE__research: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Renewables research
+    cc_pol_tax: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Tax on fuel production
+    cc_pol_car: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Stronger standards for auto manufacturers
+    cc_pol_subs: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Rebates/subsidies for buying energy-efficient vehicles/solar
+
+    # Capacity, through own actions, to avoid CC-related death
+    cc11: int = pa.Field(in_range=(1, 7), nullable=True)
+
+    # Actions taken due to current/future CC impacts
+    cc13: list[int] = pa.Field(nullable=True)
+    cc13_apr: list[int] = pa.Field(nullable=True)
+
+    # Behaviours taken to help address CC
+    cc_behaviour_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behaviour_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behaviour_active: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behaviour_discuss: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behaviour_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behaviour_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Behaviours taken in last week to limit impact on CC
+    cc_behaviorchange: int = pa.Field(isin=[0, 1, 2], nullable=True)
+
+    # Support climate-related policies
+    cc_policy_cars: int = pa.Field(in_range=(1, 7), nullable=True)
+    cc_policy_re: int = pa.Field(in_range=(1, 7), nullable=True)
+    cc_policy_house: int = pa.Field(in_range=(1, 7), nullable=True)
+    cc_policy_risk: int = pa.Field(in_range=(1, 7), nullable=True)
+
+    # Expected benefit from climate related policies
+    cc_policybenefit: list[int] = pa.Field(nullable=True)
+
+    # Climate change as policy issue vs. individual responsibility
+    cc_resp_action: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Timeframe to mitigate catastrophic climate change
+    cc_timeframe_w4new: int = pa.Field(
+        isin=[1, 2, 3, 4, 5, 6, 9, 7, 8, 10], nullable=True
+    )
+    cc_timeframe: int = pa.Field(isin=[2, 3, 4, 5, 6, 7, 8, 1], nullable=True)
+
+    # Policy support: reduce fossil fuel use, with cost to households
+    dustin_ques_64: int = pa.Field(isin=[0, 1], nullable=True)
+    dustin_ques_256: int = pa.Field(isin=[0, 1], nullable=True)
+    dustin_support: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    dustin_oppose: int = pa.Field(isin=[1, 2, 3], nullable=True)
+
+    # ==== COVID-19 / Climate-change =====
+    # Behaviour change (experienced during COVID-19 pandemic), to reduce emissions
+    cvcc4_personal: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)  # Intention
+    cvcc4_will: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Expectation (of others)
+    cvcc4_should: int = pa.Field(
+        isin=[1, 2, 3, 4, 5], nullable=True
+    )  # Attitude/normative view
+
+    # Importance of individual action on climate change
+    cvcc6: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Policy support: large-scale green infrastructure plan
+    cvcc7a: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvcc8a__opp: list[int] = pa.Field(nullable=True)
+    cvcc8a__supp: list[int] = pa.Field(nullable=True)
+    cvcc8a__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
+    cvcc8a__supp_8_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 8
+
+    # Policy support: reducing emissions to reduce impact of future pandemics
+    cvccAirDemHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvccAirRepHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvccAirHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Policy support: reducing emissions to reduce impact of global warming/climate change
+    cvccAirDemCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvccAirRepCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvccAirCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Scientists with appropriate expertise should guide climate change response
+    cvcc9_cc: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Optimism that climate change can be solved with technological solutions
+    cvcc10_cc: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # Prioritise issues: COVID-19 policies that could help address other issues.
+    cv__priority: int = pa.Field(isin=[1, 2, 3, 4, 5, 8, 9, 7, 6], nullable=True)
+    cv__priority2: int = pa.Field(isin=[0, 1, 2, 3, 4, 5, 7], nullable=True)
+    cv__priority_7_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 7
+    cv__priority2_7_TEXT: str = pa.Field(
+        nullable=True
+    )  # Non-null only if response is 7
+
+    # ==== US political issues =====
+    # How much of a threat is global warming/climate change
+    pol_threat_cc: int = pa.Field(isin=[1, 2, 3], nullable=True)
+
+    # Strict environmental laws: hurt economy vs. worth the cost
+    pol7: int = pa.Field(isin=[1, 2], nullable=False)
+
+    # Political identification
+    pol_party: int = pa.Field(isin=[1, 2, 3], nullable=False)
+    pol_lean: int = pa.Field(isin=[1, 2, 4], nullable=True)
+
+    # Would proposal of climate policies make you more or less likely to support a political candidate
+    pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    pol_vote_CCrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # ===== Experiment conditions =====
+    # Willingness to pay (ccComp, ccSolve)
+    # NOTE: These are used for ccComp and ccSolve, but don't correspond in same ways
+    # TODO: cast to true/false, null in not-applicable columns
+    WTP100: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP50: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP10: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP5: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP3: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP1: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP0: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # ccIO, ccIOinterest, ccGovt, ccGovtinterest
+    GroupCCIO: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupCCGovt: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupNoUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # cvcc5 and cvcc6
+    Groupcvcc_5and6: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # cvcc7 and cvcc8
+    Groupcvcc7show: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupGreenInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # cvccAir<X>Health
+    GroupAirDemHealth: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirRepHealth: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirHealth: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # cvccAir<X>CC
+    GroupAirDemCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirRepCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirCC: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # cvcc10
+    # NOTE: Group only used for wave 2
+    Groupcvcc10: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # Political leaning (pol_vote_CC<X>)
+    GroupVoteCC: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # @pa.dataframe_check
+    # def ew_attribution_not_null(cls, df: pl.DataFrame) -> Series[bool]:
+    #     return df.lazyframe.select(pl.col("ew_attribution").is_not_null() | (pl.col("ew1").list.first() == 0) | (pl.col("wave") != 5))
+
+    # @pa.dataframe_check
+    # def cc1_not_null(cls, df: pl.DataFrame) -> Series[bool]:
+    #     return df.lazyframe.select(pl.col("cc1").is_not_null() | (pl.col("wave") == 5))
+
+    @pa.dataframe_check
+    def singlechoice_valid_selection(cls, df: PolarsData) -> pl.LazyFrame:
+        """Check all single-choice responses are valid according to codebook.
+
+        For each column, and each pair of (waves, valid options) per column,
+        ensure that (unless the value is null), the selected option is in
+        the set of valid options for those waves.
+        """
+        item_singlechoice_options = [
+            (
+                "cc4_world",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc4_wealthUS",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4, 5], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc4_poorUS",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4, 5], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc4_comm",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4, 5], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc5_world",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc5_wealthUS",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc5_poorUS",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cc5_comm",
+                [
+                    ([1], [1, 2, 3, 4, 99]),
+                    ([2, 3, 4], [1, 2, 3, 4]),
+                ],
+            ),
+            (
+                "cv__priority",
+                [
+                    ([2], [1, 2, 3, 4, 5, 7, 6]),
+                    ([3], [1, 2, 3, 4, 5, 8, 7, 6]),
+                    ([4], [1, 2, 3, 4, 5, 8, 9, 7, 6]),
+                ],
+            ),
+        ]
+
+        return df.lazyframe.select(
+            *[
+                pl.any_horizontal(
+                    *[
+                        pl.col(col_name).is_null()
+                        | (
+                            pl.col("wave").is_in(waves)
+                            & pl.col(col_name).is_in(wave_options)
+                        )
+                        for waves, wave_options in item_options
+                    ]
+                ).alias(col_name)
+                for col_name, item_options in item_singlechoice_options
+            ]
+        )
+
+    @pa.dataframe_check
+    def multichoice_valid_selection(cls, df: PolarsData) -> pl.LazyFrame:
+        """Check all multichoice selections are valid according to codebook.
+
+        For each column, and each pair of (waves, valid options) per column,
+        ensure that (unless the value is null), all selected options are in
+        the set of valid options for those waves.
+        """
+        item_multichoice_options = [
+            (
+                "ew1",
+                [
+                    ([1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
+                    ([5], [1, 2, 3, 4, 5, 6, 7, 8, 10, 9, 0]),
+                ],
+            ),
+            (
+                "ew1_apr",
+                [
+                    ([2], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
+                ],
+            ),
+            (
+                "ew1_jun",
+                [
+                    ([3], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
+                ],
+            ),
+            (
+                "ew1_nov",
+                [
+                    ([4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
+                ],
+            ),
+            (
+                "attr_storm",
+                [
+                    ([4], [1, 2, 3, 4, 5, 6]),
+                ],
+            ),
+            (
+                "attr_outage",
+                [
+                    ([4], [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13]),
+                ],
+            ),
+            (
+                "cc13",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 77]),
+                    ([2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 77]),
+                ],
+            ),
+            (
+                "cc13_apr",
+                [
+                    ([2], [2, 3, 4, 5, 6, 7, 8, 13, 10, 11, 14, 12, 77]),
+                ],
+            ),
+            (
+                "cc_policybenefit",
+                [
+                    ([5], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0]),
+                ],
+            ),
+            (
+                "cvcc8a__opp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6]),
+                ],
+            ),
+            (
+                "cvcc8a__supp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6, 7, 8]),
+                ],
+            ),
+        ]
+
+        return df.lazyframe.select(
+            *[
+                pl.any_horizontal(
+                    *[
+                        pl.col(col_name).is_null()
+                        | (
+                            pl.col("wave").is_in(waves)
+                            & pl.col(col_name)
+                            .list.eval(pl.element().is_in(wave_options))
+                            .list.all()
+                        )
+                        for waves, wave_options in item_options
+                    ]
+                ).alias(col_name)
+                for col_name, item_options in item_multichoice_options
+            ]
+        )
+
+    @pa.dataframe_check
+    def check_value_null_conditional_on_other(cls, df: PolarsData) -> pl.LazyFrame:
+        """Check that responses are Null when they should be according to another col.
+
+        For instance, columns where respondents only answer question Y if they respond
+        "Yes" to question X.
+        """
+
+        return df.lazyframe.select(
+            ((pl.col("dem_male") == 77) | pl.col("dem_male_77_TEXT").is_null()),
+            ((pl.col("ew1") == 0) | pl.col("ew_attribution").is_null()),
+            ((pl.col("ew1_apr") == 0) | pl.col("ew_attribution_apr").is_null()),
+            ((pl.col("ew1_jun") == 0) | pl.col("ew_attribution_jun").is_null()),
+            ((pl.col("ew1_nov") == 0) | pl.col("ew_attribution_nov").is_null()),
+            (
+                pl.col("attr_storm").list.contains(6)
+                | pl.col("attr_storm_6_TEXT").is_null()
+            ),
+            (
+                pl.col("attr_outage").list.contains(13)
+                | pl.col("attr_outage_13_TEXT").is_null()
+            ),
+            (
+                pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
+                | pl.col("dustin_support").is_null()
+            ),
+            (
+                pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
+                | pl.col("dustin_oppose").is_null()
+            ),
+            (pl.col("cvcc7a").is_in([1, 2]) | pl.col("cvcc8a__opp").is_null()),
+            (pl.col("cvcc7a").is_in([5, 4]) | pl.col("cvcc8a__supp").is_null()),
+            (
+                pl.col("cvcc8a__opp").list.contains(6)
+                | pl.col("cvcc8a__opp_6_TEXT").is_null()
+            ),
+            (
+                pl.col("cvcc8a__supp").list.contains(8)
+                | pl.col("cvcc8a__supp_8_TEXT").is_null()
+            ),
+            ((pl.col("cv__priority") == 7) | pl.col("cv__priority_7_TEXT").is_null()),
+            ((pl.col("cv__priority2") == 7) | pl.col("cv__priority2_7_TEXT").is_null()),
+            ((pl.col("pol_party") == 3) | pl.col("pol_lean").is_null()),
+            (
+                ((pl.col("pol_party") == 2) | (pl.col("pol_lean") == 2))
+                | pl.col("pol_vote_CCdem").is_null()
+            ),
+            (
+                ((pl.col("pol_party") == 1) | (pl.col("pol_lean") == 1))
+                | pl.col("pol_vote_CCrep").is_null()
+            ),
+        )
+
+
+# class ResponseNullChecks(pa.DataFrameModel):
+#     """Validate that responses null/not-null when expected."""
+#
+#     @pa.dataframe_check
+#     def null_when_not_in_wave(cls, df: PolarsData) -> pl.LazyFrame:
+#         """Responses should be null if not asked in wave, or not for participant type."""
