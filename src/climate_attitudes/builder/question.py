@@ -26,7 +26,7 @@ def unpivot_questions_by_wave(questions: pl.LazyFrame) -> pl.LazyFrame:
                 "response_type",
                 "response_schema",
                 "response_requirements",
-                "randomisation",
+                "randomization",
                 "display_logic",
                 "note",
             ],
@@ -45,26 +45,10 @@ def unpivot_questions_by_wave(questions: pl.LazyFrame) -> pl.LazyFrame:
             # Extract whether Q asked to new or repeating participants
             pl.col("wave_column_name")
             .str.extract(r"^w\d_(.*)$", 1)
+            .replace({"rep": "repeating"})
             .alias("participant_type"),
         )
-        # For each question and wave, get list of participant types who are asked Q
-        .group_by(
-            pl.exclude("participant_type", "wave_column_name"),
-            maintain_order=True,
-        )
-        .agg(pl.col("participant_type"))
-        # For each Q and wave, record whether asked to new or repeating, in new columns
-        .with_columns(
-            pl.when(pl.col("participant_type").list.contains("new"))
-            .then(pl.lit(True))
-            .otherwise(pl.lit(False))
-            .alias("new_participants"),
-            pl.when(pl.col("participant_type").list.contains("rep"))
-            .then(pl.lit(True))
-            .otherwise(pl.lit(False))
-            .alias("repeating_participants"),
-        )
-        .sort(by=("codebook_row_id", "wave"))
+        .sort(by=("codebook_row_id", "wave", "participant_type"))
     )
 
 
@@ -79,8 +63,7 @@ def reorder_columns(questions: pl.LazyFrame) -> pl.LazyFrame:
         "item_name",
         "codebook_name",
         "wave",
-        "new_participants",
-        "repeating_participants",
+        "participant_type",
         # "wave_last_modified", # TODO: Implement
         "response_type",
         "response_schema",
@@ -90,7 +73,6 @@ def reorder_columns(questions: pl.LazyFrame) -> pl.LazyFrame:
 
 def build_question_table(config: Config) -> pl.DataFrame:
     questions = load_questions(config)
-    print(questions.filter(pl.col("item_name") == "cc_commit").collect())
     questions = unpivot_questions_by_wave(questions)
     questions = add_question_id(questions)
     questions = reorder_columns(questions)

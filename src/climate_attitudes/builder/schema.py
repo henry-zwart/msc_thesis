@@ -277,6 +277,13 @@ class ClimateAttitudesNullResponses:
             expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
         ),
         NullableColumn("cvcc6").add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1),
+        NullableColumn("cvcc7a")
+        .add_cond([1, 3], expr=pl.col("GroupGreenInfrastructure") == 1)
+        .add_cond(
+            2,
+            expr=(pl.col("GroupGreenInfrastructure") == 1)
+            & (pl.col("Groupcvcc7show") == 1),
+        ),
         NullableColumn("cvcc8a__opp").add_cond(expr=pl.col("cvcc7a").is_in([1, 2])),
         NullableColumn("cvcc8a__supp").add_cond(expr=pl.col("cvcc7a").is_in([4, 5])),
         NullableColumn("cvcc8a__opp_6_TEXT").add_cond(
@@ -344,32 +351,18 @@ class ClimateAttitudesNullResponses:
         However, we can simplify by doing unconditional questions separately.
 
         So:
-        1. Check not in wave ==> response is null
-        2. Check not shown to participant type ==> response is null
-        3. Check question conditions not satisfied ==> response is null
-        4. For unconditional questions, check response is null ==> not in wave OR not shown to participant type
-        5. For conditional questions, check response is null ==> not in wave OR not shown to participant type OR conditions not met.
+        1. Check not in wave, or to participant type ==> response is null
+        2. Check question conditions not satisfied ==> response is null
+        3. For unconditional questions, check response is null ==> not in wave OR not shown to participant type
+        4. For conditional questions, check response is null ==> not in wave OR not shown to participant type OR conditions not met.
 
         """
 
         # Remove unnecessary non-question survey/metadata columns
         response = response.drop(cls.ignore_columns)
 
-        # For each response, determine whether respondent is new or repeating
-        response = response.with_columns(
-            (pl.col("wave") == pl.col("wave").min().over("participant_id")).alias(
-                "is_new"
-            ),
-            (pl.col("wave") != pl.col("wave").min().over("participant_id")).alias(
-                "is_repeating"
-            ),
-        )
-
         # Check (question not in wave ==> response is null)
         cls.validate_null_if_not_in_wave(response, config)
-
-        # Check (invalid for participant type ==> response is null)
-        cls.validate_null_if_invalid_respondent_type(response, config)
 
         # Check (conditions not satisfied ==> response is null)
         cls.validate_null_if_conditions_not_met(response, config)
@@ -392,14 +385,20 @@ class ClimateAttitudesNullResponses:
 
         # Unpivot response to long format, with one row per question
         response_long = response.unpivot(
-            index=["participant_id", "wave", "is_new", "is_repeating"],
+            index=["participant_id", "wave", "participant_type"],
             variable_name="column_name",
             value_name="response",
         )
 
-        # Get associated item name for each column
+        # Get associated item name and id for each column
+        item = BuiltAsset.Item.scan(config)
         item_columns = BuiltAsset.ItemColumns.scan(config)
         response_long = response_long.join(item_columns, on="column_name", how="left")
+        response_long = response_long.join(
+            item.select(pl.col("name").alias("item_name"), "item_id"),
+            on="item_name",
+            how="left",
+        )
 
         # Join against Question table so we can identify conditions to show question
         question = BuiltAsset.Question.scan(config)
@@ -409,10 +408,9 @@ class ClimateAttitudesNullResponses:
                 "item_name",
                 "item_id",
                 "wave",
-                "new_participants",
-                "repeating_participants",
+                "participant_type",
             ),
-            on=("item_name", "wave"),
+            on=("item_name", "wave", "participant_type"),
             how="left",
         )
 
@@ -444,47 +442,6 @@ class ClimateAttitudesNullResponses:
             print(
                 "One or more columns failed check: 'not in wave ==> response is null':"
             )
-            for colname, _, waves in items_not_null.sort(by="item_id").iter_rows():
-                print(f"  - {waves}: {colname}")
-            print()
-
-    @classmethod
-    def validate_null_if_invalid_respondent_type(
-        cls,
-        response: pl.LazyFrame,
-        config: Config,
-    ):
-        """Ensure response is null when question not presented to respondent type.
-
-        For instance, if question is only asked to new respondents, the response
-        should be null for repeating respondents.
-        """
-        response = cls.join_response_to_question_long(
-            response.drop(GROUP_COLUMNS), config
-        )
-
-        # Identify rows where question is invalid for respondent type
-        invalid_respondent_type = response.filter(
-            (pl.col("is_new") & ~pl.col("new_participants"))
-            | (pl.col("is_repeating") & ~pl.col("repeating_participants"))
-        )
-
-        # Find items, waves for which responses are not null (potential errors)
-        items_not_null = (
-            invalid_respondent_type.filter(pl.col("response").is_not_null())
-            .select("column_name", "item_id", "wave")
-            .unique()
-            .group_by("column_name")
-            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
-        ).collect()
-
-        if not items_not_null.is_empty():
-            print(
-                "One or more columns failed check: 'invalid respondent type ==> "
-                "response is null':"
-            )
-
-            # items_not_null = items_not_null.join()
             for colname, _, waves in items_not_null.sort(by="item_id").iter_rows():
                 print(f"  - {waves}: {colname}")
             print()
@@ -535,15 +492,8 @@ class ClimateAttitudesNullResponses:
         )
 
         # Filter out cases where question not shown:
-        #  - question_id null, or
-        #  - only for new, and participant is repeating, or
-        #  - only for repeating, and participant is new.
         displayed_questions = response.filter(
-            pl.col("question_id").is_not_null()
-            & pl.any_horizontal(
-                pl.col("repeating_participants") & pl.col("is_repeating"),
-                pl.col("new_participants") & pl.col("is_new"),
-            )
+            pl.col("question_id").is_not_null(),
         )
 
         # Find items, waves for which responses are null (potential errors)
@@ -574,7 +524,7 @@ class ClimateAttitudesNullResponses:
         response: pl.LazyFrame,
         config: Config,
     ):
-        """Ensure displayed unconditional questions have non-null responses."""
+        """Ensure displayed conditional questions have non-null responses."""
         item_columns = BuiltAsset.ItemColumns.scan(config)
         question = (
             BuiltAsset.Question.scan(config)
@@ -582,8 +532,7 @@ class ClimateAttitudesNullResponses:
                 "item_name",
                 "question_id",
                 "wave",
-                "new_participants",
-                "repeating_participants",
+                "participant_type",
             )
             .join(item_columns, on="item_name", how="left")
         )
@@ -599,18 +548,14 @@ class ClimateAttitudesNullResponses:
             # Join on question to filter out waves/participants not asked
             # TODO: Check that column name is in question table
             displayed = (
-                cond_met.select("wave", column.name, "is_new", "is_repeating")
+                cond_met.select("wave", column.name, "participant_type")
                 .join(
                     question.filter(pl.col("column_name") == column.name),
-                    on="wave",
+                    on=("wave", "participant_type"),
                     how="left",
                 )
                 .filter(
-                    pl.col("question_id").is_not_null()
-                    & pl.any_horizontal(
-                        pl.col("repeating_participants") & pl.col("is_repeating"),
-                        pl.col("new_participants") & pl.col("is_new"),
-                    )
+                    pl.col("question_id").is_not_null(),
                 )
             )
 
@@ -745,7 +690,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     # Threat assessments of climate change
     cc9_globecon: int = pa.Field(isin=[1, 2, 3], nullable=True)
     cc9_globstab: int = pa.Field(isin=[1, 2, 3], nullable=True)
-    cc9_USecond: int = pa.Field(isin=[1, 2, 3], nullable=True)
+    cc9_USecon: int = pa.Field(isin=[1, 2, 3], nullable=True)
     cc9_commday: int = pa.Field(isin=[1, 2, 3], nullable=True)
     cc9_famheal: int = pa.Field(isin=[1, 2, 3], nullable=True)
     cc9_famecon: int = pa.Field(isin=[1, 2, 3], nullable=True)
@@ -804,12 +749,12 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc13_apr: list[int] = pa.Field(nullable=True)
 
     # Behaviours taken to help address CC
-    cc_behaviour_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behaviour_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behaviour_active: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behaviour_discuss: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behaviour_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behaviour_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_activ: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_discuss: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # Behaviours taken in last week to limit impact on CC
     cc_behaviorchange: int = pa.Field(isin=[0, 1, 2], nullable=True)
@@ -939,14 +884,6 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
 
     # Political leaning (pol_vote_CC<X>)
     GroupVoteCC: int = pa.Field(isin=[None, 1], nullable=True)
-
-    # @pa.dataframe_check
-    # def ew_attribution_not_null(cls, df: pl.DataFrame) -> Series[bool]:
-    #     return df.lazyframe.select(pl.col("ew_attribution").is_not_null() | (pl.col("ew1").list.first() == 0) | (pl.col("wave") != 5))
-
-    # @pa.dataframe_check
-    # def cc1_not_null(cls, df: pl.DataFrame) -> Series[bool]:
-    #     return df.lazyframe.select(pl.col("cc1").is_not_null() | (pl.col("wave") == 5))
 
     @pa.dataframe_check
     def singlechoice_valid_selection(cls, df: PolarsData) -> pl.LazyFrame:
@@ -1135,64 +1072,3 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
                 for col_name, item_options in item_multichoice_options
             ]
         )
-
-    @pa.dataframe_check
-    def check_value_null_conditional_on_other(cls, df: PolarsData) -> pl.LazyFrame:
-        """Check that responses are Null when they should be according to another col.
-
-        For instance, columns where respondents only answer question Y if they respond
-        "Yes" to question X.
-        """
-
-        return df.lazyframe.select(
-            ((pl.col("dem_male") == 77) | pl.col("dem_male_77_TEXT").is_null()),
-            ((pl.col("ew1") == 0) | pl.col("ew_attribution").is_null()),
-            ((pl.col("ew1_apr") == 0) | pl.col("ew_attribution_apr").is_null()),
-            ((pl.col("ew1_jun") == 0) | pl.col("ew_attribution_jun").is_null()),
-            ((pl.col("ew1_nov") == 0) | pl.col("ew_attribution_nov").is_null()),
-            (
-                pl.col("attr_storm").list.contains(6)
-                | pl.col("attr_storm_6_TEXT").is_null()
-            ),
-            (
-                pl.col("attr_outage").list.contains(13)
-                | pl.col("attr_outage_13_TEXT").is_null()
-            ),
-            (
-                pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
-                | pl.col("dustin_support").is_null()
-            ),
-            (
-                pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
-                | pl.col("dustin_oppose").is_null()
-            ),
-            (pl.col("cvcc7a").is_in([1, 2]) | pl.col("cvcc8a__opp").is_null()),
-            (pl.col("cvcc7a").is_in([5, 4]) | pl.col("cvcc8a__supp").is_null()),
-            (
-                pl.col("cvcc8a__opp").list.contains(6)
-                | pl.col("cvcc8a__opp_6_TEXT").is_null()
-            ),
-            (
-                pl.col("cvcc8a__supp").list.contains(8)
-                | pl.col("cvcc8a__supp_8_TEXT").is_null()
-            ),
-            ((pl.col("cv__priority") == 7) | pl.col("cv__priority_7_TEXT").is_null()),
-            ((pl.col("cv__priority2") == 7) | pl.col("cv__priority2_7_TEXT").is_null()),
-            ((pl.col("pol_party") == 3) | pl.col("pol_lean").is_null()),
-            (
-                ((pl.col("pol_party") == 2) | (pl.col("pol_lean") == 2))
-                | pl.col("pol_vote_CCdem").is_null()
-            ),
-            (
-                ((pl.col("pol_party") == 1) | (pl.col("pol_lean") == 1))
-                | pl.col("pol_vote_CCrep").is_null()
-            ),
-        )
-
-
-# class ResponseNullChecks(pa.DataFrameModel):
-#     """Validate that responses null/not-null when expected."""
-#
-#     @pa.dataframe_check
-#     def null_when_not_in_wave(cls, df: PolarsData) -> pl.LazyFrame:
-#         """Responses should be null if not asked in wave, or not for participant type."""

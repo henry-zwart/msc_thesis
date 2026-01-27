@@ -1,5 +1,9 @@
 [files]
-extend-exclude = ["reports/references.bib", "**/**.html"]
+extend-exclude = [
+    "reports/references.bib", 
+    "**/**.html",
+    "src/climate_attitudes/builder/schema.py"
+]
 
 [default]
 locale = "en-gb"
@@ -12,3 +16,5 @@ powellModelingLeveragingIntuitive2023 = "powellModelingLeveragingIntuitive2023"
 powellModellingLeveragingIntuitive2023 = "powellModelingLeveragingIntuitive2023"
 center = "center"
 centre = "center"
+randomization = "randomization"
+randomisation = "randomisation"

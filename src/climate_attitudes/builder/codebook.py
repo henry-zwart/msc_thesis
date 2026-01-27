@@ -56,7 +56,7 @@ def _reorder_columns(codebook: pl.DataFrame) -> pl.DataFrame:
         "response_schema",
         "display_logic",
         "response_requirements",
-        "randomisation",
+        "randomization",
         "w1_new",
         "w2_new",
         "w2_rep",
