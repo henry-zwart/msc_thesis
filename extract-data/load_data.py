@@ -8,41 +8,80 @@ import argparse
 import polars as pl
 
 
-def main(data_path: Path, codebook_path: Path, save_dir: Path):
-    data: pl.DataFrame = pl.read_parquet(data_path)
-    codebook: pl.DataFrame = pl.read_excel(codebook_path)
+def main(assets_dir: Path, static_assets_dir: Path, codebook_path: Path):
+    data = pl.read_parquet(
+        assets_dir / "building" / "w1w2w3w4w5_indices_weights_jul12_2022.parquet"
+    )
+
+    lee_2025_items = pl.read_parquet(static_assets_dir / "lee_2025_items.parquet")
+    ideology_type = pl.read_parquet(static_assets_dir / "ideology_type.parquet")
+    error_items = pl.read_parquet(static_assets_dir / "error_items.parquet")
+    variable_names = pl.read_parquet(static_assets_dir / "variable_names.parquet")
+
+    codebook = (
+        pl.read_excel(codebook_path)
+        .with_columns(pl.col("Variable name").alias("codebook_name"))
+        # Retrieve column names
+        .join(
+            variable_names.select("codebook_name", "column_name"),
+            on="codebook_name",
+            how="left",
+        )
+    )
+
+    # Ensure all items have column names
+    assert codebook.filter(pl.col("column_name").is_null()).is_empty(), (
+        "Some codebook items have no associated column name"
+    )
+
+    # Add "item_id" column to codebook, with unique id for each unique variable name
+    # NOTE: See note below about item name <--> variable name
+    codebook = codebook.join(
+        (
+            codebook.select(pl.col("column_name").unique(maintain_order=True))
+            .clone()
+            .with_row_index("item_id")
+        ),
+        how="left",
+        on="column_name",
+    )
 
     # == Construct 'Item' table
     # While questions vary between waves/experimental conditions, the item is the stationary
     #   concept which the question assesses.
     # NOTE: For now set the item name as the "variable name" (imperfect, since doesn't
     #   handle varying-condition questions).
-    codebook_with_item_id = codebook.join(
-        (
-            codebook.select(pl.col("Variable name").unique(maintain_order=True))
-            .clone()
-            .with_row_index("item_id")
-        ),
-        how="left",
-        on="Variable name",
-    )
 
-    item: pl.DataFrame = (
-        codebook_with_item_id.select(
-            pl.col("item_id"),
-            pl.col("Variable name").alias("name"),
-        )
-        .unique(maintain_order=True)
+    wave = pl.DataFrame({"id": [1, 2, 3, 4, 5]})
+    item = (
+        codebook.select("item_id", "codebook_name", pl.col("column_name").alias("name"))
+        # NOTE: Mock the 'category' column for now
         .with_columns(pl.lit(None, dtype=pl.String).alias("category"))
+        .unique(maintain_order=True)
+        # Demographic columns start with 'dem_'
+        .with_columns(pl.col("name").str.starts_with("dem_").alias("is_demographic"))
+        # Record items with errors
+        .join(
+            error_items.with_columns(pl.lit(True).alias("has_error")),
+            on="name",
+            how="left",
+        )
+        .with_columns(pl.col("has_error").fill_null(False))
+        # Record ideology types for political support items
+        .join(ideology_type, on="name", how="left")
+        .with_columns(pl.col(r"^ideology_.*$").fill_null(False))
+        # Record correspondence with factors from Lee et al. (2025)
+        .join(lee_2025_items, on="name", how="left")
+        .with_columns(pl.col(r"^lee_2025_.*$").fill_null(False))
     )
 
     # == Construct 'Question' table
     question = (
-        codebook_with_item_id
+        codebook
         # 1. Select relevant columns
         .select(
             pl.col("item_id"),
-            pl.col("Variable name").alias("item_name"),
+            pl.col("column_name").alias("item_name"),
             pl.col("Question text").alias("question_text"),
             pl.col("Response format").alias("response_type"),
             pl.col("Response fields").alias("response_schema"),
@@ -57,18 +96,20 @@ def main(data_path: Path, codebook_path: Path, save_dir: Path):
             pl.col("Wave 5 NEW").alias("w5_new"),
             pl.col("Wave 5 REP").alias("w5_rep"),
         )
+        .with_row_index("codebook_row_id")
         # 2. Tag with experimental condition (if necessary)
         #    NOTE: Currently not implemented.
         .with_columns(pl.lit(None, dtype=pl.Int64).alias("condition_id"))
         # 3. Remap wave occurrence to True/False
         .with_columns(
             pl.col("^w.*$").replace_strict(
-                {"N/A": False, "ERROR": False, "X": True}, return_dtype=bool
+                {"N/A": False, "ERROR": False, "X": True}, return_dtype=pl.Boolean
             )
         )
         # 4. Melt by wave occurrence and drop any False rows
         .unpivot(
             index=[
+                "codebook_row_id",
                 "item_id",
                 "item_name",
                 "question_text",
@@ -108,7 +149,7 @@ def main(data_path: Path, codebook_path: Path, save_dir: Path):
             .alias("repeating_participants"),
         )
         # 6. Create new question id column
-        .sort(by="item_id")
+        .sort(by=("codebook_row_id", "wave"))
         .with_row_index("question_id")
         # 7. For each question, record the last wave that it was modified
         #    NOTE: Currently not implemented. Should combine rows with same variable name.
@@ -184,12 +225,17 @@ def main(data_path: Path, codebook_path: Path, save_dir: Path):
     )
 
     # == Construct 'QuestionResponse' table
+    # TODO: Filter out rows with no matching question_id for given wave.
+    #   Currently we include these rows with a null response value
     question_response = (
         data.filter(pl.col("PID").is_not_null())
         .with_columns(
             pl.col("PID").cast(pl.Int64).alias("participant_id"),
             pl.col("WAVE").cast(pl.Int64).alias("wave"),
         )
+        # NOTE: Excluded because can't unpivot on list type
+        # Add transform columns
+        # .with_columns(cc_rank().list.join(","), cc_rank_condition())
         .unpivot(
             index=["participant_id", "wave"],
             variable_name="item_name",
@@ -199,13 +245,14 @@ def main(data_path: Path, codebook_path: Path, save_dir: Path):
         .join(
             item.select("item_id", pl.col("name").alias("item_name")),
             on="item_name",
-            how="right",
+            how="inner",
         )
-        # Join question to get question id
+        # Join question to get question id; exclude rows where null due to
+        #   question-not-asked
         .join(
             question.select("question_id", "item_id", "wave"),
             on=["item_id", "wave"],
-            how="left",
+            how="inner",
         )
         # Join response to get response ids
         .join(
@@ -228,32 +275,42 @@ def main(data_path: Path, codebook_path: Path, save_dir: Path):
         )
     )
 
-    # Save constructed tables at specified path
-    save_dir.mkdir(exist_ok=True)
-    item.write_parquet(save_dir / "item.parquet")
-    question.write_parquet(save_dir / "question.parquet")
-    participant.write_parquet(save_dir / "participant.parquet")
-    response.write_parquet(save_dir / "response.parquet")
-    question_response.write_parquet(save_dir / "question_response.parquet")
+    # Replace any 'dots' in item names with two underscores
+    item = item.with_columns(pl.col("name").str.replace_all(".", "__", literal=True))
+    question = question.with_columns(
+        pl.col("item_name").str.replace_all(".", "__", literal=True)
+    )
+    question_response = question_response.with_columns(
+        pl.col("item_name").str.replace_all(".", "__", literal=True)
+    )
 
-    db_path = f"sqlite:///{save_dir}/climate_attitudes.db"
-    item.write_database("item", connection=db_path, if_table_exists="replace")
-    question.write_database("question", connection=db_path, if_table_exists="replace")
-    participant.write_database(
-        "participant", connection=db_path, if_table_exists="replace"
-    )
-    response.write_database("response", connection=db_path, if_table_exists="replace")
-    question_response.write_database(
-        "question_response", connection=db_path, if_table_exists="replace"
-    )
+    # Save constructed tables at specified path
+    wave.write_parquet(assets_dir / "wave.parquet")
+    item.write_parquet(assets_dir / "item.parquet")
+    question.write_parquet(assets_dir / "question.parquet")
+    participant.write_parquet(assets_dir / "participant.parquet")
+    response.write_parquet(assets_dir / "response.parquet")
+    question_response.write_parquet(assets_dir / "question_response.parquet")
+
+    # db_path = f"sqlite:///{assets_dir}/climate_attitudes.db"
+    # wave.write_database("wave", connection=db_path, if_table_exists="replace")
+    # item.write_database("item", connection=db_path, if_table_exists="replace")
+    # question.write_database("question", connection=db_path, if_table_exists="replace")
+    # participant.write_database(
+    #     "participant", connection=db_path, if_table_exists="replace"
+    # )
+    # response.write_database("response", connection=db_path, if_table_exists="replace")
+    # question_response.write_database(
+    #     "question_response", connection=db_path, if_table_exists="replace"
+    # )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="Load", description="Load climate attitudes dataset."
     )
-    parser.add_argument("--data-path", type=Path)
-    parser.add_argument("--codebook-path", type=Path)
-    parser.add_argument("--save-dir", type=Path)
+    parser.add_argument("--assets-dir", type=Path)
+    parser.add_argument("--static-assets-dir", type=Path)
+    parser.add_argument("--codebook", type=Path)
     args = parser.parse_args()
-    main(args.data_path, args.codebook_path, args.save_dir)
+    main(args.assets_dir, args.static_assets_dir, args.codebook)

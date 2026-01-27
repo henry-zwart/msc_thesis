@@ -182,3 +182,119 @@ ${I_i, P_i, X^I_i, X^P_i}$ for the _direct_ effect. For partisan extremity the d
 equivalent, and are correctly estimated using the control set ${P_i, X^I_i, X^P_i}$.
 
 
+=== Survey overlap
+
+#figure(
+  placement: none,
+  block(width: 80%,
+  table(
+    columns: 3,
+    align: (right, center, center),
+    stroke: none,
+    table.header[Topic][Studies (Brandt (2022))][Climate Attitudes waves],
+    table.hline(stroke: 0.7pt),
+      [The Democratic party], [1,2,3], [1,2,3,4,5],
+      [The Republican party], [1,2,3], [1,2,3,4,5],
+      [Environmental protection],[1,2], [1,2,3,4,5],
+      [Gay rights], [1,2], [],
+      [Gun ownership], [1,2], [],
+      [Regulations on big business], [1,2], [1,2,3,4,5],
+      [Abortion rights], [1], [],
+      [Government aid for Black people], [1], [],
+      [Government run healthcare], [1], [5],
+      [Military spending], [1], [],
+      [Restrictions on immigration], [1], [1,2,3,4,5],
+      [Severe criminal sentences], [1], [4],
+      [Taxes on the rich], [1], [],
+      [Social security], [2], [?],
+      [Mandatory vaccines], [2], [5],
+      [Limits on medical malpractice suits], [2], [],
+      [Legalised marijuana], [2], [],
+      [Increased education funding], [2], [],
+      [Free trade with China], [2], [],
+      [Ban smoking in public places], [2], [],
+      [Requiring all students to receive the COVID-19 vaccination], [3], [],
+      [Increasing the number of Supreme Court justices], [3], [],
+      [Going to war with Iran], [3], [],
+      [Funding more research into renewable energy sources], [3], [2],
+      [Federal investments in infrastructure], [3], [1,2,3],
+      [Establishing an independent Palestinian state], [3], [],
+      [Deporting immigrants working in the United States illegally], [3], [],
+      [Banning police from using chokeholds], [3], [2,3,4,5 Similar (police brutality)],
+      [Background checks on all gun sales], [3], [],
+      [Allowing vote by mail in all elections], [3], [3],
+      [A wealth tax on wealth above \$25 million dollars], [3],
+  )
+  ),
+  caption: [Survey overlap between  #cite(<brandtMeasuringBeliefSystem2022>, form: "prose") and Climate Attitudes dataset]
+) 
+
+#figure(
+  placement: none,
+  block(width: 80%,
+  table(
+    columns: 4,
+    align: (right, left, left, center),
+    stroke: none,
+    table.header[Category][Belief topic][Further explanation][Climate Attitudes waves],
+    table.hline(stroke: 0.7pt),
+    [Vaccines], [Vaccination intentions], [Intention to vaccinate children (or hypothetical children)], [],
+    [], [Vaccine danger], [], [5],
+    [], [Toxic additives in vaccines], [], [],
+    [], [Vaccine effectiveness], [Effectiveness at _preventing_ disease], [5],
+    table.hline(stroke: 0.7pt),
+    [Childhood diseases], [Disease rarity], [], [(Similar: threat to family) 1],
+    [], [Disease severity], [], [(Similar: threat to family) 1],
+    table.hline(stroke: 0.7pt),
+    [Infant immune system (IIS)], [IIS: weakness], [], [],
+    [], [IIS: limited capacity], [Limited in capacity and easily overwhelmed], [],
+    [], [IIS: vaccines strain], [Vaccines strain the infant immune system], [],
+    table.hline(stroke: 0.7pt),
+    [Parenting and medicine], [Parental protectiveness], [], [],
+    [], [Parental expertise], [i.e., that parents usually know more about their children's health than medical experts], [],
+    [], [Medical scepticism], [Including concerns about pharmaceutical companies and corruption in the medical community], [],
+    table.hline(stroke: 0.7pt),
+    [Worldviews], [Naturalism], [Preference for natural over artificial things], [],
+    [], [Holistic balance], [Related to attitudes toward alternative medicine], [],
+  )
+  ),
+  caption: [Psychometric scales used in a Study 1 of @powellModelingLeveragingIntuitive2023.]
+) <tab:powell-climate-attitude-overlap>
+
+
+#figure(
+  placement: none,
+  block(width: 80%,
+  table(
+    columns: 2,
+    align: (right, center),
+    stroke: none,
+    table.header[Belief topic][Climate Attitudes waves],
+    [Left-right identification], [1,2,3,4,5],
+    [Gender inequality], [],
+    [Anti-LGBT], [],
+    [Euroscepticism], [],
+    [Anti-immigration], [2,3,4,5],
+    [Anti-egalitarianism], [2,3,4,5],
+    [Benefits harm economy], [],
+    [Benefits harm society], [1,2,3,4,5],
+    [Welfare chauvinism], [1,2,3,4,5 (indirect)],
+    [Anti-economic interventionism], [5],
+    [Anti-social benefits (low income)], [coincides with "Benefits harm society"],
+    [Anti-social benefits (parents)], [],
+    [Educational spending], [],
+    [Anti-basic income], [3],
+    [Anti-climate change taxes],[1,2,3],
+    [Anti-climate change renewables], [2],
+    [Anti-climate ban of appliances], [],
+    [Climate scepticism], [1,2,3,4,5],
+    [Authoritarianism], [1,2,3,4,5],
+    [Anti-libertarianism], [(Unclear distinction with authoritarianism)],
+  )
+)
+)
+
+For #cite(<leeVariationsClimateChange2025>, form: "prose"), I believe all variables are represented in the climate attitudes survey.
+
+Also consider the nature of the questions asked by each study. What would these look like in a climate 
+change context? What variables do we have that fit the description?
