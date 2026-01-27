@@ -90,6 +90,14 @@
 
 - The networks do not attempt to describe belief systems of individuals, but rather variation across the population.
 
+*Survey data:* 
+- Longitudinal survey (NZAVS) with seven waves; representative sample of New Zealand.  
+- Items are assessed as either symbolic or operational.
+- Symbolic items were: "support for party X", ideological identification, and right-wing/left-wing identification.
+- Operational components all query participants support for a particular existing or potential policy, with 
+  responses coded such that higher scores represent more conservative positions in NZ context. 
+
+
 
 == Measuring the belief system of a person @brandtMeasuringBeliefSystem2022
 
@@ -123,6 +131,26 @@ estimating individual belief system structure in a political belief context?
 - Reflecting on two theoretical/computational models of belief systems (Brandt-Sleegers, Goldberg-Stein).
 
 *Possible error in choice of Controls* (Notes, causal DAG on iPad)
+
+*Survey data:* 
+- Five studies
+- Measures of participants' attitudes: support/opposition for 12 salient political positions, 
+  coded such that higher scores reflect more conservative attitudes
+- Political engagement: "How interested in politics are you?", "How important are politics to you?"
+- Political knowledge: 10 multiple choice factual questions about current events, political power, 
+  and government procedures.
+- Conceptual similarity (following methods from #cite(<stolierTraitKnowledgeForms2020>, form: "prose"): 
+  either asked as "own-task" or "other-task" condition. Participants either rated both orders of an attitude
+  pair (study 1), or a random selection (studies 2 and 3).
+  - Own-task: "Imagine that you support one attitude, how likely is it that you will support the other?"
+  - Other-task: "Given that a person supports one attitude, how likely is it that they support the other?"
+- Demographic information: age, income, education, ethicity/race, English language, state, religious affiliation, gender.
+- Ideological identification: "When it comes to politics, do you think of yourself as a liberal, conservative, moderate, 
+  or haven't you thought much about this?"
+- Partisan identification: "Do you think of yourself as a Republican, a Democrat, an Independent, or haven't you thought
+  much about this?"
+
+
 
 == Modelling and leveraging intuitive theories to improve vaccine attitudes @powellModelingLeveragingIntuitive2023
 
@@ -194,6 +222,11 @@ understanding here is limited.
   interaction, e.g., with a third belief.
 - They note that auxiliary hypotheses and beliefs can affect belief revision outcomes (per Duhem-Quine thesis).
 
+*Survey data:*
+- Assesses 14 beliefs/attitudes/intentions (@tab:powell-beliefs).
+- Each belief assessed using 4-6 statements, including at least one reverse-coded item. Scale items listed 
+  in supplementary materials.
+
 #figure(
   block(width: 80%,
   table(
@@ -212,7 +245,7 @@ understanding here is limited.
     table.hline(stroke: 0.7pt),
     [Infant immune system (IIS)], [IIS: weakness], [],
     [], [IIS: limited capacity], [Limited in capacity and easily overwhelmed],
-    [], [IIS: vaccines strain], [Vaccined strain the infant immune system],
+    [], [IIS: vaccines strain], [Vaccines strain the infant immune system],
     table.hline(stroke: 0.7pt),
     [Parenting and medicine], [Parental protectiveness], [],
     [], [Parental expertise], [i.e., that parents usually know more about their children's health than medical experts],
@@ -223,7 +256,7 @@ understanding here is limited.
   )
   ),
   caption: [Psychometric scales used in a Study 1 of @powellModelingLeveragingIntuitive2023.]
-)
+) <tab:powell-beliefs>
 
 == The nature and structure of European belief systems: exploring the varieties of belief systems across 23 European countries @vannoordNatureStructureEuropean2025
 
@@ -311,6 +344,16 @@ limited insight into whether and how belief systems vary between countries.
 - Survey questions selected from the 2016 European Social Survey, comprising question to test both 
   #glossary("operational-component")[operational] and #glossary("symbolic-component")[symbolic] components
   of belief systems.
+
+*Survey data:*
+- 20 political beliefs.
+- Mostly single-items, some scales (averaged across items).
+- Both operational and symbolic components.
+- Broad set of beliefs, not all easily categorised as 'cultural' or 'economic'.
+- Coded such that higher scores indicate more right-wing responses.
+- Topics span: ideological identification, gender + LGBT, EU, immigration, role of government, social benefits,
+  education spending, climate change (taxes, subsidising renewables, banning low-efficiency appliances, scepticism), 
+  authoritarianism, libertarianism.
 
 == Variations in climate change belief systems across 110 geographic areas @leeVariationsClimateChange2025
 
@@ -407,3 +450,12 @@ Additional factors: education level, exposure to climate change information, GDP
   @vannoordNatureStructureEuropean2025, though they were more concerned with meta-level similarity and 
   relationships between belief systems, and qualitative 'dimensions', than structural properties.
 
+*Survey data:*
+- International study of Facebook users from 110 geographical areas ($n=99,074$).
+- Eight climate-related beliefs commonly assessed in public surveys, characterised
+  as beliefs, risk perceptions, or policy support.
+- Beliefs: climate change is happening; assuming CC happening, it is caused by human activities.
+- Risk perception: concern about CC; personal harm expected from CC; future generation harm from CC.
+- Policy support (for country where you live): in future should use more/less/same amt fossil fuel; 
+  in future should use more/less/same amt renewable energy sources; CC should be very high/high/medium/low
+  priority for government.

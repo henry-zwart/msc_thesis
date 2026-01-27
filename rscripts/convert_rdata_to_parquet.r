@@ -1,4 +1,3 @@
-library(data.table)
 library(arrow)
 
 args <- commandArgs(trailingOnly = TRUE)

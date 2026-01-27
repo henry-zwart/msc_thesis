@@ -10,6 +10,8 @@ endif
 # Each recipe runs in a single shell.
 .ONESHELL:
 
+RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w /code msc-thesis-r:latest
+
 REPORT_TYPES := proposal reading_summary climate-attitudes-eda
 PRESENTATION_TYPES := project_plan
 REPORTS = \
@@ -92,8 +94,6 @@ outputs:
 
 
 # Build climate attitudes data assets
-# data-assets: 
-# 	@$(MAKE) -C extract-data 
 ${CA_BUILT_ASSETS}/response.parquet: src/climate_attitudes/builder/response.py \
 			src/climate_attitudes/builder/schema.py \
 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
@@ -122,9 +122,9 @@ ${CA_BUILT_ASSETS}/question.parquet: src/climate_attitudes/builder/question.py \
 ${CA_BUILT_ASSETS}/item.parquet: src/climate_attitudes/builder/item.py \
 			src/climate_attitudes/builder/schema.py \
 			${CA_BUILT_ASSETS}/codebook.parquet \
-			${CA_STATIC_ASSETS}/error_items.parquet \
-			${CA_STATIC_ASSETS}/ideology_type.parquet \
-			${CA_STATIC_ASSETS}/lee_2025_items.parquet
+			${CA_STATIC_ASSETS}/error_items.csv \
+			${CA_STATIC_ASSETS}/ideology_type.csv \
+			${CA_STATIC_ASSETS}/lee_2025_items.csv
 	uv run cadata build item
 
 ${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/codebook.py \
@@ -136,6 +136,18 @@ ${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/codebook.py \
 ${CA_BUILT_ASSETS}: 
 	mkdir -p $@
 
+# == Convert Rdata response files to parquet.
+# WARNING: Takes ~12 minutes
+#
+# ${CA_RAW_ASSETS}/%.parquet: \
+# 			rscripts/convert_rdata_to_parquet.r \
+# 			${CA_RAW_ASSETS}/%.Rdata \
+# 			.docker-r
+# 	$(RUN_R) bash -c "Rscript $< /raw-data/$*.rdata /raw-data/$*.parquet"
+#
+# .docker-r: rscripts/Dockerfile
+# 	docker build -t msc-thesis-r rscripts && touch $@
+
 # Remove all generated files 
 clean: 
 	rm -rf outputs
@@ -144,5 +156,5 @@ clean:
 	@$(MAKE) clean -C reports/reading_summary
 	@$(MAKE) clean -C reports/climate-attitudes-eda
 	@$(MAKE) clean -C presentations/project_plan
-	@$(MAKE) clean -C extract-data
+	rm .docker-r
 

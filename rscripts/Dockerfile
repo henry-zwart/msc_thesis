@@ -43,7 +43,7 @@ RUN add-apt-repository "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu ja
 
 # Packages
 RUN apt-get install -y --no-install-recommends \
-	r-cran-data.table r-cran-dotenv && \
+	r-cran-dotenv && \
 	apt upgrade --yes && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

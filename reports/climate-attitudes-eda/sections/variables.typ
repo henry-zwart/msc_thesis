@@ -32,5 +32,11 @@ Extreme weather:
   - Causes of the storm
   - Causes of (power?) outages during storm
 - Causes of increased wildfire frequency in West (of USA)
+ 
 
 
+- `cc4`: Asks how much global warming/climate change is currently harming \<COMMUNITY OR LOCATION\>:
+  - Scale: 1--4 (not at all --- a great deal), and "don't know".
+  - A response $> 1$ indicates belief that climate change is happening
+  - A response of $1$ indicates belief that climate change is not happening (when community/location is broad)
+  - A response of $1$ indicates either belief in no-CC, or that no personal harm experienced (when community/location is local)
