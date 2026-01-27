@@ -1,4 +1,8 @@
-include .env
+# Include environment variables from .env if exists 
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 
 # Expand prerequisites twice, so that we capture the '%' in wildcards
 .SECONDEXPANSION:
