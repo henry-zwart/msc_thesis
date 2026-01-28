@@ -25,7 +25,7 @@ class NullableColumn:
         self.conditions = []
 
     def add_cond(
-        self, waves: int | list[int] | None = None, *, expr: pl.Expr
+        self, waves: int | list[int] | None = None, *, expr: pl.Expr | bool
     ) -> NullableColumn:
         match waves:
             case int():
@@ -35,15 +35,14 @@ class NullableColumn:
                 waves_cond = pl.col("wave").is_in(waves)
                 self.conditional_waves |= set(waves)
             case None:
-                waves_cond = True
-                self.conditional_waves = set(WAVES)
+                waves_cond = pl.col("wave").is_in(WAVES)
+                self.conditional_waves |= set(WAVES)
 
         self.conditions.append(waves_cond & expr)
         return self
 
     def show_condition(self) -> pl.Expr:
-        unconditional_waves_cond = ~pl.col("wave").is_in(self.conditional_waves)
-        return unconditional_waves_cond | pl.any_horizontal(*self.conditions)
+        return pl.any_horizontal(*self.conditions)
 
 
 class ConditionColumn:

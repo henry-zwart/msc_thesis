@@ -237,7 +237,9 @@ class ClimateAttitudesNullResponses:
         NullableColumn("dustin_oppose").add_cond(
             expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
         ),
-        NullableColumn("cvcc6").add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1),
+        NullableColumn("cvcc6")
+        .add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1)
+        .add_cond([1, 3, 4], expr=True),
         NullableColumn("cvcc7a")
         .add_cond([1, 3], expr=pl.col("GroupGreenInfrastructure") == 1)
         .add_cond(
@@ -263,7 +265,9 @@ class ClimateAttitudesNullResponses:
         NullableColumn("cvccAirDemCC").add_cond(expr=pl.col("GroupAirDemCC") == 1),
         NullableColumn("cvccAirRepCC").add_cond(expr=pl.col("GroupAirRepCC") == 1),
         NullableColumn("cvccAirCC").add_cond(expr=pl.col("GroupAirCC") == 1),
-        NullableColumn("cvcc10_cc").add_cond(2, expr=pl.col("Groupcvcc10") == 1),
+        NullableColumn("cvcc10_cc")
+        .add_cond(2, expr=pl.col("Groupcvcc10") == 1)
+        .add_cond(1, expr=True),
         NullableColumn("cv__priority_7_TEXT").add_cond(
             expr=pl.col("cv__priority") == 7
         ),
@@ -346,7 +350,7 @@ class ClimateAttitudesNullResponses:
 
         # Unpivot response to long format, with one row per question
         response_long = response.unpivot(
-            index=["participant_id", "wave", "participant_type"],
+            index=["response_id", "participant_id", "wave", "participant_type"],
             variable_name="column_name",
             value_name="response",
         )
@@ -712,7 +716,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     # behaviors taken to help address CC
     cc_behavior_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behavior_active: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_activ: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_discuss: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
