@@ -4,48 +4,7 @@ import polars as pl
 from climate_attitudes.schema.constants import WAVES
 
 
-class NullableColumn:
-    """
-    Column can be null if:
-    - Not asked in given wave
-    - Only asked to new respondents or repeating respondents
-    - Asked conditional on another response
-    - Asked conditional on experimental condition
-
-    The first two can be checked simply by joining the Question table and performing
-    some column checks (question_id null; only asked to new/repeating and respondent
-    is repeating/new).
-
-    The remaining two require specifying manual conditions.
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-        self.conditional_waves = set()
-        self.conditions = []
-
-    def add_cond(
-        self, waves: int | list[int] | None = None, *, expr: pl.Expr | bool
-    ) -> NullableColumn:
-        match waves:
-            case int():
-                waves_cond = pl.col("wave") == waves
-                self.conditional_waves.add(waves)
-            case list():
-                waves_cond = pl.col("wave").is_in(waves)
-                self.conditional_waves |= set(waves)
-            case None:
-                waves_cond = pl.col("wave").is_in(WAVES)
-                self.conditional_waves |= set(WAVES)
-
-        self.conditions.append(waves_cond & expr)
-        return self
-
-    def show_condition(self) -> pl.Expr:
-        return pl.any_horizontal(*self.conditions)
-
-
-class ConditionColumn:
+class ConditionalColumn:
     def __init__(
         self,
         name: str,
@@ -60,8 +19,8 @@ class ConditionColumn:
         self.all_groups: set[str] = set()
 
     def add_cond(
-        self, waves: int | list[int], groups: str | list[str]
-    ) -> ConditionColumn:
+        self, waves: int | list[int] | None = None, *, expr: pl.Expr | bool
+    ) -> ConditionalColumn:
         match waves:
             case int():
                 waves_cond = pl.col("wave") == waves
@@ -69,12 +28,22 @@ class ConditionColumn:
             case list():
                 waves_cond = pl.col("wave").is_in(waves)
                 self.conditional_waves |= set(waves)
+            case None:
+                waves_cond = pl.col("wave").is_in(WAVES)
+                self.conditional_waves |= set(WAVES)
 
+        self.conditions.append(waves_cond & expr)
+        return self
+
+    def add_group_cond(
+        self, waves: int | list[int], groups: str | list[str]
+    ) -> ConditionalColumn:
         if isinstance(groups, str):
             groups = [groups]
 
-        self.conditions.append(waves_cond & pl.all_horizontal(*groups))
+        self.add_cond(waves, expr=pl.all_horizontal(*groups))
         self.all_groups |= set(groups)
+
         return self
 
     def condition(self) -> pl.Expr:
@@ -82,7 +51,7 @@ class ConditionColumn:
 
 
 class ConditionGroup:
-    def __init__(self, name: str, *column: ConditionColumn, allow_null: bool = False):
+    def __init__(self, name: str, *column: ConditionalColumn, allow_null: bool = False):
         self.name = name
         self.allow_null = allow_null
         self.orig_columns: list[str] = []
@@ -102,7 +71,7 @@ class ConditionGroup:
     def temp_group_cols(self) -> pl.Expr:
         return pl.col(f"^{self.name}_group_\\d+$")
 
-    def add_column(self, column: ConditionColumn):
+    def add_column(self, column: ConditionalColumn):
         if column.name in self.orig_columns:
             raise ValueError(f"Duplicate column: {column.name}.")
         if column.name.startswith(self.name):
