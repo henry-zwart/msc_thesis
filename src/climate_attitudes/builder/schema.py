@@ -31,6 +31,10 @@ To check:
 """
 
 from __future__ import annotations
+from climate_attitudes.builder.transforms.group_columns import (
+    ConditionGroup,
+    ConditionColumn,
+)
 from climate_attitudes.settings import Config, BuiltAsset
 import polars as pl
 import polars.selectors as cs
@@ -97,80 +101,76 @@ US_STATES = [
     ("Wyoming", "WY"),
 ]
 
-DISPLAY_LOGIC_COLUMNS = [
-    "ew_attribution",
-    "ew_attribution_apr",
-    "ew_attribution_jun",
-    "ew_attribution_nov",
-    "ccComp100",
-    "ccComp50",
-    "ccComp25",
-    "ccComp10",
-    "ccComp1",
-    "ccComp0",
-    "ccSolve100",
-    "ccSolve50",
-    "ccSolve10",
-    "ccSolve1",
-    "ccSolve0",
-    "ccIO",
-    "ccIOinterest",
-    "ccGovt",
-    "ccGovtinterest",
-    "dustin_support",
-    "dustin_oppose",
-    "cvcc6",
-    "cvcc7a",
-    "cvcc8a__opp",
-    "cvcc8a__supp",
-    "cvccAirDemHealth",
-    "cvccAirRepHealth",
-    "cvccAirHealth",
-    "cvccAirDemCC",
-    "cvccAirRepCC",
-    "cvccAirCC",
-    "cvcc10_cc",
-    "pol_lean",
-    "pol_vote_CCdem",
-    "pol_vote_CCrep",
-]
-
 WAVES = [1, 2, 3, 4, 5, 6]
 
-GROUP_COLUMNS = pl.col(r"^Group.*$", r"^WTP.*$")
+GROUP_COLUMNS = pl.col(r"^Group.*$", r"^WTP.*$", "d_ran1", "d_ran2")
 
-
-# Columns with nulls where there should exist no nulls
-NULL_ERROR_COLUMNS = [
-    "ew1",
-    "ew1_apr",
-    "ew1_jun",
-    "cc_impact_1",
-    "cc5_world",
-    "cc5_wealthUS",
-    "cc5_poorUS",
-    "cc5_comm",
-    "cc_pol_RE__research",
-    "cc_pol_tax",
-    "cc_pol_car",
-    "cc_pol_subs",
-    "cc11",
-    "cc13",
-    "cc13_apr",
-    "cc_behaviorchange",
-    "dustin_ques_64",
-    "dustin_ques_256",
-    "cv__priority2",
+EXPERIMENT_CONDITION_COLUMNS = [
+    # ccIO, ccGovt, ccIOinterest, ccGovtinterest
+    ConditionGroup(
+        "cc_global_response",
+        ConditionColumn("ccIO", "ccIO")
+        .add_cond(1, ["GroupNoUSinterest", "GroupCCIO"])
+        .add_cond([2, 4], "GroupCCIO"),
+        ConditionColumn("ccGovt", "ccGovt")
+        .add_cond(1, ["GroupNoUSinterest", "GroupCCGovt"])
+        .add_cond([2, 4], "GroupCCGovt"),
+        ConditionColumn("ccIOinterest", "ccIOinterest").add_cond(
+            1, ["GroupUSinterest", "GroupCCIO"]
+        ),
+        ConditionColumn("ccGovtinterest", "ccGovtinterest").add_cond(
+            1, ["GroupUSinterest", "GroupCCGovt"]
+        ),
+    ),
+    ConditionGroup(
+        "ccCompensation",
+        ConditionColumn("ccComp0", variant=0).add_cond([1, 2, 3], "WTP0"),
+        ConditionColumn("ccComp1", variant=1).add_cond([1, 2, 3], "WTP1"),
+        ConditionColumn("ccComp10", variant=10)
+        .add_cond(1, "WTP3")
+        .add_cond([2, 3], "WTP10"),
+        ConditionColumn("ccComp25", variant=25).add_cond(1, "WTP5"),
+        ConditionColumn("ccComp50", variant=50)
+        .add_cond(1, "WTP10")
+        .add_cond([2, 3], "WTP50"),
+        ConditionColumn("ccComp100", variant=100).add_cond([2, 3], "WTP100"),
+    ),
+    ConditionGroup(
+        "ccSolving",
+        ConditionColumn("ccSolve0", variant=0).add_cond([2, 3, 4], "WTP0"),
+        ConditionColumn("ccSolve1", variant=1).add_cond([2, 3, 4], "WTP1"),
+        ConditionColumn("ccSolve10", variant=10).add_cond([2, 3, 4], "WTP10"),
+        ConditionColumn("ccSolve50", variant=50).add_cond([2, 3, 4], "WTP50"),
+        ConditionColumn("ccSolve100", variant=100).add_cond([2, 3, 4], "WTP100"),
+    ),
+    ConditionGroup(
+        "dustin_question",
+        ConditionColumn("dustin_ques_64", variant=64).add_cond(3, "d_ran1"),
+        ConditionColumn("dustin_ques_256", variant=256).add_cond(3, "d_ran2"),
+    ),
+    ConditionGroup(
+        "cvcc_clean_air_policy",
+        ConditionColumn("cvccAirCC", "Climate change (control)").add_cond(
+            2, "GroupAirCC"
+        ),
+        ConditionColumn("cvccAirDemCC", "Climate change (Democrat)").add_cond(
+            [1, 2], "GroupAirDemCC"
+        ),
+        ConditionColumn("cvccAirRepCC", "Climate change (Republican)").add_cond(
+            [1, 2], "GroupAirRepCC"
+        ),
+        ConditionColumn("cvccAirHealth", "Health (control)").add_cond(
+            2, "GroupAirHealth"
+        ),
+        ConditionColumn("cvccAirDemHealth", "Health (Democrat)").add_cond(
+            [1, 2], "GroupAirDemHealth"
+        ),
+        ConditionColumn("cvccAirRepHealth", "Health (Republican)").add_cond(
+            [1, 2], "GroupAirRepHealth"
+        ),
+        allow_null=True,
+    ),
 ]
-
-NULL_ERROR_CONDITIONAL_COLUMNS = [
-    "cvcc7a",
-]
-
-QUESTION_EXTRA_COLUMNS = {
-    "dem_stcount_1": ["dem_stcount_1_char"],
-    "dem_stcount_2": ["dem_stcount_2_char"],
-}
 
 
 class NullableColumn:
@@ -270,6 +270,8 @@ class ClimateAttitudesNullResponses:
         NullableColumn("ccGovtinterest").add_cond(
             expr=pl.all_horizontal(pl.col("GroupCCGovt", "GroupUSinterest") == 1)
         ),
+        NullableColumn("dustin_ques_64").add_cond(expr=pl.col("d_ran1") == 1),
+        NullableColumn("dustin_ques_256").add_cond(expr=pl.col("d_ran2") == 1),
         NullableColumn("dustin_support").add_cond(
             expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
         ),
@@ -853,6 +855,10 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     WTP3: int = pa.Field(isin=[None, 1], nullable=True)
     WTP1: int = pa.Field(isin=[None, 1], nullable=True)
     WTP0: int = pa.Field(isin=[None, 1], nullable=True)
+
+    # dustin_ques_64, dustin_ques_256
+    d_ran1: int = pa.Field(isin=[None, 1], nullable=True)
+    d_ran2: int = pa.Field(isin=[None, 1], nullable=True)
 
     # ccIO, ccIOinterest, ccGovt, ccGovtinterest
     GroupCCIO: int = pa.Field(isin=[None, 1], nullable=True)

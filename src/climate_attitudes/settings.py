@@ -15,6 +15,7 @@ CONFIG_DICT = SettingsConfigDict(
     env_file=("_env", ".env"),
     # We don't care about extra keys in the _env
     extra="ignore",
+    env_prefix="CA_",
 )
 
 

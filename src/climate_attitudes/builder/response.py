@@ -1,6 +1,8 @@
+from climate_attitudes.builder.transforms.group_columns import ExperimentConditions
 from climate_attitudes.builder.schema import (
     ClimateAttitudesSchema,
     ClimateAttitudesNullResponses,
+    EXPERIMENT_CONDITION_COLUMNS,
 )
 import polars as pl
 import polars.selectors as cs
@@ -97,6 +99,10 @@ def load_w1_to_5_response_data(config: Config) -> pl.LazyFrame:
     return ClimateAttitudesSchema.validate(lf)
 
 
+def add_response_id(lf: pl.LazyFrame) -> pl.LazyFrame:
+    return lf.with_row_index("response_id")
+
+
 def add_participant_type(lf: pl.LazyFrame) -> pl.LazyFrame:
     """For each response, add indicator for whether participant is new or repeating."""
     return (
@@ -117,6 +123,10 @@ def build_response_table(
     config: Config,
 ) -> pl.DataFrame:
     response = load_w1_to_5_response_data(config)
+    response = add_response_id(response)
     response = add_participant_type(response)
     ClimateAttitudesNullResponses.validate(response, config)
+
+    # Coalesce experiment condition columns
+    response = ExperimentConditions(EXPERIMENT_CONDITION_COLUMNS).coalesce(response)
     return response.collect()
