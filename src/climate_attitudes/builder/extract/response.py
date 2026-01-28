@@ -1,5 +1,6 @@
-from climate_attitudes.builder.transforms.group_columns import ExperimentConditions
-from climate_attitudes.builder.schema import (
+# from climate_attitudes.builder.transforms.group_columns import ExperimentConditions
+from climate_attitudes.schema.transforms import ExperimentConditions
+from climate_attitudes.schema.extract import (
     ClimateAttitudesSchema,
     ClimateAttitudesNullResponses,
     EXPERIMENT_CONDITION_COLUMNS,

@@ -31,9 +31,10 @@ To check:
 """
 
 from __future__ import annotations
-from climate_attitudes.builder.transforms.group_columns import (
+from climate_attitudes.schema.columns import (
     ConditionGroup,
     ConditionColumn,
+    NullableColumn,
 )
 from climate_attitudes.settings import Config, BuiltAsset
 import polars as pl
@@ -171,48 +172,6 @@ EXPERIMENT_CONDITION_COLUMNS = [
         allow_null=True,
     ),
 ]
-
-
-class NullableColumn:
-    """
-    Column can be null if:
-    - Not asked in given wave
-    - Only asked to new respondents or repeating respondents
-    - Asked conditional on another response
-    - Asked conditional on experimental condition
-
-    The first two can be checked simply by joining the Question table and performing
-    some column checks (question_id null; only asked to new/repeating and respondent
-    is repeating/new).
-
-    The remaining two require specifying manual conditions.
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-        self.conditional_waves = set()
-        self.conditions = []
-
-    def add_cond(
-        self, waves: int | list[int] | None = None, *, expr: pl.Expr
-    ) -> NullableColumn:
-        match waves:
-            case int():
-                waves_cond = pl.col("wave") == waves
-                self.conditional_waves.add(waves)
-            case list():
-                waves_cond = pl.col("wave").is_in(waves)
-                self.conditional_waves |= set(waves)
-            case None:
-                waves_cond = True
-                self.conditional_waves = set(WAVES)
-
-        self.conditions.append(waves_cond & expr)
-        return self
-
-    def show_condition(self) -> pl.Expr:
-        unconditional_waves_cond = ~pl.col("wave").is_in(self.conditional_waves)
-        return unconditional_waves_cond | pl.any_horizontal(*self.conditions)
 
 
 class ClimateAttitudesNullResponses:
@@ -750,15 +709,15 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc13: list[int] = pa.Field(nullable=True)
     cc13_apr: list[int] = pa.Field(nullable=True)
 
-    # Behaviours taken to help address CC
+    # behaviors taken to help address CC
     cc_behavior_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cc_behavior_activ: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cc_behavior_active: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_discuss: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Behaviours taken in last week to limit impact on CC
+    # behaviors taken in last week to limit impact on CC
     cc_behaviorchange: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Support climate-related policies
@@ -786,7 +745,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     dustin_oppose: int = pa.Field(isin=[1, 2, 3], nullable=True)
 
     # ==== COVID-19 / Climate-change =====
-    # Behaviour change (experienced during COVID-19 pandemic), to reduce emissions
+    # behavior change (experienced during COVID-19 pandemic), to reduce emissions
     cvcc4_personal: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)  # Intention
     cvcc4_will: int = pa.Field(
         isin=[1, 2, 3, 4, 5], nullable=True

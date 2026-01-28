@@ -1,8 +1,49 @@
 from __future__ import annotations
 import polars as pl
 
+from climate_attitudes.schema.constants import WAVES
 
-WAVES = [1, 2, 3, 4, 5, 6]
+
+class NullableColumn:
+    """
+    Column can be null if:
+    - Not asked in given wave
+    - Only asked to new respondents or repeating respondents
+    - Asked conditional on another response
+    - Asked conditional on experimental condition
+
+    The first two can be checked simply by joining the Question table and performing
+    some column checks (question_id null; only asked to new/repeating and respondent
+    is repeating/new).
+
+    The remaining two require specifying manual conditions.
+    """
+
+    def __init__(self, name: str):
+        self.name = name
+        self.conditional_waves = set()
+        self.conditions = []
+
+    def add_cond(
+        self, waves: int | list[int] | None = None, *, expr: pl.Expr
+    ) -> NullableColumn:
+        match waves:
+            case int():
+                waves_cond = pl.col("wave") == waves
+                self.conditional_waves.add(waves)
+            case list():
+                waves_cond = pl.col("wave").is_in(waves)
+                self.conditional_waves |= set(waves)
+            case None:
+                waves_cond = True
+                self.conditional_waves = set(WAVES)
+
+        self.conditions.append(waves_cond & expr)
+        return self
+
+    def show_condition(self) -> pl.Expr:
+        unconditional_waves_cond = ~pl.col("wave").is_in(self.conditional_waves)
+        return unconditional_waves_cond | pl.any_horizontal(*self.conditions)
 
 
 class ConditionColumn:
@@ -185,19 +226,3 @@ class ConditionGroup:
 
         # Finally join with original data
         return lf.join(coalesced_lf, on="response_id", how="left")
-
-
-class ExperimentConditions:
-    def __init__(self, conditions: list[ConditionGroup]):
-        self.conditions = conditions
-
-    def coalesce(self, lf: pl.LazyFrame) -> pl.LazyFrame:
-        """Combine condition-specific responses into singular columns."""
-        for cond in self.conditions:
-            lf = cond.coalesce(lf)
-
-        # Remove old columns
-        all_needs = {need for cond in self.conditions for need in cond.needs}
-        lf = lf.drop(all_needs)
-
-        return lf

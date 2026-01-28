@@ -94,41 +94,41 @@ outputs:
 
 
 # Build climate attitudes data assets
-${CA_BUILT_ASSETS}/response.parquet: src/climate_attitudes/builder/response.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/response.parquet: src/climate_attitudes/builder/extract/response.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
 			${CA_BUILT_ASSETS}/question.parquet
 	uv run cadata build response
 
 
-${CA_BUILT_ASSETS}/participant.parquet: src/climate_attitudes/builder/participant.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/participant.parquet: src/climate_attitudes/builder/extract/participant.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet
 	uv run cadata build participant
 
-${CA_BUILT_ASSETS}/item_columns.parquet: src/climate_attitudes/builder/item_columns.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/item_columns.parquet: src/climate_attitudes/builder/extract/item_columns.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_STATIC_ASSETS}/item_columns.json \
 			${CA_BUILT_ASSETS}/codebook.parquet 
 	uv run cadata build item-columns
 
 
-${CA_BUILT_ASSETS}/question.parquet: src/climate_attitudes/builder/question.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/question.parquet: src/climate_attitudes/builder/extract/question.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_BUILT_ASSETS}/codebook.parquet \
 			${CA_BUILT_ASSETS}/item.parquet
 	uv run cadata build question
 
-${CA_BUILT_ASSETS}/item.parquet: src/climate_attitudes/builder/item.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/item.parquet: src/climate_attitudes/builder/extract/item.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_BUILT_ASSETS}/codebook.parquet \
 			${CA_STATIC_ASSETS}/error_items.csv \
 			${CA_STATIC_ASSETS}/ideology_type.csv \
 			${CA_STATIC_ASSETS}/lee_2025_items.csv
 	uv run cadata build item
 
-${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/codebook.py \
-			src/climate_attitudes/builder/schema.py \
+${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/extract/codebook.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
 			| ${CA_BUILT_ASSETS}
 	uv run cadata build codebook
