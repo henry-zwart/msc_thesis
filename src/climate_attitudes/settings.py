@@ -5,7 +5,6 @@ from typing import ClassVar
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import polars as pl
-import polars.selectors as cs
 
 ITEM_NAME_MAP_PATH = "variable_names.parquet"
 
@@ -17,32 +16,6 @@ CONFIG_DICT = SettingsConfigDict(
     extra="ignore",
     env_prefix="CA_",
 )
-
-
-def clean_participant_schema(lf: pl.LazyFrame) -> pl.LazyFrame:
-    return (
-        lf
-        # Replace "dots" with double underscore for Python compatibility
-        .rename(lambda column_name: column_name.replace(".", "__"))
-        # Manual replacements
-        .rename(
-            {
-                "WAVE": "wave",
-                "PID": "participant_id",
-                "StartDate": "start_date",
-                "EndDate": "end_date",
-            }
-        )
-        .with_columns(cs.integer().cast(pl.Int64))
-        .with_columns(
-            pl.col("wave").cast(pl.Int64),
-            pl.col("participant_id").cast(pl.Int64),
-            pl.col("dem_age").cast(pl.Int64),
-            pl.col("start_date", "end_date").str.strptime(
-                pl.Datetime, format="%-m/%-d/%y %R", strict=True
-            ),
-        )
-    )
 
 
 class Config(BaseSettings):
