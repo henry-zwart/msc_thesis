@@ -103,8 +103,6 @@ US_STATES = [
 
 WAVES = [1, 2, 3, 4, 5, 6]
 
-GROUP_COLUMNS = pl.col(r"^Group.*$", r"^WTP.*$", "d_ran1", "d_ran2")
-
 NULLABLE_COLUMNS: list[str] = [
     "dem_male_77_TEXT",
     "attr_storm_6_TEXT",
@@ -275,7 +273,17 @@ class ConditionalColumns:
         return [
             getattr(ConditionalColumns, colname)
             for colname in filter(
-                lambda x: not (x.startswith("__") or x == "columns"),
+                lambda x: not (x.startswith("__") or x in ("columns", "column_names")),
+                vars(ConditionalColumns),
+            )
+        ]
+
+    @classmethod
+    def column_names(cls) -> list[str]:
+        return [
+            getattr(ConditionalColumns, colname).name
+            for colname in filter(
+                lambda x: not (x.startswith("__") or x in ("columns", "column_names")),
                 vars(ConditionalColumns),
             )
         ]
@@ -370,6 +378,27 @@ class ClimateAttitudesNullResponses:
         cls, response: pl.LazyFrame, config: Config
     ) -> pl.LazyFrame:
         """Convert wide response to long format by question; join Question table."""
+        # Load data
+        item_columns = BuiltAsset.ItemColumns.scan(config)
+        question = BuiltAsset.Question.scan(config)
+
+        # Select columns corresponding to questions, and relevant metadata
+        question_columns = (
+            item_columns.filter(
+                pl.col("column_name").is_in(response.collect_schema().names())
+            )
+            .select("column_name")
+            .collect()
+            .to_series()
+        )
+        response = response.select(
+            "response_id",
+            "participant_id",
+            "wave",
+            "participant_type",
+            *question_columns,
+        )
+
         # Convert list columns to string so we can unpivot on them
         response = response.with_columns(
             cs.list().cast(pl.List(pl.String)).list.join(",")
@@ -383,14 +412,7 @@ class ClimateAttitudesNullResponses:
         )
 
         # Get associated item name and id for each column
-        item = BuiltAsset.Item.scan(config)
-        item_columns = BuiltAsset.ItemColumns.scan(config)
         response_long = response_long.join(item_columns, on="column_name", how="left")
-        response_long = response_long.join(
-            item.select(pl.col("name").alias("item_name"), "item_id"),
-            on="item_name",
-            how="left",
-        )
 
         # Join against Question table so we can identify conditions to show question
         question = BuiltAsset.Question.scan(config)
@@ -414,9 +436,7 @@ class ClimateAttitudesNullResponses:
     ):
         """Ensure (question not in wave) ==> (response is null)."""
 
-        response = cls.join_response_to_question_long(
-            response.drop(GROUP_COLUMNS), config
-        )
+        response = cls.join_response_to_question_long(response, config)
 
         # Question ID is null if question is not asked in given wave
         not_in_wave = response.filter(pl.col("question_id").is_null())
@@ -480,9 +500,7 @@ class ClimateAttitudesNullResponses:
     ):
         """Ensure displayed unconditional questions have non-null responses."""
         response = cls.join_response_to_question_long(
-            response.drop(
-                GROUP_COLUMNS, *[col.name for col in ConditionalColumns.columns()]
-            ),
+            response.drop(*ConditionalColumns.column_names()),
             config,
         )
 

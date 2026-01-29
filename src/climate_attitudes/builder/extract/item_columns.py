@@ -18,4 +18,13 @@ def build_item_columns_table(config: Config) -> pl.DataFrame:
             data["item_name"].append(item)
             data["column_name"].append(extra_col)
 
-    return pl.DataFrame(data)
+    # Add corresponding item_id column
+    item = BuiltAsset.Item.scan(config).select(
+        pl.col("name").alias("item_name"), "item_id"
+    )
+    item_columns = pl.LazyFrame(data).join(item, on="item_name", how="left")
+
+    # Re-order columns
+    item_columns = item_columns.select("item_id", "item_name", "column_name")
+
+    return item_columns.unique(maintain_order=True).collect()
