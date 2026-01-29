@@ -1,9 +1,4 @@
-from climate_attitudes.builder.extract.item_columns import build_item_columns_table
-from climate_attitudes.builder.extract.participant import build_participant_table
-from climate_attitudes.builder.extract.response import build_response_table
-from climate_attitudes.builder.extract.question import build_question_table
-from climate_attitudes.builder.extract.codebook import build_codebook
-from climate_attitudes.builder.extract.item import build_item_table
+from climate_attitudes.builder.raw_data import extract_raw_data
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import (
@@ -14,7 +9,7 @@ from pydantic_settings import (
 )
 from rich.console import Console
 
-from climate_attitudes.settings import Config, BuiltAsset
+from climate_attitudes.settings import Config
 
 console = Console()
 
@@ -39,55 +34,9 @@ class BaseCommand(BaseSettings):
         )
 
 
-class BuildCodebookCommand(BaseCommand):
+class ExtractRawDataCommand(BaseCommand):
     def cli_cmd(self) -> None:
-        codebook = build_codebook(self.settings)
-        codebook.write_parquet(BuiltAsset.Codebook.filepath(self.settings))
-
-
-class BuildItemCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        item_table = build_item_table(self.settings)
-        BuiltAsset.Item.write(item_table, self.settings)
-
-
-class BuildQuestionCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        question_table = build_question_table(self.settings)
-        BuiltAsset.Question.write(question_table, self.settings)
-
-
-class BuildItemColumnsCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        columns = build_item_columns_table(self.settings)
-        BuiltAsset.ItemColumns.write(columns, self.settings)
-
-
-class BuildParticipantCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        participant_table = build_participant_table(self.settings)
-        BuiltAsset.Participant.write(participant_table, self.settings)
-
-
-class BuildResponseCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        response_table = build_response_table(self.settings)
-        BuiltAsset.Response.write(response_table, self.settings)
-
-
-class BuildCommand(BaseModel):
-    """Extract, clean, and build climate attitudes dataset."""
-
-    codebook: CliSubCommand[BuildCodebookCommand]
-    item: CliSubCommand[BuildItemCommand]
-    question: CliSubCommand[BuildQuestionCommand]
-    item_columns: CliSubCommand[BuildItemColumnsCommand]
-    participant: CliSubCommand[BuildParticipantCommand]
-    response: CliSubCommand[BuildResponseCommand]
-
-    def cli_cmd(self):
-        """Run the CLI application."""
-        CliApp.run_subcommand(self)
+        extract_raw_data(self.settings)
 
 
 class CAData(
@@ -99,7 +48,7 @@ class CAData(
 ):
     """Climate attitudes dataset CLI."""
 
-    build: CliSubCommand[BuildCommand]
+    extract: CliSubCommand[ExtractRawDataCommand]
 
     def cli_cmd(self):
         """Run the CLI application."""

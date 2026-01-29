@@ -1,13 +1,14 @@
-# from climate_attitudes.builder.transforms.group_columns import ExperimentConditions
-from climate_attitudes.schema.transforms import ExperimentConditions
 from climate_attitudes.schema.extract import (
-    ClimateAttitudesSchema,
+    OutputResponseSchema,
     ClimateAttitudesNullResponses,
-    EXPERIMENT_CONDITION_COLUMNS,
+    ParticipantType,
 )
 import polars as pl
 import polars.selectors as cs
 from climate_attitudes.settings import Config, RawDataFile
+
+from pandera.typing.polars import DataFrame
+import pandera.polars as pa
 
 
 def remove_null_pids(lf: pl.LazyFrame) -> pl.LazyFrame:
@@ -31,7 +32,7 @@ def clean_schema(lf: pl.LazyFrame) -> pl.LazyFrame:
         .with_columns(cs.integer().cast(pl.Int64))
         .with_columns(
             pl.col("wave").cast(pl.Int64),
-            pl.col("participant_id").cast(pl.Int64),
+            pl.col("participant_id").cast(pl.UInt32),
             pl.col("dem_age").cast(pl.Int64),
             pl.col("start_date", "end_date").str.strptime(
                 pl.Datetime, format="%-m/%-d/%y %R", strict=True
@@ -41,7 +42,14 @@ def clean_schema(lf: pl.LazyFrame) -> pl.LazyFrame:
 
 
 def filter_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
-    keep_cols = list(ClimateAttitudesSchema.build_schema_().columns.keys())
+    # Get list of columns from schema
+    schema_cols = list(OutputResponseSchema.build_schema_().columns.keys())
+
+    # Filter down to those that are in the data (i.e., not result of transform)
+    lf_cols = set(lf.collect_schema().names())
+    keep_cols = [col for col in schema_cols if col in lf_cols]
+
+    # Return data with only those cols included
     return lf.select(*keep_cols)
 
 
@@ -90,6 +98,13 @@ def split_multichoice_strings(lf: pl.LazyFrame) -> pl.LazyFrame:
 def load_w1_to_5_response_data(config: Config) -> pl.LazyFrame:
     lf = RawDataFile.Waves1to5Responses.scan(config)
 
+    # Normalise column names; coerce specialised data types
+    lf = clean_schema(lf)
+
+    # Filter out null-id participants
+    lf = lf.filter(pl.col("participant_id").is_not_null())
+
+    # Select only those columns that we validate in the Output schema
     lf = filter_columns(lf)
 
     # Column transformations
@@ -97,7 +112,7 @@ def load_w1_to_5_response_data(config: Config) -> pl.LazyFrame:
     lf = split_multichoice_strings(lf)
 
     # Validate schema
-    return ClimateAttitudesSchema.validate(lf)
+    return lf
 
 
 def add_response_id(lf: pl.LazyFrame) -> pl.LazyFrame:
@@ -114,20 +129,32 @@ def add_participant_type(lf: pl.LazyFrame) -> pl.LazyFrame:
             pl.when(pl.col("wave_joined") == pl.col("wave"))
             .then(pl.lit("new"))
             .otherwise(pl.lit("repeating"))
+            .cast(ParticipantType)
             .alias("participant_type")
         )
         .drop("wave_joined")
     )
 
 
+def reorder_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
+    schema_cols = list(OutputResponseSchema.build_schema_().columns.keys())
+    return lf.select(*schema_cols)
+
+
+@pa.check_types
 def build_response_table(
     config: Config,
-) -> pl.DataFrame:
+) -> DataFrame[OutputResponseSchema]:
     response = load_w1_to_5_response_data(config)
     response = add_response_id(response)
     response = add_participant_type(response)
     ClimateAttitudesNullResponses.validate(response, config)
 
+    response = reorder_columns(response)
+
+    # TODO: After null checks, cast Group columns to bool
+    #        - We will also need to update the schema to reflect this.
+
     # Coalesce experiment condition columns
-    response = ExperimentConditions(EXPERIMENT_CONDITION_COLUMNS).coalesce(response)
+    # response = ExperimentConditions(EXPERIMENT_CONDITION_COLUMNS).coalesce(response)
     return response.collect()

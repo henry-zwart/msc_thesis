@@ -1,13 +1,20 @@
+from climate_attitudes.schema.extract import (
+    ParticipantType,
+    ResponseType,
+    OutputQuestionSchema,
+)
 from climate_attitudes.settings import (
     Config,
-    BuiltAsset,
+    InterimAsset,
 )
 import polars as pl
+import pandera.polars as pa
+from pandera.typing.polars import DataFrame
 
 
 def load_questions(config: Config) -> pl.LazyFrame:
-    codebook = BuiltAsset.Codebook.scan(config).with_row_index("codebook_row_id")
-    item_ids = BuiltAsset.Item.scan(config).select(
+    codebook = InterimAsset.Codebook.scan(config).with_row_index("codebook_row_id")
+    item_ids = InterimAsset.Item.scan(config).select(
         "item_id", pl.col("name").alias("item_name")
     )
     return codebook.join(item_ids, on="item_name", how="left", maintain_order="left")
@@ -56,6 +63,13 @@ def add_question_id(questions: pl.LazyFrame) -> pl.LazyFrame:
     return questions.with_row_index("question_id")
 
 
+def recast_enum_cols(questions: pl.LazyFrame) -> pl.LazyFrame:
+    return questions.with_columns(
+        pl.col("participant_type").cast(ParticipantType),
+        pl.col("response_type").cast(ResponseType),
+    )
+
+
 def reorder_columns(questions: pl.LazyFrame) -> pl.LazyFrame:
     return questions.select(
         "question_id",
@@ -71,9 +85,11 @@ def reorder_columns(questions: pl.LazyFrame) -> pl.LazyFrame:
     )
 
 
-def build_question_table(config: Config) -> pl.DataFrame:
+@pa.check_types
+def build_question_table(config: Config) -> DataFrame[OutputQuestionSchema]:
     questions = load_questions(config)
     questions = unpivot_questions_by_wave(questions)
     questions = add_question_id(questions)
+    questions = recast_enum_cols(questions)
     questions = reorder_columns(questions)
     return questions.collect()

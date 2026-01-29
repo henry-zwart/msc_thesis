@@ -3,25 +3,8 @@ Errors:
 -------
 
 - PID: Sometimes null.
-- Null values where there shouldn't be: ew1, ew1_apr, ew1_jun, cc_impact_1, cc5_world,
-    cc5_wealthUS, cc5_poorUS, cc5_comm, cc_pol_RE__research, cc_pol_tax, cc_pol_car,
-    cc_pol_subs, cc11, cc13, cc13_apr, cc_behaviorchange, dustin_ques_64,
-    dustin_ques_256, cv__priority2
 - We also have null values in cvcc7a. Wave 3, GroupGreenInfrastructure == 1 but
     response is null.
-- ew1: Responses contain both null and "0" (none of the above) responses. On closer
-    inspection, at least some of the null respondents responded to the ew1_apr or
-    ew1_jun questions instead, even though these are only for repeating participants,
-    and these respondents had no prior recorded waves. Filtering out any
-    participants whose first recorded wave has a response to a "repeating-only"
-    question, and vice-versa, fixes all of the above columns except: cc_impact_1,
-    cc_behaviorchange, dustin_ques_64, dustin_ques_256.
-- cc13: Codebook says both variants asked in wave 1 (note that only first variant
-    options are observed in wave 1)
-- WTP: Codebook says `WTP` condition column used for ccComp10 in wave 2. But column
-    doesn't exist. Currently using `WTP10` instead; following pattern from other vars.
-- GroupInfrastructure: Codebook doesn't specify when this is used. Presumably it is
-    an alternative to GroupGreenInfrastructure.
 
 To check:
 ---------
@@ -35,73 +18,13 @@ from climate_attitudes.schema.columns import (
     ConditionGroup,
     ConditionalColumn,
 )
-from climate_attitudes.settings import Config, BuiltAsset
+from climate_attitudes.settings import Config, InterimAsset
+from climate_attitudes.schema.constants import US_STATES, WAVES
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
 from pandera.polars import PolarsData
 
-US_STATES = [
-    ("Alabama", "AL"),
-    ("Alaska", "AK"),
-    ("Arizona", "AZ"),
-    ("Arkansas", "AR"),
-    ("American Samoa", "AS"),
-    ("California", "CA"),
-    ("Colorado", "CO"),
-    ("Connecticut", "CT"),
-    ("Delaware", "DE"),
-    ("District of Columbia", "DC"),
-    ("Florida", "FL"),
-    ("Georgia", "GA"),
-    ("Guam", "GU"),
-    ("Hawaii", "HI"),
-    ("Idaho", "ID"),
-    ("Illinois", "IL"),
-    ("Indiana", "IN"),
-    ("Iowa", "IA"),
-    ("Kansas", "KS"),
-    ("Kentucky", "KY"),
-    ("Louisiana", "LA"),
-    ("Maine", "ME"),
-    ("Maryland", "MD"),
-    ("Massachusetts", "MA"),
-    ("Michigan", "MI"),
-    ("Minnesota", "MN"),
-    ("Mississippi", "MS"),
-    ("Missouri", "MO"),
-    ("Montana", "MT"),
-    ("Nebraska", "NE"),
-    ("Nevada", "NV"),
-    ("New Hampshire", "NH"),
-    ("New Jersey", "NJ"),
-    ("New Mexico", "NM"),
-    ("New York", "NY"),
-    ("North Carolina", "NC"),
-    ("North Dakota", "AND"),
-    ("Northern Mariana Islands", "MP"),
-    ("Ohio", "OH"),
-    ("Oklahoma", "OK"),
-    ("Oregon", "OR"),
-    ("Pennsylvania", "PA"),
-    ("Puerto Rico", "PR"),
-    ("Rhode Island", "RI"),
-    ("South Carolina", "SC"),
-    ("South Dakota", "SD"),
-    ("Tennessee", "TN"),
-    ("Texas", "TX"),
-    ("Trust Territories", "TT"),
-    ("Utah", "UT"),
-    ("Vermont", "VT"),
-    ("Virginia", "VA"),
-    ("Virgin Islands", "VI"),
-    ("Washington", "WA"),
-    ("West Virginia", "WV"),
-    ("Wisconsin", "WI"),
-    ("Wyoming", "WY"),
-]
-
-WAVES = [1, 2, 3, 4, 5, 6]
 
 NULLABLE_COLUMNS: list[str] = [
     "dem_male_77_TEXT",
@@ -379,8 +302,8 @@ class ClimateAttitudesNullResponses:
     ) -> pl.LazyFrame:
         """Convert wide response to long format by question; join Question table."""
         # Load data
-        item_columns = BuiltAsset.ItemColumns.scan(config)
-        question = BuiltAsset.Question.scan(config)
+        item_columns = InterimAsset.ItemColumns.scan(config)
+        question = InterimAsset.Question.scan(config)
 
         # Select columns corresponding to questions, and relevant metadata
         question_columns = (
@@ -415,7 +338,7 @@ class ClimateAttitudesNullResponses:
         response_long = response_long.join(item_columns, on="column_name", how="left")
 
         # Join against Question table so we can identify conditions to show question
-        question = BuiltAsset.Question.scan(config)
+        question = InterimAsset.Question.scan(config)
         return response_long.join(
             question.select(
                 "question_id",
@@ -538,9 +461,9 @@ class ClimateAttitudesNullResponses:
         config: Config,
     ):
         """Ensure displayed conditional questions have non-null responses."""
-        item_columns = BuiltAsset.ItemColumns.scan(config)
+        item_columns = InterimAsset.ItemColumns.scan(config)
         question = (
-            BuiltAsset.Question.scan(config)
+            InterimAsset.Question.scan(config)
             .select(
                 "item_name",
                 "question_id",
@@ -591,25 +514,117 @@ class ClimateAttitudesNullResponses:
             print()
 
 
-class ClimateAttitudesSchema(pa.DataFrameModel):
-    wave: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
-    participant_id: int = pa.Field(nullable=False)
-    start_date: pl.Datetime = pa.Field(nullable=False)
-    end_date: pl.Datetime = pa.Field(nullable=False)
+ResponseType = pl.Enum(
+    [
+        "Single response",
+        "Multiple response",
+        "Dropdown",
+        "Text",
+        "Slider",
+        "Numeric",
+        "Drag and drop (in order)",
+    ]
+)
+
+
+class BaseSchema(pa.DataFrameModel):
+    class Config:
+        ordered = True
+        strict = True
+
+
+class OutputCodebookSchema(BaseSchema):
+    codebook_name: str
+    item_name: str
+    question_text: str
+    response_type: ResponseType  # ty: ignore (not handling Polars Enum)
+    response_schema: str = pa.Field(nullable=True)
+    display_logic: str = pa.Field(nullable=True)
+    response_requirements: str = pa.Field(nullable=True)
+    randomization: str = pa.Field(nullable=True)
+    note: str = pa.Field(nullable=True)
+    w1_new: bool
+    w2_new: bool
+    w2_rep: bool
+    w3_new: bool
+    w3_rep: bool
+    w4_new: bool
+    w4_rep: bool
+    w5_new: bool
+    w5_rep: bool
+
+
+class OutputItemColumnsSchema(BaseSchema):
+    item_id: pl.UInt32
+    item_name: str
+    column_name: str
+
+
+class OutputItemSchema(BaseSchema):
+    item_id: pl.UInt32
+    name: str
+    codebook_name: str
+    category: str = pa.Field(nullable=True)
+    is_demographic: bool
+    has_error: bool
+    ideology_operational: bool
+    ideology_symbolic: bool
+    lee_2025_cc_happening: bool
+    lee_2025_cc_human: bool
+    lee_2025_cc_worried: bool
+    lee_2025_personal_harm: bool
+    lee_2025_future_gen_harm: bool
+    lee_2025_fossil_fuel_reduction: bool
+    lee_2025_renewable_energy: bool
+    lee_2025_govt_priority: bool
+
+
+ParticipantType = pl.Enum(["new", "repeating"])
+
+
+class OutputQuestionSchema(BaseSchema):
+    question_id: pl.UInt32
+    item_id: pl.UInt32
+    item_name: str
+    codebook_name: str
+    wave: int = pa.Field(isin=WAVES)
+    participant_type: ParticipantType  # ty: ignore
+    response_type: ResponseType  # ty: ignore
+    response_schema: str = pa.Field(nullable=True)
+    question_text: str
+
+
+class OutputParticipationSchema(BaseSchema):
+    participant_id: pl.UInt32
+    wave_joined: int = pa.Field(isin=WAVES)
+    wave_1: bool
+    wave_2: bool
+    wave_3: bool
+    wave_4: bool
+    wave_5: bool
+
+
+class OutputResponseSchema(BaseSchema):
+    response_id: pl.UInt32
+    wave: int = pa.Field(isin=WAVES)
+    participant_id: pl.UInt32
+    participant_type: ParticipantType  # ty: ignore
+    start_date: pl.Datetime
+    end_date: pl.Datetime
 
     # Demographic columns
-    dem_stcount_1: int = pa.Field(nullable=False)  # State
+    dem_stcount_1: int  # State
     dem_stcount_1_char: str = pa.Field(
-        isin=[name for state, name in US_STATES], nullable=False
+        isin=[name for state, name in US_STATES],
     )
-    dem_stcount_2: int = pa.Field(nullable=False)  # County
-    dem_stcount_2_char: str = pa.Field(nullable=False)
-    dem_zip: str = pa.Field(nullable=False)  # Zip code
-    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
-    dem_male: int = pa.Field(isin=[0, 1, 77], nullable=False)
+    dem_stcount_2: int  # County
+    dem_stcount_2_char: str
+    dem_zip: str  # Zip code
+    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
+    dem_male: int = pa.Field(isin=[0, 1, 77])
     dem_male_77_TEXT: str = pa.Field(nullable=True)  # Nonempty if dem_male == 77
-    dem_age: int = pa.Field(gt=0, le=99, nullable=False)
-    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
+    dem_age: int = pa.Field(gt=0, le=99)
+    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
 
     # Extreme weather
     ew1: list[int] = pa.Field(nullable=True)
@@ -620,7 +635,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
-    ew5: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+    ew5: int = pa.Field(isin=[1, 2, 3, 4])
     attr_storm: list[int] = pa.Field(nullable=True)
     attr_storm_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     attr_outage: list[int] = pa.Field(nullable=True)
@@ -646,9 +661,9 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc4_world: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_wealthcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_poorcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
-    cc4_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
-    cc4_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
-    cc4_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
+    cc4_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99])
+    cc4_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99])
+    cc4_comm: int = pa.Field(isin=[1, 2, 3, 4, 99])
     cc4_person: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_famheal: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     cc4_famecon: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
@@ -669,7 +684,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc5_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
 
     # Level of worry about climate change
-    cc6: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+    cc6: int = pa.Field(isin=[1, 2, 3, 4])
 
     # Should <PERSON/ENTITY> be doing more/less to address current and future CC
     cc7_pres: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -845,10 +860,10 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     pol_threat_cc: int = pa.Field(isin=[1, 2, 3], nullable=True)
 
     # Strict environmental laws: hurt economy vs. worth the cost
-    pol7: int = pa.Field(isin=[1, 2], nullable=False)
+    pol7: int = pa.Field(isin=[1, 2])
 
     # Political identification
-    pol_party: int = pa.Field(isin=[1, 2, 3], nullable=False)
+    pol_party: int = pa.Field(isin=[1, 2, 3])
     pol_lean: int = pa.Field(isin=[1, 2, 4], nullable=True)
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
@@ -896,7 +911,6 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     GroupAirCC: int = pa.Field(isin=[None, 1], nullable=True)
 
     # cvcc10
-    # NOTE: Group only used for wave 2
     Groupcvcc10: int = pa.Field(isin=[None, 1], nullable=True)
 
     # Political leaning (pol_vote_CC<X>)

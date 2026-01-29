@@ -74,11 +74,7 @@ class RawDataFile(Enum):
     def scan(self, config) -> pl.LazyFrame:
         match self:
             case RawDataFile.Waves1to5Responses:
-                return clean_participant_schema(
-                    pl.scan_parquet(self.filepath(config)).filter(
-                        pl.col("PID").is_not_null(),
-                    )
-                )
+                return pl.scan_parquet(self.filepath(config))
             case _:
                 raise NotImplementedError
 
@@ -121,7 +117,7 @@ class StaticAsset(Enum):
                 return pl.scan_csv(self.filepath(config))
 
 
-class BuiltAsset(Enum):
+class InterimAsset(Enum):
     Codebook = auto()
     Wave = auto()
     Item = auto()
@@ -132,23 +128,23 @@ class BuiltAsset(Enum):
 
     def filename(self) -> Path:
         match self:
-            case BuiltAsset.Codebook:
+            case InterimAsset.Codebook:
                 return Path("codebook.parquet")
-            case BuiltAsset.Wave:
+            case InterimAsset.Wave:
                 return Path("wave.parquet")
-            case BuiltAsset.Item:
+            case InterimAsset.Item:
                 return Path("item.parquet")
-            case BuiltAsset.Question:
+            case InterimAsset.Question:
                 return Path("question.parquet")
-            case BuiltAsset.ItemColumns:
+            case InterimAsset.ItemColumns:
                 return Path("item_columns.parquet")
-            case BuiltAsset.Participant:
+            case InterimAsset.Participant:
                 return Path("participant.parquet")
-            case BuiltAsset.Response:
+            case InterimAsset.Response:
                 return Path("response.parquet")
 
     def filepath(self, config: Config) -> Path:
-        return config.built_assets / self.filename()
+        return config.built_assets / "extract" / self.filename()
 
     def load(self, config: Config) -> pl.DataFrame:
         return pl.read_parquet(self.filepath(config))
@@ -158,3 +154,6 @@ class BuiltAsset(Enum):
 
     def write(self, df: pl.DataFrame, config: Config):
         df.write_parquet(self.filepath(config))
+
+    def sink(self, lf: pl.LazyFrame, config: Config):
+        lf.sink_parquet(self.filepath(config))
