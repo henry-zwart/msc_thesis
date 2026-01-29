@@ -93,47 +93,19 @@ outputs:
 	@mkdir outputs
 
 
-# Build climate attitudes data assets
-${CA_BUILT_ASSETS}/response.parquet: src/climate_attitudes/builder/extract/response.py \
-			src/climate_attitudes/schema/extract.py \
+# Extract raw climate attitudes data
+${CA_BUILT_ASSETS}/.extract: src/climate_attitudes/schema/extract.py \
 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-			${CA_BUILT_ASSETS}/question.parquet
-	uv run cadata build response
-
-
-${CA_BUILT_ASSETS}/participant.parquet: src/climate_attitudes/builder/extract/participant.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet
-	uv run cadata build participant
-
-${CA_BUILT_ASSETS}/item_columns.parquet: src/climate_attitudes/builder/extract/item_columns.py \
-			src/climate_attitudes/schema/extract.py \
+			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
 			${CA_STATIC_ASSETS}/item_columns.json \
-			${CA_BUILT_ASSETS}/codebook.parquet 
-	uv run cadata build item-columns
-
-
-${CA_BUILT_ASSETS}/question.parquet: src/climate_attitudes/builder/extract/question.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_BUILT_ASSETS}/codebook.parquet \
-			${CA_BUILT_ASSETS}/item.parquet
-	uv run cadata build question
-
-${CA_BUILT_ASSETS}/item.parquet: src/climate_attitudes/builder/extract/item.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_BUILT_ASSETS}/codebook.parquet \
 			${CA_STATIC_ASSETS}/error_items.csv \
 			${CA_STATIC_ASSETS}/ideology_type.csv \
-			${CA_STATIC_ASSETS}/lee_2025_items.csv
-	uv run cadata build item
+			${CA_STATIC_ASSETS}/lee_2025_items.csv \
+			| ${CA_BUILT_ASSETS}/extract
+	uv run cadata extract && touch $@
 
-${CA_BUILT_ASSETS}/codebook.parquet: src/climate_attitudes/builder/extract/codebook.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
-			| ${CA_BUILT_ASSETS}
-	uv run cadata build codebook
 
-${CA_BUILT_ASSETS}: 
+${CA_BUILT_ASSETS}/extract: 
 	mkdir -p $@
 
 # == Convert Rdata response files to parquet.
@@ -157,4 +129,5 @@ clean:
 	@$(MAKE) clean -C reports/climate-attitudes-eda
 	@$(MAKE) clean -C presentations/project_plan
 	rm .docker-r
+	rm ${CA_BUILT_ASSETS}/.extract
 
