@@ -12,7 +12,7 @@ class ConditionalColumn:
         variant: str | int | None = None,
     ):
         self.name = name
-        self.group_name = group
+        self.group = group
         self.variant = variant
         self.conditional_waves = set()
         self.conditions = []
@@ -41,7 +41,7 @@ class ConditionalColumn:
         if isinstance(groups, str):
             groups = [groups]
 
-        self.add_cond(waves, expr=pl.all_horizontal(*groups))
+        self.add_cond(waves, expr=pl.all_horizontal(*[pl.col(g) == 1 for g in groups]))
         self.all_groups |= set(groups)
 
         return self
@@ -83,7 +83,7 @@ class ConditionGroup:
         self.waves |= column.conditional_waves
         self.needs |= {column.name, *column.all_groups}
         self.group_conditions[column.name] = column.condition()
-        self.group_names[column.name] = column.group_name
+        self.group_names[column.name] = column.group
         self.group_variants[column.name] = column.variant
 
     def validate_all_rows_have_group(self, lf: pl.LazyFrame):
