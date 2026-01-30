@@ -1,4 +1,4 @@
-from climate_attitudes.schema.extract import OutputParticipationSchema
+from climate_attitudes.schema.extract import OutputParticipantSchema
 from climate_attitudes.settings import (
     Config,
     InterimAsset,
@@ -36,7 +36,7 @@ def add_bool_participation_indicators(lf: pl.LazyFrame) -> pl.LazyFrame:
 
 
 @pa.check_types
-def build_participant_table(config: Config) -> DataFrame[OutputParticipationSchema]:
+def build_participant_table(config: Config) -> DataFrame[OutputParticipantSchema]:
     participants = InterimAsset.Response.scan(config).select("participant_id", "wave")
     participants = record_wave_joined(participants)
     participants = add_bool_participation_indicators(participants)
