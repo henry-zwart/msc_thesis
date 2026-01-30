@@ -13,6 +13,10 @@ To check:
 - pol7_DO: Is this question ordering? Entries are of form "1|2", "2|1"
 """
 
+# TODO: Refactor response schema into single defined object which generates
+# pandera schema as required --- to avoid the multiple definitions currently
+# required for each column, and simplify treatment group logic.
+
 from __future__ import annotations
 from climate_attitudes.schema.columns import (
     ConditionGroup,
@@ -25,6 +29,7 @@ import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
 from pandera.polars import PolarsData
+from .enums import ResponseType, ParticipantType
 
 
 NULLABLE_COLUMNS: list[str] = [
@@ -617,19 +622,6 @@ class ClimateAttitudesNullResponses:
             print()
 
 
-ResponseType = pl.Enum(
-    [
-        "Single response",
-        "Multiple response",
-        "Dropdown",
-        "Text",
-        "Slider",
-        "Numeric",
-        "Drag and drop (in order)",
-    ]
-)
-
-
 class BaseSchema(pa.DataFrameModel):
     class Config:
         ordered = True
@@ -682,9 +674,6 @@ class OutputItemSchema(BaseSchema):
     lee_2025_govt_priority: bool
 
 
-ParticipantType = pl.Enum(["new", "repeating"])
-
-
 class OutputQuestionSchema(BaseSchema):
     question_id: pl.UInt32
     item_id: pl.UInt32
@@ -697,7 +686,7 @@ class OutputQuestionSchema(BaseSchema):
     question_text: str
 
 
-class OutputParticipationSchema(BaseSchema):
+class OutputParticipantSchema(BaseSchema):
     participant_id: pl.UInt32
     wave_joined: int = pa.Field(isin=WAVES)
     wave_1: bool
