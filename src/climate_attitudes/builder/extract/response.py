@@ -2,10 +2,11 @@ from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ClimateAttitudesNullResponses,
     ParticipantType,
+    ConditionalColumns,
 )
 import polars as pl
 import polars.selectors as cs
-from climate_attitudes.settings import Config, RawDataFile
+from climate_attitudes.settings import Config, RawDataFile, InterimAsset
 
 from pandera.typing.polars import DataFrame
 import pandera.polars as pa
@@ -53,45 +54,41 @@ def filter_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
     return lf.select(*keep_cols)
 
 
-def nullify_empty_strings(lf: pl.LazyFrame) -> pl.LazyFrame:
-    cols = [
-        "dem_male_77_TEXT",
-        "ew1",
-        "ew1_apr",
-        "ew1_jun",
-        "ew1_nov",
-        "attr_storm_6_TEXT",
-        "attr_outage_13_TEXT",
-        "cc13",
-        "cc13_apr",
-        "cvcc8a__opp",
-        "cvcc8a__supp",
-        "cvcc8a__opp_6_TEXT",
-        "cvcc8a__supp_8_TEXT",
-        "cv__priority_7_TEXT",
-        "cv__priority2_7_TEXT",
-    ]
+def split_multichoice_strings(lf: pl.LazyFrame, config: Config) -> pl.LazyFrame:
+    multichoice_columns = (
+        InterimAsset.Question.scan(config)
+        .filter(
+            pl.col("response_type") == "Multiple response",
+            pl.col("item_name").is_in(lf.collect_schema().names()),
+        )
+        .select("item_name")
+        .unique()
+        .collect()
+        .to_series()
+    )
     return lf.with_columns(
-        pl.col(cols).replace("", None),
+        pl.col(multichoice_columns)
+        .replace("", None)
+        .str.split(",")
+        .list.eval(pl.element().cast(pl.Int64))
     )
 
 
-def split_multichoice_strings(lf: pl.LazyFrame) -> pl.LazyFrame:
-    cols = [
-        "ew1",
-        "ew1_apr",
-        "ew1_jun",
-        "ew1_nov",
-        "attr_storm",
-        "attr_outage",
-        "cc13",
-        "cc13_apr",
-        "cc_policybenefit",
-        "cvcc8a__opp",
-        "cvcc8a__supp",
-    ]
+def clean_text_fields(lf: pl.LazyFrame, config: Config) -> pl.LazyFrame:
+    TEXT_COL_REGEX = r"^.*_TEXT$"
+    text_columns = (
+        InterimAsset.Question.scan(config)
+        .filter(pl.col("response_type") == "Text")
+        .select("item_id")
+        .unique()
+        .join(InterimAsset.ItemColumns.scan(config), on="item_id", how="left")
+        .filter(pl.col("column_name").is_in(lf.collect_schema().names()))
+        .select("column_name")
+        .collect()
+        .to_series()
+    )
     return lf.with_columns(
-        pl.col(cols).str.split(",").list.eval(pl.element().cast(pl.Int64))
+        pl.col(*text_columns, TEXT_COL_REGEX).str.strip_chars().replace("", None)
     )
 
 
@@ -108,10 +105,9 @@ def load_w1_to_5_response_data(config: Config) -> pl.LazyFrame:
     lf = filter_columns(lf)
 
     # Column transformations
-    lf = nullify_empty_strings(lf)
-    lf = split_multichoice_strings(lf)
+    lf = split_multichoice_strings(lf, config)
+    lf = clean_text_fields(lf, config)
 
-    # Validate schema
     return lf
 
 
@@ -141,6 +137,18 @@ def reorder_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
     return lf.select(*schema_cols)
 
 
+def cast_group_cols_to_bool(lf: pl.LazyFrame) -> pl.LazyFrame:
+    lf = lf.collect()
+    for column in ConditionalColumns.group_columns():
+        lf = lf.with_columns(
+            # Filter to rows where question shown; some treatment is true
+            pl.when(column.condition())
+            # Replace treatment class Null/1 indicators with bool False/True
+            .then(pl.col(column.name).is_not_null())
+        )
+    return lf.lazy()
+
+
 @pa.check_types
 def build_response_table(
     config: Config,
@@ -150,11 +158,11 @@ def build_response_table(
     response = add_participant_type(response)
     ClimateAttitudesNullResponses.validate(response, config)
 
-    response = reorder_columns(response)
-
     # TODO: After null checks, cast Group columns to bool
     #        - We will also need to update the schema to reflect this.
+    response = cast_group_cols_to_bool(response)
 
+    response = reorder_columns(response)
     # Coalesce experiment condition columns
     # response = ExperimentConditions(EXPERIMENT_CONDITION_COLUMNS).coalesce(response)
     return response.collect()

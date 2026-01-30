@@ -17,6 +17,7 @@ from __future__ import annotations
 from climate_attitudes.schema.columns import (
     ConditionGroup,
     ConditionalColumn,
+    GroupColumn,
 )
 from climate_attitudes.settings import Config, InterimAsset
 from climate_attitudes.schema.constants import US_STATES, WAVES
@@ -32,6 +33,8 @@ NULLABLE_COLUMNS: list[str] = [
     "attr_outage_13_TEXT",
     "cvcc8a__opp_6_TEXT",
     "cvcc8a__supp_8_TEXT",
+    "cvcc8b__opp_6_TEXT",
+    "cvcc8b__supp_6_TEXT",
 ]
 
 
@@ -123,17 +126,18 @@ class ConditionalColumns:
 
     cvcc6 = (
         ConditionalColumn("cvcc6")
-        .add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1)
         .add_cond([1, 3, 4], expr=True)
+        .add_group_cond(2, "Groupcvcc_5and6")
     )
     cvcc7a = (
         ConditionalColumn("cvcc7a")
-        .add_cond([1, 3], expr=pl.col("GroupGreenInfrastructure") == 1)
-        .add_cond(
-            2,
-            expr=(pl.col("GroupGreenInfrastructure") == 1)
-            & (pl.col("Groupcvcc7show") == 1),
-        )
+        .add_group_cond(2, ["GroupGreenInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1, 3], "GroupGreenInfrastructure")
+    )
+    cvcc7b = (
+        ConditionalColumn("cvcc7b")
+        .add_group_cond(2, ["GroupInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1, 3], "GroupInfrastructure")
     )
 
     cvcc8a__opp = ConditionalColumn("cvcc8a__opp").add_cond(
@@ -147,6 +151,18 @@ class ConditionalColumns:
     )
     cvcc8a__supp_8_TEXT = ConditionalColumn("cvcc8a__supp_8_TEXT").add_cond(
         expr=pl.col("cvcc8a__supp").list.contains(8)
+    )
+    cvcc8b__opp = ConditionalColumn("cvcc8b__opp").add_cond(
+        expr=pl.col("cvcc7b").is_in([1, 2])
+    )
+    cvcc8b__supp = ConditionalColumn("cvcc8b__supp").add_cond(
+        expr=pl.col("cvcc7b").is_in([4, 5])
+    )
+    cvcc8b__opp_6_TEXT = ConditionalColumn("cvcc8b__opp_6_TEXT").add_cond(
+        expr=pl.col("cvcc8b__opp").list.contains(6)
+    )
+    cvcc8b__supp_6_TEXT = ConditionalColumn("cvcc8b__supp_6_TEXT").add_cond(
+        expr=pl.col("cvcc8b__supp").list.contains(6)
     )
 
     cvccAirCC = ConditionalColumn(
@@ -170,8 +186,8 @@ class ConditionalColumns:
 
     cvcc10_cc = (
         ConditionalColumn("cvcc10_cc")
-        .add_cond(2, expr=pl.col("Groupcvcc10") == 1)
         .add_cond(1, expr=True)
+        .add_group_cond(2, "Groupcvcc10")
     )
 
     cv__priority_7_TEXT = ConditionalColumn("cv__priority_7_TEXT").add_cond(
@@ -182,31 +198,98 @@ class ConditionalColumns:
     )
 
     pol_lean = ConditionalColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3)
-    pol_vote_CCdem = ConditionalColumn("pol_vote_CCdem").add_cond(
-        expr=(pl.col("GroupVoteCC") == 1)
-        & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2)
+    pol_vote_CVdem = ConditionalColumn(
+        "pol_vote_CVdem", group="COVID (Democrat)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCV",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
     )
-    pol_vote_CCrep = ConditionalColumn("pol_vote_CCrep").add_cond(
-        expr=(pl.col("GroupVoteCC") == 1)
-        & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1)
+    pol_vote_CVrep = ConditionalColumn(
+        "pol_vote_CVrep", group="COVID (Republican)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCV",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
     )
+    pol_vote_CCdem = ConditionalColumn(
+        "pol_vote_CCdem", group="Climate (Democrat)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCC",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
+    )
+    pol_vote_CCrep = ConditionalColumn(
+        "pol_vote_CCrep", group="Climate (Republican)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCC",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
+    )
+
+    # Group columns
+    WTP0 = GroupColumn("WTP0").valid_waves([1, 2, 3, 4])
+    WTP1 = GroupColumn("WTP1").valid_waves([1, 2, 3, 4])
+    WTP3 = GroupColumn("WTP3").valid_waves(1)
+    WTP5 = GroupColumn("WTP5").valid_waves(1)
+    WTP10 = GroupColumn("WTP10").valid_waves([1, 2, 3, 4])
+    WTP50 = GroupColumn("WTP50").valid_waves([2, 3, 4])
+    WTP100 = GroupColumn("WTP100").valid_waves([2, 3, 4])
+
+    GroupUSinterest = GroupColumn("GroupUSinterest").valid_waves(1)
+    GroupNoUSinterest = GroupColumn("GroupNoUSinterest").valid_waves(1)
+
+    GroupCCIO = GroupColumn("GroupCCIO").valid_waves([1, 2, 4])
+    GroupCCGovt = GroupColumn("GroupCCGovt").valid_waves([1, 2, 4])
+
+    d_ran1 = GroupColumn("d_ran1").valid_waves(3)
+    d_ran2 = GroupColumn("d_ran2").valid_waves(3)
+
+    Groupcvcc_5and6 = GroupColumn("Groupcvcc_5and6").valid_waves(2)
+    Groupcvcc10 = GroupColumn("Groupcvcc10").valid_waves(2)
+    Groupcvcc7show = GroupColumn("Groupcvcc7show").valid_waves(2)
+
+    GroupInfrastructure = GroupColumn(
+        "GroupInfrastructure",
+    ).valid_waves([1, 2, 3])
+    GroupGreenInfrastructure = GroupColumn("GroupGreenInfrastructure").valid_waves(
+        [1, 2, 3]
+    )
+
+    GroupAirCC = GroupColumn("GroupAirCC").valid_waves(2)
+    GroupAirDemCC = GroupColumn("GroupAirDemCC").valid_waves([1, 2])
+    GroupAirRepCC = GroupColumn("GroupAirRepCC").valid_waves([1, 2])
+    GroupAirHealth = GroupColumn("GroupAirHealth").valid_waves(2)
+    GroupAirDemHealth = GroupColumn("GroupAirDemHealth").valid_waves([1, 2])
+    GroupAirRepHealth = GroupColumn("GroupAirRepHealth").valid_waves([1, 2])
+
+    GroupVoteCV = GroupColumn("GroupVoteCV").valid_waves([1, 2, 3])
+    GroupVoteCC = GroupColumn("GroupVoteCC").valid_waves([1, 2, 3])
 
     @classmethod
     def columns(cls) -> list[ConditionalColumn]:
         return [
             getattr(ConditionalColumns, colname)
             for colname in filter(
-                lambda x: not (x.startswith("__") or x in ("columns", "column_names")),
+                lambda x: not (
+                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                ),
                 vars(ConditionalColumns),
             )
         ]
+
+    @classmethod
+    def group_columns(cls) -> list[GroupColumn]:
+        return list(filter(lambda col: isinstance(col, GroupColumn), cls.columns()))
 
     @classmethod
     def column_names(cls) -> list[str]:
         return [
             getattr(ConditionalColumns, colname).name
             for colname in filter(
-                lambda x: not (x.startswith("__") or x in ("columns", "column_names")),
+                lambda x: not (
+                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                ),
                 vars(ConditionalColumns),
             )
         ]
@@ -244,6 +327,12 @@ EXPERIMENT_CONDITION_COLUMNS = [
         ConditionalColumns.dustin_ques_256,
     ),
     ConditionGroup(
+        "cvcc_infrastructure_policy",
+        ConditionalColumns.cvcc7a,
+        ConditionalColumns.cvcc7b,
+        allow_null=True,
+    ),
+    ConditionGroup(
         "cvcc_clean_air_policy",
         ConditionalColumns.cvccAirCC,
         ConditionalColumns.cvccAirDemCC,
@@ -252,6 +341,18 @@ EXPERIMENT_CONDITION_COLUMNS = [
         ConditionalColumns.cvccAirDemHealth,
         ConditionalColumns.cvccAirRepHealth,
         allow_null=True,
+    ),
+    ConditionGroup(
+        "cvcc_solution_kind",
+        ConditionalColumns.cvcc6,
+        ConditionalColumns.cvcc10_cc,
+    ),
+    ConditionGroup(
+        "pol_vote_support",
+        ConditionalColumns.pol_vote_CVdem,
+        ConditionalColumns.pol_vote_CCdem,
+        ConditionalColumns.pol_vote_CVrep,
+        ConditionalColumns.pol_vote_CCrep,
     ),
 ]
 
@@ -449,7 +550,6 @@ class ClimateAttitudesNullResponses:
                 "response is not null':"
             )
 
-            # items_not_null = items_not_null.join()
             for colname, _, waves in items_null.sort(by="item_id").iter_rows():
                 print(f"  - {waves}: {colname}")
             print()
@@ -482,7 +582,10 @@ class ClimateAttitudesNullResponses:
             cond_met = response.filter(column.condition())
 
             # Join on question to filter out waves/participants not asked
-            # TODO: Check that column name is in question table
+            if column.name not in question.collect_schema().get_names():
+                raise RuntimeError(
+                    f"Column `{column.name}` not found in item column table."
+                )
             displayed = (
                 cond_met.select("wave", column.name, "participant_type")
                 .join(
@@ -826,10 +929,15 @@ class OutputResponseSchema(BaseSchema):
 
     # Policy support: large-scale green infrastructure plan
     cvcc7a: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvcc7b: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvcc8a__opp: list[int] = pa.Field(nullable=True)
     cvcc8a__supp: list[int] = pa.Field(nullable=True)
     cvcc8a__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     cvcc8a__supp_8_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 8
+    cvcc8b__opp: list[int] = pa.Field(nullable=True)
+    cvcc8b__supp: list[int] = pa.Field(nullable=True)
+    cvcc8b__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
+    cvcc8b__supp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
 
     # Policy support: reducing emissions to reduce impact of future pandemics
     cvccAirDemHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -869,52 +977,53 @@ class OutputResponseSchema(BaseSchema):
     # Would proposal of climate policies make you more or less likely to support a political candidate
     pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CCrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    pol_vote_CVdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    pol_vote_CVrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # ===== Experiment conditions =====
     # Willingness to pay (ccComp, ccSolve)
-    # NOTE: These are used for ccComp and ccSolve, but don't correspond in same ways
-    # TODO: cast to true/false, null in not-applicable columns
-    WTP100: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP50: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP10: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP5: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP3: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP1: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP0: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP100: bool = pa.Field(nullable=True)
+    WTP50: bool = pa.Field(nullable=True)
+    WTP10: bool = pa.Field(nullable=True)
+    WTP5: bool = pa.Field(nullable=True)
+    WTP3: bool = pa.Field(nullable=True)
+    WTP1: bool = pa.Field(nullable=True)
+    WTP0: bool = pa.Field(nullable=True)
 
     # dustin_ques_64, dustin_ques_256
-    d_ran1: int = pa.Field(isin=[None, 1], nullable=True)
-    d_ran2: int = pa.Field(isin=[None, 1], nullable=True)
+    d_ran1: bool = pa.Field(nullable=True)
+    d_ran2: bool = pa.Field(nullable=True)
 
     # ccIO, ccIOinterest, ccGovt, ccGovtinterest
-    GroupCCIO: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupCCGovt: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupNoUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupCCIO: bool = pa.Field(nullable=True)
+    GroupCCGovt: bool = pa.Field(nullable=True)
+    GroupUSinterest: bool = pa.Field(nullable=True)
+    GroupNoUSinterest: bool = pa.Field(nullable=True)
 
     # cvcc5 and cvcc6
-    Groupcvcc_5and6: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc_5and6: bool = pa.Field(nullable=True)
 
     # cvcc7 and cvcc8
-    Groupcvcc7show: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupGreenInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc7show: bool = pa.Field(nullable=True)
+    GroupGreenInfrastructure: bool = pa.Field(nullable=True)
+    GroupInfrastructure: bool = pa.Field(nullable=True)
 
     # cvccAir<X>Health
-    GroupAirDemHealth: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirRepHealth: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirHealth: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirDemHealth: bool = pa.Field(nullable=True)
+    GroupAirRepHealth: bool = pa.Field(nullable=True)
+    GroupAirHealth: bool = pa.Field(nullable=True)
 
     # cvccAir<X>CC
-    GroupAirDemCC: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirRepCC: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirDemCC: bool = pa.Field(nullable=True)
+    GroupAirRepCC: bool = pa.Field(nullable=True)
+    GroupAirCC: bool = pa.Field(nullable=True)
 
     # cvcc10
-    Groupcvcc10: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc10: bool = pa.Field(nullable=True)
 
     # Political leaning (pol_vote_CC<X>)
-    GroupVoteCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupVoteCC: bool = pa.Field(nullable=True)
+    GroupVoteCV: bool = pa.Field(nullable=True)
 
     @pa.dataframe_check
     def singlechoice_valid_selection(cls, df: PolarsData) -> pl.LazyFrame:
@@ -1082,6 +1191,18 @@ class OutputResponseSchema(BaseSchema):
                 "cvcc8a__supp",
                 [
                     ([1], [1, 2, 3, 4, 5, 6, 7, 8]),
+                ],
+            ),
+            (
+                "cvcc8b__opp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6]),
+                ],
+            ),
+            (
+                "cvcc8b__supp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6]),
                 ],
             ),
         ]

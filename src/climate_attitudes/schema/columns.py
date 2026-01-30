@@ -1,8 +1,6 @@
 from __future__ import annotations
 import polars as pl
 
-from climate_attitudes.schema.constants import WAVES
-
 
 class ConditionalColumn:
     def __init__(
@@ -14,9 +12,9 @@ class ConditionalColumn:
         self.name = name
         self.group = group
         self.variant = variant
-        self.conditional_waves = set()
-        self.conditions = []
-        self.all_groups: set[str] = set()
+        self.survey_conditions: list[pl.Expr | bool] = []
+        self.treatment_conditions: list[pl.Expr] = []
+        self.treatment_classes: set[str] = set()
 
     def add_cond(
         self, waves: int | list[int] | None = None, *, expr: pl.Expr | bool
@@ -24,44 +22,108 @@ class ConditionalColumn:
         match waves:
             case int():
                 waves_cond = pl.col("wave") == waves
-                self.conditional_waves.add(waves)
             case list():
                 waves_cond = pl.col("wave").is_in(waves)
-                self.conditional_waves |= set(waves)
             case None:
-                waves_cond = pl.col("wave").is_in(WAVES)
-                self.conditional_waves |= set(WAVES)
+                waves_cond = True
 
-        self.conditions.append(waves_cond & expr)
+        self.survey_conditions.append(waves_cond & expr)
+        return self
+
+    def valid_waves(self, waves: int | list[int]) -> ConditionalColumn:
+        if isinstance(waves, int):
+            waves = [waves]
+
+        self.survey_conditions.append(pl.col("wave").is_in(waves))
         return self
 
     def add_group_cond(
-        self, waves: int | list[int], groups: str | list[str]
+        self,
+        waves: int | list[int],
+        groups: str | list[str],
+        *,
+        extra_condition: pl.Expr | None = None,
     ) -> ConditionalColumn:
         if isinstance(groups, str):
             groups = [groups]
 
-        self.add_cond(waves, expr=pl.all_horizontal(*[pl.col(g) == 1 for g in groups]))
-        self.all_groups |= set(groups)
+        match waves:
+            case int():
+                waves_cond = pl.col("wave") == waves
+            case list():
+                waves_cond = pl.col("wave").is_in(waves)
+
+        if extra_condition is None:
+            extra_condition = pl.lit(True)
+
+        self.treatment_conditions.append(
+            waves_cond
+            & pl.all_horizontal(*[pl.col(g) == 1 for g in groups])
+            & extra_condition
+        )
+
+        self.treatment_classes |= set(groups)
 
         return self
 
+    def survey_condition(self) -> pl.Expr:
+        return pl.any_horizontal(*self.survey_conditions)
+
+    def treatment_condition(self) -> pl.Expr:
+        return pl.any_horizontal(*self.treatment_conditions)
+
     def condition(self) -> pl.Expr:
-        return pl.any_horizontal(*self.conditions)
+        if self.survey_conditions:
+            show_condition_met = pl.any_horizontal(*self.survey_conditions)
+        else:
+            show_condition_met = pl.lit(True)
+
+        if self.treatment_conditions:
+            treatment_condition_met = pl.any_horizontal(*self.treatment_conditions)
+        else:
+            treatment_condition_met = pl.lit(True)
+
+        return show_condition_met & treatment_condition_met
+
+
+class GroupColumn(ConditionalColumn): ...
 
 
 class ConditionGroup:
     def __init__(self, name: str, *column: ConditionalColumn, allow_null: bool = False):
         self.name = name
         self.allow_null = allow_null
-        self.orig_columns: list[str] = []
-        self.group_conditions: dict[str, pl.Expr] = {}
-        self.group_names: dict[str, str | None] = {}
-        self.group_variants: dict[str, str | int | None] = {}
-        self.waves = set()
-        self.needs = set()
+        self.columns: list[ConditionalColumn] = []
         for col in column:
             self.add_column(col)
+
+    def survey_condition(self) -> pl.Expr:
+        return pl.any_horizontal(*[col.survey_condition() for col in self.columns])
+
+    def condition(self) -> pl.Expr:
+        return pl.any_horizontal(*[col.condition() for col in self.columns])
+
+    @property
+    def response_columns(self) -> list[str]:
+        """Get list of names for response columns."""
+        return [col.name for col in self.columns]
+
+    @property
+    def group_columns(self) -> list[str]:
+        """Get list of names for treatment group columns."""
+        return list(
+            {
+                treatment_class
+                for col in self.columns
+                for treatment_class in col.treatment_classes
+            }
+        )
+
+    @property
+    def required_columns(self) -> list[str]:
+        return list(
+            {dep for col in self.columns for dep in (col.name, *col.treatment_classes)}
+        )
 
     @property
     def group_col(self) -> str:
@@ -72,19 +134,14 @@ class ConditionGroup:
         return pl.col(f"^{self.name}_group_\\d+$")
 
     def add_column(self, column: ConditionalColumn):
-        if column.name in self.orig_columns:
+        if column.name in self.response_columns:
             raise ValueError(f"Duplicate column: {column.name}.")
         if column.name.startswith(self.name):
             raise ValueError(
                 f"Conditional column name `{self.name}` is a prefix of one of its "
                 f"constituent columns: `{column.name}`."
             )
-        self.orig_columns.append(column.name)
-        self.waves |= column.conditional_waves
-        self.needs |= {column.name, *column.all_groups}
-        self.group_conditions[column.name] = column.condition()
-        self.group_names[column.name] = column.group
-        self.group_variants[column.name] = column.variant
+        self.columns.append(column)
 
     def validate_all_rows_have_group(self, lf: pl.LazyFrame):
         check = lf.select(pl.col(self.group_col).is_not_null().all()).collect().item()
@@ -94,30 +151,41 @@ class ConditionGroup:
         )
 
     def validate_exclusive_groups(self, lf: pl.LazyFrame):
-        if self.allow_null:
-            cond = pl.sum_horizontal(self.temp_group_cols.is_not_null()) <= 1
-        else:
-            cond = pl.sum_horizontal(self.temp_group_cols.is_not_null()) == 1
-
-        check = lf.select(cond.all()).collect().item()
-
-        assert check, (
-            "One or more rows has more than one assigned group for conditional "
-            f"column: {self.name}"
+        num_groups = (
+            lf.select(pl.sum_horizontal(self.temp_group_cols.is_not_null()))
+            .collect()
+            .to_series()
         )
+        if (num_groups == 0).any() and not self.allow_null:
+            raise RuntimeError(
+                f"One or more rows has no assigned group for conditional "
+                f"column: {self.name}"
+            )
+
+        if (num_groups > 1).any():
+            raise RuntimeError(
+                f"One or more rows has more than one assigned group for conditional "
+                f"column: {self.name}"
+            )
 
     def validate_exclusive_responses(self, lf: pl.LazyFrame):
-        if self.allow_null:
-            cond = pl.sum_horizontal(pl.col(*self.orig_columns).is_not_null()) <= 1
-        else:
-            cond = pl.sum_horizontal(pl.col(*self.orig_columns).is_not_null()) == 1
-
-        check = lf.select(cond.all()).collect().item()
-
-        assert check, (
-            "One or more rows has more than one non-null response for conditional "
-            f"column: {self.name}"
+        num_responses = (
+            lf.select(pl.sum_horizontal(pl.col(*self.response_columns).is_not_null()))
+            .collect()
+            .to_series()
         )
+
+        if (num_responses == 0).any() and not self.allow_null:
+            raise RuntimeError(
+                "One or more rows has no non-null response for conditional "
+                f"column: {self.name}"
+            )
+
+        if (num_responses > 1).any():
+            raise RuntimeError(
+                "One or more rows has more than one non-null response for conditional "
+                f"column: {self.name}"
+            )
 
     def coalesce(self, lf: pl.LazyFrame) -> pl.LazyFrame:
         """Coalesce group-partitioned responses.
@@ -139,20 +207,19 @@ class ConditionGroup:
         """
         coalesced_lf = (
             # Filter to relevant waves, necessary columns
-            lf.filter(pl.col("wave").is_in(self.waves))
-            .select("response_id", "wave", *self.needs)
+            lf.filter(self.condition())
             # Coalesce responses into new combined response column
-            .with_columns(pl.coalesce(*self.orig_columns).alias(self.name))
+            .with_columns(pl.coalesce(*self.response_columns).alias(self.name))
             # Create new indicator columns for group membership
             .with_columns(
                 *[
                     (
-                        self.group_conditions[orig_col]
+                        column.treatment_condition()
                         # For rows where conditions met, record the group index
                         .replace_strict({True: i, False: None}, return_dtype=pl.Int64)
                         .alias(f"{self.name}_group_{i}")
                     )
-                    for (i, orig_col) in enumerate(self.orig_columns)
+                    for (i, column) in enumerate(self.columns)
                 ]
             )
             # Coalesce group membership indicator columns to single index column
@@ -160,6 +227,8 @@ class ConditionGroup:
                 pl.coalesce(pl.col(f"^{self.name}_group_\\d+$")).alias(self.group_col)
             )
         )
+
+        coalesced_lf.collect()
 
         # Check all okay (unique groups, responses, no unexpected nulls)
         if not self.allow_null:
@@ -171,19 +240,17 @@ class ConditionGroup:
         coalesced_lf = coalesced_lf.select("response_id", self.name, self.group_col)
 
         # If all groups have names, convert group index to enum
-        if all(self.group_names.values()):
+        if all(column.group is not None for column in self.columns):
             group_enum = pl.Enum(
-                [self.group_names[orig_col] for orig_col in self.orig_columns]  # ty: ignore
+                [column.group for column in self.columns]  # ty: ignore
             )
             coalesced_lf = coalesced_lf.with_columns(
                 pl.col(self.group_col).cast(group_enum)
             )
 
         # If all groups have `variant` specified, create new column with these values
-        if all(variant is not None for variant in self.group_variants.values()):
-            group_to_variant = {
-                i: self.group_variants[col] for i, col in enumerate(self.orig_columns)
-            }
+        if all(col.variant is not None for col in self.columns):
+            group_to_variant = {i: col.variant for i, col in enumerate(self.columns)}
             variant_type = type(group_to_variant[0])
             coalesced_lf = coalesced_lf.with_columns(
                 pl.col(self.group_col)

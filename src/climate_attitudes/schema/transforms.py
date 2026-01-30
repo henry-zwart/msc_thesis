@@ -13,7 +13,7 @@ class ExperimentConditions:
             lf = cond.coalesce(lf)
 
         # Remove old columns
-        all_needs = {need for cond in self.conditions for need in cond.needs}
-        lf = lf.drop(all_needs)
+        old_cols = {col for cond in self.conditions for col in cond.required_columns}
+        lf = lf.drop(old_cols)
 
         return lf
