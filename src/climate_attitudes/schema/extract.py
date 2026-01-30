@@ -631,6 +631,7 @@ class BaseSchema(pa.DataFrameModel):
 class OutputCodebookSchema(BaseSchema):
     codebook_name: str
     item_name: str
+    item_id: pl.UInt32
     question_text: str
     response_type: ResponseType  # ty: ignore (not handling Polars Enum)
     response_schema: str = pa.Field(nullable=True)
@@ -657,7 +658,7 @@ class OutputItemColumnsSchema(BaseSchema):
 
 class OutputItemSchema(BaseSchema):
     item_id: pl.UInt32
-    name: str
+    item_name: str
     codebook_name: str
     category: str = pa.Field(nullable=True)
     is_demographic: bool
