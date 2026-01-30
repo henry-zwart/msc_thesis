@@ -158,8 +158,6 @@ def build_response_table(
     response = add_participant_type(response)
     ClimateAttitudesNullResponses.validate(response, config)
 
-    # TODO: After null checks, cast Group columns to bool
-    #        - We will also need to update the schema to reflect this.
     response = cast_group_cols_to_bool(response)
 
     response = reorder_columns(response)
