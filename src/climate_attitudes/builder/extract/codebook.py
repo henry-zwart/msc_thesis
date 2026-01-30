@@ -1,9 +1,13 @@
+from climate_attitudes.schema.extract import OutputCodebookSchema, ResponseType
 from climate_attitudes.settings import (
     Config,
     RawDataFile,
     StaticAsset,
 )
 import polars as pl
+import polars.selectors as cs
+import pandera.polars as pa
+from pandera.typing.polars import DataFrame
 
 
 def _fix_schema(codebook: pl.DataFrame) -> pl.DataFrame:
@@ -39,12 +43,20 @@ def _normalise_item_names(codebook: pl.DataFrame, config: Config) -> pl.DataFram
     )
 
 
+def _convert_response_type_to_enum(codebook: pl.DataFrame) -> pl.DataFrame:
+    return codebook.with_columns(pl.col("response_type").cast(ResponseType))
+
+
 def _convert_waves_to_bool(codebook: pl.DataFrame) -> pl.DataFrame:
     return codebook.with_columns(
         pl.col(r"^w\d_.*$").replace_strict(
             {"N/A": False, "ERROR": False, "X": True}, return_dtype=pl.Boolean
         )
     )
+
+
+def _nullify_empty_strings(codebook: pl.DataFrame) -> pl.DataFrame:
+    return codebook.with_columns(cs.string().replace("", None))
 
 
 def _reorder_columns(codebook: pl.DataFrame) -> pl.DataFrame:
@@ -57,6 +69,7 @@ def _reorder_columns(codebook: pl.DataFrame) -> pl.DataFrame:
         "display_logic",
         "response_requirements",
         "randomization",
+        "note",
         "w1_new",
         "w2_new",
         "w2_rep",
@@ -66,18 +79,20 @@ def _reorder_columns(codebook: pl.DataFrame) -> pl.DataFrame:
         "w4_rep",
         "w5_new",
         "w5_rep",
-        "note",
     )
 
 
-def build_codebook(config: Config) -> pl.DataFrame:
+@pa.check_types(lazy=True)
+def build_codebook(config: Config) -> DataFrame[OutputCodebookSchema]:
     codebook = pl.read_excel(
         RawDataFile.Codebook.filepath(config),
         schema_overrides={"Display Logic": pl.String, "Randomization": pl.String},
     )
     codebook = _fix_schema(codebook)
     codebook = _normalise_item_names(codebook, config)
+    codebook = _convert_response_type_to_enum(codebook)
     codebook = _convert_waves_to_bool(codebook)
+    codebook = _nullify_empty_strings(codebook)
     codebook = _reorder_columns(codebook)
 
     # Ensure all items have column names
@@ -85,4 +100,4 @@ def build_codebook(config: Config) -> pl.DataFrame:
         "Some codebook items have no associated column name"
     )
 
-    return codebook
+    return codebook  # ty: ignore

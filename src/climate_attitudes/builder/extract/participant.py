@@ -1,12 +1,11 @@
+from climate_attitudes.schema.extract import OutputParticipantSchema
 from climate_attitudes.settings import (
     Config,
-    RawDataFile,
+    InterimAsset,
 )
 import polars as pl
-
-
-def load_participants(config: Config) -> pl.LazyFrame:
-    return RawDataFile.Waves1to5Responses.scan(config).select("participant_id", "wave")
+import pandera.polars as pa
+from pandera.typing.polars import DataFrame
 
 
 def record_wave_joined(lf: pl.LazyFrame) -> pl.LazyFrame:
@@ -36,8 +35,9 @@ def add_bool_participation_indicators(lf: pl.LazyFrame) -> pl.LazyFrame:
     )
 
 
-def build_participant_table(config: Config) -> pl.DataFrame:
-    participants = load_participants(config)
+@pa.check_types
+def build_participant_table(config: Config) -> DataFrame[OutputParticipantSchema]:
+    participants = InterimAsset.Response.scan(config).select("participant_id", "wave")
     participants = record_wave_joined(participants)
     participants = add_bool_participation_indicators(participants)
     return participants.collect()

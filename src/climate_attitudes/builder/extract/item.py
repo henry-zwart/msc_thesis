@@ -1,9 +1,12 @@
+from climate_attitudes.schema.extract import OutputItemSchema
 from climate_attitudes.settings import (
     Config,
     StaticAsset,
-    BuiltAsset,
+    InterimAsset,
 )
 import polars as pl
+import pandera.polars as pa
+from pandera.typing.polars import DataFrame
 
 
 def load_items(config: Config) -> pl.LazyFrame:
@@ -13,7 +16,7 @@ def load_items(config: Config) -> pl.LazyFrame:
     However, this is imperfect since it does not account for item variations based
     on experiment condition.
     """
-    codebook = BuiltAsset.Codebook.scan(config)
+    codebook = InterimAsset.Codebook.scan(config)
     return (
         codebook.select(
             pl.col("item_name").alias("name"),
@@ -66,7 +69,8 @@ def _add_item_id(items: pl.LazyFrame) -> pl.LazyFrame:
     return items.with_row_index("item_id")
 
 
-def build_item_table(config: Config) -> pl.DataFrame:
+@pa.check_types
+def build_item_table(config: Config) -> DataFrame[OutputItemSchema]:
     items = load_items(config)
     items = _label_demographic_items(items)
     items = _label_error_items(items, config)

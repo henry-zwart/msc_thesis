@@ -3,25 +3,8 @@ Errors:
 -------
 
 - PID: Sometimes null.
-- Null values where there shouldn't be: ew1, ew1_apr, ew1_jun, cc_impact_1, cc5_world,
-    cc5_wealthUS, cc5_poorUS, cc5_comm, cc_pol_RE__research, cc_pol_tax, cc_pol_car,
-    cc_pol_subs, cc11, cc13, cc13_apr, cc_behaviorchange, dustin_ques_64,
-    dustin_ques_256, cv__priority2
 - We also have null values in cvcc7a. Wave 3, GroupGreenInfrastructure == 1 but
     response is null.
-- ew1: Responses contain both null and "0" (none of the above) responses. On closer
-    inspection, at least some of the null respondents responded to the ew1_apr or
-    ew1_jun questions instead, even though these are only for repeating participants,
-    and these respondents had no prior recorded waves. Filtering out any
-    participants whose first recorded wave has a response to a "repeating-only"
-    question, and vice-versa, fixes all of the above columns except: cc_impact_1,
-    cc_behaviorchange, dustin_ques_64, dustin_ques_256.
-- cc13: Codebook says both variants asked in wave 1 (note that only first variant
-    options are observed in wave 1)
-- WTP: Codebook says `WTP` condition column used for ccComp10 in wave 2. But column
-    doesn't exist. Currently using `WTP10` instead; following pattern from other vars.
-- GroupInfrastructure: Codebook doesn't specify when this is used. Presumably it is
-    an alternative to GroupGreenInfrastructure.
 
 To check:
 ---------
@@ -30,295 +13,357 @@ To check:
 - pol7_DO: Is this question ordering? Entries are of form "1|2", "2|1"
 """
 
+# TODO: Refactor response schema into single defined object which generates
+# pandera schema as required --- to avoid the multiple definitions currently
+# required for each column, and simplify treatment group logic.
+
 from __future__ import annotations
-from climate_attitudes.settings import Config, BuiltAsset
+from climate_attitudes.schema.columns import (
+    ConditionGroup,
+    ConditionalColumn,
+    GroupColumn,
+)
+from climate_attitudes.settings import Config, InterimAsset
+from climate_attitudes.schema.constants import US_STATES, WAVES
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
 from pandera.polars import PolarsData
+from .enums import ResponseType, ParticipantType
 
-US_STATES = [
-    ("Alabama", "AL"),
-    ("Alaska", "AK"),
-    ("Arizona", "AZ"),
-    ("Arkansas", "AR"),
-    ("American Samoa", "AS"),
-    ("California", "CA"),
-    ("Colorado", "CO"),
-    ("Connecticut", "CT"),
-    ("Delaware", "DE"),
-    ("District of Columbia", "DC"),
-    ("Florida", "FL"),
-    ("Georgia", "GA"),
-    ("Guam", "GU"),
-    ("Hawaii", "HI"),
-    ("Idaho", "ID"),
-    ("Illinois", "IL"),
-    ("Indiana", "IN"),
-    ("Iowa", "IA"),
-    ("Kansas", "KS"),
-    ("Kentucky", "KY"),
-    ("Louisiana", "LA"),
-    ("Maine", "ME"),
-    ("Maryland", "MD"),
-    ("Massachusetts", "MA"),
-    ("Michigan", "MI"),
-    ("Minnesota", "MN"),
-    ("Mississippi", "MS"),
-    ("Missouri", "MO"),
-    ("Montana", "MT"),
-    ("Nebraska", "NE"),
-    ("Nevada", "NV"),
-    ("New Hampshire", "NH"),
-    ("New Jersey", "NJ"),
-    ("New Mexico", "NM"),
-    ("New York", "NY"),
-    ("North Carolina", "NC"),
-    ("North Dakota", "AND"),
-    ("Northern Mariana Islands", "MP"),
-    ("Ohio", "OH"),
-    ("Oklahoma", "OK"),
-    ("Oregon", "OR"),
-    ("Pennsylvania", "PA"),
-    ("Puerto Rico", "PR"),
-    ("Rhode Island", "RI"),
-    ("South Carolina", "SC"),
-    ("South Dakota", "SD"),
-    ("Tennessee", "TN"),
-    ("Texas", "TX"),
-    ("Trust Territories", "TT"),
-    ("Utah", "UT"),
-    ("Vermont", "VT"),
-    ("Virginia", "VA"),
-    ("Virgin Islands", "VI"),
-    ("Washington", "WA"),
-    ("West Virginia", "WV"),
-    ("Wisconsin", "WI"),
-    ("Wyoming", "WY"),
+
+NULLABLE_COLUMNS: list[str] = [
+    "dem_male_77_TEXT",
+    "attr_storm_6_TEXT",
+    "attr_outage_13_TEXT",
+    "cvcc8a__opp_6_TEXT",
+    "cvcc8a__supp_8_TEXT",
+    "cvcc8b__opp_6_TEXT",
+    "cvcc8b__supp_6_TEXT",
 ]
 
-DISPLAY_LOGIC_COLUMNS = [
-    "ew_attribution",
-    "ew_attribution_apr",
-    "ew_attribution_jun",
-    "ew_attribution_nov",
-    "ccComp100",
-    "ccComp50",
-    "ccComp25",
-    "ccComp10",
-    "ccComp1",
-    "ccComp0",
-    "ccSolve100",
-    "ccSolve50",
-    "ccSolve10",
-    "ccSolve1",
-    "ccSolve0",
-    "ccIO",
-    "ccIOinterest",
-    "ccGovt",
-    "ccGovtinterest",
-    "dustin_support",
-    "dustin_oppose",
-    "cvcc6",
-    "cvcc7a",
-    "cvcc8a__opp",
-    "cvcc8a__supp",
-    "cvccAirDemHealth",
-    "cvccAirRepHealth",
-    "cvccAirHealth",
-    "cvccAirDemCC",
-    "cvccAirRepCC",
-    "cvccAirCC",
-    "cvcc10_cc",
-    "pol_lean",
-    "pol_vote_CCdem",
-    "pol_vote_CCrep",
+
+class ConditionalColumns:
+    dem_male_77_TEXT = ConditionalColumn("dem_male_77_TEXT").add_cond(
+        expr=pl.col("dem_male") == 77
+    )
+    ew_attribution = ConditionalColumn("ew_attribution").add_cond(
+        expr=pl.col("ew1") != [0]
+    )
+    ew_attribution_apr = ConditionalColumn("ew_attribution_apr").add_cond(
+        expr=pl.col("ew1_apr") != [0]
+    )
+    ew_attribution_jun = ConditionalColumn("ew_attribution_jun").add_cond(
+        expr=pl.col("ew1_jun") != [0]
+    )
+    ew_attribution_nov = ConditionalColumn("ew_attribution_nov").add_cond(
+        expr=pl.col("ew1_nov") != [0]
+    )
+    attr_storm_6_TEXT = ConditionalColumn("attr_storm_6_TEXT").add_cond(
+        expr=pl.col("attr_storm").list.contains(6)
+    )
+    attr_outage_13_TEXT = ConditionalColumn("attr_outage_13_TEXT").add_cond(
+        expr=pl.col("attr_outage").list.contains(13)
+    )
+
+    ccComp0 = ConditionalColumn("ccComp0", variant=0).add_group_cond([1, 2, 3], "WTP0")
+    ccComp1 = ConditionalColumn("ccComp1", variant=1).add_group_cond([1, 2, 3], "WTP1")
+    ccComp10 = (
+        ConditionalColumn("ccComp10", variant=10)
+        .add_group_cond(1, "WTP3")
+        .add_group_cond([2, 3], "WTP10")
+    )
+    ccComp25 = ConditionalColumn("ccComp25", variant=25).add_group_cond(1, "WTP5")
+    ccComp50 = (
+        ConditionalColumn("ccComp50", variant=50)
+        .add_group_cond(1, "WTP10")
+        .add_group_cond([2, 3], "WTP50")
+    )
+    ccComp100 = ConditionalColumn("ccComp100", variant=100).add_group_cond(
+        [2, 3], "WTP100"
+    )
+
+    ccSolve0 = ConditionalColumn("ccSolve0", variant=0).add_group_cond(
+        [2, 3, 4], "WTP0"
+    )
+    ccSolve1 = ConditionalColumn("ccSolve1", variant=1).add_group_cond(
+        [2, 3, 4], "WTP1"
+    )
+    ccSolve10 = ConditionalColumn("ccSolve10", variant=10).add_group_cond(
+        [2, 3, 4], "WTP10"
+    )
+    ccSolve50 = ConditionalColumn("ccSolve50", variant=50).add_group_cond(
+        [2, 3, 4], "WTP50"
+    )
+    ccSolve100 = ConditionalColumn("ccSolve100", variant=100).add_group_cond(
+        [2, 3, 4], "WTP100"
+    )
+
+    ccIO = (
+        ConditionalColumn("ccIO", "ccIO")
+        .add_group_cond(1, ["GroupNoUSinterest", "GroupCCIO"])
+        .add_group_cond([2, 4], "GroupCCIO")
+    )
+    ccGovt = (
+        ConditionalColumn("ccGovt", "ccGovt")
+        .add_group_cond(1, ["GroupNoUSinterest", "GroupCCGovt"])
+        .add_group_cond([2, 4], "GroupCCGovt")
+    )
+    ccIOinterest = ConditionalColumn("ccIOinterest", "ccIOinterest").add_group_cond(
+        1, ["GroupUSinterest", "GroupCCIO"]
+    )
+    ccGovtinterest = ConditionalColumn(
+        "ccGovtinterest", "ccGovtinterest"
+    ).add_group_cond(1, ["GroupUSinterest", "GroupCCGovt"])
+
+    dustin_ques_64 = ConditionalColumn("dustin_ques_64", variant=64).add_group_cond(
+        3, "d_ran1"
+    )
+    dustin_ques_256 = ConditionalColumn("dustin_ques_256", variant=256).add_group_cond(
+        3, "d_ran2"
+    )
+    dustin_support = ConditionalColumn("dustin_support").add_cond(
+        expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
+    )
+    dustin_oppose = ConditionalColumn("dustin_oppose").add_cond(
+        expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
+    )
+
+    cvcc6 = (
+        ConditionalColumn("cvcc6")
+        .add_cond([1, 3, 4], expr=True)
+        .add_group_cond(2, "Groupcvcc_5and6")
+    )
+    cvcc7a = (
+        ConditionalColumn("cvcc7a")
+        .add_group_cond(2, ["GroupGreenInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1, 3], "GroupGreenInfrastructure")
+    )
+    cvcc7b = (
+        ConditionalColumn("cvcc7b")
+        .add_group_cond(2, ["GroupInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1, 3], "GroupInfrastructure")
+    )
+
+    cvcc8a__opp = ConditionalColumn("cvcc8a__opp").add_cond(
+        expr=pl.col("cvcc7a").is_in([1, 2])
+    )
+    cvcc8a__supp = ConditionalColumn("cvcc8a__supp").add_cond(
+        expr=pl.col("cvcc7a").is_in([4, 5])
+    )
+    cvcc8a__opp_6_TEXT = ConditionalColumn("cvcc8a__opp_6_TEXT").add_cond(
+        expr=pl.col("cvcc8a__opp").list.contains(6)
+    )
+    cvcc8a__supp_8_TEXT = ConditionalColumn("cvcc8a__supp_8_TEXT").add_cond(
+        expr=pl.col("cvcc8a__supp").list.contains(8)
+    )
+    cvcc8b__opp = ConditionalColumn("cvcc8b__opp").add_cond(
+        expr=pl.col("cvcc7b").is_in([1, 2])
+    )
+    cvcc8b__supp = ConditionalColumn("cvcc8b__supp").add_cond(
+        expr=pl.col("cvcc7b").is_in([4, 5])
+    )
+    cvcc8b__opp_6_TEXT = ConditionalColumn("cvcc8b__opp_6_TEXT").add_cond(
+        expr=pl.col("cvcc8b__opp").list.contains(6)
+    )
+    cvcc8b__supp_6_TEXT = ConditionalColumn("cvcc8b__supp_6_TEXT").add_cond(
+        expr=pl.col("cvcc8b__supp").list.contains(6)
+    )
+
+    cvccAirCC = ConditionalColumn(
+        "cvccAirCC", "Climate change (control)"
+    ).add_group_cond(2, "GroupAirCC")
+    cvccAirDemCC = ConditionalColumn(
+        "cvccAirDemCC", "Climate change (Democrat)"
+    ).add_group_cond([1, 2], "GroupAirDemCC")
+    cvccAirRepCC = ConditionalColumn(
+        "cvccAirRepCC", "Climate change (Republican)"
+    ).add_group_cond([1, 2], "GroupAirRepCC")
+    cvccAirHealth = ConditionalColumn(
+        "cvccAirHealth", "Health (control)"
+    ).add_group_cond(2, "GroupAirHealth")
+    cvccAirDemHealth = ConditionalColumn(
+        "cvccAirDemHealth", "Health (Democrat)"
+    ).add_group_cond([1, 2], "GroupAirDemHealth")
+    cvccAirRepHealth = ConditionalColumn(
+        "cvccAirRepHealth", "Health (Republican)"
+    ).add_group_cond([1, 2], "GroupAirRepHealth")
+
+    cvcc10_cc = (
+        ConditionalColumn("cvcc10_cc")
+        .add_cond(1, expr=True)
+        .add_group_cond(2, "Groupcvcc10")
+    )
+
+    cv__priority_7_TEXT = ConditionalColumn("cv__priority_7_TEXT").add_cond(
+        expr=pl.col("cv__priority") == 7
+    )
+    cv__priority2_7_TEXT = ConditionalColumn("cv__priority2_7_TEXT").add_cond(
+        expr=pl.col("cv__priority2") == 7
+    )
+
+    pol_lean = ConditionalColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3)
+    pol_vote_CVdem = ConditionalColumn(
+        "pol_vote_CVdem", group="COVID (Democrat)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCV",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
+    )
+    pol_vote_CVrep = ConditionalColumn(
+        "pol_vote_CVrep", group="COVID (Republican)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCV",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
+    )
+    pol_vote_CCdem = ConditionalColumn(
+        "pol_vote_CCdem", group="Climate (Democrat)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCC",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
+    )
+    pol_vote_CCrep = ConditionalColumn(
+        "pol_vote_CCrep", group="Climate (Republican)"
+    ).add_group_cond(
+        [1, 2, 3],
+        "GroupVoteCC",
+        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
+    )
+
+    # Group columns
+    WTP0 = GroupColumn("WTP0").valid_waves([1, 2, 3, 4])
+    WTP1 = GroupColumn("WTP1").valid_waves([1, 2, 3, 4])
+    WTP3 = GroupColumn("WTP3").valid_waves(1)
+    WTP5 = GroupColumn("WTP5").valid_waves(1)
+    WTP10 = GroupColumn("WTP10").valid_waves([1, 2, 3, 4])
+    WTP50 = GroupColumn("WTP50").valid_waves([2, 3, 4])
+    WTP100 = GroupColumn("WTP100").valid_waves([2, 3, 4])
+
+    GroupUSinterest = GroupColumn("GroupUSinterest").valid_waves(1)
+    GroupNoUSinterest = GroupColumn("GroupNoUSinterest").valid_waves(1)
+
+    GroupCCIO = GroupColumn("GroupCCIO").valid_waves([1, 2, 4])
+    GroupCCGovt = GroupColumn("GroupCCGovt").valid_waves([1, 2, 4])
+
+    d_ran1 = GroupColumn("d_ran1").valid_waves(3)
+    d_ran2 = GroupColumn("d_ran2").valid_waves(3)
+
+    Groupcvcc_5and6 = GroupColumn("Groupcvcc_5and6").valid_waves(2)
+    Groupcvcc10 = GroupColumn("Groupcvcc10").valid_waves(2)
+    Groupcvcc7show = GroupColumn("Groupcvcc7show").valid_waves(2)
+
+    GroupInfrastructure = GroupColumn(
+        "GroupInfrastructure",
+    ).valid_waves([1, 2, 3])
+    GroupGreenInfrastructure = GroupColumn("GroupGreenInfrastructure").valid_waves(
+        [1, 2, 3]
+    )
+
+    GroupAirCC = GroupColumn("GroupAirCC").valid_waves(2)
+    GroupAirDemCC = GroupColumn("GroupAirDemCC").valid_waves([1, 2])
+    GroupAirRepCC = GroupColumn("GroupAirRepCC").valid_waves([1, 2])
+    GroupAirHealth = GroupColumn("GroupAirHealth").valid_waves(2)
+    GroupAirDemHealth = GroupColumn("GroupAirDemHealth").valid_waves([1, 2])
+    GroupAirRepHealth = GroupColumn("GroupAirRepHealth").valid_waves([1, 2])
+
+    GroupVoteCV = GroupColumn("GroupVoteCV").valid_waves([1, 2, 3])
+    GroupVoteCC = GroupColumn("GroupVoteCC").valid_waves([1, 2, 3])
+
+    @classmethod
+    def columns(cls) -> list[ConditionalColumn]:
+        return [
+            getattr(ConditionalColumns, colname)
+            for colname in filter(
+                lambda x: not (
+                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                ),
+                vars(ConditionalColumns),
+            )
+        ]
+
+    @classmethod
+    def group_columns(cls) -> list[GroupColumn]:
+        return list(filter(lambda col: isinstance(col, GroupColumn), cls.columns()))
+
+    @classmethod
+    def column_names(cls) -> list[str]:
+        return [
+            getattr(ConditionalColumns, colname).name
+            for colname in filter(
+                lambda x: not (
+                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                ),
+                vars(ConditionalColumns),
+            )
+        ]
+
+
+EXPERIMENT_CONDITION_COLUMNS = [
+    # ccIO, ccGovt, ccIOinterest, ccGovtinterest
+    ConditionGroup(
+        "cc_global_response",
+        ConditionalColumns.ccIO,
+        ConditionalColumns.ccGovt,
+        ConditionalColumns.ccIOinterest,
+        ConditionalColumns.ccGovtinterest,
+    ),
+    ConditionGroup(
+        "ccCompensation",
+        ConditionalColumns.ccComp0,
+        ConditionalColumns.ccComp1,
+        ConditionalColumns.ccComp10,
+        ConditionalColumns.ccComp25,
+        ConditionalColumns.ccComp50,
+        ConditionalColumns.ccComp100,
+    ),
+    ConditionGroup(
+        "ccSolving",
+        ConditionalColumns.ccSolve0,
+        ConditionalColumns.ccSolve1,
+        ConditionalColumns.ccSolve10,
+        ConditionalColumns.ccSolve50,
+        ConditionalColumns.ccSolve100,
+    ),
+    ConditionGroup(
+        "dustin_question",
+        ConditionalColumns.dustin_ques_64,
+        ConditionalColumns.dustin_ques_256,
+    ),
+    ConditionGroup(
+        "cvcc_infrastructure_policy",
+        ConditionalColumns.cvcc7a,
+        ConditionalColumns.cvcc7b,
+        allow_null=True,
+    ),
+    ConditionGroup(
+        "cvcc_clean_air_policy",
+        ConditionalColumns.cvccAirCC,
+        ConditionalColumns.cvccAirDemCC,
+        ConditionalColumns.cvccAirRepCC,
+        ConditionalColumns.cvccAirHealth,
+        ConditionalColumns.cvccAirDemHealth,
+        ConditionalColumns.cvccAirRepHealth,
+        allow_null=True,
+    ),
+    ConditionGroup(
+        "cvcc_solution_kind",
+        ConditionalColumns.cvcc6,
+        ConditionalColumns.cvcc10_cc,
+    ),
+    ConditionGroup(
+        "pol_vote_support",
+        ConditionalColumns.pol_vote_CVdem,
+        ConditionalColumns.pol_vote_CCdem,
+        ConditionalColumns.pol_vote_CVrep,
+        ConditionalColumns.pol_vote_CCrep,
+    ),
 ]
-
-WAVES = [1, 2, 3, 4, 5, 6]
-
-GROUP_COLUMNS = pl.col(r"^Group.*$", r"^WTP.*$")
-
-
-# Columns with nulls where there should exist no nulls
-NULL_ERROR_COLUMNS = [
-    "ew1",
-    "ew1_apr",
-    "ew1_jun",
-    "cc_impact_1",
-    "cc5_world",
-    "cc5_wealthUS",
-    "cc5_poorUS",
-    "cc5_comm",
-    "cc_pol_RE__research",
-    "cc_pol_tax",
-    "cc_pol_car",
-    "cc_pol_subs",
-    "cc11",
-    "cc13",
-    "cc13_apr",
-    "cc_behaviorchange",
-    "dustin_ques_64",
-    "dustin_ques_256",
-    "cv__priority2",
-]
-
-NULL_ERROR_CONDITIONAL_COLUMNS = [
-    "cvcc7a",
-]
-
-QUESTION_EXTRA_COLUMNS = {
-    "dem_stcount_1": ["dem_stcount_1_char"],
-    "dem_stcount_2": ["dem_stcount_2_char"],
-}
-
-
-class NullableColumn:
-    """
-    Column can be null if:
-    - Not asked in given wave
-    - Only asked to new respondents or repeating respondents
-    - Asked conditional on another response
-    - Asked conditional on experimental condition
-
-    The first two can be checked simply by joining the Question table and performing
-    some column checks (question_id null; only asked to new/repeating and respondent
-    is repeating/new).
-
-    The remaining two require specifying manual conditions.
-    """
-
-    def __init__(self, name: str):
-        self.name = name
-        self.conditional_waves = set()
-        self.conditions = []
-
-    def add_cond(
-        self, waves: int | list[int] | None = None, *, expr: pl.Expr
-    ) -> NullableColumn:
-        match waves:
-            case int():
-                waves_cond = pl.col("wave") == waves
-                self.conditional_waves.add(waves)
-            case list():
-                waves_cond = pl.col("wave").is_in(waves)
-                self.conditional_waves |= set(waves)
-            case None:
-                waves_cond = True
-                self.conditional_waves = set(WAVES)
-
-        self.conditions.append(waves_cond & expr)
-        return self
-
-    def show_condition(self) -> pl.Expr:
-        unconditional_waves_cond = ~pl.col("wave").is_in(self.conditional_waves)
-        return unconditional_waves_cond | pl.any_horizontal(*self.conditions)
 
 
 class ClimateAttitudesNullResponses:
     ignore_columns = ["start_date", "end_date"]
-
-    # Columns which are allowed to be null, even if presented to participant.
-    null_allowed: list[str] = [
-        "dem_male_77_TEXT",
-        "attr_storm_6_TEXT",
-        "attr_outage_13_TEXT",
-        "cvcc8a__opp_6_TEXT",
-        "cvcc8a__supp_8_TEXT",
-    ]
-
-    null_checks: list[NullableColumn] = [
-        NullableColumn("dem_male_77_TEXT").add_cond(expr=pl.col("dem_male") == 77),
-        NullableColumn("ew_attribution").add_cond(expr=pl.col("ew1") != [0]),
-        NullableColumn("ew_attribution_apr").add_cond(expr=pl.col("ew1_apr") != [0]),
-        NullableColumn("ew_attribution_jun").add_cond(expr=pl.col("ew1_jun") != [0]),
-        NullableColumn("ew_attribution_nov").add_cond(expr=pl.col("ew1_nov") != [0]),
-        NullableColumn("attr_storm_6_TEXT").add_cond(
-            expr=pl.col("attr_storm").list.contains(6)
-        ),
-        NullableColumn("attr_outage_13_TEXT").add_cond(
-            expr=pl.col("attr_outage").list.contains(13)
-        ),
-        NullableColumn("ccComp100").add_cond(expr=pl.col("WTP100") == 1),
-        NullableColumn("ccComp50")
-        .add_cond(waves=[2, 3], expr=pl.col("WTP50") == 1)
-        .add_cond(1, expr=pl.col("WTP10") == 1),
-        NullableColumn("ccComp25").add_cond(expr=pl.col("WTP5") == 1),
-        NullableColumn("ccComp10")
-        .add_cond(waves=[2, 3], expr=pl.col("WTP10") == 1)
-        .add_cond(1, expr=pl.col("WTP3") == 1),
-        NullableColumn("ccComp1").add_cond(expr=pl.col("WTP1") == 1),
-        NullableColumn("ccComp0").add_cond(expr=pl.col("WTP0") == 1),
-        NullableColumn("ccSolve100").add_cond(expr=pl.col("WTP100") == 1),
-        NullableColumn("ccSolve50").add_cond(expr=pl.col("WTP50") == 1),
-        NullableColumn("ccSolve10").add_cond(expr=pl.col("WTP10") == 1),
-        NullableColumn("ccSolve1").add_cond(expr=pl.col("WTP1") == 1),
-        NullableColumn("ccSolve0").add_cond(expr=pl.col("WTP0") == 1),
-        NullableColumn("ccIO")
-        .add_cond(
-            1, expr=(pl.col("GroupCCIO") == 1) & (pl.col("GroupNoUSinterest") == 1)
-        )
-        .add_cond([2, 4], expr=pl.col("GroupCCIO") == 1),
-        NullableColumn("ccIOinterest").add_cond(
-            expr=pl.all_horizontal(pl.col("GroupCCIO", "GroupUSinterest") == 1)
-        ),
-        NullableColumn("ccGovt")
-        .add_cond(
-            1, expr=(pl.col("GroupCCGovt") == 1) & (pl.col("GroupNoUSinterest") == 1)
-        )
-        .add_cond([2, 4], expr=pl.col("GroupCCGovt") == 1),
-        NullableColumn("ccGovtinterest").add_cond(
-            expr=pl.all_horizontal(pl.col("GroupCCGovt", "GroupUSinterest") == 1)
-        ),
-        NullableColumn("dustin_support").add_cond(
-            expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 1)
-        ),
-        NullableColumn("dustin_oppose").add_cond(
-            expr=pl.any_horizontal(pl.col("dustin_ques_64", "dustin_ques_256") == 0)
-        ),
-        NullableColumn("cvcc6").add_cond(2, expr=pl.col("Groupcvcc_5and6") == 1),
-        NullableColumn("cvcc7a")
-        .add_cond([1, 3], expr=pl.col("GroupGreenInfrastructure") == 1)
-        .add_cond(
-            2,
-            expr=(pl.col("GroupGreenInfrastructure") == 1)
-            & (pl.col("Groupcvcc7show") == 1),
-        ),
-        NullableColumn("cvcc8a__opp").add_cond(expr=pl.col("cvcc7a").is_in([1, 2])),
-        NullableColumn("cvcc8a__supp").add_cond(expr=pl.col("cvcc7a").is_in([4, 5])),
-        NullableColumn("cvcc8a__opp_6_TEXT").add_cond(
-            expr=pl.col("cvcc8a__opp").list.contains(6)
-        ),
-        NullableColumn("cvcc8a__supp_8_TEXT").add_cond(
-            expr=pl.col("cvcc8a__supp").list.contains(8)
-        ),
-        NullableColumn("cvccAirDemHealth").add_cond(
-            expr=pl.col("GroupAirDemHealth") == 1
-        ),
-        NullableColumn("cvccAirRepHealth").add_cond(
-            expr=pl.col("GroupAirRepHealth") == 1
-        ),
-        NullableColumn("cvccAirHealth").add_cond(expr=pl.col("GroupAirHealth") == 1),
-        NullableColumn("cvccAirDemCC").add_cond(expr=pl.col("GroupAirDemCC") == 1),
-        NullableColumn("cvccAirRepCC").add_cond(expr=pl.col("GroupAirRepCC") == 1),
-        NullableColumn("cvccAirCC").add_cond(expr=pl.col("GroupAirCC") == 1),
-        NullableColumn("cvcc10_cc").add_cond(2, expr=pl.col("Groupcvcc10") == 1),
-        NullableColumn("cv__priority_7_TEXT").add_cond(
-            expr=pl.col("cv__priority") == 7
-        ),
-        NullableColumn("cv__priority2_7_TEXT").add_cond(
-            expr=pl.col("cv__priority2") == 7
-        ),
-        NullableColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3),
-        NullableColumn("pol_vote_CCdem").add_cond(
-            expr=(pl.col("GroupVoteCC") == 1)
-            & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2)
-        ),
-        NullableColumn("pol_vote_CCrep").add_cond(
-            expr=(pl.col("GroupVoteCC") == 1)
-            & pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1)
-        ),
-    ]
 
     @classmethod
     def validate(cls, response: pl.LazyFrame, config: Config):
@@ -335,22 +380,6 @@ class ClimateAttitudesNullResponses:
                                 question not shown to participant type |
                                 question conditions not satisfied
 
-        a V b V c ==> d
-        ~(a V b V c) V d
-        (~a & ~b & ~c) V d
-        (~a V d) & (~b V d) & (~c V d)
-        (a ==> d) & (b ==> d) & (c ==> d)
-
-        So we can test the implications separately
-
-        Going other way,
-        d ==> (a V b V c)
-        ~d V a V b V c
-
-        Must check all together.
-        However, we can simplify by doing unconditional questions separately.
-
-        So:
         1. Check not in wave, or to participant type ==> response is null
         2. Check question conditions not satisfied ==> response is null
         3. For unconditional questions, check response is null ==> not in wave OR not shown to participant type
@@ -378,6 +407,27 @@ class ClimateAttitudesNullResponses:
         cls, response: pl.LazyFrame, config: Config
     ) -> pl.LazyFrame:
         """Convert wide response to long format by question; join Question table."""
+        # Load data
+        item_columns = InterimAsset.ItemColumns.scan(config)
+        question = InterimAsset.Question.scan(config)
+
+        # Select columns corresponding to questions, and relevant metadata
+        question_columns = (
+            item_columns.filter(
+                pl.col("column_name").is_in(response.collect_schema().names())
+            )
+            .select("column_name")
+            .collect()
+            .to_series()
+        )
+        response = response.select(
+            "response_id",
+            "participant_id",
+            "wave",
+            "participant_type",
+            *question_columns,
+        )
+
         # Convert list columns to string so we can unpivot on them
         response = response.with_columns(
             cs.list().cast(pl.List(pl.String)).list.join(",")
@@ -385,23 +435,16 @@ class ClimateAttitudesNullResponses:
 
         # Unpivot response to long format, with one row per question
         response_long = response.unpivot(
-            index=["participant_id", "wave", "participant_type"],
+            index=["response_id", "participant_id", "wave", "participant_type"],
             variable_name="column_name",
             value_name="response",
         )
 
         # Get associated item name and id for each column
-        item = BuiltAsset.Item.scan(config)
-        item_columns = BuiltAsset.ItemColumns.scan(config)
         response_long = response_long.join(item_columns, on="column_name", how="left")
-        response_long = response_long.join(
-            item.select(pl.col("name").alias("item_name"), "item_id"),
-            on="item_name",
-            how="left",
-        )
 
         # Join against Question table so we can identify conditions to show question
-        question = BuiltAsset.Question.scan(config)
+        question = InterimAsset.Question.scan(config)
         return response_long.join(
             question.select(
                 "question_id",
@@ -422,9 +465,7 @@ class ClimateAttitudesNullResponses:
     ):
         """Ensure (question not in wave) ==> (response is null)."""
 
-        response = cls.join_response_to_question_long(
-            response.drop(GROUP_COLUMNS), config
-        )
+        response = cls.join_response_to_question_long(response, config)
 
         # Question ID is null if question is not asked in given wave
         not_in_wave = response.filter(pl.col("question_id").is_null())
@@ -460,8 +501,8 @@ class ClimateAttitudesNullResponses:
         """
         failed_checks = []
 
-        for column in cls.null_checks:
-            cond_not_met = response.filter(~column.show_condition())
+        for column in ConditionalColumns.columns():
+            cond_not_met = response.filter(~column.condition())
             waves_not_null = (
                 cond_not_met.filter(pl.col(column.name).is_not_null())
                 .select(pl.col("wave").unique().sort())
@@ -488,7 +529,8 @@ class ClimateAttitudesNullResponses:
     ):
         """Ensure displayed unconditional questions have non-null responses."""
         response = cls.join_response_to_question_long(
-            response.drop(GROUP_COLUMNS, *[col.name for col in cls.null_checks]), config
+            response.drop(*ConditionalColumns.column_names()),
+            config,
         )
 
         # Filter out cases where question not shown:
@@ -504,7 +546,7 @@ class ClimateAttitudesNullResponses:
             .group_by("column_name")
             .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
             # Disregard items where null is okay
-            .filter(~pl.col("column_name").is_in(cls.null_allowed))
+            .filter(~pl.col("column_name").is_in(NULLABLE_COLUMNS))
         ).collect()
 
         if not items_null.is_empty():
@@ -513,7 +555,6 @@ class ClimateAttitudesNullResponses:
                 "response is not null':"
             )
 
-            # items_not_null = items_not_null.join()
             for colname, _, waves in items_null.sort(by="item_id").iter_rows():
                 print(f"  - {waves}: {colname}")
             print()
@@ -525,9 +566,9 @@ class ClimateAttitudesNullResponses:
         config: Config,
     ):
         """Ensure displayed conditional questions have non-null responses."""
-        item_columns = BuiltAsset.ItemColumns.scan(config)
+        item_columns = InterimAsset.ItemColumns.scan(config)
         question = (
-            BuiltAsset.Question.scan(config)
+            InterimAsset.Question.scan(config)
             .select(
                 "item_name",
                 "question_id",
@@ -538,15 +579,18 @@ class ClimateAttitudesNullResponses:
         )
 
         failed_checks = []
-        for column in cls.null_checks:
+        for column in ConditionalColumns.columns():
             # Disregard items where null is okay
-            if column.name in cls.null_allowed:
+            if column.name in NULLABLE_COLUMNS:
                 continue
 
-            cond_met = response.filter(column.show_condition())
+            cond_met = response.filter(column.condition())
 
             # Join on question to filter out waves/participants not asked
-            # TODO: Check that column name is in question table
+            if column.name not in question.collect_schema().get_names():
+                raise RuntimeError(
+                    f"Column `{column.name}` not found in item column table."
+                )
             displayed = (
                 cond_met.select("wave", column.name, "participant_type")
                 .join(
@@ -578,25 +622,101 @@ class ClimateAttitudesNullResponses:
             print()
 
 
-class ClimateAttitudesSchema(pa.DataFrameModel):
-    wave: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
-    participant_id: int = pa.Field(nullable=False)
-    start_date: pl.Datetime = pa.Field(nullable=False)
-    end_date: pl.Datetime = pa.Field(nullable=False)
+class BaseSchema(pa.DataFrameModel):
+    class Config:
+        ordered = True
+        strict = True
+
+
+class OutputCodebookSchema(BaseSchema):
+    codebook_name: str
+    item_name: str
+    question_text: str
+    response_type: ResponseType  # ty: ignore (not handling Polars Enum)
+    response_schema: str = pa.Field(nullable=True)
+    display_logic: str = pa.Field(nullable=True)
+    response_requirements: str = pa.Field(nullable=True)
+    randomization: str = pa.Field(nullable=True)
+    note: str = pa.Field(nullable=True)
+    w1_new: bool
+    w2_new: bool
+    w2_rep: bool
+    w3_new: bool
+    w3_rep: bool
+    w4_new: bool
+    w4_rep: bool
+    w5_new: bool
+    w5_rep: bool
+
+
+class OutputItemColumnsSchema(BaseSchema):
+    item_id: pl.UInt32
+    item_name: str
+    column_name: str
+
+
+class OutputItemSchema(BaseSchema):
+    item_id: pl.UInt32
+    name: str
+    codebook_name: str
+    category: str = pa.Field(nullable=True)
+    is_demographic: bool
+    has_error: bool
+    ideology_operational: bool
+    ideology_symbolic: bool
+    lee_2025_cc_happening: bool
+    lee_2025_cc_human: bool
+    lee_2025_cc_worried: bool
+    lee_2025_personal_harm: bool
+    lee_2025_future_gen_harm: bool
+    lee_2025_fossil_fuel_reduction: bool
+    lee_2025_renewable_energy: bool
+    lee_2025_govt_priority: bool
+
+
+class OutputQuestionSchema(BaseSchema):
+    question_id: pl.UInt32
+    item_id: pl.UInt32
+    item_name: str
+    codebook_name: str
+    wave: int = pa.Field(isin=WAVES)
+    participant_type: ParticipantType  # ty: ignore
+    response_type: ResponseType  # ty: ignore
+    response_schema: str = pa.Field(nullable=True)
+    question_text: str
+
+
+class OutputParticipantSchema(BaseSchema):
+    participant_id: pl.UInt32
+    wave_joined: int = pa.Field(isin=WAVES)
+    wave_1: bool
+    wave_2: bool
+    wave_3: bool
+    wave_4: bool
+    wave_5: bool
+
+
+class OutputResponseSchema(BaseSchema):
+    response_id: pl.UInt32
+    wave: int = pa.Field(isin=WAVES)
+    participant_id: pl.UInt32
+    participant_type: ParticipantType  # ty: ignore
+    start_date: pl.Datetime
+    end_date: pl.Datetime
 
     # Demographic columns
-    dem_stcount_1: int = pa.Field(nullable=False)  # State
+    dem_stcount_1: int  # State
     dem_stcount_1_char: str = pa.Field(
-        isin=[name for state, name in US_STATES], nullable=False
+        isin=[name for state, name in US_STATES],
     )
-    dem_stcount_2: int = pa.Field(nullable=False)  # County
-    dem_stcount_2_char: str = pa.Field(nullable=False)
-    dem_zip: str = pa.Field(nullable=False)  # Zip code
-    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
-    dem_male: int = pa.Field(isin=[0, 1, 77], nullable=False)
+    dem_stcount_2: int  # County
+    dem_stcount_2_char: str
+    dem_zip: str  # Zip code
+    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
+    dem_male: int = pa.Field(isin=[0, 1, 77])
     dem_male_77_TEXT: str = pa.Field(nullable=True)  # Nonempty if dem_male == 77
-    dem_age: int = pa.Field(gt=0, le=99, nullable=False)
-    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6], nullable=False)
+    dem_age: int = pa.Field(gt=0, le=99)
+    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
 
     # Extreme weather
     ew1: list[int] = pa.Field(nullable=True)
@@ -607,7 +727,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
-    ew5: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+    ew5: int = pa.Field(isin=[1, 2, 3, 4])
     attr_storm: list[int] = pa.Field(nullable=True)
     attr_storm_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     attr_outage: list[int] = pa.Field(nullable=True)
@@ -633,9 +753,9 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc4_world: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_wealthcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_poorcoun: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
-    cc4_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
-    cc4_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
-    cc4_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=False)
+    cc4_wealthUS: int = pa.Field(isin=[1, 2, 3, 4, 99])
+    cc4_poorUS: int = pa.Field(isin=[1, 2, 3, 4, 99])
+    cc4_comm: int = pa.Field(isin=[1, 2, 3, 4, 99])
     cc4_person: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
     cc4_famheal: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     cc4_famecon: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
@@ -656,7 +776,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc5_comm: int = pa.Field(isin=[1, 2, 3, 4, 99], nullable=True)
 
     # Level of worry about climate change
-    cc6: int = pa.Field(isin=[1, 2, 3, 4], nullable=False)
+    cc6: int = pa.Field(isin=[1, 2, 3, 4])
 
     # Should <PERSON/ENTITY> be doing more/less to address current and future CC
     cc7_pres: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -748,7 +868,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc13: list[int] = pa.Field(nullable=True)
     cc13_apr: list[int] = pa.Field(nullable=True)
 
-    # Behaviours taken to help address CC
+    # behaviors taken to help address CC
     cc_behavior_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_travel: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_activ: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -756,7 +876,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     cc_behavior_evacuate: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cc_behavior_move: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Behaviours taken in last week to limit impact on CC
+    # behaviors taken in last week to limit impact on CC
     cc_behaviorchange: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Support climate-related policies
@@ -784,7 +904,7 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     dustin_oppose: int = pa.Field(isin=[1, 2, 3], nullable=True)
 
     # ==== COVID-19 / Climate-change =====
-    # Behaviour change (experienced during COVID-19 pandemic), to reduce emissions
+    # behavior change (experienced during COVID-19 pandemic), to reduce emissions
     cvcc4_personal: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)  # Intention
     cvcc4_will: int = pa.Field(
         isin=[1, 2, 3, 4, 5], nullable=True
@@ -798,10 +918,15 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
 
     # Policy support: large-scale green infrastructure plan
     cvcc7a: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    cvcc7b: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvcc8a__opp: list[int] = pa.Field(nullable=True)
     cvcc8a__supp: list[int] = pa.Field(nullable=True)
     cvcc8a__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     cvcc8a__supp_8_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 8
+    cvcc8b__opp: list[int] = pa.Field(nullable=True)
+    cvcc8b__supp: list[int] = pa.Field(nullable=True)
+    cvcc8b__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
+    cvcc8b__supp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
 
     # Policy support: reducing emissions to reduce impact of future pandemics
     cvccAirDemHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -832,58 +957,62 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
     pol_threat_cc: int = pa.Field(isin=[1, 2, 3], nullable=True)
 
     # Strict environmental laws: hurt economy vs. worth the cost
-    pol7: int = pa.Field(isin=[1, 2], nullable=False)
+    pol7: int = pa.Field(isin=[1, 2])
 
     # Political identification
-    pol_party: int = pa.Field(isin=[1, 2, 3], nullable=False)
+    pol_party: int = pa.Field(isin=[1, 2, 3])
     pol_lean: int = pa.Field(isin=[1, 2, 4], nullable=True)
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
     pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CCrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    pol_vote_CVdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    pol_vote_CVrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # ===== Experiment conditions =====
     # Willingness to pay (ccComp, ccSolve)
-    # NOTE: These are used for ccComp and ccSolve, but don't correspond in same ways
-    # TODO: cast to true/false, null in not-applicable columns
-    WTP100: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP50: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP10: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP5: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP3: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP1: int = pa.Field(isin=[None, 1], nullable=True)
-    WTP0: int = pa.Field(isin=[None, 1], nullable=True)
+    WTP100: bool = pa.Field(nullable=True)
+    WTP50: bool = pa.Field(nullable=True)
+    WTP10: bool = pa.Field(nullable=True)
+    WTP5: bool = pa.Field(nullable=True)
+    WTP3: bool = pa.Field(nullable=True)
+    WTP1: bool = pa.Field(nullable=True)
+    WTP0: bool = pa.Field(nullable=True)
+
+    # dustin_ques_64, dustin_ques_256
+    d_ran1: bool = pa.Field(nullable=True)
+    d_ran2: bool = pa.Field(nullable=True)
 
     # ccIO, ccIOinterest, ccGovt, ccGovtinterest
-    GroupCCIO: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupCCGovt: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupNoUSinterest: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupCCIO: bool = pa.Field(nullable=True)
+    GroupCCGovt: bool = pa.Field(nullable=True)
+    GroupUSinterest: bool = pa.Field(nullable=True)
+    GroupNoUSinterest: bool = pa.Field(nullable=True)
 
     # cvcc5 and cvcc6
-    Groupcvcc_5and6: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc_5and6: bool = pa.Field(nullable=True)
 
     # cvcc7 and cvcc8
-    Groupcvcc7show: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupGreenInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupInfrastructure: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc7show: bool = pa.Field(nullable=True)
+    GroupGreenInfrastructure: bool = pa.Field(nullable=True)
+    GroupInfrastructure: bool = pa.Field(nullable=True)
 
     # cvccAir<X>Health
-    GroupAirDemHealth: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirRepHealth: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirHealth: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirDemHealth: bool = pa.Field(nullable=True)
+    GroupAirRepHealth: bool = pa.Field(nullable=True)
+    GroupAirHealth: bool = pa.Field(nullable=True)
 
     # cvccAir<X>CC
-    GroupAirDemCC: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirRepCC: int = pa.Field(isin=[None, 1], nullable=True)
-    GroupAirCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupAirDemCC: bool = pa.Field(nullable=True)
+    GroupAirRepCC: bool = pa.Field(nullable=True)
+    GroupAirCC: bool = pa.Field(nullable=True)
 
     # cvcc10
-    # NOTE: Group only used for wave 2
-    Groupcvcc10: int = pa.Field(isin=[None, 1], nullable=True)
+    Groupcvcc10: bool = pa.Field(nullable=True)
 
     # Political leaning (pol_vote_CC<X>)
-    GroupVoteCC: int = pa.Field(isin=[None, 1], nullable=True)
+    GroupVoteCC: bool = pa.Field(nullable=True)
+    GroupVoteCV: bool = pa.Field(nullable=True)
 
     @pa.dataframe_check
     def singlechoice_valid_selection(cls, df: PolarsData) -> pl.LazyFrame:
@@ -1051,6 +1180,18 @@ class ClimateAttitudesSchema(pa.DataFrameModel):
                 "cvcc8a__supp",
                 [
                     ([1], [1, 2, 3, 4, 5, 6, 7, 8]),
+                ],
+            ),
+            (
+                "cvcc8b__opp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6]),
+                ],
+            ),
+            (
+                "cvcc8b__supp",
+                [
+                    ([1], [1, 2, 3, 4, 5, 6]),
                 ],
             ),
         ]
