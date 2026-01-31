@@ -48,6 +48,14 @@ class RawDataFile(Enum):
         match self:
             case RawDataFile.Waves1to5Responses:
                 return pl.scan_parquet(self.filepath(config))
+            case RawDataFile.Codebook:
+                return pl.read_excel(
+                    RawDataFile.Codebook.filepath(config),
+                    schema_overrides={
+                        "Display Logic": pl.String,
+                        "Randomization": pl.String,
+                    },
+                ).lazy()
             case _:
                 raise NotImplementedError
 

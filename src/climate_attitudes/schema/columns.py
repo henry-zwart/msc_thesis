@@ -12,6 +12,8 @@ class ConditionalColumn:
         self.name = name
         self.group = group
         self.variant = variant
+        self.wave_conditions = dict()
+        self.global_conditions = []
         self.survey_conditions: list[pl.Expr | bool] = []
         self.treatment_conditions: list[pl.Expr] = []
         self.treatment_classes: set[str] = set()
@@ -19,15 +21,18 @@ class ConditionalColumn:
     def add_cond(
         self, waves: int | list[int] | None = None, *, expr: pl.Expr | bool
     ) -> ConditionalColumn:
-        match waves:
-            case int():
-                waves_cond = pl.col("wave") == waves
-            case list():
-                waves_cond = pl.col("wave").is_in(waves)
-            case None:
-                waves_cond = True
+        if waves is None:
+            self.global_conditions.append(expr)
+            return self
 
-        self.survey_conditions.append(waves_cond & expr)
+        if isinstance(waves, int):
+            waves = [waves]
+
+        for wave in waves:
+            if wave not in self.wave_conditions:
+                self.wave_conditions[wave] = {"survey": [], "treatment": []}
+            self.wave_conditions[wave]["survey"].append(expr)
+
         return self
 
     def valid_waves(self, waves: int | list[int]) -> ConditionalColumn:
@@ -41,52 +46,76 @@ class ConditionalColumn:
         self,
         waves: int | list[int],
         groups: str | list[str],
-        *,
-        extra_condition: pl.Expr | None = None,
     ) -> ConditionalColumn:
+        # TODO: Remove extra_condition part, since we are now separating over waves
         if isinstance(groups, str):
             groups = [groups]
 
-        match waves:
-            case int():
-                waves_cond = pl.col("wave") == waves
-            case list():
-                waves_cond = pl.col("wave").is_in(waves)
+        if isinstance(waves, int):
+            waves = [waves]
 
-        if extra_condition is None:
-            extra_condition = pl.lit(True)
+        for wave in waves:
+            if wave not in self.wave_conditions:
+                self.wave_conditions[wave] = {"survey": [], "treatment": []}
+            self.wave_conditions[wave]["treatment"] = list(
+                set(self.wave_conditions[wave]["treatment"]) | set(groups)
+            )
 
-        self.treatment_conditions.append(
-            waves_cond
-            & pl.all_horizontal(*[pl.col(g) == 1 for g in groups])
-            & extra_condition
-        )
+        # self.treatment_conditions.append(
+        #     waves_cond
+        #     & pl.all_horizontal(*[pl.col(g) == 1 for g in groups])
+        #     & extra_condition
+        # )
 
+        # TODO: Maybe don't need this anymore since we store groups in conditions.
         self.treatment_classes |= set(groups)
 
         return self
 
-    def survey_condition(self) -> pl.Expr:
-        return pl.any_horizontal(*self.survey_conditions)
-
     def treatment_condition(self) -> pl.Expr:
-        return pl.any_horizontal(*self.treatment_conditions)
+        # NOTE: This is still useful since we create the treatment groups by checking if the treatment is satisfied, which should be irrespective of the survey conditions being met.
+
+        # TODO: Make this check === 1
+        wave_treatments = [
+            (pl.col("wave") == wave).and_(pl.all_horizontal(*conds["treatment"]))
+            for wave, conds in self.wave_conditions.items()
+            if conds["treatment"]
+        ]
+        return pl.any_horizontal(*wave_treatments)
 
     def condition(self) -> pl.Expr:
-        if self.survey_conditions:
-            show_condition_met = pl.any_horizontal(*self.survey_conditions)
+        # TODO: Refactor conditions to disjunction over waves.
+        # i.e., wave 1 & survey conditions met for wave 1 & treatment conds met for ...
+        wave_conditions = []
+        for wave, conds in self.wave_conditions.items():
+            condition_parts = [pl.col("wave") == wave]
+            if conds["survey"]:
+                condition_parts.append(pl.all_horizontal(*conds["survey"]))
+            if conds["treatment"]:
+                condition_parts.append(pl.all_horizontal(*conds["treatment"]))
+            wave_conditions.append(pl.all_horizontal(*condition_parts))
+
+        # Condition satisfied as disjunction over wave-specific conditions
+
+        if wave_conditions and self.global_conditions:
+            return pl.any_horizontal(*wave_conditions) & pl.all_horizontal(
+                *self.global_conditions
+            )
+        elif wave_conditions:
+            return pl.any_horizontal(*wave_conditions)
+        elif self.global_conditions:
+            return pl.all_horizontal(*self.global_conditions)
         else:
-            show_condition_met = pl.lit(True)
-
-        if self.treatment_conditions:
-            treatment_condition_met = pl.any_horizontal(*self.treatment_conditions)
-        else:
-            treatment_condition_met = pl.lit(True)
-
-        return show_condition_met & treatment_condition_met
+            return pl.lit(True)
 
 
-class GroupColumn(ConditionalColumn): ...
+class GroupColumn:
+    def __init__(self, name: str, waves: int | list[int]):
+        self.name = name
+        self.waves = [waves] if isinstance(waves, int) else waves
+
+    def valid(self) -> pl.Expr:
+        return pl.col("wave").is_in(self.waves)
 
 
 class ConditionGroup:
@@ -97,10 +126,11 @@ class ConditionGroup:
         for col in column:
             self.add_column(col)
 
-    def survey_condition(self) -> pl.Expr:
-        return pl.any_horizontal(*[col.survey_condition() for col in self.columns])
-
     def condition(self) -> pl.Expr:
+        """True iff any of the columns' display conditions are met.
+
+        In such cases we expect one of the columns to have a non-null response.
+        """
         return pl.any_horizontal(*[col.condition() for col in self.columns])
 
     @property
