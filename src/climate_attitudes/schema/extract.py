@@ -32,6 +32,7 @@ from pandera.polars import PolarsData
 from .enums import ResponseType, ParticipantType
 
 
+"""Columns for which Null is a valid response."""
 NULLABLE_COLUMNS: list[str] = [
     "dem_male_77_TEXT",
     "attr_storm_6_TEXT",
@@ -203,73 +204,73 @@ class ConditionalColumns:
     )
 
     pol_lean = ConditionalColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3)
-    pol_vote_CVdem = ConditionalColumn(
-        "pol_vote_CVdem", group="COVID (Democrat)"
-    ).add_group_cond(
-        [1, 2, 3],
-        "GroupVoteCV",
-        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
+    pol_vote_CVdem = (
+        ConditionalColumn("pol_vote_CVdem", group="COVID (Democrat)")
+        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2))
+        .add_group_cond(
+            [1, 2, 3],
+            "GroupVoteCV",
+        )
     )
-    pol_vote_CVrep = ConditionalColumn(
-        "pol_vote_CVrep", group="COVID (Republican)"
-    ).add_group_cond(
-        [1, 2, 3],
-        "GroupVoteCV",
-        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
+    pol_vote_CVrep = (
+        ConditionalColumn("pol_vote_CVrep", group="COVID (Republican)")
+        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1))
+        .add_group_cond(
+            [1, 2, 3],
+            "GroupVoteCV",
+        )
     )
-    pol_vote_CCdem = ConditionalColumn(
-        "pol_vote_CCdem", group="Climate (Democrat)"
-    ).add_group_cond(
-        [1, 2, 3],
-        "GroupVoteCC",
-        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2),
+    pol_vote_CCdem = (
+        ConditionalColumn("pol_vote_CCdem", group="Climate (Democrat)")
+        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2))
+        .add_group_cond(
+            [1, 2, 3],
+            "GroupVoteCC",
+        )
     )
-    pol_vote_CCrep = ConditionalColumn(
-        "pol_vote_CCrep", group="Climate (Republican)"
-    ).add_group_cond(
-        [1, 2, 3],
-        "GroupVoteCC",
-        extra_condition=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1),
+    pol_vote_CCrep = (
+        ConditionalColumn("pol_vote_CCrep", group="Climate (Republican)")
+        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1))
+        .add_group_cond(
+            [1, 2, 3],
+            "GroupVoteCC",
+        )
     )
 
     # Group columns
-    WTP0 = GroupColumn("WTP0").valid_waves([1, 2, 3, 4])
-    WTP1 = GroupColumn("WTP1").valid_waves([1, 2, 3, 4])
-    WTP3 = GroupColumn("WTP3").valid_waves(1)
-    WTP5 = GroupColumn("WTP5").valid_waves(1)
-    WTP10 = GroupColumn("WTP10").valid_waves([1, 2, 3, 4])
-    WTP50 = GroupColumn("WTP50").valid_waves([2, 3, 4])
-    WTP100 = GroupColumn("WTP100").valid_waves([2, 3, 4])
+    WTP0 = GroupColumn("WTP0", [1, 2, 3, 4])
+    WTP1 = GroupColumn("WTP1", [1, 2, 3, 4])
+    WTP3 = GroupColumn("WTP3", 1)
+    WTP5 = GroupColumn("WTP5", 1)
+    WTP10 = GroupColumn("WTP10", [1, 2, 3, 4])
+    WTP50 = GroupColumn("WTP50", [2, 3, 4])
+    WTP100 = GroupColumn("WTP100", [2, 3, 4])
 
-    GroupUSinterest = GroupColumn("GroupUSinterest").valid_waves(1)
-    GroupNoUSinterest = GroupColumn("GroupNoUSinterest").valid_waves(1)
+    GroupUSinterest = GroupColumn("GroupUSinterest", 1)
+    GroupNoUSinterest = GroupColumn("GroupNoUSinterest", 1)
 
-    GroupCCIO = GroupColumn("GroupCCIO").valid_waves([1, 2, 4])
-    GroupCCGovt = GroupColumn("GroupCCGovt").valid_waves([1, 2, 4])
+    GroupCCIO = GroupColumn("GroupCCIO", [1, 2, 4])
+    GroupCCGovt = GroupColumn("GroupCCGovt", [1, 2, 4])
 
-    d_ran1 = GroupColumn("d_ran1").valid_waves(3)
-    d_ran2 = GroupColumn("d_ran2").valid_waves(3)
+    d_ran1 = GroupColumn("d_ran1", 3)
+    d_ran2 = GroupColumn("d_ran2", 3)
 
-    Groupcvcc_5and6 = GroupColumn("Groupcvcc_5and6").valid_waves(2)
-    Groupcvcc10 = GroupColumn("Groupcvcc10").valid_waves(2)
-    Groupcvcc7show = GroupColumn("Groupcvcc7show").valid_waves(2)
+    Groupcvcc_5and6 = GroupColumn("Groupcvcc_5and6", 2)
+    Groupcvcc10 = GroupColumn("Groupcvcc10", 2)
+    Groupcvcc7show = GroupColumn("Groupcvcc7show", 2)
 
-    GroupInfrastructure = GroupColumn(
-        "GroupInfrastructure",
-    ).valid_waves([1, 2, 3])
-    GroupGreenInfrastructure = GroupColumn("GroupGreenInfrastructure").valid_waves(
-        [1, 2, 3]
-    )
+    GroupInfrastructure = GroupColumn("GroupInfrastructure", [1, 2, 3])
+    GroupGreenInfrastructure = GroupColumn("GroupGreenInfrastructure", [1, 2, 3])
 
-    GroupAirCC = GroupColumn("GroupAirCC").valid_waves(2)
-    GroupAirDemCC = GroupColumn("GroupAirDemCC").valid_waves([1, 2])
-    GroupAirRepCC = GroupColumn("GroupAirRepCC").valid_waves([1, 2])
-    GroupAirHealth = GroupColumn("GroupAirHealth").valid_waves(2)
-    GroupAirDemHealth = GroupColumn("GroupAirDemHealth").valid_waves([1, 2])
-    GroupAirRepHealth = GroupColumn("GroupAirRepHealth").valid_waves([1, 2])
+    GroupAirCC = GroupColumn("GroupAirCC", 2)
+    GroupAirDemCC = GroupColumn("GroupAirDemCC", [1, 2])
+    GroupAirRepCC = GroupColumn("GroupAirRepCC", [1, 2])
+    GroupAirHealth = GroupColumn("GroupAirHealth", 2)
+    GroupAirDemHealth = GroupColumn("GroupAirDemHealth", [1, 2])
+    GroupAirRepHealth = GroupColumn("GroupAirRepHealth", [1, 2])
 
-    GroupVoteCV = GroupColumn("GroupVoteCV").valid_waves([1, 2, 3])
-    GroupVoteCC = GroupColumn("GroupVoteCC").valid_waves([1, 2, 3])
+    GroupVoteCV = GroupColumn("GroupVoteCV", [1, 2, 3])
+    GroupVoteCC = GroupColumn("GroupVoteCC", [1, 2, 3])
 
     @classmethod
     def columns(cls) -> list[ConditionalColumn]:
@@ -286,6 +287,10 @@ class ConditionalColumns:
     @classmethod
     def group_columns(cls) -> list[GroupColumn]:
         return list(filter(lambda col: isinstance(col, GroupColumn), cls.columns()))
+
+    @classmethod
+    def question_columns(cls) -> list[ConditionalColumn]:
+        return list(filter(lambda col: not isinstance(col, GroupColumn), cls.columns()))
 
     @classmethod
     def column_names(cls) -> list[str]:

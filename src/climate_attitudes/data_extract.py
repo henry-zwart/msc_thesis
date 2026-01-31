@@ -2,6 +2,7 @@ from climate_attitudes.schema.constants import WAVES
 from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ConditionalColumns,
+    NULLABLE_COLUMNS,
 )
 from climate_attitudes.schema import extract as schema
 from climate_attitudes.schema.enums import ResponseType, ParticipantType
@@ -30,9 +31,6 @@ class DataExtract:
         can be included at a later date.
         """
 
-        # TODO: Remove null PIDs
-        # TODO: Filter response columns
-
         self.codebook = RawDataFile.Codebook.scan(self.config)
         self.response = RawDataFile.Waves1to5Responses.scan(self.config)
 
@@ -59,16 +57,17 @@ class DataExtract:
         self._validate()
 
     def _validate(self):
-        schema.OutputCodebookSchema.validate(self.codebook)
-        schema.OutputItemSchema.validate(self.item)
-        schema.OutputQuestionSchema.validate(self.question)
-        schema.OutputItemColumnsSchema.validate(self.columns)
-        schema.OutputResponseSchema.validate(self.response)
-        schema.OutputParticipantSchema.validate(self.participant)
+        schema.OutputCodebookSchema.validate(self.codebook.collect())
+        schema.OutputItemSchema.validate(self.item.collect())
+        schema.OutputQuestionSchema.validate(self.question.collect())
+        schema.OutputItemColumnsSchema.validate(self.columns.collect())
+        schema.OutputResponseSchema.validate(self.response.collect())
+        schema.OutputParticipantSchema.validate(self.participant.collect())
 
         # TODO: This is currently broken since it expects config, to load data.
         #       Instead we want to just pass the required data. Or validate
         #         in this class. Or make the classmethods functions in this file.
+        self._validate_response_null_values()
 
         # Check response values are null, iff, expected null
         # ClimateAttitudesNullResponses.validate(self.response, self.config)
@@ -195,7 +194,7 @@ class DataExtract:
             on="item_name",
             how="left",
             maintain_order="left",
-        ).with_columns(pl.col("has_error").fill_null(False))
+        ).with_columns(pl.col(r"^ideology_.*$").fill_null(False))
         # 4. Lee et al. 2025 items
         item = item.join(
             StaticAsset.Lee2025.scan(self.config),
@@ -374,18 +373,18 @@ class DataExtract:
             pl.col(*multichoice_columns)
             .replace("", None)
             # Transform csv format responses to list of integers
-            .str.split(";")
+            .str.split(",")
             .list.eval(pl.element().cast(pl.Int64))
         )
 
         # Convert treatment class indicator columns to bool,
         #  - Only when these columns are valid for wave
         # TODO: Also check that valid for participant type
-        for column in ConditionalColumns.group_columns():
+        for group in ConditionalColumns.group_columns():
             response = response.with_columns(
-                pl.when(column.condition())
+                pl.when(group.valid())
                 # Replace treatment class Null/1 indicators with bool False/True
-                .then(pl.col(column.name).is_not_null())
+                .then(pl.col(group.name).is_not_null())
             )
 
         # Add participant type (new vs. repeating) to each response row
@@ -465,3 +464,164 @@ class DataExtract:
 
         # Columns
         self.columns = self.columns.select("item_id", "item_name", "column_name")
+
+    def _validate_response_null_values(self):
+        """Check that responses are null if, and only if, we expect them to be."""
+
+        # Select question columns from response, and also relevant metadata
+        question_columns = (
+            self.columns.filter(
+                pl.col("column_name").is_in(self.response.collect_schema().names())
+            )
+            .select("column_name")
+            .collect()
+            .to_series()
+        )
+        response = self.response.select(
+            "response_id",
+            "participant_id",
+            "wave",
+            "participant_type",
+            *question_columns,
+        )
+
+        # Convert list columns to string so we can unpivot on them
+        response = response.with_columns(
+            cs.list().cast(pl.List(pl.String)).list.join(",")
+        )
+
+        # Convert response to long format, one row per question
+        response_long = response.unpivot(
+            index=["response_id", "participant_id", "wave", "participant_type"],
+            variable_name="column_name",
+            value_name="response",
+        )
+
+        # Get item name and id for each column
+        response_long = response_long.join(self.columns, on="column_name", how="left")
+
+        # Join question table on item name, wave, participant_type
+        response_long = response_long.join(
+            self.question.select(
+                "question_id", "item_name", "item_id", "wave", "participant_type"
+            ),
+            on=("item_name", "wave", "participant_type"),
+            how="left",
+        )
+
+        # First, check that 'not asked in wave ==> response is null'
+        question_not_in_wave = response_long.filter(pl.col("question_id").is_null())
+        response_not_null = question_not_in_wave.filter(
+            pl.col("response").is_not_null()
+        )
+        problem_items = (
+            response_not_null.select("column_name", "item_id", "wave")
+            .unique()
+            .group_by("column_name")
+            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
+            .sort(by="item_id")
+        ).collect()
+        if not problem_items.is_empty():
+            print(
+                "At least one column failed check: question not asked in wave "
+                "==> response is null."
+            )
+            for col, _, waves in problem_items.iter_rows():
+                print(f"  - {waves}: {col}")
+            print()
+
+        # Second, check that 'conditions not met ==> response is null'
+        failed_checks = []
+        for col in ConditionalColumns.question_columns():
+            cond_not_met = self.response.filter(~col.condition())
+            waves_not_null = (
+                cond_not_met.filter(pl.col(col.name).is_not_null())
+                .select(pl.col("wave").unique().sort())
+                .collect()
+                .to_series()
+            )
+            if not waves_not_null.is_empty():
+                failed_checks.append((col.name, waves_not_null.to_list()))
+
+        if failed_checks:
+            print(
+                "At least one conditional column failed check: condition not "
+                "satisfied ==> response is null."
+            )
+            for col, waves in failed_checks:
+                print(f"  - {waves}: {col}")
+            print()
+
+        # Third, check 'question shown ==> response not null' for unconditional Qs
+        response_long = response_long.filter(
+            ~pl.col("column_name").is_in(ConditionalColumns.column_names())
+        )
+        question_shown = response_long.filter(pl.col("question_id").is_not_null())
+        response_is_null = (
+            question_shown.filter(pl.col("response").is_null())
+            .select("column_name", "item_id", "wave")
+            .unique()
+            .group_by("column_name")
+            .agg(pl.col("item_id").first(), pl.col("wave").unique().sort())
+            # Disregard items where null is okay
+            .filter(~pl.col("column_name").is_in(NULLABLE_COLUMNS))
+            .sort(by="item_id")
+        ).collect()
+
+        if not response_is_null.is_empty():
+            print(
+                "At least one column failed check: question displayed ==> "
+                "response is not null."
+            )
+
+            for col, _, waves in response_is_null.iter_rows():
+                print(f"  - {waves}: {col}")
+            print()
+
+        # Finally, check 'question shown ==> response not null' for conditional Qs
+        question = self.question.select(
+            "item_name", "question_id", "wave", "participant_type"
+        ).join(self.columns, on="item_name", how="left")
+        question_columns = set(question.select("column_name").collect().to_series())
+        failed_checks = []
+        for col in ConditionalColumns.question_columns():
+            # Disregard items where null is okay
+            if col.name in NULLABLE_COLUMNS:
+                continue
+
+            cond_met = self.response.filter(col.condition())
+
+            # Join on question to filter out waves/participants not asked
+            if col.name not in question_columns:
+                raise RuntimeError(
+                    f"Column `{col.name}` not found in item column table."
+                )
+            displayed = (
+                cond_met.select("wave", col.name, "participant_type")
+                .join(
+                    question.filter(pl.col("column_name") == col.name),
+                    on=("wave", "participant_type"),
+                    how="left",
+                )
+                .filter(
+                    pl.col("question_id").is_not_null(),
+                )
+            )
+
+            waves_null = (
+                displayed.filter(pl.col(col.name).is_null())
+                .select(pl.col("wave").unique().sort())
+                .collect()
+                .to_series()
+            )
+            if not waves_null.is_empty():
+                failed_checks.append((col.name, waves_null.to_list()))
+
+        if failed_checks:
+            print(
+                "At least one conditional column failed check: question displayed "
+                "==> response is not null."
+            )
+            for col, waves in failed_checks:
+                print(f"  - {waves}: {col}")
+            print()
