@@ -24,12 +24,31 @@ from climate_attitudes.schema.columns import (
     GroupColumn,
 )
 from climate_attitudes.settings import Config, InterimAsset
-from climate_attitudes.schema.constants import US_STATES, WAVES
+from climate_attitudes.schema.constants import WAVES
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
 from pandera.polars import PolarsData
-from .enums import ResponseType, ParticipantType
+from .enums import (
+    ResponseType,
+    ParticipantType,
+    Education,
+    StateAbbrev,
+    NaturalDisaster,
+    Gender,
+    StormAttribution,
+    OutageAttribution,
+    ClimateChangeCause,
+    ClimateChangeInducedAction,
+    ClimatePolicyBenefit,
+    ReasonOpposeGreenInfra,
+    ReasonSupportGreenInfra,
+    ReasonOpposeInfra,
+    ReasonSupportInfra,
+    CovidPolicyFlowonPriority,
+    PoliticalParty,
+    PoliticalLeaning,
+)
 
 
 """Columns for which Null is a valid response."""
@@ -43,28 +62,52 @@ NULLABLE_COLUMNS: list[str] = [
     "cvcc8b__supp_6_TEXT",
 ]
 
+# Columns requiring response re-map via subtraction by 1
+RESPONSE_REMAP_SUB_1 = {
+    "dem_educ",
+    "attr_storm",
+    "attr_outage",
+    "cc2",
+    "cvcc8a__opp",
+    "cvcc8a__supp",
+    "cvcc8b__opp",
+    "cvcc8b__supp",
+    "pol_party",
+    "pol_lean",
+}
+
+# Columns with additional required re-maps.
+# NOTE: Happens after RESPONSE_REMAP_SUB_1
+RESPONSE_REMAP = {
+    "dem_male": {77: 2},
+    "attr_outage": {12: 11, 11: 10, 10: 9, 9: 8, 8: 7, 7: 6, 6: 5, 5: 4},
+    "cc13": {77: 0},
+    "cc13_apr": {77: 0},
+    "pol_lean": {3: 2},
+}
+
 
 class ConditionalColumns:
     dem_male_77_TEXT = ConditionalColumn("dem_male_77_TEXT").add_cond(
-        expr=pl.col("dem_male") == 77
+        expr=pl.col("dem_male") == "Prefer to self describe"
     )
     ew_attribution = ConditionalColumn("ew_attribution").add_cond(
-        expr=pl.col("ew1") != [0]
+        expr=pl.col("ew1") != ["None of the above"]
     )
     ew_attribution_apr = ConditionalColumn("ew_attribution_apr").add_cond(
-        expr=pl.col("ew1_apr") != [0]
+        expr=pl.col("ew1_apr") != ["None of the above"]
     )
     ew_attribution_jun = ConditionalColumn("ew_attribution_jun").add_cond(
-        expr=pl.col("ew1_jun") != [0]
+        expr=pl.col("ew1_jun") != ["None of the above"]
     )
     ew_attribution_nov = ConditionalColumn("ew_attribution_nov").add_cond(
-        expr=pl.col("ew1_nov") != [0]
+        expr=pl.col("ew1_nov") != ["None of the above"]
     )
     attr_storm_6_TEXT = ConditionalColumn("attr_storm_6_TEXT").add_cond(
-        expr=pl.col("attr_storm").list.contains(6)
+        expr=pl.col("attr_storm").list.contains("Other (text entry)")
     )
     attr_outage_13_TEXT = ConditionalColumn("attr_outage_13_TEXT").add_cond(
-        expr=pl.col("attr_outage").list.contains(13)
+        expr=pl.col("attr_outage").list.contains("Other (text entry)")
     )
 
     ccComp0 = ConditionalColumn("ccComp0", variant=0).add_group_cond([1, 2, 3], "WTP0")
@@ -153,10 +196,10 @@ class ConditionalColumns:
         expr=pl.col("cvcc7a").is_in([4, 5])
     )
     cvcc8a__opp_6_TEXT = ConditionalColumn("cvcc8a__opp_6_TEXT").add_cond(
-        expr=pl.col("cvcc8a__opp").list.contains(6)
+        expr=pl.col("cvcc8a__opp").list.contains("Other (text entry)")
     )
     cvcc8a__supp_8_TEXT = ConditionalColumn("cvcc8a__supp_8_TEXT").add_cond(
-        expr=pl.col("cvcc8a__supp").list.contains(8)
+        expr=pl.col("cvcc8a__supp").list.contains("Other (text entry)")
     )
     cvcc8b__opp = ConditionalColumn("cvcc8b__opp").add_cond(
         expr=pl.col("cvcc7b").is_in([1, 2])
@@ -165,10 +208,10 @@ class ConditionalColumns:
         expr=pl.col("cvcc7b").is_in([4, 5])
     )
     cvcc8b__opp_6_TEXT = ConditionalColumn("cvcc8b__opp_6_TEXT").add_cond(
-        expr=pl.col("cvcc8b__opp").list.contains(6)
+        expr=pl.col("cvcc8b__opp").list.contains("Other (text entry)")
     )
     cvcc8b__supp_6_TEXT = ConditionalColumn("cvcc8b__supp_6_TEXT").add_cond(
-        expr=pl.col("cvcc8b__supp").list.contains(6)
+        expr=pl.col("cvcc8b__supp").list.contains("Other (text entry)")
     )
 
     cvccAirCC = ConditionalColumn(
@@ -197,16 +240,23 @@ class ConditionalColumns:
     )
 
     cv__priority_7_TEXT = ConditionalColumn("cv__priority_7_TEXT").add_cond(
-        expr=pl.col("cv__priority") == 7
+        expr=pl.col("cv__priority") == "Other policy (text entry)"
     )
     cv__priority2_7_TEXT = ConditionalColumn("cv__priority2_7_TEXT").add_cond(
-        expr=pl.col("cv__priority2") == 7
+        expr=pl.col("cv__priority2") == "Other policy (text entry)"
     )
 
-    pol_lean = ConditionalColumn("pol_lean").add_cond(expr=pl.col("pol_party") == 3)
+    pol_lean = ConditionalColumn("pol_lean").add_cond(
+        expr=pl.col("pol_party") == "Independent"
+    )
     pol_vote_CVdem = (
         ConditionalColumn("pol_vote_CVdem", group="COVID (Democrat)")
-        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2))
+        .add_cond(
+            expr=pl.any_horizontal(
+                pl.col("pol_party") == "Democrat",
+                pl.col("pol_lean") == "Leaning Democrat",
+            )
+        )
         .add_group_cond(
             [1, 2, 3],
             "GroupVoteCV",
@@ -214,7 +264,12 @@ class ConditionalColumns:
     )
     pol_vote_CVrep = (
         ConditionalColumn("pol_vote_CVrep", group="COVID (Republican)")
-        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1))
+        .add_cond(
+            expr=pl.any_horizontal(
+                pl.col("pol_party") == "Republican",
+                pl.col("pol_lean") == "Leaning Republican",
+            )
+        )
         .add_group_cond(
             [1, 2, 3],
             "GroupVoteCV",
@@ -222,7 +277,12 @@ class ConditionalColumns:
     )
     pol_vote_CCdem = (
         ConditionalColumn("pol_vote_CCdem", group="Climate (Democrat)")
-        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 2))
+        .add_cond(
+            expr=pl.any_horizontal(
+                pl.col("pol_party") == "Democrat",
+                pl.col("pol_lean") == "Leaning Democrat",
+            )
+        )
         .add_group_cond(
             [1, 2, 3],
             "GroupVoteCC",
@@ -230,7 +290,12 @@ class ConditionalColumns:
     )
     pol_vote_CCrep = (
         ConditionalColumn("pol_vote_CCrep", group="Climate (Republican)")
-        .add_cond(expr=pl.any_horizontal(pl.col("pol_party", "pol_lean") == 1))
+        .add_cond(
+            expr=pl.any_horizontal(
+                pl.col("pol_party") == "Republican",
+                pl.col("pol_lean") == "Leaning Republican",
+            )
+        )
         .add_group_cond(
             [1, 2, 3],
             "GroupVoteCC",
@@ -708,31 +773,29 @@ class OutputResponseSchema(BaseSchema):
 
     # Demographic columns
     dem_stcount_1: int  # State
-    dem_stcount_1_char: str = pa.Field(
-        isin=[name for state, name in US_STATES],
-    )
+    dem_stcount_1_char: StateAbbrev  # ty: ignore
     dem_stcount_2: int  # County
     dem_stcount_2_char: str
     dem_zip: str  # Zip code
-    dem_educ: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
-    dem_male: int = pa.Field(isin=[0, 1, 77])
-    dem_male_77_TEXT: str = pa.Field(nullable=True)  # Nonempty if dem_male == 77
+    dem_educ: Education  # ty: ignore
+    dem_male: Gender  # ty: ignore
+    dem_male_77_TEXT: str = pa.Field(nullable=True)
     dem_age: int = pa.Field(gt=0, le=99)
     dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
 
     # Extreme weather
-    ew1: list[int] = pa.Field(nullable=True)
-    ew1_apr: list[int] = pa.Field(nullable=True)
-    ew1_jun: list[int] = pa.Field(nullable=True)
-    ew1_nov: list[int] = pa.Field(nullable=True)
+    ew1: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore
+    ew1_apr: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore
+    ew1_jun: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore
+    ew1_nov: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore
     ew_attribution: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew5: int = pa.Field(isin=[1, 2, 3, 4])
-    attr_storm: list[int] = pa.Field(nullable=True)
+    attr_storm: pl.List(StormAttribution) = pa.Field(nullable=True)  # ty: ignore
     attr_storm_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
-    attr_outage: list[int] = pa.Field(nullable=True)
+    attr_outage: pl.List(OutageAttribution) = pa.Field(nullable=True)  # ty: ignore
     attr_outage_13_TEXT: str = pa.Field(
         nullable=True
     )  # Non-null only if response is 13
@@ -743,7 +806,7 @@ class OutputResponseSchema(BaseSchema):
     cc1: int = pa.Field(isin=[0, 1, 99], nullable=True)
 
     # Climate change causes/anthropogenic CC
-    cc2: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    cc2: ClimateChangeCause = pa.Field(nullable=True)  # ty: ignore
 
     # Climate change is a scam
     cc_scam: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -867,8 +930,8 @@ class OutputResponseSchema(BaseSchema):
     cc11: int = pa.Field(in_range=(1, 7), nullable=True)
 
     # Actions taken due to current/future CC impacts
-    cc13: list[int] = pa.Field(nullable=True)
-    cc13_apr: list[int] = pa.Field(nullable=True)
+    cc13: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
+    cc13_apr: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
 
     # behaviors taken to help address CC
     cc_behavior_meat: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -888,7 +951,7 @@ class OutputResponseSchema(BaseSchema):
     cc_policy_risk: int = pa.Field(in_range=(1, 7), nullable=True)
 
     # Expected benefit from climate related policies
-    cc_policybenefit: list[int] = pa.Field(nullable=True)
+    cc_policybenefit: pl.List(ClimatePolicyBenefit) = pa.Field(nullable=True)  # ty: ignore
 
     # Climate change as policy issue vs. individual responsibility
     cc_resp_action: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -921,12 +984,12 @@ class OutputResponseSchema(BaseSchema):
     # Policy support: large-scale green infrastructure plan
     cvcc7a: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvcc7b: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-    cvcc8a__opp: list[int] = pa.Field(nullable=True)
-    cvcc8a__supp: list[int] = pa.Field(nullable=True)
+    cvcc8a__opp: pl.List(ReasonOpposeGreenInfra) = pa.Field(nullable=True)  # ty: ignore
+    cvcc8a__supp: pl.List(ReasonSupportGreenInfra) = pa.Field(nullable=True)  # ty: ignore
     cvcc8a__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     cvcc8a__supp_8_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 8
-    cvcc8b__opp: list[int] = pa.Field(nullable=True)
-    cvcc8b__supp: list[int] = pa.Field(nullable=True)
+    cvcc8b__opp: pl.List(ReasonOpposeInfra) = pa.Field(nullable=True)  # ty: ignore
+    cvcc8b__supp: pl.List(ReasonSupportInfra) = pa.Field(nullable=True)  # ty: ignore
     cvcc8b__opp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     cvcc8b__supp_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
 
@@ -947,12 +1010,10 @@ class OutputResponseSchema(BaseSchema):
     cvcc10_cc: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # Prioritise issues: COVID-19 policies that could help address other issues.
-    cv__priority: int = pa.Field(isin=[1, 2, 3, 4, 5, 8, 9, 7, 6], nullable=True)
-    cv__priority2: int = pa.Field(isin=[0, 1, 2, 3, 4, 5, 7], nullable=True)
-    cv__priority_7_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 7
-    cv__priority2_7_TEXT: str = pa.Field(
-        nullable=True
-    )  # Non-null only if response is 7
+    cv__priority: CovidPolicyFlowonPriority = pa.Field(nullable=True)  # ty: ignore
+    cv__priority2: CovidPolicyFlowonPriority = pa.Field(nullable=True)  # ty: ignore
+    cv__priority_7_TEXT: str = pa.Field(nullable=True)
+    cv__priority2_7_TEXT: str = pa.Field(nullable=True)
 
     # ==== US political issues =====
     # How much of a threat is global warming/climate change
@@ -962,8 +1023,8 @@ class OutputResponseSchema(BaseSchema):
     pol7: int = pa.Field(isin=[1, 2])
 
     # Political identification
-    pol_party: int = pa.Field(isin=[1, 2, 3])
-    pol_lean: int = pa.Field(isin=[1, 2, 4], nullable=True)
+    pol_party: PoliticalParty  # ty: ignore
+    pol_lean: PoliticalLeaning = pa.Field(nullable=True)  # ty: ignore
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
     pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -1089,9 +1150,16 @@ class OutputResponseSchema(BaseSchema):
                     ([4], [1, 2, 3, 4, 5, 8, 9, 7, 6]),
                 ],
             ),
+            (
+                "cv__priority2",
+                [
+                    ([2], [0, 1, 2, 3, 4, 5, 7]),
+                ],
+            ),
         ]
 
-        return df.lazyframe.select(
+        # Cast enums to int temporarily so we can specify above conds with ints
+        return df.lazyframe.with_columns(cs.enum().cast(pl.Int64)).select(
             *[
                 pl.any_horizontal(
                     *[
@@ -1144,26 +1212,26 @@ class OutputResponseSchema(BaseSchema):
             (
                 "attr_storm",
                 [
-                    ([4], [1, 2, 3, 4, 5, 6]),
+                    ([4], [0, 1, 2, 3, 4, 5]),
                 ],
             ),
             (
                 "attr_outage",
                 [
-                    ([4], [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13]),
+                    ([4], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]),
                 ],
             ),
             (
                 "cc13",
                 [
-                    ([1], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 77]),
-                    ([2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 77]),
+                    ([1], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]),
+                    ([2, 3, 4], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]),
                 ],
             ),
             (
                 "cc13_apr",
                 [
-                    ([2], [2, 3, 4, 5, 6, 7, 8, 13, 10, 11, 14, 12, 77]),
+                    ([2], [0, 2, 3, 4, 5, 6, 7, 8, 13, 10, 11, 14, 12]),
                 ],
             ),
             (
@@ -1175,30 +1243,33 @@ class OutputResponseSchema(BaseSchema):
             (
                 "cvcc8a__opp",
                 [
-                    ([1], [1, 2, 3, 4, 5, 6]),
+                    ([1], [0, 1, 2, 3, 4, 5]),
                 ],
             ),
             (
                 "cvcc8a__supp",
                 [
-                    ([1], [1, 2, 3, 4, 5, 6, 7, 8]),
+                    ([1], [0, 1, 2, 3, 4, 5, 6, 7]),
                 ],
             ),
             (
                 "cvcc8b__opp",
                 [
-                    ([1], [1, 2, 3, 4, 5, 6]),
+                    ([1], [0, 1, 2, 3, 4, 5]),
                 ],
             ),
             (
                 "cvcc8b__supp",
                 [
-                    ([1], [1, 2, 3, 4, 5, 6]),
+                    ([1], [0, 1, 2, 3, 4, 5]),
                 ],
             ),
         ]
 
-        return df.lazyframe.select(
+        # Cast enums to int temporarily so we can specify above conds with ints
+        return df.lazyframe.with_columns(
+            cs.list(cs.enum()).list.eval(pl.element().cast(pl.Int64))
+        ).select(
             *[
                 pl.any_horizontal(
                     *[
