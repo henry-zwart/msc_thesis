@@ -353,16 +353,12 @@ EXPERIMENT_CONDITION_COLUMNS = [
         allow_null=True,
     ),
     ConditionGroup(
-        "cvcc_solution_kind",
-        ConditionalColumns.cvcc6,
-        ConditionalColumns.cvcc10_cc,
-    ),
-    ConditionGroup(
         "pol_vote_support",
         ConditionalColumns.pol_vote_CVdem,
         ConditionalColumns.pol_vote_CCdem,
         ConditionalColumns.pol_vote_CVrep,
         ConditionalColumns.pol_vote_CCrep,
+        allow_multiple_groups=True,
     ),
 ]
 

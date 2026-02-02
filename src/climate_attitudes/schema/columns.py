@@ -119,9 +119,16 @@ class GroupColumn:
 
 
 class ConditionGroup:
-    def __init__(self, name: str, *column: ConditionalColumn, allow_null: bool = False):
+    def __init__(
+        self,
+        name: str,
+        *column: ConditionalColumn,
+        allow_null: bool = False,
+        allow_multiple_groups: bool = False,
+    ):
         self.name = name
         self.allow_null = allow_null
+        self.allow_multiple_groups = allow_multiple_groups
         self.columns: list[ConditionalColumn] = []
         for col in column:
             self.add_column(col)
@@ -193,6 +200,12 @@ class ConditionGroup:
             )
 
         if (num_groups > 1).any():
+            if self.name == "pol_vote_support":
+                print(
+                    lf.filter(pl.sum_horizontal(self.temp_group_cols.is_not_null()) > 1)
+                    .select("participant_id", "wave", self.temp_group_cols)
+                    .collect()
+                )
             raise RuntimeError(
                 f"One or more rows has more than one assigned group for conditional "
                 f"column: {self.name}"
@@ -263,7 +276,8 @@ class ConditionGroup:
         # Check all okay (unique groups, responses, no unexpected nulls)
         if not self.allow_null:
             self.validate_all_rows_have_group(coalesced_lf)
-        self.validate_exclusive_groups(coalesced_lf)
+        if not self.allow_multiple_groups:
+            self.validate_exclusive_groups(coalesced_lf)
         self.validate_exclusive_responses(coalesced_lf)
 
         # Drop temporary columns
