@@ -200,12 +200,6 @@ class ConditionGroup:
             )
 
         if (num_groups > 1).any():
-            if self.name == "pol_vote_support":
-                print(
-                    lf.filter(pl.sum_horizontal(self.temp_group_cols.is_not_null()) > 1)
-                    .select("participant_id", "wave", self.temp_group_cols)
-                    .collect()
-                )
             raise RuntimeError(
                 f"One or more rows has more than one assigned group for conditional "
                 f"column: {self.name}"
