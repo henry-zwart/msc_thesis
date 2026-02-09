@@ -1,3 +1,55 @@
+## Feb 9 - Feb 15 2026
+
+### Monday
+
+- Weekly catch-up with Vítor, as rescheduled from last Thursday
+
+#### Weekly catch-up
+We discussed the general state of the survey questions I have selected as representative of the 
+dimensions examined in Lee et al (2025), as well as a number of problems with this selection. 
+From the initial question tagging, I have selected for each dimension the questions which are likely 
+the most directly indicative internal state, such that both positive and negative responses are 
+meaningful. This yields approximately 1--2 questions per dimension, once we have filtered to those 
+questions which appear in both waves 1 and 2, and are asked of the same participants.
+
+Some of the dimensions (support for fossil fuel reduction/renewable energy increases, expectations 
+of personal harm from climate change) are represented only by `cc13` (or `cc13_apr`), which asks 
+about specific actions taken due to climate change. Responses to this question can be extracted to 
+specialised measures regarding fossil fuel reduction, risk perceptions, etc. However, this measure 
+has limited usefulness for our purposes, since (i) perceived attribution of past actions may be subject
+to error, and (ii) historical actions do not necessarily represent current states of affairs.
+
+Vítor agreed with my concern that retrofitting the climate attitudes survey data to the purpose of
+this study may be a bold ask. 
+
+We instead considered that the questions posed by Lee et al could form the (moral) basis of our study.
+In their paper, they categorise the presented survey questions into three categories: Belief, Risk 
+perception, and Policy support. We could instead operate from this more abstract base to identify 
+a line of inquiry that is more readily supported by the available data. This also allows us to make 
+use of richer aspects of the climate attitudes dataset which are not considered by Lee et al, such 
+as policy support with varying costs.
+
+Finally, we briefly discussed the necessity of having all questions be contiguous across waves. 
+Waves 5 and 6 of the survey contain several behavioural questions which are not present in earlier 
+waves, yet exclude many of the policy support/climate belief questions. I suggested that this may
+provide a natural and possible divide; we may use earlier waves to fit a model of internal states,
+yielding a theory of belief change which allows us to extrapolate to those later waves, where 
+the internal states are considered inputs to a behavioural model for these other questions. 
+
+**Tasks:**
+
+- Prepare an email for Sara, describing the issues identified with the climate attitudes dataset.
+- Continue with EDA for the unproblematic subset of representative questions.
+- Prepare a presentation for Thursday. 
+
+
+
+
+## Feb 2 - Feb 8 2026
+This week was a write-off due to a bad cold. I've mostly recovered now, so will continue next 
+week with the tasks planned for this week.
+
+
 ## Jan 26 - Feb 1  2026
 
 ### Tuesday
