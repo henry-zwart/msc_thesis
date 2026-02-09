@@ -3,6 +3,8 @@
 ### Monday
 
 - Weekly catch-up with Vítor, as rescheduled from last Thursday
+- Prepared email to send to Sara, describing dataset issues
+- Visualisation of Lee 2025 representative variables
 
 #### Weekly catch-up
 We discussed the general state of the survey questions I have selected as representative of the 
@@ -41,6 +43,20 @@ the internal states are considered inputs to a behavioural model for these other
 - Prepare an email for Sara, describing the issues identified with the climate attitudes dataset.
 - Continue with EDA for the unproblematic subset of representative questions.
 - Prepare a presentation for Thursday. 
+
+#### Question categorisation
+Lee et al group their survey questions into three categories: beliefs, risk perception, and policy 
+support. This offers an alternative method for us to compare with their work, namely by taking their
+abstract categories as the base for our own variable selection.
+
+I propose the following set of categories:
+
+- Belief: Assesses participant's epistemic position on some issue. 
+- Attitude: Assesses attitudinal positions (i.e., not necessarily true or false, but rather 
+  character alignments or feelings).
+- Policy support
+- Experience: Past events which participants have experienced.
+- Demographic: Individual-level information about participants.
 
 
 
