@@ -180,13 +180,13 @@ class ConditionalColumns:
     )
     cvcc7a = (
         ConditionalColumn("cvcc7a")
-        .add_group_cond(2, ["GroupGreenInfrastructure", "Groupcvcc7show"])
-        .add_group_cond([1, 3], "GroupGreenInfrastructure")
+        .add_group_cond([2, 3], ["GroupGreenInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1], "GroupGreenInfrastructure")
     )
     cvcc7b = (
         ConditionalColumn("cvcc7b")
-        .add_group_cond(2, ["GroupInfrastructure", "Groupcvcc7show"])
-        .add_group_cond([1, 3], "GroupInfrastructure")
+        .add_group_cond([2, 3], ["GroupInfrastructure", "Groupcvcc7show"])
+        .add_group_cond([1], "GroupInfrastructure")
     )
 
     cvcc8a__opp = ConditionalColumn("cvcc8a__opp").add_cond(
@@ -725,7 +725,6 @@ class OutputItemColumnsSchema(BaseSchema):
 class OutputItemSchema(BaseSchema):
     item_id: pl.UInt32
     item_name: str
-    codebook_name: str
     category: str = pa.Field(nullable=True)
     is_demographic: bool
     has_error: bool
