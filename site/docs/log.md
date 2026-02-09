@@ -2,9 +2,10 @@
 
 ### Monday
 
-- Weekly catch-up with Vítor, as rescheduled from last Thursday
-- Prepared email to send to Sara, describing dataset issues
-- Visualisation of Lee 2025 representative variables
+- Weekly catch-up with Vítor, as rescheduled from last Thursday.
+- Sent email to Sara, describing dataset issues.
+- Visualisation of Lee 2025 representative variables: Plotting transition diagrams for 
+  responses across waves 1 & 2, treating as a MC.
 
 #### Weekly catch-up
 We discussed the general state of the survey questions I have selected as representative of the 
