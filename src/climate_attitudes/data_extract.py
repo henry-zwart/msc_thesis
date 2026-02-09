@@ -148,7 +148,10 @@ class DataExtract:
         # Normalise item names:
         # 1. Fix item names that are incorrectly recorded in codebook
         self.codebook = self.codebook.join(
-            StaticAsset.ItemName.scan(self.config), on="codebook_name", how="left"
+            StaticAsset.ItemName.scan(self.config),
+            on="codebook_name",
+            how="left",
+            maintain_order="left",
         )
         # 2. Replace '.' with double underscore '__'
         self.codebook = self.codebook.with_columns(
@@ -184,7 +187,7 @@ class DataExtract:
         # NOTE: Category is unimplemented so currently null. Intended to distinguish
         # demographic/experience/belief/attitude/etc.
         item = (
-            self.codebook.select("item_name", "codebook_name")
+            self.codebook.select("item_name")
             .with_columns(pl.lit(None, dtype=pl.String).alias("category"))
             .unique(maintain_order=True)
         )
