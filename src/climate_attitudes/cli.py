@@ -1,4 +1,4 @@
-from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.dataset import Dataset
 from climate_attitudes.builder.raw_data import extract_raw_data
 from pathlib import Path
 from pydantic import BaseModel
@@ -42,7 +42,8 @@ class ExtractRawDataCommand(BaseCommand):
 
 class BuildDataCommand(BaseCommand):
     def cli_cmd(self) -> None:
-        _ = DataExtract(self.settings).load()
+        ds = Dataset(self.settings).build()
+        ds.write()
 
 
 class CAData(

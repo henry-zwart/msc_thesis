@@ -1,11 +1,33 @@
+from __future__ import annotations
 from climate_attitudes.schema.constants import WAVES
 from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ConditionalColumns,
     NULLABLE_COLUMNS,
+    RESPONSE_REMAP_SUB_1,
+    RESPONSE_REMAP,
 )
 from climate_attitudes.schema import extract as schema
-from climate_attitudes.schema.enums import ResponseType, ParticipantType
+from climate_attitudes.schema.enums import (
+    ResponseType,
+    ParticipantType,
+    Education,
+    StateAbbrev,
+    NaturalDisaster,
+    Gender,
+    StormAttribution,
+    OutageAttribution,
+    ClimateChangeCause,
+    ClimateChangeInducedAction,
+    ClimatePolicyBenefit,
+    ReasonOpposeGreenInfra,
+    ReasonSupportGreenInfra,
+    ReasonOpposeInfra,
+    ReasonSupportInfra,
+    CovidPolicyFlowonPriority,
+    PoliticalParty,
+    PoliticalLeaning,
+)
 import json
 import polars as pl
 import polars.selectors as cs
@@ -23,7 +45,7 @@ class DataExtract:
     def __init__(self, config: Config):
         self.config = config
 
-    def load(self):
+    def load(self) -> DataExtract:
         """Load raw data into Polars LazyFrames.
 
         Since we only have a codebook for waves 1---5 at the moment, we only
@@ -55,6 +77,8 @@ class DataExtract:
 
         # Validate that all data loaded correctly
         self._validate()
+
+        return self
 
     def _validate(self):
         schema.OutputCodebookSchema.validate(self.codebook.collect())
@@ -124,7 +148,10 @@ class DataExtract:
         # Normalise item names:
         # 1. Fix item names that are incorrectly recorded in codebook
         self.codebook = self.codebook.join(
-            StaticAsset.ItemName.scan(self.config), on="codebook_name", how="left"
+            StaticAsset.ItemName.scan(self.config),
+            on="codebook_name",
+            how="left",
+            maintain_order="left",
         )
         # 2. Replace '.' with double underscore '__'
         self.codebook = self.codebook.with_columns(
@@ -160,7 +187,7 @@ class DataExtract:
         # NOTE: Category is unimplemented so currently null. Intended to distinguish
         # demographic/experience/belief/attitude/etc.
         item = (
-            self.codebook.select("item_name", "codebook_name")
+            self.codebook.select("item_name")
             .with_columns(pl.lit(None, dtype=pl.String).alias("category"))
             .unique(maintain_order=True)
         )
@@ -377,6 +404,51 @@ class DataExtract:
             .list.eval(pl.element().cast(pl.Int64))
         )
 
+        # Remap any required columns. Treat lists separately.
+        # 1. Re-map columns requiring subtraction by one
+        response = response.with_columns(
+            (cs.by_name(RESPONSE_REMAP_SUB_1) & ~cs.list()) - 1
+        ).with_columns(
+            (cs.by_name(RESPONSE_REMAP_SUB_1) & cs.list()).list.eval(pl.element() - 1)
+        )
+
+        # 2. Perform any additional required remaps
+        for column, remap in RESPONSE_REMAP.items():
+            if isinstance(response.collect_schema()[column], pl.List):
+                expr = pl.col(column).list.eval(pl.element().replace(remap))
+            else:
+                expr = pl.col(column).replace(remap)
+            response = response.with_columns(expr)
+
+        # Cast enum-type columns
+        response = response.with_columns(
+            pl.col("dem_educ").cast(Education),
+            pl.col("dem_male").cast(Gender),
+            pl.col("dem_stcount_1_char").cast(StateAbbrev),
+            pl.col("ew1").list.eval(pl.element().cast(NaturalDisaster)),
+            pl.col("ew1_apr").list.eval(pl.element().cast(NaturalDisaster)),
+            pl.col("ew1_jun").list.eval(pl.element().cast(NaturalDisaster)),
+            pl.col("ew1_nov").list.eval(pl.element().cast(NaturalDisaster)),
+            pl.col("attr_storm").list.eval(pl.element().cast(StormAttribution)),
+            pl.col("attr_outage").list.eval((pl.element().cast(OutageAttribution))),
+            pl.col("cc2").cast(ClimateChangeCause),
+            pl.col("cc13").list.eval(pl.element().cast(ClimateChangeInducedAction)),
+            pl.col("cc13_apr").list.eval(pl.element().cast(ClimateChangeInducedAction)),
+            pl.col("cc_policybenefit").list.eval(
+                pl.element().cast(ClimatePolicyBenefit)
+            ),
+            pl.col("cvcc8a__opp").list.eval(pl.element().cast(ReasonOpposeGreenInfra)),
+            pl.col("cvcc8a__supp").list.eval(
+                pl.element().cast(ReasonSupportGreenInfra)
+            ),
+            pl.col("cvcc8b__opp").list.eval(pl.element().cast(ReasonOpposeInfra)),
+            pl.col("cvcc8b__supp").list.eval(pl.element().cast(ReasonSupportInfra)),
+            pl.col("cv__priority").cast(CovidPolicyFlowonPriority),
+            pl.col("cv__priority2").cast(CovidPolicyFlowonPriority),
+            pl.col("pol_party").cast(PoliticalParty),
+            pl.col("pol_lean").cast(PoliticalLeaning),
+        )
+
         # Convert treatment class indicator columns to bool,
         #  - Only when these columns are valid for wave
         # TODO: Also check that valid for participant type
@@ -485,9 +557,10 @@ class DataExtract:
             *question_columns,
         )
 
-        # Convert list columns to string so we can unpivot on them
+        # Convert list columns to string, enum to int, so we can unpivot on them
         response = response.with_columns(
-            cs.list().cast(pl.List(pl.String)).list.join(",")
+            cs.list().cast(pl.List(pl.String)).list.join(","),
+            (cs.enum() & cs.exclude("participant_type")).cast(pl.Int64),
         )
 
         # Convert response to long format, one row per question
