@@ -62,8 +62,7 @@ class OutputItemColumnsSchema(BaseSchema):
 
 class OutputItemSchema(BaseSchema):
     item_id: pl.UInt32
-    name: str
-    codebook_name: str
+    item_name: str
     category: str = pa.Field(nullable=True)
     is_demographic: bool
     has_error: bool
@@ -89,6 +88,7 @@ class OutputQuestionSchema(BaseSchema):
     response_type: ResponseType  # ty: ignore
     response_schema: str = pa.Field(nullable=True)
     question_text: str
+    treatment: pl.Int32
 
 
 class OutputParticipantSchema(BaseSchema):
