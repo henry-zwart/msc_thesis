@@ -42,7 +42,8 @@ class ExtractRawDataCommand(BaseCommand):
 
 class BuildDataCommand(BaseCommand):
     def cli_cmd(self) -> None:
-        _ = Dataset(self.settings).build()
+        ds = Dataset(self.settings).build()
+        ds.write()
 
 
 class CAData(
