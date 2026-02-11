@@ -48,6 +48,7 @@ from .enums import (
     CovidPolicyFlowonPriority,
     PoliticalParty,
     PoliticalLeaning,
+    PoliticalIdeology,
 )
 
 
@@ -74,6 +75,7 @@ RESPONSE_REMAP_SUB_1 = {
     "cvcc8b__supp",
     "pol_party",
     "pol_lean",
+    "pol_ideology",
 }
 
 # Columns with additional required re-maps.
@@ -102,6 +104,9 @@ class ConditionalColumns:
     )
     ew_attribution_nov = ConditionalColumn("ew_attribution_nov").add_cond(
         expr=pl.col("ew1_nov") != ["None of the above"]
+    )
+    ew3_mat = ConditionalColumn("ew3_mat").add_cond(
+        expr=pl.col("ew1") != ["None of the above"]
     )
     attr_storm_6_TEXT = ConditionalColumn("attr_storm_6_TEXT").add_cond(
         expr=pl.col("attr_storm").list.contains("Other (text entry)")
@@ -791,7 +796,9 @@ class OutputResponseSchema(BaseSchema):
     ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew3_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew5: int = pa.Field(isin=[1, 2, 3, 4])
+    ew6: int = pa.Field(isin=[1, 2, 3, 4])
     attr_storm: pl.List(StormAttribution) = pa.Field(nullable=True)  # ty: ignore
     attr_storm_6_TEXT: str = pa.Field(nullable=True)  # Non-null only if response is 6
     attr_outage: pl.List(OutageAttribution) = pa.Field(nullable=True)  # ty: ignore
@@ -925,8 +932,14 @@ class OutputResponseSchema(BaseSchema):
         isin=[1, 2, 3, 4, 5], nullable=True
     )  # Rebates/subsidies for buying energy-efficient vehicles/solar
 
+    # CC risks known precisely to those exposed
+    cc10: int = pa.Field(in_range=(1, 7), nullable=True)
+
     # Capacity, through own actions, to avoid CC-related death
     cc11: int = pa.Field(in_range=(1, 7), nullable=True)
+
+    # Public calm/dread regarding CC
+    cc12: int = pa.Field(in_range=(1, 7), nullable=True)
 
     # Actions taken due to current/future CC impacts
     cc13: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
@@ -980,6 +993,9 @@ class OutputResponseSchema(BaseSchema):
     # Importance of individual action on climate change
     cvcc6: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
+    # How worried are most Americans about CC?
+    cvcc_worryothers: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
     # Policy support: large-scale green infrastructure plan
     cvcc7a: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvcc7b: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -1018,12 +1034,35 @@ class OutputResponseSchema(BaseSchema):
     # How much of a threat is global warming/climate change
     pol_threat_cc: int = pa.Field(isin=[1, 2, 3], nullable=True)
 
+    # Regulation of business: harmful vs. necessary for public good
+    pol4: int = pa.Field(isin=[1, 2])
+
+    # Poor people: have it easy vs. have it hard
+    pol5: int = pa.Field(isin=[1, 2])
+
+    # Immigrants: good or bad for workforce
+    pol6: int = pa.Field(isin=[1, 2])
+
     # Strict environmental laws: hurt economy vs. worth the cost
     pol7: int = pa.Field(isin=[1, 2])
 
+    # US Foreign interests: Align with allies vs. follow own national interests
+    pol8: int = pa.Field(isin=[1, 2])
+
+    # US participation in global affairs: yes/no
+    pol9: int = pa.Field(isin=[1, 2])
+
+    # US economic system: unfair vs. fair
+    pol10: int = pa.Field(isin=[1, 2])
+
+    # In times of crises govt should: exercise control vs. prioritise civil liberties
+    pol11: int = pa.Field(isin=[1, 2])
+
     # Political identification
+    pol_interest: int = pa.Field(in_range=(1, 5))
     pol_party: PoliticalParty  # ty: ignore
     pol_lean: PoliticalLeaning = pa.Field(nullable=True)  # ty: ignore
+    pol_ideology: PoliticalIdeology  # ty: ignore
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
     pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)

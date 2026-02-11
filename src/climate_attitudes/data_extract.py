@@ -27,6 +27,7 @@ from climate_attitudes.schema.enums import (
     CovidPolicyFlowonPriority,
     PoliticalParty,
     PoliticalLeaning,
+    PoliticalIdeology,
 )
 import json
 import polars as pl
@@ -447,6 +448,7 @@ class DataExtract:
             pl.col("cv__priority2").cast(CovidPolicyFlowonPriority),
             pl.col("pol_party").cast(PoliticalParty),
             pl.col("pol_lean").cast(PoliticalLeaning),
+            pl.col("pol_ideology").cast(PoliticalIdeology),
         )
 
         # Convert treatment class indicator columns to bool,

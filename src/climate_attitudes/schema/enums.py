@@ -286,3 +286,8 @@ PoliticalParty = pl.Enum(["Republican", "Democrat", "Independent"])
 
 # pol_lean
 PoliticalLeaning = pl.Enum(["Leaning Republican", "Leaning Democrat", "Neither"])
+
+# pol_ideology
+PoliticalIdeology = pl.Enum(
+    ["Very conservative", "Conservative", "Moderate", "Liberal", "Very liberal"]
+)
