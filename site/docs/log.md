@@ -1,3 +1,46 @@
+## Feb 16 - Feb 22 2026
+
+### Monday
+
+#### Weekly standup
+##### Last week:
+- _(Data validation; [#67](https://github.com/henry-zwart/msc_thesis/issues/67))_ 
+  Emailed Sara about data validation issues in climate attitudes dataset.
+- _(Presentation; [#72](https://github.com/henry-zwart/msc_thesis/issues/72))_
+  Created presentations for Thursday ECHO talk:
+    - Teaching practice (collider bias)
+    - Project update (validation; initial EDA)
+- Started looking at variables outside those considered in Lee et al. (2025)
+- Discussed project with colleagues at Dragonfly
+- _(EDA; [#76](https://github.com/henry-zwart/msc_thesis/issues/76))_ Implemented 
+  partial correlation calculation for Polars DataFrames.
+
+##### This week:
+- _(Meetings)_ ENLENS on Thursday afternoon.
+- _(Meetings)_ Perhaps catch up with Kyuri (Tuesday?) to discuss preparations 
+  for Thursday meeting.
+- _(Literature; [#77](https://github.com/henry-zwart/msc_thesis/issues/77))_
+  Read up on partial correlation.
+- _(EDA, literature [#78](https://github.com/henry-zwart/msc_thesis/issues/78))_ 
+  Look at ways to reduce data dimensionality, both in the number of questions and 
+  number of response options.
+
+##### Other tasks:
+- _(EDA; [#79](https://github.com/henry-zwart/msc_thesis/issues/79))_ Fit diffusion 
+  models to individual question response Markov processes. 
+- _(Analysis; [#80](https://github.com/henry-zwart/msc_thesis/issues/80))_ Check 
+  whether the matrix inversion method for computing partial correlations is generally
+  appropriate for our data.
+- _(Analysis; [#81](https://github.com/henry-zwart/msc_thesis/issues/81) 
+  [#82](https://github.com/henry-zwart/msc_thesis/issues/82))_ Redo Vítor's 
+  'willingness-to-pay' analysis to extract between-person comparable factors  
+  from `ccSolve`, `ccComp` variables. Consider whether a similar approach 
+  could be applied to other variable-treatment questions.
+- _(Analysis; [#83](https://github.com/henry-zwart/msc_thesis/issues/83))_ Estimate
+  distance-from-equilibrium for survey questions as Markov processes.
+- _(Research direction; [#84](https://github.com/henry-zwart/msc_thesis/issues/84))_
+  Identify a couple of specific contexts for my research questions.
+
 ## Feb 9 - Feb 15 2026
 
 ### Summary
