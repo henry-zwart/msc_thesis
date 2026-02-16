@@ -1,5 +1,112 @@
 ## Feb 9 - Feb 15 2026
 
+### Summary
+This week was a bit slow, as I was still recovering from my cold. I met with Vítor
+twice (on Monday and Thursday), and presented at the ECHO meeting on Thursday. 
+Much of the week was dedicated to preparing my presentations. I also began 
+some EDA.
+
+Key items are as follows:
+
+- I emailed Sara regarding the dataset validation issues I have identified.
+- We decided to extend our field-of-view beyond Lee et al (2025). Only four of their 
+  cognitive items are well-assessed by the climate attitudes dataset; conversely, we 
+  have variables of interest which Lee et al did not consider, such as priced policies
+  and recorded experience. Rather, we can treat this paper as a moral basis for our 
+  question selection, particularly in their categorisation of cognitive items into 
+  different types.
+- EDA: 
+    - Pairwise correlation (for Lee et al variables, and extended set).
+    - Implemented partial correlation as well. 
+    - Visualising changes in individuals' responses to particular questions as a 
+      Markov process, on a directed transition network.
+- Created slides for Thursday ECHO talk:
+    - Teaching practice (collider bias).
+    - Project status.
+
+
+### Friday
+
+- Implementing partial correlations
+- Brief catchup with Vítor
+
+#### Partial correlations
+I implemented these using [matrix inversion](https://en.wikipedia.org/wiki/Partial_correlation#Using_matrix_inversion).
+We calculate the inverse pairwise covariance matrix for the dataset, and normalise the 
+elements by the root product of the corresponding row/column diagonals.
+
+This approach requires that the covariance matrix be positive definite. While the 
+method does not fail for any of the examined columns, I need to check why this is 
+apparently satisfied for our data. Perhaps due to the heavy diagonal.
+
+#### Catchup with Vítor
+I caught up with Vítor for 5min or so to discuss my plans for the following week.
+Key takeaways are:
+
+- Read up on partial correlations: use in related literature, interpretation, 
+  limitations, connections to the Ising model.
+- Don't focus too much on interpreting results for the time being (e.g., from 
+  the partial correlations). Two reasons: (i) we have not yet settled on a 
+  context, and (ii) we should resolve the data issues first.
+- Think (generally) about how to reduce the data dimensionality, both in terms 
+  of the number of questions and number of response options, based on the 
+  partial correlations (and/or other metrics). e.g., Clustering, binarisation.
+
+### Thursday
+
+- Weekly catchup with Vítor
+- ECHO presentation
+
+#### Weekly catch-up
+We talked about the initial EDA I have started since Monday: (i) plotting pairwise
+correlations for Lee representative survey questions, and (ii) visualising changes in 
+individuals' responses to particular questions as a Markov process, plotting the 
+transition probabilities on a directed network.
+
+Vítor also showed me an analysis he had done on the costed policies questions. By 
+modelling responses as a function of policy cost as well as individual factors 
+(e.g., financial capacity, age, etc.), and solving the resulting equation for the 
+price at which individuals are neutral, he derived a "willingness-to-pay" factor 
+for each participant. This illustrates one way that we can extract variable-treatment
+responses into variables which are comparable across individuals from different 
+treatment groups. I should consider redoing this analysis, perhaps also for other 
+treatment questions.
+
+**Pairwise correlations:** These don't show much at the moment. Most variables are 
+positively correlated, since they are all generally associated with pro/anti-climate
+stances. Vítor suggested also plotting the partial correlations, which assess the 
+correlation between a pair of variables while controlling for all others. 
+
+**Response changes as Markov process:** All of the survey questions I have examined 
+are ordinal, and most of these display stronger connections between consecutive 
+response options. This is indicative of a continuous underlying internal state. We 
+can also look at the responses as measurements of a diffusion process, allowing us 
+to see how the 'velocity' varies along the scale. While this visualisation is limited
+to individual survey questions, directed belief systems can be considered a 
+generalisation of this to higher dimensions (more questions). This analysis may also 
+justify binarising some questions, for instance, when changing response from one value 
+to another almost always requires passing through an intermediary ordinal state.
+
+On the same plot, I have coloured the nodes (response values) according to the 
+stationary distribution of the Markov process. Vítor has suggested also investigating
+the difference between this stationary distribution and the actual distribution as 
+observed in the data. This gives an indication of how far the system is from 
+equilibrium (at a global population level) for each survey question.
+
+**Question selection:** Finally, we discussed selecting/narrowing down the set of 
+survey questions we are considering. The narrowing-down is best done with respect 
+to a particular context frame (e.g., select a behaviour of interest, then select 
+the beliefs/attitudes/experiences/positions which are relevant to that behaviour).
+If we do this carefully, we may be able to identify a couple of contexts, spanning 
+multiple waves, with relatively few and non-overlapping relevant items.  
+
+
+### Wednesday
+
+- Creating slides for Thursday ECHO presentation.
+    - Teaching practice: Collider bias.
+    - Project status: data validation, initial EDA.
+
 ### Monday
 
 - Weekly catch-up with Vítor, as rescheduled from last Thursday.
