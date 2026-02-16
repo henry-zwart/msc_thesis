@@ -28,15 +28,15 @@ def main():
     within_corrs = stats.pearsonr(b1, b2, axis=0).statistic
     between_corrs = stats.pearsonr(b1, b2, axis=1).statistic
 
-    fig, axe = plt.subplots(figsize=(5, 3), constrained_layout=True)
-    axe.hist(within_corrs, density=True, alpha=0.7, label="Within-person")
-    axe.hist(between_corrs, density=True, alpha=0.7, label="Between-person")
-    axe.set_xlabel("Correlation")
-    axe.set_ylabel("Probability density")
-    axe.spines["top"].set_visible(False)
-    axe.spines["right"].set_visible(False)
-    axe.set_xlim(-0.1, 0.25)
-    axe.legend()
+    fig, ax = plt.subplots(figsize=(5, 3), constrained_layout=True)
+    ax.hist(within_corrs, density=True, alpha=0.7, label="Within-person")
+    ax.hist(between_corrs, density=True, alpha=0.7, label="Between-person")
+    ax.set_xlabel("Correlation")
+    ax.set_ylabel("Probability density")
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_xlim(-0.1, 0.25)
+    ax.legend()
 
     plt.show()
 

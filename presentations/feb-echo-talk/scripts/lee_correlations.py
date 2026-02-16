@@ -56,7 +56,7 @@ def main():
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # Set up the matplotlib figure
-    fig, axe = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
 
     # Generate a custom diverging colormap
     cmap = sns.diverging_palette(230, 20, as_cmap=True)
@@ -73,14 +73,14 @@ def main():
         square=True,
         linewidths=0.5,
         cbar_kws={"shrink": 0.5},
-        axe=axe,
+        ax=ax,
     )
 
     labels = ["CC Happening", "CC Anthropogenic (proxy)", "CC Worry", "Future gen harm"]
-    axe.set_xticks(
+    ax.set_xticks(
         np.arange(3) + 0.5, labels=labels[:-1], rotation=30, horizontalalignment="right"
     )
-    axe.set_yticks(np.arange(1, 4) + 0.5, labels=labels[1:], rotation=0)
+    ax.set_yticks(np.arange(1, 4) + 0.5, labels=labels[1:], rotation=0)
 
     fig.savefig("figures/lee_correlations.pdf", bbox_inches="tight", dpi=300)
 

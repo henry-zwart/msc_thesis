@@ -96,7 +96,7 @@ def main():
     mask = np.triu(np.ones_like(corr, dtype=bool))
 
     # Set up the matplotlib figure
-    fig, axe = plt.subplots(figsize=(17, 17))
+    fig, ax = plt.subplots(figsize=(17, 17))
 
     # Generate a custom diverging colormap
     cmap = sns.diverging_palette(230, 20, as_cmap=True)
@@ -114,18 +114,18 @@ def main():
         square=True,
         linewidths=0.5,
         cbar_kws={"shrink": 0.5},
-        axe=axe,
+        ax=ax,
     )
 
-    axe.set_xticks(
+    ax.set_xticks(
         np.arange(len(corr.index) - 1) + 0.5,
         labels=corr.index[:-1],
         rotation=35,
         horizontalalignment="right",
     )
-    axe.set_yticks(np.arange(1, len(corr.index)) + 0.5, labels=corr.index[1:])
+    ax.set_yticks(np.arange(1, len(corr.index)) + 0.5, labels=corr.index[1:])
 
-    axe.set_title("Pairwise correlation")
+    ax.set_title("Pairwise correlation")
 
     fig.savefig("figures/all_corr.pdf", bbox_inches="tight", dpi=300)
 

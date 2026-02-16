@@ -90,7 +90,7 @@ def main():
     }
 
     for i, (dimension, dimension_metadata) in enumerate(columns.items()):
-        axe = axes[i // 2, i % 2]
+        ax = axes[i // 2, i % 2]
         colname = dimension_metadata["colname"]
         responses = dimension_metadata["responses"]
 
@@ -172,14 +172,14 @@ def main():
                     boxstyle="round,pad=0.2",
                 ),
                 edge_label_rotate=False,
-                axe=axe,
+                ax=ax,
             )[0]
 
             # network_artist.get_nodes().set(norm=mcolors.Normalise(0,1))
 
-        plt.colorbar(network_artist.get_vertices(), axe=axe)
+        plt.colorbar(network_artist.get_vertices(), ax=ax)
 
-        axe.set_title(dimension)
+        ax.set_title(dimension)
 
     fig.savefig("figures/lee_transitions.pdf", dpi=300, bbox_inches="tight")
 
