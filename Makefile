@@ -13,7 +13,7 @@ endif
 RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w /code msc-thesis-r:latest
 
 REPORT_TYPES := proposal reading_summary climate-attitudes-eda
-PRESENTATION_TYPES := project_plan collider-bias feb-echo-talk
+PRESENTATION_TYPES := project_plan  # collider-bias feb-echo-talk
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
@@ -47,7 +47,7 @@ data-assets: $(ASSETS)
 
 # Serve site locally
 serve:
-	uv run --group docs mkdocs serve -f site/mkdocs.yml
+	uv run --only-group docs mkdocs serve -f site/mkdocs.yml
 
 # Build site
 site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
@@ -60,7 +60,7 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 	done
 	@cp -r outputs/* site/docs
 	@printf "Site    → Building site...\n"
-	@uv run --group docs mkdocs build -f site/mkdocs.yml
+	@uv run --only-group docs mkdocs build -f site/mkdocs.yml
 	@printf "Site    → Done.\n"
 
 
