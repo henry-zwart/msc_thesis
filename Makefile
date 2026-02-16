@@ -13,7 +13,7 @@ endif
 RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w /code msc-thesis-r:latest
 
 REPORT_TYPES := proposal reading_summary climate-attitudes-eda
-PRESENTATION_TYPES := project_plan
+PRESENTATION_TYPES := project_plan collider-bias feb-echo-talk
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
