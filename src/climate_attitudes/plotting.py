@@ -9,39 +9,39 @@ def draw_tree_recursive(
     branch_length: float,
     leaf_dist: float,
     levels: int,
-    axe: Axes,
+    ax: Axes,
 ):
     dx = branch_length
     dy = leaf_dist * 2 ** (levels - 2)
 
     x, y = root
 
-    axe.plot([x, x, x + dx], [y, y + dy, y + dy], colour="blue", linewidth=1)
-    axe.plot(
+    ax.plot([x, x, x + dx], [y, y + dy, y + dy], colour="blue", linewidth=1)
+    ax.plot(
         [x, x, x + dx], [y, y - dy, y - dy], colour="k", linewidth=1, linestyle="dotted"
     )
 
     if levels > 1:
         # top tree
-        draw_tree_recursive((x + dx, y + dy), branch_length, leaf_dist, levels - 1, axe)
+        draw_tree_recursive((x + dx, y + dy), branch_length, leaf_dist, levels - 1, ax)
         # bottom tree
-        draw_tree_recursive((x + dx, y - dy), branch_length, leaf_dist, levels - 1, axe)
+        draw_tree_recursive((x + dx, y - dy), branch_length, leaf_dist, levels - 1, ax)
 
 
-def draw_tree(branch_length: float, leaf_dist: float, levels: int, axe=None):
-    axe = axe or plt.gca()
+def draw_tree(branch_length: float, leaf_dist: float, levels: int, ax=None):
+    ax = ax or plt.gca()
 
-    draw_tree_recursive((0, 0), branch_length, leaf_dist, levels, axe)
+    draw_tree_recursive((0, 0), branch_length, leaf_dist, levels, ax)
 
-    for spine in axe.spines.values():
+    for spine in ax.spines.values():
         spine.set_visible(False)
 
-    axe.set_yticks([])
-    axe.set_xticks(
+    ax.set_yticks([])
+    ax.set_xticks(
         [level + branch_length / 2 for level in range(levels)],
         labels=[f"W{i}" for i in range(1, levels + 1)],
     )
-    axe.tick_params(length=0)
+    ax.tick_params(length=0)
 
 
 def count_wave_combo_participants(participant):
@@ -70,11 +70,11 @@ def count_wave_combo_participants(participant):
 
 def plot_participation_sequence_counts(participant):
     # Plot the tree
-    fig, axe = plt.subplots(figsize=(6, 7))
+    fig, ax = plt.subplots(figsize=(6, 7))
     branch_length = 1
     leaf_dist = 1
     levels = 5
-    draw_tree(branch_length, leaf_dist, levels, axe)
+    draw_tree(branch_length, leaf_dist, levels, ax)
 
     # Annotate each path with number of participants
     participant_counts = (
@@ -93,8 +93,8 @@ def plot_participation_sequence_counts(participant):
     )
 
     for i, (count, y) in enumerate(zip(participant_counts, ys)):
-        axe.annotate(f"({31 - i:0>5b}): {count}", (x, y))
+        ax.annotate(f"({31 - i:0>5b}): {count}", (x, y))
 
-    axe.set_xlim(0, levels + 1.5)
+    ax.set_xlim(0, levels + 1.5)
 
-    return fig, axe
+    return fig, ax
