@@ -1,12 +1,13 @@
 from __future__ import annotations
+
+import polars as pl
+import polars.selectors as cs
+
 from climate_attitudes.schema.extract import (
     EXPERIMENT_CONDITION_COLUMNS,
 )
-from climate_attitudes.schema import transform as schema
-import polars as pl
-import polars.selectors as cs
+from climate_attitudes.schema import dataset as schema
 from climate_attitudes.settings import Config
-
 from climate_attitudes.data_extract import DataExtract
 
 

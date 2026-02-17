@@ -24,7 +24,7 @@ from climate_attitudes.schema.columns import (
     GroupColumn,
 )
 from climate_attitudes.settings import Config, InterimAsset
-from climate_attitudes.schema.constants import WAVES
+from climate_attitudes.schema.enums import WAVES
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
@@ -347,8 +347,8 @@ class ConditionalColumns:
         return [
             getattr(ConditionalColumns, colname)
             for colname in filter(
-                lambda x: not (
-                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                lambda x: (
+                    not (x.startswith("__") or callable(getattr(ConditionalColumns, x)))
                 ),
                 vars(ConditionalColumns),
             )
@@ -367,8 +367,8 @@ class ConditionalColumns:
         return [
             getattr(ConditionalColumns, colname).name
             for colname in filter(
-                lambda x: not (
-                    x.startswith("__") or callable(getattr(ConditionalColumns, x))
+                lambda x: (
+                    not (x.startswith("__") or callable(getattr(ConditionalColumns, x)))
                 ),
                 vars(ConditionalColumns),
             )

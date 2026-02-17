@@ -1,5 +1,5 @@
 from __future__ import annotations
-from climate_attitudes.schema.constants import WAVES
+from climate_attitudes.schema.enums import WAVES
 from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ConditionalColumns,
@@ -89,13 +89,7 @@ class DataExtract:
         schema.OutputResponseSchema.validate(self.response.collect())
         schema.OutputParticipantSchema.validate(self.participant.collect())
 
-        # TODO: This is currently broken since it expects config, to load data.
-        #       Instead we want to just pass the required data. Or validate
-        #         in this class. Or make the classmethods functions in this file.
         self._validate_response_null_values()
-
-        # Check response values are null, iff, expected null
-        # ClimateAttitudesNullResponses.validate(self.response, self.config)
 
     def _clean_schema(self):
         """Clean + normalise table schemas for codebook and response data."""
