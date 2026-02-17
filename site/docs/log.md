@@ -1,5 +1,10 @@
 ## Feb 16 - Feb 22 2026
 
+### Tuesday
+- Cleaning up GH repository; Python package
+- Uploaded built data assets to OneDrive
+
+
 ### Monday
 
 #### Weekly standup
