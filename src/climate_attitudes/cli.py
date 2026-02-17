@@ -1,5 +1,4 @@
 from climate_attitudes.dataset import Dataset
-from climate_attitudes.builder.raw_data import extract_raw_data
 from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import (
@@ -35,11 +34,6 @@ class BaseCommand(BaseSettings):
         )
 
 
-class ExtractRawDataCommand(BaseCommand):
-    def cli_cmd(self) -> None:
-        extract_raw_data(self.settings)
-
-
 class BuildDataCommand(BaseCommand):
     def cli_cmd(self) -> None:
         ds = Dataset(self.settings).build()
@@ -55,7 +49,6 @@ class CAData(
 ):
     """Climate attitudes dataset CLI."""
 
-    extract: CliSubCommand[ExtractRawDataCommand]
     build: CliSubCommand[BuildDataCommand]
 
     def cli_cmd(self):

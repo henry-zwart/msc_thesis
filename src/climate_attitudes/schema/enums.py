@@ -1,5 +1,7 @@
 import polars as pl
 
+WAVES = [1, 2, 3, 4, 5]
+
 US_STATES = [
     ("Alabama", "AL"),
     ("Alaska", "AK"),
