@@ -18,6 +18,10 @@ This site serves as a central point for notes, reports, and information regardin
 project. Access to ongoing work (such as drafts) is restricted, and requires access to 
 the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 
+### Links:
+
+- [Project board](https://github.com/users/henry-zwart/projects/5/views/1){:target="_blank"}
+
 ### Reports:
 
 <!-- INFO: The {:target="_blank"} part ensures the file opens in a separate tab.-->
@@ -28,3 +32,4 @@ the associated [GitHub repository](https://github.com/henry-zwart/msc_thesis).
 Each presentation is available in both HTML (for presenting) and PDF (e.g. for handouts).
 
 - Project plan ([pdf](slides/project_plan.pdf){:target="_blank"}, [html](slides/project_plan.html){:target="_blank"})
+- February ECHO talk (Private; [Project update](https://github.com/henry-zwart/msc_thesis/blob/main/outputs/slides/feb-echo-talk.pdf){:target="_blank"}, [Teaching practice: collider bias](https://github.com/henry-zwart/msc_thesis/blob/main/outputs/slides/collider-bias.pdf){:target="_blank"})
