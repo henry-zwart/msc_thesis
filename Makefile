@@ -83,14 +83,14 @@ outputs/slides/%.html: | outputs/slides
 
 
 # == Create results and output directories
-outputs/slides: outputs
-	@mkdir outputs/slides
+outputs/slides: | outputs
+	@mkdir -p outputs/slides
 
-outputs/reports: outputs
-	@mkdir outputs/reports
+outputs/reports: | outputs
+	@mkdir -p outputs/reports
 
 outputs:
-	@mkdir outputs
+	@mkdir -p outputs
 
 
 # Extract raw climate attitudes data
