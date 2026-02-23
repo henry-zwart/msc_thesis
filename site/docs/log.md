@@ -1,8 +1,131 @@
+## Feb 23 - March 1 2026
+### Plan for week
+- Regular meeting with Vítor on Monday at 1pm, shifted due to Kobe workshop on 
+  Thursday.
+- Kobe workshop on Thursday.
+
+### Monday
+- Weekly catch-up with Vítor
+- Exploring missing wave imputation for survey data
+
+#### Weekly catch-up
+- Discussed imputing missing responses.
+- Planning for future ENLENS meetings.
+- Moved regular meeting to 12.30 on Thursdays to make it easier for Kyuri to attend.
+- Project goals for next few weeks.
+
+In future, we would like the ENLENS meetings to be clearer in purpose, and in the 
+questions we have for Sara and her team. To achieve this we discussed setting a 
+meeting agenda on Tuesday (CEST) to send to Sara by Wednesday. This will help 
+direct my work in the days running up to each meeting, and give us the chance to
+either change course prior to meeting, move questions to email, or cancel in a 
+given week.
+
+On Thursdays Kyuri typically attends a meeting at the DIEP from 11am. We decided 
+to shift our regular meeting to 12.30pm so that it is possible for Kyuri to attend.
+We can revert this at a later date if we don't find it necessary. 
+
+We spent the final fifteen minutes discussing the broader project plan + goals for 
+the coming weeks. While I have been attempting to find a focal area of the survey 
+for our study (e.g., belief systems relating to local effects of climate change), we
+discussed the merits of a more general analysis of 'beliefs, attitudes, experiences,
+behaviours related to climate change'. Given the limitations associated with trying 
+to retro-fit the climate attitudes survey data to a specific question, this approach 
+is far from ideal. 
+
+On the other hand, the more general approach allows us to focus on identifying a 
+proof-of-concept scenario in which a directed belief system differs meaningfully from
+the equivalent undirected systems inferred using standard methods. If we can show that
+interventions may differ in this proof-of-concept scenario, this is a more general 
+finding and would have greater relevance to future, more directed studies.
+
+Thus over the next few weeks, my goal will be to:
+
+1. Construct indices for variables in the data, so as to reduce redundancy. 
+    - Note: this may require imputation or other variable transformations.
+2. Explore the make-up of these indices, to discuss with Sara at the next ENLENS
+    meeting. Ideally the indices should make sense qualitatively (e.g., 'these 
+    variables reflect concern about social impacts of CC'), such that we can 
+    meaningfully discuss interventions. 
+3. Re-examine the relationships between these indices using the analytical tools 
+    already used for the raw data variables (VAR, partial correlation, etc.)
+4. Undirected models: Fit standard models to the indices.
+5. Directed models: Fit directed Ising models; run causal discovery.
+
+#### Missing wave imputation
+Vítor and I discussed using imputation methods to estimate survey responses for 
+missing waves. I have been exploring methods using latent continuous states which 
+translate to ordinal responses, and using sampled transition matrices to impute the 
+responses directly. This makes most sense when we have recorded responses at 
+$t \in \{i, i+2\}$ but no data for $t = i + 1$, as the missing response is constrained 
+by the prior and following data points. 
+
+We decided that in the first instance, a simpler method is to replace missing values 
+by either the previous value, the next value, or a random sample from the two.  
+
+
 ## Feb 16 - Feb 22 2026
+
+### Friday
+- Emailed Sara regarding data validation issues
+- Reconsidering question presence for more complex cases, combinations of related 
+  questions.
+
+
+#### Email to Sara
+Follow-up from Yesterday's ENLENS meeting. I checked out the data to see: (i) how many 
+null-ID participants there are per wave, and (ii) whether there are clear temporal 
+switchpoints in the data where the survey provider has updated/fixed survey logic to 
+resolve the identified null/non-null response issues.
+
+#### Question presence
+Until now I have considered questions in isolation for purposes of identifying 
+relevant/repeated questions. However, in some cases we may find it useful to consider
+questions which are only asked once, or combinations of related questions. 
+
+For instance, `ew4` asks how well public officials handled the extreme weather event
+that affected participants most in the prior 10 years. We expect this to be relatively
+stable across waves, while also potentially influencing other variables as a 
+conditional factor. This is to say that `ew4` may not itself induce change in a 
+variable $Y$, but may instead moderate the causal relation $X \to Y$.
+
+Alternatively, questions regarding beliefs such as `cc9_globstab` (regarding the 
+threat of CC to global social and political stability), which are only asked in a 
+single wave, may be extrapolated to later waves by considering their relation to 
+other questions which are asked in multiple waves.
+
+In the second case, `ew1` asks participants about their experiences with extreme 
+weather events in the prior 10 years. This is only asked to new participants (except in 
+Wave 5); however, a separate question is presented to repeating participants, asking 
+instead about the change in their response since (presumably) the previous wave. Thus
+while no question in this group is asked more than once, we can combine them to extract 
+a repeated measure (recent extreme weather experience; total extreme weather experience).
+
+On a related note, perhaps the erroneous survey responses (e.g., where repeating participants
+answer questions intended for new participants) could be used to help impute these values 
+more generally. For instance, `cc2` asks about the causes of climate change. This question is 
+not asked to repeating participants in Wave 2, limiting its usage for multi-wave analyses. 
+However, due to the aforementioned survey error, we actually have responses from 380 repeating 
+participants. 
+
+### Thursday
+- Meeting with Vítor
+- ENLENS meeting
+
+#### Weekly catch-up
+To-do:
+- Understand what is happening with the VAR calculation; inverse of covariance of 
+  residuals.
+- Add $B$ matrix visualisation. (Done)
+- Standardise variables for correlation calculations (Done); think about how they'd differ
+  otherwise.
+- Show networks for partial correlations, VAR. (Done)
+- Significance tests for partial correlations.
 
 ### Tuesday
 - Cleaning up GH repository; Python package
 - Uploaded built data assets to OneDrive
+- Brief catch-up with Kyuri, who has recommended some papers on partial correlation
 
 
 ### Monday
