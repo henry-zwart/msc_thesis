@@ -24,7 +24,7 @@ from climate_attitudes.schema.columns import (
     GroupColumn,
 )
 from climate_attitudes.settings import Config, InterimAsset
-from climate_attitudes.schema.enums import WAVES
+from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
@@ -66,6 +66,7 @@ NULLABLE_COLUMNS: list[str] = [
 # Columns requiring response re-map via subtraction by 1
 RESPONSE_REMAP_SUB_1 = {
     "dem_educ",
+    "dem_urban",
     "attr_storm",
     "attr_outage",
     "cc2",
@@ -730,8 +731,8 @@ class OutputItemColumnsSchema(BaseSchema):
 class OutputItemSchema(BaseSchema):
     item_id: pl.UInt32
     item_name: str
-    category: str = pa.Field(nullable=True)
-    is_demographic: bool
+    group: str = pa.Field(nullable=True)
+    category: ItemCategory = pa.Field(nullable=True)  # ty: ignore
     has_error: bool
     ideology_operational: bool
     ideology_symbolic: bool
@@ -786,6 +787,7 @@ class OutputResponseSchema(BaseSchema):
     dem_male_77_TEXT: str = pa.Field(nullable=True)
     dem_age: int = pa.Field(gt=0, le=99)
     dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
+    dem_urban: UrbanArea = pa.Field(nullable=True)  # ty: ignore
 
     # Extreme weather
     ew1: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore

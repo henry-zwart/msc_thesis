@@ -1,5 +1,5 @@
 from __future__ import annotations
-from climate_attitudes.schema.enums import WAVES
+from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
 from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ConditionalColumns,
@@ -181,11 +181,7 @@ class DataExtract:
 
         # NOTE: Category is unimplemented so currently null. Intended to distinguish
         # demographic/experience/belief/attitude/etc.
-        item = (
-            self.codebook.select("item_name")
-            .with_columns(pl.lit(None, dtype=pl.String).alias("category"))
-            .unique(maintain_order=True)
-        )
+        item = self.codebook.select("item_name").unique(maintain_order=True)
 
         # Add item id (also add these to the codebook)
         item = item.with_row_index("item_id")
@@ -197,11 +193,21 @@ class DataExtract:
         )
 
         # Add enrichment metadata
-        # 1. Demographic items
-        item = item.with_columns(
-            pl.col("item_name").str.starts_with("dem_").alias("is_demographic")
+        # 1. Groups (questions with complex/conditional relationships)
+        item = item.join(
+            StaticAsset.ItemGroups.scan(self.config),
+            how="left",
+            on="item_name",
         )
-        # 2. Items with errors
+        # 2. Categories
+        item = item.join(
+            StaticAsset.Category.scan(self.config).with_columns(
+                pl.col("category").cast(ItemCategory)
+            ),
+            how="left",
+            on="item_name",
+        )
+        # 3. Items with errors
         item = item.join(
             StaticAsset.ErrorItem.scan(self.config).with_columns(
                 pl.lit(True).alias("has_error")
@@ -210,14 +216,14 @@ class DataExtract:
             how="left",
             maintain_order="left",
         ).with_columns(pl.col("has_error").fill_null(False))
-        # 3. Ideological status
+        # 4. Ideological status
         item = item.join(
             StaticAsset.Ideology.scan(self.config),
             on="item_name",
             how="left",
             maintain_order="left",
         ).with_columns(pl.col(r"^ideology_.*$").fill_null(False))
-        # 4. Lee et al. 2025 items
+        # 5. Lee et al. 2025 items
         item = item.join(
             StaticAsset.Lee2025.scan(self.config),
             on="item_name",
@@ -419,6 +425,7 @@ class DataExtract:
         response = response.with_columns(
             pl.col("dem_educ").cast(Education),
             pl.col("dem_male").cast(Gender),
+            pl.col("dem_urban").cast(UrbanArea),
             pl.col("dem_stcount_1_char").cast(StateAbbrev),
             pl.col("ew1").list.eval(pl.element().cast(NaturalDisaster)),
             pl.col("ew1_apr").list.eval(pl.element().cast(NaturalDisaster)),

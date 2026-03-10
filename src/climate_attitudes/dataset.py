@@ -131,6 +131,7 @@ class Dataset:
             treatment_items.group_by("treatment_group")
             .agg(
                 pl.col("item_id").min(),
+                pl.col("group").first(),
                 pl.col("category").first(),
                 cs.boolean().any(),
             )
