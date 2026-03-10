@@ -430,6 +430,12 @@ class DataExtract:
             response = response.with_columns(expr)
 
         # Cast enum-type columns
+        print(
+            response.select("participant_id", "wave", pl.col("cc2"))
+            .sort(by=("participant_id", "wave"))
+            .collect()
+            .head(5)
+        )
         response = response.with_columns(
             pl.col("dem_educ").cast(Education),
             pl.col("dem_male").cast(Gender),
@@ -441,7 +447,18 @@ class DataExtract:
             pl.col("ew1_nov").list.eval(pl.element().cast(NaturalDisaster)),
             pl.col("attr_storm").list.eval(pl.element().cast(StormAttribution)),
             pl.col("attr_outage").list.eval((pl.element().cast(OutageAttribution))),
-            pl.col("cc2").cast(ClimateChangeCause),
+            (
+                pl.col("cc2")
+                .replace(
+                    {  # Remap so human is high
+                        3: 0,  # Not happening
+                        1: 1,  # Natural causes
+                        0: 2,  # Human causes
+                        2: 3,  # Both
+                    }
+                )
+                .cast(ClimateChangeCause)
+            ),
             pl.col("cc13").list.eval(pl.element().cast(ClimateChangeInducedAction)),
             pl.col("cc13_apr").list.eval(pl.element().cast(ClimateChangeInducedAction)),
             pl.col("cc_policybenefit").list.eval(
