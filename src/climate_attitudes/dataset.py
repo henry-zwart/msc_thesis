@@ -10,6 +10,7 @@ from climate_attitudes.schema.extract import (
 from climate_attitudes.schema import dataset as schema
 from climate_attitudes.settings import Config
 from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.imputation import impute_viterbi
 
 
 class Dataset:
@@ -109,6 +110,117 @@ class Dataset:
         ds.participant = pl.scan_parquet(config.built_assets / "participant.parquet")
         ds.response = pl.scan_parquet(config.built_assets / "response.parquet")
         ds._validate()
+        return ds
+
+    def impute_viterbi(
+        self, columns: list[str | pl.Expr], impute_waves: list[int] | None = None
+    ) -> Dataset:
+        new_resp = impute_viterbi(
+            self.response.clone().collect(),  # ty: ignore
+            columns=columns,
+            impute_waves=impute_waves,
+        )
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp.lazy()
+
+        return ds
+
+    def filter_columns(self, columns: list[str | pl.Expr]) -> Dataset:
+        new_resp = self.response.select(*columns).clone()
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
+        return ds
+
+    def filter_at_least_one_resp(self, columns: list[str | pl.Expr]) -> Dataset:
+        keep_pids = (
+            self.response.select("participant_id", *columns)
+            .group_by("participant_id")
+            .agg(pl.all().is_not_null().any())
+            .unpivot(
+                index="participant_id", variable_name="column", value_name="some_full"
+            )
+            .group_by("participant_id")
+            .agg(pl.col("some_full").all().alias("no_empty_questions"))
+            .filter(pl.col("no_empty_questions"))
+            .select("participant_id")
+            .collect()
+            .to_series()
+            .implode()
+        )
+
+        new_resp = self.response.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+        new_part = self.participant.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = new_part
+        ds.response = new_resp
+
+        return ds
+
+    def transform(self, *expr: pl.Expr) -> Dataset:
+        new_resp = self.response.clone().with_columns(*expr)
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
+        return ds
+
+    def cast_enum_to_int(self) -> Dataset:
+        self.response = self.response.with_columns(cs.enum().cast(pl.Int64))
+        return self
+
+    def reverse_coding(self, columns: list[str | pl.Expr]) -> Dataset:
+        exprs = []
+
+        for col in columns:
+            if isinstance(col, str):
+                exprs.append((-pl.col(col)).alias(col))
+            elif isinstance(col, pl.Expr):
+                exprs.append((-col))
+            else:
+                raise TypeError(f"Unsupported column type: {type(col)}")
+
+        self.response = self.response.with_columns(exprs)
+        return self
+
+    def standardise(self, columns: cs.Selector | pl.Expr) -> Dataset:
+        new_resp = self.response.with_columns(
+            (columns - columns.mean()) / columns.std()
+        )
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
         return ds
 
     def _validate(self):
