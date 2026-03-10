@@ -28,5 +28,9 @@
 #include "sections/summary.typ"
 #pagebreak()
 
+= Partial correlation
+#include "sections/partial_correlation.typ"
+#pagebreak()
+
 = Critical reflection
 #include "sections/papers.typ"
