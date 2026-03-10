@@ -1,0 +1,493 @@
+---
+title: "Quarto Basics"
+format:
+  html:
+    code-fold: true
+    page-layout: full
+execute:
+  echo: false
+---
+
+```{python}
+from pathlib import Path
+
+import numpy as np
+import scipy as sp
+
+import polars as pl
+import polars.selectors as cs
+
+from matplotlib.axes import Axes
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import seaborn as sns
+
+from statsmodels.multivariate.factor import Factor
+from sklearn.decomposition import PCA, FactorAnalysis
+
+from climate_attitudes.settings import Config
+from climate_attitudes.dataset import Dataset
+from climate_attitudes.correlation import Correlation, filter_vars_by_abs_corr
+from climate_attitudes import configure_mpl
+from climate_attitudes.visualisation import plot_corr, plot_corr_with_dendro
+from climate_attitudes.parallel_analysis import pa_random_eigs, pa_true_eigs
+
+FONT_PATH = Path("../../fonts")
+configure_mpl(FONT_PATH)
+
+plt.rc("figure", dpi=100)
+```
+
+```{python}
+SURVEY_COLS = [
+    "participant_id",
+    # "participant_type",
+    "wave",
+    # "start_date",
+]
+
+BELIEF_COLS = [
+    "cc1",
+    "cc4_world",
+    "cc4_wealthUS",
+    "cc4_poorUS",
+    "cc4_comm",
+    "cc5_world",
+    "cc5_wealthUS",
+    "cc5_poorUS",
+    "cc5_comm",
+    "cc10",
+    "cc11",
+    "cc12",
+    "cvcc4_will",
+    "soc_trust",
+    "soc_help",
+    "future",
+    "cvcc10_cc"
+]
+
+EXPERIENCE_COLS = []
+
+ATTITUDE_COLS = [
+    "cc3",
+    "cc6",
+
+    # "ccIO",
+    # "ccGovt",
+    
+    "cvcc_worryothers",
+    "ew5",
+    "cvcc4_should",
+    "cvcc6",
+    "cvcc9_econ",
+    "cvcc9_cc",
+    "cvcc9_cv",
+    "cc_ica",
+    "cc_pol_tax",
+    "cc_pol_car",
+    
+    "pol4",
+    "pol7",
+    "pol7_pi",
+    "pol8",
+    "pol8_pi",
+    "pol9",
+    "pol10",
+    "pol11",
+    "pol11_pi",
+    "pol_party",
+    "pol_ideology",
+    "pol_worry_econ",
+    "pol_trust_state",
+    "pol_trust_io",
+    "pol_trust_cdc",
+    "pol_trust_news",
+    "pol_trust_epa",
+    "pol_trust_sci",
+
+    "pol_laws_cong",
+    "pol_laws_state",
+    # "pol_vote_support",
+]
+
+BEHAVIOUR_COLS = [
+    "ew6",
+    "cvcc4_personal",
+]
+
+DEMOGRAPHIC_COLS = [
+    # "dem_age",
+    "dem_income",
+    "dem_urban",
+]
+
+TREATMENT_COLUMNS = [
+    # "Group_pol_vote_support",
+]
+
+REVERSE_CODING = [
+    "cc10",
+    "pol4",
+    "pol8",
+    "pol8_pi",
+    "pol9",
+    "pol10",
+    "pol11",
+    "pol11_pi",
+    "dem_urban",
+]
+
+TRANSFORMS = [
+    pl.col("cc1").replace({1: 2, 99: 1}), # Move "yes" to 2, "don't know" to 1
+    pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace({1: 0, 2: 1, 99: 2}), # Shift "not at all", "only a little" down; insert "don't know" between "only a little" and "a moderate amount"
+    pl.col(r"^cc5_(world|wealthUS|poorUS|comm)$").replace({1: 0, 2: 1, 99: 2}),
+]
+
+QUESTION_COLS = BELIEF_COLS + EXPERIENCE_COLS + ATTITUDE_COLS + BEHAVIOUR_COLS + DEMOGRAPHIC_COLS
+
+ALL_COLS = SURVEY_COLS + QUESTION_COLS + TREATMENT_COLUMNS
+
+categories = np.asarray(
+    ["Belief"] * len(BELIEF_COLS) +
+    ["Experience"] * len(EXPERIENCE_COLS) +
+    ["Attitude"] * len(ATTITUDE_COLS) +
+    ["Behaviour"] * len(BEHAVIOUR_COLS) +
+    ["Demographic"] * len(DEMOGRAPHIC_COLS)
+)
+```
+
+```{python}
+# Load data
+config = Config(_env_file="../../.env")
+
+dataset = (
+    Dataset.load(config)
+    .filter_columns(ALL_COLS)
+    .filter_at_least_one_resp(QUESTION_COLS)
+    .cast_enum_to_int()
+    .transform(*TRANSFORMS)
+    .reverse_coding(REVERSE_CODING)
+    .impute_viterbi(QUESTION_COLS)
+)
+dataset_std = dataset.standardise(cs.exclude(*SURVEY_COLS))
+
+resp = dataset.response.collect()
+resp_std = dataset_std.response.collect()
+```
+
+# Pairwise correlation overview
+
+Generally high Pearson correlations reflect common CC theme. Some variables have little to no correlation 
+outside a restricted set (e.g. `soc_trust` & `soc_help`, or `ew5` & `ew6`).
+
+Partial correlations are sparse, at least partially due to the large number of variables. A cluster of moderate--high correlation is maintained between the `cc4_X` and `cc5_X` questions.
+
+For VAR: the contemporaneous GGM reflects the partial correlation heatmap; the temporal GGM is sparser, with some strong self-correlated questions, and others which are considerably weaker (e.g. `cc11`, `cc12`, `cc4_poorUS`, `cc4_wealthUS`).
+
+
+::: {.panel-tabset}
+
+## Pearson
+
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories, y_categories=categories)
+#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
+#plot_corr(resp_std, kind=Correlation.PEARSON, ax=ax);
+```
+
+## Partial
+
+```{python}
+#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
+#plot_corr(resp_std, kind=Correlation.PARTIAL, ax=ax);
+plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+## VAR (Contemporaneous)
+
+```{python}
+#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
+#plot_corr(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, ax=ax);
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+## VAR (Temporal)
+
+```{python}
+#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
+#plot_corr(resp_std, kind=Correlation.VAR_TEMPORAL, ax=ax);
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+:::
+
+## High-correlation variables (Pearson $\geq 0.75$)
+
+Questions with high Pearson correlation all belong to either the `cc4/5_X` group, or `cvcc9_cc`. Three clusters emerge in the partial correlations between these variables:
+
++ `cvcc9_cc` and `cvcc9_cv`: 'People with the appropriate expertise should guide the response to CC/Covid'
++ `cc4_world`, `cc4_poorUS`, `cc3`, `cc6`: The `cc4_X` variables reflect epistemic positions regarding the current impacts of climate change. `cc3` reflects the current 'crisis-level' of climate change, and `cc6` the respondent's level of worry. 
++ `cc5_X`: These reflect epistemic positions on the future impacts of climate change.
+
+Notably `cc4_world` is only strongly linked to `cc4_poorUS`, perhaps reflecting the belief that when climate change is impactful _in general_, poor communities bear the brunt of these impacts. 
+
+The contemporaneous network clusters differently to the partial correlations in this case, and contains several negative weights, particularly associated with `cc3` (belief about the 'crisis-level' of CC). These negative weights are surprising (e.g., with `cc4_poorUS`), and perhaps reflect a form of bias due to the calculation process.
+
+```{python}
+plt.rc("figure", dpi=250)
+```
+
+```{python}
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.75)
+resp_std_high_corr = resp.select(*SURVEY_COLS, *high_corr_cols)
+categories_high_corr = categories[high_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial
+```{python}
+plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Temporal)
+```{python}
+plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+:::
+
+
+## Moderate--high correlation variables (Pearson $\geq 0.5$)
+
+```{python}
+plt.rc("figure", dpi=125)
+```
+
+```{python}
+mod_corr_cols, med_corr_idxes  = filter_vars_by_abs_corr(resp_std, 0.5)
+resp_std_mod_corr = resp.select(*SURVEY_COLS, *mod_corr_cols)
+categories_med_corr = categories[med_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
+```
+
+### Partial
+```{python}
+plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
+```
+
+### VAR (Temporal)
+```{python}
+plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
+```
+
+:::
+
+# Low-correlation variables
+
+We select those questions with maximum correlation less than some threshold (0.2 for Pearson correlation, 0.15 for partial correlation). Five questions feature in both sets:
+
+- `pol_worry_econ`: Worry about the economy
+- `cvcc10_cc`: Optimism that CC will be solved with technology
+- `dem_urban`: Urban/Suburban/Rural
+- `dem_income`: Income level
+- `future`: In next 5y, quality of life for family expected to... get worse; get better.
+
+The Pearson correlation analysis also highlights `cc11` (capacity to avoid CC-related death through own actions), `pol11` (political viewpoint: in times of crisis, the govt should take control vs. maintain civil liberties), and `pol11_pi` (second-order social belief for `pol11`).
+
+The partial correlation analysis also highlights `cc1` (belief that climate change is happening), `cvcc_worryothers` (how worried are people, generally, about CC), and `pol10` (regarding the fairness of the American political system).
+
+## Pearson $\leq 0.2$
+```{python}
+low_corr_cols, low_corr_idxes = filter_vars_by_abs_corr(resp_std, upper=0.25, predicate="all")
+categories_low_corr = categories[low_corr_idxes]
+```
+
+::: {.panel-tabset}
+### Pearson
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### Partial
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### VAR (Contemporaneous)
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### VAR (Temporal)
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+:::
+
+## Partial $\leq 0.15$
+```{python}
+low_corr_cols, low_corr_idxes = filter_vars_by_abs_corr(resp_std, upper=0.15, predicate="all", kind=Correlation.PARTIAL)
+categories_low_corr = categories[low_corr_idxes]
+```
+
+::: {.panel-tabset}
+### Pearson
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### Partial
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### VAR (Contemporaneous)
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+
+### VAR (Temporal)
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=categories, y_categories=categories)
+```
+:::
+
+# EFA
+
+## Parallel analysis: determining appropriate number of factors 
+
+We calculate the eigenvalues of the true correlation matrix (blue), and those of a correlation matrix generated from random data (red). After/around the crossover point, additional factors are considered to reflect only noise. In this case we take $n=3$.
+
+```{python}
+plt.rc("figure", dpi=200)
+```
+
+```{python}
+rng = np.random.default_rng(202602271618)
+
+true_eigs = pa_true_eigs(resp_std)
+rand_eigs = pa_random_eigs(resp_std, repeats=100, rng=rng)
+
+fig, ax = plt.subplots(figsize=(4.5,2), constrained_layout=True)
+ax.plot(np.arange(len(true_eigs)), true_eigs, color="tab:blue", label="Data")
+ax.plot(np.arange(len(rand_eigs)), rand_eigs, color="tab:red", label="Random")
+ax.set_xticks(np.arange(0, len(true_eigs), 2), np.arange(0, len(true_eigs), 2) + 1)
+
+ax.set_xlim(0, 44)
+ax.set_ylim(0, None)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.set_xlabel("Eigenvalue sorted index (decreasing)")
+ax.set_ylabel("Eigenvalue")
+ax.legend();
+```
+
+## Factor analysis / PCA results ($n=3$)
+
+```{python}
+plt.rc("figure", dpi=100)
+```
+
+```{python}
+cmap = sns.diverging_palette(20, 230, as_cmap=True)
+
+n_factor = 3
+labels = np.asarray(resp_std.drop(*SURVEY_COLS).columns)
+
+X = resp_std.drop(*SURVEY_COLS).to_numpy()
+
+efa = Factor(
+    X,
+    n_factor=n_factor
+).fit()
+
+pca = PCA(n_components=n_factor)
+pca.fit(X);
+```
+
+```{python}
+category_pal = sns.husl_palette(5, s=0.45)
+category_lut = dict(
+    zip(
+        map(
+            str,
+            ["Belief", "Experience", "Attitude", "Behaviour", "Demographic"],
+        ),
+        category_pal,
+    )
+)
+
+category_colours = [category_lut[c] for c in categories]
+```
+
+::: {.panel-tabset}
+
+### EFA
+```{python}
+figsize = (0.25 * efa.loadings.shape[0] + 0.5, 0.2 * n_factor + 1.5)
+
+g = sns.clustermap(
+    efa.loadings.T,
+    center=0,
+    cmap=cmap,
+    col_colors=category_colours,
+    vmin=-1,
+    vmax=1,
+    method="ward",
+    dendrogram_ratio=(0, 0.5),
+    cbar_pos=None,
+    linewidths=0.75,
+    figsize=figsize,
+    fmt=".1f",
+    annot=True,
+)
+
+ord_labels = labels[g.dendrogram_col.reordered_ind]
+
+g.ax_heatmap.set_xticks(np.arange(efa.loadings.shape[0]) + 0.5, ord_labels, rotation=45, horizontalalignment="right");
+```
+
+### PCA
+```{python}
+g = sns.clustermap(
+    (pca.components_.T * np.sqrt(pca.explained_variance_)).T,
+    center=0,
+    cmap=cmap,
+    vmin=-1,
+    vmax=1,
+    method="ward",
+    col_colors=category_colours,
+    dendrogram_ratio=(0, 0.5),
+    cbar_pos=None,
+    linewidths=0.75,
+    figsize=figsize,
+    fmt=".1f",
+    annot=True,
+)
+
+ord_labels = labels[g.dendrogram_col.reordered_ind]
+
+g.ax_heatmap.set_xticks(np.arange(pca.components_.shape[1]) + 0.5, ord_labels, rotation=45, horizontalalignment="right");
+```
