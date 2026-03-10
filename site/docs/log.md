@@ -1,3 +1,30 @@
+## March 9 - March 15
+Goals for the week:
+
+- Figure out how to include expected relevant, yet problematic variables (e.g., `cc2`, binary vars).
+- Reduce set of variables by pruning out low relevance ones, with justification when these were 
+  expected to be important.
+- Re-do analysis within the beliefs, attitudes categories. Identify broad trends/factors.
+- Start planning thesis writing, likely for methods section.
+
+### Monday
+Met with Kyuri and Katinka to go back over main points from Thursday ENLENS meeting.
+
+
+## March 2 - March 8
+A short week for me, as I am at the NTDS Friday through Sunday. Met with Kyuri 
+to discuss variable indexes EDA, then with Sara and team on Thursday.
+
+#### Meeting with Kyuri
+- Revert from split variables to singular scales 
+- Use EFA to qualitatively identify groups of variables; compare findings with 
+  other methods (PCA, ICA, hierarchical clustering).
+- Try to prune out questions which don't appear to load strongly with any other 
+  factors.
+- Consider the differences between methods; what do contrasting results imply?
+- Once we have removed unuseful variables, we may see more structure appear for 
+  the found clusters.
+
 ## Feb 23 - March 1 2026
 ### Plan for week
 - Regular meeting with Vítor on Monday at 1pm, shifted due to Kobe workshop on 
