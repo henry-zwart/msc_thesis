@@ -33,7 +33,7 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 ASSETS := \
 		${CA_BUILT_ASSETS}/item.parquet \
 		${CA_BUILT_ASSETS}/question.parquet \
-		${CA_BUILT_ASSETS}/item_columns.parquet \
+		${CA_BUILT_ASSETS}/columns.parquet \
 		${CA_BUILT_ASSETS}/participant.parquet \
 		${CA_BUILT_ASSETS}/response.parquet 
 
