@@ -60,6 +60,9 @@ class Dataset:
         # Coalesce treatment columns into (response, treatment index) pairs
         self.coalesce_treatments()
 
+        # Constructed columns
+        self.construct_columns()
+
         self._reorder_columns()
 
         self._validate()
@@ -264,3 +267,15 @@ class Dataset:
         # 4. Add the treatment columns back into columns df, re-sort
         columns = pl.concat([columns, treatment_columns]).sort(by="item_id").lazy()
         self.columns = columns
+
+    def construct_columns(self):
+        self.response = self.response.with_columns(
+            pl.coalesce(pl.col(r"^ew1_(apr|jun|nov)$")).alias("ew1_delta"),
+            pl.coalesce(pl.col(r"^ew_attribution_(apr|jun|nov)$")).alias(
+                "ew_attribution_recent"
+            ),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$")).alias("ew3_phy_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$")).alias("ew3_mat_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$")).alias("ew3_fin_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$")).alias("ew3_men_delta"),
+        )
