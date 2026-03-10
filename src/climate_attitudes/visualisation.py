@@ -359,4 +359,4 @@ def plot_corr_with_dendro(
     g.ax_heatmap.set_yticks(np.arange(len(y_labels)) + 0.5, y_labels, rotation=0)
 
     if y_vars is None:
-        g.axe_row_dendrogram.remove()
+        g.ax_row_dendrogram.remove()
