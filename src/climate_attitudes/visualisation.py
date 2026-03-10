@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import iplotx as ipx
-import matplotlib.colours as mcolors
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
