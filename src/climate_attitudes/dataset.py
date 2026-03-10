@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 
 import polars as pl
 import polars.selectors as cs
@@ -22,14 +23,33 @@ class Dataset:
     def __init__(self, config: Config):
         self.config = config
 
-    def build(self) -> Dataset:
+    def build(
+        self,
+        prune_error_participants: bool = False,
+        filter_valid: bool = False,
+    ) -> Dataset:
         """Create refined climate attitudes survey dataset.
 
         Extracts and validates required columns from the raw data, then
         cleans and transforms these.
         """
+        print("Building climate attitudes dataset.")
+
+        self.prune_survey_error_participants = prune_error_participants
+        self.filter_valid = filter_valid
+
+        if prune_error_participants:
+            print("Removing participants with survey errors.")
+        else:
+            print("Keeping participants with survey errors.")
+
+        if filter_valid:
+            print("Removing participants who fail survey validation check in any wave.")
+        else:
+            print("Keeping participants who fail survey validation checks.")
+
         # Extract and validate raw data
-        extract = DataExtract(self.config).load()
+        extract = DataExtract(self.config).load(prune_error_participants, filter_valid)
         self.codebook = extract.codebook.clone()
         self.item = extract.item.clone()
         self.question = extract.question.clone()
@@ -54,9 +74,31 @@ class Dataset:
         self.participant.sink_parquet(self.config.built_assets / "participant.parquet")
         self.response.sink_parquet(self.config.built_assets / "response.parquet")
 
+        md = dict(
+            prune_survey_error_participants=self.prune_survey_error_participants,
+            filter_valid=self.filter_valid,
+        )
+        with (self.config.built_assets / "metadata.json").open("w") as f:
+            json.dump(md, f)
+
     @classmethod
     def load(cls, config: Config) -> Dataset:
         ds = cls(config)
+
+        try:
+            with (config.built_assets / "metadata.json").open("r") as f:
+                md = json.load(f)
+
+        except FileExistsError:
+            raise RuntimeError(
+                f"Could not find metadata file for built assets at "
+                f"`{config.built_assets}`. Try rebuilding assets."
+            )
+
+        print("Loading built assets:")
+        for k, v in md.items():
+            print(f"  {k}={v}")
+
         ds.codebook = pl.scan_parquet(config.built_assets / "codebook.parquet")
         ds.item = pl.scan_parquet(config.built_assets / "item.parquet")
         ds.question = pl.scan_parquet(config.built_assets / "question.parquet")

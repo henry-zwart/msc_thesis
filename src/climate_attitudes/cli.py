@@ -35,8 +35,14 @@ class BaseCommand(BaseSettings):
 
 
 class BuildDataCommand(BaseCommand):
+    prune_error_participants: bool = False
+    filter_valid: bool = False
+
     def cli_cmd(self) -> None:
-        ds = Dataset(self.settings).build()
+        ds = Dataset(self.settings).build(
+            self.prune_error_participants,
+            self.filter_valid,
+        )
         ds.write()
 
 

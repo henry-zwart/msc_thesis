@@ -6,6 +6,7 @@ from climate_attitudes.schema.extract import (
     NULLABLE_COLUMNS,
     RESPONSE_REMAP_SUB_1,
     RESPONSE_REMAP,
+    SurveyError,
 )
 from climate_attitudes.schema import extract as schema
 from climate_attitudes.schema.enums import (
@@ -46,7 +47,7 @@ class DataExtract:
     def __init__(self, config: Config):
         self.config = config
 
-    def load(self) -> DataExtract:
+    def load(self, prune_error_participants: bool, filter_valid: bool) -> DataExtract:
         """Load raw data into Polars LazyFrames.
 
         Since we only have a codebook for waves 1---5 at the moment, we only
@@ -72,6 +73,13 @@ class DataExtract:
 
         # Create `participant` table from responses
         self.participant = self._create_participant_table()
+
+        # Remove participants with survey errors, if flag set
+        if prune_error_participants:
+            self.prune_survey_error_participants()
+
+        if filter_valid:
+            self.filter_invalid_responses()
 
         # Reorder columns to match schemas
         self._reorder_columns()
@@ -701,3 +709,77 @@ class DataExtract:
             for col, waves in failed_checks:
                 print(f"  - {waves}: {col}")
             print()
+
+    def prune_survey_error_participants(self):
+        """Remove participants with survey errors.
+
+        Survey errors are cases where a participant responds to a question which
+        is not intended to be shown, or _does not respond_ to one which should be
+        shown. These errors are catalogued in the data extract schema module.
+
+        This method modifies both the response and participant tables.
+        """
+
+        def get_error_pids(wave: int, survey_err: SurveyError) -> list[int]:
+            return (
+                self.response.filter(
+                    wave=wave, participant_type=survey_err.participant_type
+                )
+                .select("participant_id", survey_err.column)
+                .filter(survey_err.condition())
+                .select(pl.col("participant_id").cast(int).sort())
+                .collect()
+                .to_series()
+                .to_list()
+            )
+
+        all_err_pids = []
+        for wave, survey_errors in schema.SURVEY_ERRORS.items():
+            for err in survey_errors:
+                pids = get_error_pids(wave, err)
+                print(
+                    f"Pruning {len(pids)} {err.participant_type} participants from "
+                    f"wave {wave} due to errors in column `{err.column}`."
+                )
+                all_err_pids += pids
+
+        self.response = self.response.filter(
+            ~pl.col("participant_id").is_in(all_err_pids)
+        )
+        self.participant = self.participant.filter(
+            ~pl.col("participant_id").is_in(all_err_pids)
+        )
+
+    def filter_invalid_responses(self):
+        """Remove any responses for participants who fail the validation check.
+
+        If a participant fails the check in any wave, we exclude all of their
+        responses.
+
+        Note: correct validation answer is always '2' in waves 1--5.
+        """
+        invalid_pids = (
+            self.response.group_by("participant_id")  # ty: ignore
+            .agg((~(pl.col("valid") == 2).all()).alias("some_invalid"))
+            .filter(pl.col("some_invalid"))
+            .select("participant_id")
+            .collect()
+            .to_series()
+            .implode()
+        )
+
+        n_removed_responses = len(
+            self.response.filter(pl.col("participant_id").is_in(invalid_pids)).collect()  # ty: ignore
+        )
+
+        print(
+            f"Filtering out {len(invalid_pids[0])} participants ({n_removed_responses} "
+            f"responses) with failed survey validation checks."
+        )
+
+        self.response = self.response.filter(
+            ~pl.col("participant_id").is_in(invalid_pids)
+        )
+        self.participant = self.participant.filter(
+            ~pl.col("participant_id").is_in(invalid_pids)
+        )
