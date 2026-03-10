@@ -404,7 +404,7 @@ class Dataset:
                     )
                     .cast(PoliticalAffiliation)
                     .alias("pol_affiliation")
-                )
+                ),
             )
             .drop("pol_party", "pol_lean")
         )

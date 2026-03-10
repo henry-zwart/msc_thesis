@@ -187,10 +187,10 @@ OutageAttribution = pl.Enum(
 # cc2
 ClimateChangeCause = pl.Enum(
     [
-        "Human activities",
-        "Natural causes",
-        "Both",
         "Not happening",
+        "Natural causes",
+        "Human activities",
+        "Both",
     ]
 )
 

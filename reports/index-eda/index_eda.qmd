@@ -48,6 +48,7 @@ SURVEY_COLS = [
 
 BELIEF_COLS = [
     "cc1",
+    "cc2",
     "cc4_world",
     "cc4_wealthUS",
     "cc4_poorUS",
