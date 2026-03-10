@@ -1,4 +1,5 @@
 from __future__ import annotations
+from climate_attitudes.schema.enums import PoliticalAffiliation
 import json
 
 import polars as pl
@@ -381,13 +382,29 @@ class Dataset:
         self.columns = columns
 
     def construct_columns(self):
-        self.response = self.response.with_columns(
-            pl.coalesce(pl.col(r"^ew1_(apr|jun|nov)$")).alias("ew1_delta"),
-            pl.coalesce(pl.col(r"^ew_attribution_(apr|jun|nov)$")).alias(
-                "ew_attribution_recent"
-            ),
-            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$")).alias("ew3_phy_delta"),
-            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$")).alias("ew3_mat_delta"),
-            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$")).alias("ew3_fin_delta"),
-            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$")).alias("ew3_men_delta"),
+        self.response = (
+            self.response.with_columns(
+                pl.coalesce(pl.col(r"^ew1_(apr|jun|nov)$")).alias("ew1_delta"),
+                pl.coalesce(pl.col(r"^ew_attribution_(apr|jun|nov)$")).alias(
+                    "ew_attribution_recent"
+                ),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$")).alias("ew3_phy_delta"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$")).alias("ew3_mat_delta"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$")).alias("ew3_fin_delta"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$")).alias("ew3_men_delta"),
+            )
+            .with_columns(
+                (
+                    pl.when(pl.col("pol_party") != "Independent")
+                    .then(pl.col("pol_party").cast(pl.String))
+                    .otherwise(
+                        pl.col("pol_lean")
+                        .cast(pl.String)
+                        .replace({"Neither": "Independent"})
+                    )
+                    .cast(PoliticalAffiliation)
+                    .alias("pol_affiliation")
+                )
+            )
+            .drop("pol_party", "pol_lean")
         )

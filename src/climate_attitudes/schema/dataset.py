@@ -1,5 +1,10 @@
 from __future__ import annotations
-from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
+from climate_attitudes.schema.enums import (
+    WAVES,
+    ItemCategory,
+    UrbanArea,
+    PoliticalAffiliation,
+)
 import polars as pl
 import pandera.polars as pa
 from .enums import (
@@ -22,8 +27,6 @@ from .enums import (
     ReasonOpposeInfra,
     ReasonSupportInfra,
     CovidPolicyFlowonPriority,
-    PoliticalParty,
-    PoliticalLeaning,
     PoliticalIdeology,
 )
 
@@ -444,8 +447,7 @@ class OutputResponseSchema(BaseSchema):
 
     # Political identification
     pol_interest: int = pa.Field(in_range=(1, 5))
-    pol_party: PoliticalParty  # ty: ignore
-    pol_lean: PoliticalLeaning = pa.Field(nullable=True)  # ty: ignore
+    pol_affiliation: PoliticalAffiliation  # ty: ignore
     pol_ideology: PoliticalIdeology  # ty: ignore
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
