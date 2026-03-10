@@ -95,7 +95,7 @@ ATTITUDE_COLS = [
     "pol10",
     "pol11",
     "pol11_pi",
-    "pol_party",
+    "pol_affiliation",
     "pol_ideology",
     "pol_worry_econ",
     "pol_trust_state",
