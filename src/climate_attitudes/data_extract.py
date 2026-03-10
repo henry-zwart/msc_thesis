@@ -1,11 +1,12 @@
 from __future__ import annotations
-from climate_attitudes.schema.enums import WAVES
+from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
 from climate_attitudes.schema.extract import (
     OutputResponseSchema,
     ConditionalColumns,
     NULLABLE_COLUMNS,
     RESPONSE_REMAP_SUB_1,
     RESPONSE_REMAP,
+    SurveyError,
 )
 from climate_attitudes.schema import extract as schema
 from climate_attitudes.schema.enums import (
@@ -46,7 +47,7 @@ class DataExtract:
     def __init__(self, config: Config):
         self.config = config
 
-    def load(self) -> DataExtract:
+    def load(self, prune_error_participants: bool, filter_valid: bool) -> DataExtract:
         """Load raw data into Polars LazyFrames.
 
         Since we only have a codebook for waves 1---5 at the moment, we only
@@ -72,6 +73,13 @@ class DataExtract:
 
         # Create `participant` table from responses
         self.participant = self._create_participant_table()
+
+        # Remove participants with survey errors, if flag set
+        if prune_error_participants:
+            self.prune_survey_error_participants()
+
+        if filter_valid:
+            self.filter_invalid_responses()
 
         # Reorder columns to match schemas
         self._reorder_columns()
@@ -181,11 +189,7 @@ class DataExtract:
 
         # NOTE: Category is unimplemented so currently null. Intended to distinguish
         # demographic/experience/belief/attitude/etc.
-        item = (
-            self.codebook.select("item_name")
-            .with_columns(pl.lit(None, dtype=pl.String).alias("category"))
-            .unique(maintain_order=True)
-        )
+        item = self.codebook.select("item_name").unique(maintain_order=True)
 
         # Add item id (also add these to the codebook)
         item = item.with_row_index("item_id")
@@ -197,11 +201,21 @@ class DataExtract:
         )
 
         # Add enrichment metadata
-        # 1. Demographic items
-        item = item.with_columns(
-            pl.col("item_name").str.starts_with("dem_").alias("is_demographic")
+        # 1. Groups (questions with complex/conditional relationships)
+        item = item.join(
+            StaticAsset.ItemGroups.scan(self.config),
+            how="left",
+            on="item_name",
         )
-        # 2. Items with errors
+        # 2. Categories
+        item = item.join(
+            StaticAsset.Category.scan(self.config).with_columns(
+                pl.col("category").cast(ItemCategory)
+            ),
+            how="left",
+            on="item_name",
+        )
+        # 3. Items with errors
         item = item.join(
             StaticAsset.ErrorItem.scan(self.config).with_columns(
                 pl.lit(True).alias("has_error")
@@ -210,14 +224,14 @@ class DataExtract:
             how="left",
             maintain_order="left",
         ).with_columns(pl.col("has_error").fill_null(False))
-        # 3. Ideological status
+        # 4. Ideological status
         item = item.join(
             StaticAsset.Ideology.scan(self.config),
             on="item_name",
             how="left",
             maintain_order="left",
         ).with_columns(pl.col(r"^ideology_.*$").fill_null(False))
-        # 4. Lee et al. 2025 items
+        # 5. Lee et al. 2025 items
         item = item.join(
             StaticAsset.Lee2025.scan(self.config),
             on="item_name",
@@ -419,6 +433,7 @@ class DataExtract:
         response = response.with_columns(
             pl.col("dem_educ").cast(Education),
             pl.col("dem_male").cast(Gender),
+            pl.col("dem_urban").cast(UrbanArea),
             pl.col("dem_stcount_1_char").cast(StateAbbrev),
             pl.col("ew1").list.eval(pl.element().cast(NaturalDisaster)),
             pl.col("ew1_apr").list.eval(pl.element().cast(NaturalDisaster)),
@@ -694,3 +709,77 @@ class DataExtract:
             for col, waves in failed_checks:
                 print(f"  - {waves}: {col}")
             print()
+
+    def prune_survey_error_participants(self):
+        """Remove participants with survey errors.
+
+        Survey errors are cases where a participant responds to a question which
+        is not intended to be shown, or _does not respond_ to one which should be
+        shown. These errors are catalogued in the data extract schema module.
+
+        This method modifies both the response and participant tables.
+        """
+
+        def get_error_pids(wave: int, survey_err: SurveyError) -> list[int]:
+            return (
+                self.response.filter(
+                    wave=wave, participant_type=survey_err.participant_type
+                )
+                .select("participant_id", survey_err.column)
+                .filter(survey_err.condition())
+                .select(pl.col("participant_id").cast(int).sort())
+                .collect()
+                .to_series()
+                .to_list()
+            )
+
+        all_err_pids = []
+        for wave, survey_errors in schema.SURVEY_ERRORS.items():
+            for err in survey_errors:
+                pids = get_error_pids(wave, err)
+                print(
+                    f"Pruning {len(pids)} {err.participant_type} participants from "
+                    f"wave {wave} due to errors in column `{err.column}`."
+                )
+                all_err_pids += pids
+
+        self.response = self.response.filter(
+            ~pl.col("participant_id").is_in(all_err_pids)
+        )
+        self.participant = self.participant.filter(
+            ~pl.col("participant_id").is_in(all_err_pids)
+        )
+
+    def filter_invalid_responses(self):
+        """Remove any responses for participants who fail the validation check.
+
+        If a participant fails the check in any wave, we exclude all of their
+        responses.
+
+        Note: correct validation answer is always '2' in waves 1--5.
+        """
+        invalid_pids = (
+            self.response.group_by("participant_id")  # ty: ignore
+            .agg((~(pl.col("valid") == 2).all()).alias("some_invalid"))
+            .filter(pl.col("some_invalid"))
+            .select("participant_id")
+            .collect()
+            .to_series()
+            .implode()
+        )
+
+        n_removed_responses = len(
+            self.response.filter(pl.col("participant_id").is_in(invalid_pids)).collect()  # ty: ignore
+        )
+
+        print(
+            f"Filtering out {len(invalid_pids[0])} participants ({n_removed_responses} "
+            f"responses) with failed survey validation checks."
+        )
+
+        self.response = self.response.filter(
+            ~pl.col("participant_id").is_in(invalid_pids)
+        )
+        self.participant = self.participant.filter(
+            ~pl.col("participant_id").is_in(invalid_pids)
+        )

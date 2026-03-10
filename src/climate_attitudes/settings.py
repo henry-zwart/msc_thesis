@@ -66,6 +66,8 @@ class StaticAsset(Enum):
     ItemName = auto()
     Ideology = auto()
     ItemColumns = auto()
+    ItemGroups = auto()
+    Category = auto()
 
     def filename(self) -> Path:
         match self:
@@ -79,6 +81,10 @@ class StaticAsset(Enum):
                 return Path("ideology_type.csv")
             case StaticAsset.ItemColumns:
                 return Path("item_columns.json")
+            case StaticAsset.ItemGroups:
+                return Path("item_groups.csv")
+            case StaticAsset.Category:
+                return Path("categories.csv")
 
     def filepath(self, config: Config) -> Path:
         return config.static_assets / self.filename()

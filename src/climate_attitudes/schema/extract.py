@@ -18,13 +18,14 @@ To check:
 # required for each column, and simplify treatment group logic.
 
 from __future__ import annotations
+from pydantic import BaseModel
 from climate_attitudes.schema.columns import (
     ConditionGroup,
     ConditionalColumn,
     GroupColumn,
 )
 from climate_attitudes.settings import Config, InterimAsset
-from climate_attitudes.schema.enums import WAVES
+from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
 import polars as pl
 import polars.selectors as cs
 import pandera.polars as pa
@@ -66,6 +67,7 @@ NULLABLE_COLUMNS: list[str] = [
 # Columns requiring response re-map via subtraction by 1
 RESPONSE_REMAP_SUB_1 = {
     "dem_educ",
+    "dem_urban",
     "attr_storm",
     "attr_outage",
     "cc2",
@@ -86,6 +88,45 @@ RESPONSE_REMAP = {
     "cc13": {77: 0},
     "cc13_apr": {77: 0},
     "pol_lean": {3: 2},
+}
+
+
+class SurveyError(BaseModel):
+    column: str
+    participant_type: str
+    filter_cond: str
+
+    def condition(self) -> pl.Expr:
+        pl_col = pl.col(self.column)
+
+        match self.filter_cond:
+            case "not_null":
+                return pl_col.is_not_null() & (pl_col != [])
+            case "null":
+                return pl_col.is_null()
+            case _:
+                raise ValueError(f"Unknown filter condition: {self.filter_cond}")
+
+
+SURVEY_ERRORS = {
+    2: [
+        SurveyError(column="ew1", participant_type="repeating", filter_cond="not_null"),
+        SurveyError(
+            column="cc_pol_RE__research",
+            participant_type="repeating",
+            filter_cond="null",
+        ),
+    ],
+    3: [
+        SurveyError(column="ew1", participant_type="repeating", filter_cond="not_null"),
+        SurveyError(column="ew1_jun", participant_type="new", filter_cond="not_null"),
+    ],
+    5: [
+        SurveyError(column="cc_impact_1", participant_type="new", filter_cond="null"),
+        SurveyError(
+            column="cc_impact_1", participant_type="repeating", filter_cond="null"
+        ),
+    ],
 }
 
 
@@ -730,8 +771,8 @@ class OutputItemColumnsSchema(BaseSchema):
 class OutputItemSchema(BaseSchema):
     item_id: pl.UInt32
     item_name: str
-    category: str = pa.Field(nullable=True)
-    is_demographic: bool
+    group: str = pa.Field(nullable=True)
+    category: ItemCategory = pa.Field(nullable=True)  # ty: ignore
     has_error: bool
     ideology_operational: bool
     ideology_symbolic: bool
@@ -786,6 +827,7 @@ class OutputResponseSchema(BaseSchema):
     dem_male_77_TEXT: str = pa.Field(nullable=True)
     dem_age: int = pa.Field(gt=0, le=99)
     dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
+    dem_urban: UrbanArea = pa.Field(nullable=True)  # ty: ignore
 
     # Extreme weather
     ew1: pl.List(NaturalDisaster) = pa.Field(nullable=True)  # ty: ignore
@@ -796,7 +838,22 @@ class OutputResponseSchema(BaseSchema):
     ew_attribution_apr: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_jun: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
     ew_attribution_nov: int = pa.Field(isin=[0, 1, 2, 3], nullable=True)
+    ew3_phy: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew3_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_fin: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_men: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_apr_phy: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_apr_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_apr_fin: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_apr_men: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_jun_phy: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_jun_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_jun_fin: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_jun_men: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_nov_phy: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_nov_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_nov_fin: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_nov_men: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew5: int = pa.Field(isin=[1, 2, 3, 4])
     ew6: int = pa.Field(isin=[1, 2, 3, 4])
     attr_storm: pl.List(StormAttribution) = pa.Field(nullable=True)  # ty: ignore
@@ -1018,11 +1075,28 @@ class OutputResponseSchema(BaseSchema):
     cvccAirRepCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvccAirCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Scientists with appropriate expertise should guide climate change response
+    # Scientists with appropriate expertise should guide ...
+    # Economic growth and employment
+    cvcc9_econ: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    # Climate change response
     cvcc9_cc: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    # Coronavirus response
+    cvcc9_cv: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # Optimism that climate change can be solved with technological solutions
     cvcc10_cc: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # People mostly: look out for themselves/help others
+    soc_help: int = pa.Field(isin=[0, 1])
+
+    # People can't/can be trusted
+    soc_trust: int = pa.Field(isin=[0, 1])
+
+    # Future change in quality-of-life expectation
+    future: int = pa.Field(isin=[1, 2, 3, 4, 5])
+
+    # Willingness to take risks
+    mood__risk: int = pa.Field(in_range=(1, 10), nullable=True)
 
     # Prioritise issues: COVID-19 policies that could help address other issues.
     cv__priority: CovidPolicyFlowonPriority = pa.Field(nullable=True)  # ty: ignore
@@ -1033,6 +1107,30 @@ class OutputResponseSchema(BaseSchema):
     # ==== US political issues =====
     # How much of a threat is global warming/climate change
     pol_threat_cc: int = pa.Field(isin=[1, 2, 3], nullable=True)
+
+    # Worry about the economy
+    pol_worry_econ: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Trust in ...
+    # State government / governer
+    pol_trust_state: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # International orgs (e.g. UN, WHO)
+    pol_trust_io: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # CDC
+    pol_trust_cdc: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # "Most news media"
+    pol_trust_news: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # Business leaders
+    pol_trust_bus: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # EPA
+    pol_trust_epa: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    # Scientists
+    pol_trust_sci: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+
+    # Congress makes laws that reflect views of American people
+    pol_laws_cong: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+    # Respondent's state makes laws that reflect its people
+    pol_laws_state: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # Regulation of business: harmful vs. necessary for public good
     pol4: int = pa.Field(isin=[1, 2])
@@ -1045,9 +1143,11 @@ class OutputResponseSchema(BaseSchema):
 
     # Strict environmental laws: hurt economy vs. worth the cost
     pol7: int = pa.Field(isin=[1, 2])
+    pol7_pi: int = pa.Field(isin=[1, 2], nullable=True)
 
     # US Foreign interests: Align with allies vs. follow own national interests
     pol8: int = pa.Field(isin=[1, 2])
+    pol8_pi: int = pa.Field(isin=[1, 2], nullable=True)
 
     # US participation in global affairs: yes/no
     pol9: int = pa.Field(isin=[1, 2])
@@ -1057,6 +1157,7 @@ class OutputResponseSchema(BaseSchema):
 
     # In times of crises govt should: exercise control vs. prioritise civil liberties
     pol11: int = pa.Field(isin=[1, 2])
+    pol11_pi: int = pa.Field(isin=[1, 2], nullable=True)
 
     # Political identification
     pol_interest: int = pa.Field(in_range=(1, 5))
@@ -1069,6 +1170,9 @@ class OutputResponseSchema(BaseSchema):
     pol_vote_CCrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CVdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CVrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
+
+    # ===== Validity check =======
+    valid: int = pa.Field(isin=[1, 2, 3])
 
     # ===== Experiment conditions =====
     # Willingness to pay (ccComp, ccSolve)

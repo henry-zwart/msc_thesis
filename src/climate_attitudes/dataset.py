@@ -1,4 +1,5 @@
 from __future__ import annotations
+import json
 
 import polars as pl
 import polars.selectors as cs
@@ -9,6 +10,7 @@ from climate_attitudes.schema.extract import (
 from climate_attitudes.schema import dataset as schema
 from climate_attitudes.settings import Config
 from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.imputation import impute_viterbi
 
 
 class Dataset:
@@ -22,14 +24,33 @@ class Dataset:
     def __init__(self, config: Config):
         self.config = config
 
-    def build(self) -> Dataset:
+    def build(
+        self,
+        prune_error_participants: bool = False,
+        filter_valid: bool = False,
+    ) -> Dataset:
         """Create refined climate attitudes survey dataset.
 
         Extracts and validates required columns from the raw data, then
         cleans and transforms these.
         """
+        print("Building climate attitudes dataset.")
+
+        self.prune_survey_error_participants = prune_error_participants
+        self.filter_valid = filter_valid
+
+        if prune_error_participants:
+            print("Removing participants with survey errors.")
+        else:
+            print("Keeping participants with survey errors.")
+
+        if filter_valid:
+            print("Removing participants who fail survey validation check in any wave.")
+        else:
+            print("Keeping participants who fail survey validation checks.")
+
         # Extract and validate raw data
-        extract = DataExtract(self.config).load()
+        extract = DataExtract(self.config).load(prune_error_participants, filter_valid)
         self.codebook = extract.codebook.clone()
         self.item = extract.item.clone()
         self.question = extract.question.clone()
@@ -39,6 +60,9 @@ class Dataset:
 
         # Coalesce treatment columns into (response, treatment index) pairs
         self.coalesce_treatments()
+
+        # Constructed columns
+        self.construct_columns()
 
         self._reorder_columns()
 
@@ -54,9 +78,31 @@ class Dataset:
         self.participant.sink_parquet(self.config.built_assets / "participant.parquet")
         self.response.sink_parquet(self.config.built_assets / "response.parquet")
 
+        md = dict(
+            prune_survey_error_participants=self.prune_survey_error_participants,
+            filter_valid=self.filter_valid,
+        )
+        with (self.config.built_assets / "metadata.json").open("w") as f:
+            json.dump(md, f)
+
     @classmethod
     def load(cls, config: Config) -> Dataset:
         ds = cls(config)
+
+        try:
+            with (config.built_assets / "metadata.json").open("r") as f:
+                md = json.load(f)
+
+        except FileExistsError:
+            raise RuntimeError(
+                f"Could not find metadata file for built assets at "
+                f"`{config.built_assets}`. Try rebuilding assets."
+            )
+
+        print("Loading built assets:")
+        for k, v in md.items():
+            print(f"  {k}={v}")
+
         ds.codebook = pl.scan_parquet(config.built_assets / "codebook.parquet")
         ds.item = pl.scan_parquet(config.built_assets / "item.parquet")
         ds.question = pl.scan_parquet(config.built_assets / "question.parquet")
@@ -64,6 +110,117 @@ class Dataset:
         ds.participant = pl.scan_parquet(config.built_assets / "participant.parquet")
         ds.response = pl.scan_parquet(config.built_assets / "response.parquet")
         ds._validate()
+        return ds
+
+    def impute_viterbi(
+        self, columns: list[str | pl.Expr], impute_waves: list[int] | None = None
+    ) -> Dataset:
+        new_resp = impute_viterbi(
+            self.response.clone().collect(),  # ty: ignore
+            columns=columns,
+            impute_waves=impute_waves,
+        )
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp.lazy()
+
+        return ds
+
+    def filter_columns(self, columns: list[str | pl.Expr]) -> Dataset:
+        new_resp = self.response.select(*columns).clone()
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
+        return ds
+
+    def filter_at_least_one_resp(self, columns: list[str | pl.Expr]) -> Dataset:
+        keep_pids = (
+            self.response.select("participant_id", *columns)
+            .group_by("participant_id")
+            .agg(pl.all().is_not_null().any())
+            .unpivot(
+                index="participant_id", variable_name="column", value_name="some_full"
+            )
+            .group_by("participant_id")
+            .agg(pl.col("some_full").all().alias("no_empty_questions"))
+            .filter(pl.col("no_empty_questions"))
+            .select("participant_id")
+            .collect()
+            .to_series()
+            .implode()
+        )
+
+        new_resp = self.response.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+        new_part = self.participant.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = new_part
+        ds.response = new_resp
+
+        return ds
+
+    def transform(self, *expr: pl.Expr) -> Dataset:
+        new_resp = self.response.clone().with_columns(*expr)
+
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
+        return ds
+
+    def cast_enum_to_int(self) -> Dataset:
+        self.response = self.response.with_columns(cs.enum().cast(pl.Int64))
+        return self
+
+    def reverse_coding(self, columns: list[str | pl.Expr]) -> Dataset:
+        exprs = []
+
+        for col in columns:
+            if isinstance(col, str):
+                exprs.append((-pl.col(col)).alias(col))
+            elif isinstance(col, pl.Expr):
+                exprs.append((-col))
+            else:
+                raise TypeError(f"Unsupported column type: {type(col)}")
+
+        self.response = self.response.with_columns(exprs)
+        return self
+
+    def standardise(self, columns: cs.Selector | pl.Expr) -> Dataset:
+        new_resp = self.response.with_columns(
+            (columns - columns.mean()) / columns.std()
+        )
+        ds = Dataset(self.config.copy())
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = new_resp
+
         return ds
 
     def _validate(self):
@@ -131,6 +288,7 @@ class Dataset:
             treatment_items.group_by("treatment_group")
             .agg(
                 pl.col("item_id").min(),
+                pl.col("group").first(),
                 pl.col("category").first(),
                 cs.boolean().any(),
             )
@@ -221,3 +379,15 @@ class Dataset:
         # 4. Add the treatment columns back into columns df, re-sort
         columns = pl.concat([columns, treatment_columns]).sort(by="item_id").lazy()
         self.columns = columns
+
+    def construct_columns(self):
+        self.response = self.response.with_columns(
+            pl.coalesce(pl.col(r"^ew1_(apr|jun|nov)$")).alias("ew1_delta"),
+            pl.coalesce(pl.col(r"^ew_attribution_(apr|jun|nov)$")).alias(
+                "ew_attribution_recent"
+            ),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$")).alias("ew3_phy_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$")).alias("ew3_mat_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$")).alias("ew3_fin_delta"),
+            pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$")).alias("ew3_men_delta"),
+        )

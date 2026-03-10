@@ -62,6 +62,21 @@ US_STATES = [
     ("Wyoming", "WY"),
 ]
 
+ItemCategory = pl.Enum(
+    [
+        "demographic",
+        "belief",
+        "knowledge",
+        "attitude",
+        "experience",
+        "behaviour",
+        "intention",
+        "behavioural-cause",
+        "policy-support",
+        "valid",
+    ]
+)
+
 StateAbbrev = pl.Enum([abbrev for _, abbrev in US_STATES])
 
 StateName = pl.Enum([name for name, _ in US_STATES])
@@ -98,6 +113,8 @@ ResponseType = pl.Enum(
 )
 
 ParticipantType = pl.Enum(["new", "repeating"])
+
+UrbanArea = pl.Enum(["Urban", "Surburban", "Rural"])
 
 GroupCCGlobalResponse = pl.Enum(["ccIO", "ccGovt", "ccIOinterest", "ccGovtinterest"])
 

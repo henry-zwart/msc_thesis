@@ -1,26 +1,40 @@
-import numpy.typing as npt
 import numpy as np
+import numpy.typing as npt
 import polars as pl
+import polars.selectors as cs
 
 
-def cov(df: pl.DataFrame) -> pl.DataFrame:
-    """Compute pairwise covariance between columns of a Polars DataFrame."""
-    z = np.cov(df.to_numpy(), rowvar=False)
-    if df.width == 1:
-        z = np.array([z])
-    return pl.DataFrame(z, schema=df.columns)
+def standardise(expr: pl.Expr | cs.Selector) -> pl.Expr:
+    return (expr - expr.mean()) / expr.std()
 
 
-def pcorr(df: pl.DataFrame) -> pl.DataFrame:
-    """Compute pairwise partial correlation between columns of a Polars DataFrame."""
-    sigma = cov(df).to_numpy()
-    sigma_inv = np.linalg.inv(sigma)
-    denom = np.sqrt(np.outer(np.diag(sigma_inv), np.diag(sigma_inv)))
-    z = -(sigma_inv / denom)
-    if df.width == 1:
-        z = np.array([z])
-    z[np.diag_indices_from(z)] = 1.0
-    return pl.DataFrame(z, schema=df.columns)
+def rand_direction_fill(col: str | pl.Expr | cs.Selector) -> pl.Expr:
+    """Fill null values with either forward or backward values, with p=1/2."""
+    # Whatever 'col' is, make it an expression
+    match col:
+        case str():
+            col = pl.col(col)
+        case cs.Selector():
+            col = col.as_expr()
+        case _:
+            col = col
+
+    expr = (
+        pl.when(col.is_null())
+        .then(
+            pl.when(pl.int_range(2).sample(pl.len(), with_replacement=True) == 1)
+            .then(col.backward_fill().over("participant_id"))
+            .otherwise(col.forward_fill().over("participant_id"))
+        )
+        .otherwise(col)
+    )
+
+    # Account for participants with non-null values in only one direction
+    # First try filling forward (use previous values)
+    expr = pl.when(expr.is_null()).then(col.forward_fill().over("participant_id"))
+    # Then try filling backward (use future values)
+    expr = pl.when(expr.is_null()).then(col.backward_fill().over("participant_id"))
+    return expr
 
 
 def calculate_proportion_response(
@@ -119,3 +133,41 @@ def relative_entropy(
     relative_entropy = sum(p * x for p, x in zip(actual, excess_surprise))
 
     return float(relative_entropy)
+
+
+def sample_discrete_mc(
+    R: npt.NDArray[np.float64],
+    init_dist: npt.NDArray[np.float64] | None = None,
+    n: int = 1,
+    steps: int = 1,
+    rng: np.random.Generator | None = None,
+) -> npt.NDArray[np.int64]:
+    n_states = R.shape[0]
+    states = np.arange(n_states)
+
+    if rng is None:
+        print("No random number generator provided, using new random seed.")
+        rng = np.random.default_rng()
+
+    if init_dist is None:
+        print("No initial distribution provided, using default (uniform).")
+        init_dist = np.full(n_states, fill_value=1 / n_states, dtype=np.float64)
+
+    # Initialise empty (-1) array for samples
+    samples = np.full((steps + 1, n), fill_value=-1)
+
+    # Sample initial state using initial distribution
+    samples[0] = rng.choice(states, p=init_dist, size=n)
+
+    # Iteratively sample next state using transition matrix
+    for i in range(1, steps + 1):
+        # Treat source states separately; rng.choice only accepts one distribution
+        for m in states:
+            prev_state_is_m = samples[i - 1] == m
+            samples[i, prev_state_is_m] = rng.choice(
+                states,
+                p=R[m],
+                size=prev_state_is_m.sum(),
+            )
+
+    return samples

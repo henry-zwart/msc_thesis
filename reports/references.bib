@@ -246,6 +246,7 @@
   urldate = {2025-12-20},
   abstract = {A central challenge for identifying core components of a belief system is examining the position of components within the structure of the entire belief system. We test whether operational (i.e., positions on issues) or symbolic (i.e., affective attachments to political groups and labels) components are most central by modeling a political belief system as a network of interconnected attitudes and beliefs. Across seven waves of representative panel data from New Zealand, we find that symbolic components are more central than operational components ( ds range = 0.78-0.97). Symbolic components were also closer than operational components in the network to self-reported voting ( d = -2.43), proenvironmental actions ( ds = -1.71 and -1.63), and religious behaviors ( d = -0.74). These findings are consistent with perspectives that emphasize the importance of symbolic politics in tying belief systems together and motivating behavior, and further the link between political belief system research and network science.},
   langid = {english},
+  keywords = {partial-correlation},
   file = {/Users/henry/Zotero/storage/IU9XKRX8/Brandt et al. - 2019 - What Is Central to Political Belief System Networks.pdf}
 }
 
@@ -400,8 +401,27 @@
   urldate = {2026-01-05},
   abstract = {The usage of psychological networks that conceptualize behavior as a complex interplay of psychological and other components has gained increasing popularity in various research fields. While prior publications have tackled the topics of estimating and interpreting such networks, little work has been conducted to check how accurate (i.e., prone to sampling variation) networks are estimated, and how stable (i.e., interpretation remains similar with less observations) inferences from the network structure (such as centrality indices) are. In this tutorial paper, we aim to introduce the reader to this field and tackle the problem of accuracy under sampling variation. We first introduce the current state-of-the-art of network estimation. Second, we provide a rationale why researchers should investigate the accuracy of psychological networks. Third, we describe how bootstrap routines can be used to (A) assess the accuracy of estimated network connections, (B) investigate the stability of centrality indices, and (C) test whether network connections and centrality estimates for different variables differ from each other. We introduce two novel statistical methods: for (B) the correlation stability coefficient, and for (C) the bootstrapped difference test for edge-weights and centrality indices. We conducted and present simulation studies to assess the performance of both methods. Finally, we developed the free R-package bootnet that allows for estimating psychological networks in a generalized framework in addition to the proposed bootstrap methods. We showcase bootnet in a tutorial, accompanied by R syntax, in which we analyze a dataset of 359 women with posttraumatic stress disorder available online.},
   langid = {english},
-  keywords = {Bootstrap,Network psychometrics,Psychological networks,Replicability,Tutorial,unread},
+  keywords = {Bootstrap,Network psychometrics,partial-correlation,pmrf,Psychological networks,Replicability,Tutorial,unread},
   file = {/Users/henry/Zotero/storage/W6NGAJ6I/Epskamp et al. - 2018 - Estimating psychological networks and their accuracy A tutorial paper.pdf}
+}
+
+@article{epskampGaussianGraphicalModel2018,
+  title = {The {{Gaussian Graphical Model}} in {{Cross-Sectional}} and {{Time-Series Data}}},
+  author = {Epskamp, Sacha and Waldorp, Lourens J. and M{\~o}ttus, Ren{\'e} and Borsboom, Denny},
+  year = 2018,
+  month = jul,
+  journal = {Multivariate Behavioral Research},
+  volume = {53},
+  number = {4},
+  pages = {453--480},
+  publisher = {Routledge},
+  issn = {0027-3171},
+  doi = {10.1080/00273171.2018.1454823},
+  urldate = {2026-02-17},
+  abstract = {We discuss the Gaussian graphical model (GGM; an undirected network of partial correlation coefficients) and detail its utility as an exploratory data analysis tool. The GGM shows which variables predict one-another, allows for sparse modeling of covariance structures, and may highlight potential causal relationships between observed variables. We describe the utility in three kinds of psychological data sets: data sets in which consecutive cases are assumed independent (e.g., cross-sectional data), temporally ordered data sets (e.g., n = 1 time series), and a mixture of the 2 (e.g., n {$>$} 1 time series). In time-series analysis, the GGM can be used to model the residual structure of a vector-autoregression analysis (VAR), also termed graphical VAR. Two network models can then be obtained: a temporal network and a contemporaneous network. When analyzing data from multiple subjects, a GGM can also be formed on the covariance structure of stationary means---the between-subjects network. We discuss the interpretation of these models and propose estimation methods to obtain these networks, which we implement in the R packages graphicalVAR and mlVAR. The methods are showcased in two empirical examples, and simulation studies on these methods are included in the supplementary materials.},
+  pmid = {29658809},
+  keywords = {exploratory-data analysis,multilevel modeling,multivariate analysis,network modeling,partial-correlation,Time-series analysis},
+  file = {/Users/henry/Zotero/storage/DIMJLHI5/Epskamp et al. - 2018 - The Gaussian Graphical Model in Cross-Sectional and Time-Series Data.pdf}
 }
 
 @incollection{fishbein1966relationships,
@@ -411,6 +431,24 @@
   year = 1966,
   pages = {199--223},
   publisher = {Elsevier}
+}
+
+@article{fishmanChangeWeCan2022,
+  title = {Change {{We Can Believe In}}: {{Structural}} and {{Content Dynamics}} within {{Belief Networks}}},
+  shorttitle = {Change {{We Can Believe In}}},
+  author = {Fishman, Nic and Davis, Nicholas T.},
+  year = 2022,
+  journal = {American Journal of Political Science},
+  volume = {66},
+  number = {3},
+  pages = {648--663},
+  issn = {1540-5907},
+  doi = {10.1111/ajps.12626},
+  urldate = {2026-02-17},
+  abstract = {Scholars have used network analysis to explore the structural properties of mass ideology. This article incorporates two important, though ignored features in past research by investigating how time shapes the properties of belief networks for different populations of people---those who exhibit high and low levels of political knowledge. We find that (1) belief network density increases asymmetrically among people with high relative to low knowledge; (2) symbolic preferences are more central to belief networks irrespective of survey timing or population; in contrast, policy beliefs exhibit some increase in centrality over time among the politically knowledgeable; and (3) a belief's centrality is unrelated to the amount of change it explains in other beliefs. Troublingly, this latter finding presents problems for describing belief networks using the vernacular of Conversian belief systems---a disconnect that seems grounded in the mismatch between Converse's individual-level theory and network analysis' population-based properties.},
+  langid = {english},
+  keywords = {partial-correlation},
+  file = {/Users/henry/Zotero/storage/GUPCTFLD/Fishman and Davis - 2022 - Change We Can Believe In Structural and Content Dynamics within Belief Networks.pdf;/Users/henry/Zotero/storage/VI9YD84E/ajps.html}
 }
 
 @phdthesis{gabrielatorresImpactCOVID19Interventions2025,
@@ -561,6 +599,23 @@
   file = {/Users/henry/Zotero/storage/KLJGPTKE/Greenwald et al. - 2002 - A unified theory of implicit attitudes, stereotypes, self-esteem, and self-concept..pdf}
 }
 
+@article{iacobucciHowManyFactors2022,
+  title = {How Many Factors in Factor Analysis? {{New}} Insights about Parallel Analysis with Confidence Intervals},
+  shorttitle = {How Many Factors in Factor Analysis?},
+  author = {Iacobucci, Dawn and Ruvio, Ayalla and Rom{\'a}n, Sergio and Moon, Sangkil and Herr, Paul M.},
+  year = 2022,
+  month = feb,
+  journal = {Journal of Business Research},
+  volume = {139},
+  pages = {1026--1043},
+  issn = {0148-2963},
+  doi = {10.1016/j.jbusres.2021.09.015},
+  urldate = {2026-02-25},
+  abstract = {Factor analysis is an extremely popular model for scale development prior to other modeling in much research in business and the social sciences. A central question in factor analysis remains the determination of the number of factors to extract and retain to explain as much of the data as possible, and do so parsimoniously. Parallel analysis can be helpful, but there is some confusion surrounding this technique, which may lead to incorrect conclusions. This research seeks first to clarify and correct these confusions. Second, we offer R, SAS, and SPSS programs to conduct parallel analysis in factor analysis. Third, we incorporate inferential statistics, enabling hypothesis testing and confidence intervals. Finally, we discuss how parallel analysis can help scholars in ongoing debates about individual differences scales, construct and measure dimensionality, and the utility of multi-item scales. Hopefully, the recurrent question, ``How many factors?'' can be answered more definitively.},
+  keywords = {Eigenvalues,Factor analysis,Number of factors,Parallel analysis,Random factors},
+  file = {/Users/henry/Zotero/storage/UFQEEZX4/S0148296321006603.html}
+}
+
 @article{inskoTriadicConsistency1967,
   title = {Triadic {{Consistency}}},
   author = {Insko, Chester and Schopler, John},
@@ -690,7 +745,7 @@
   abstract = {Climate beliefs shape engagement with climate action, yet research often overlooks their interconnections. This research frames climate beliefs as a belief system and examines two structural features: density (the strength of all connections) and inconsistency (conflicts between beliefs). Using Facebook survey data from 110 geographic areas (n\,=\,99,074), we show that global north presents higher density networks, where climate beliefs are more tightly correlated, while many global south areas have positive but less interconnected beliefs. Inconsistency appears in geographic areas where opposition to reducing fossil fuel use conflicts with support for renewable energy and government prioritization of climate policies, such as in the Middle East. Information exposure is positively correlated with density and negatively with inconsistency. Gross domestic product per capita is positively associated with density and carbon resource dependence positively correlates with inconsistency. These findings offer communication strategies to enhance climate belief endurance while addressing conflicting beliefs that may undermine climate action.},
   copyright = {2025 The Author(s), under exclusive licence to Springer Nature Limited},
   langid = {english},
-  keywords = {Communication,Psychology},
+  keywords = {Communication,partial-correlation,Psychology},
   file = {/Users/henry/Zotero/storage/UA4T836E/Lee et al. - 2025 - Variations in climate change belief systems across 110 geographic areas.pdf}
 }
 
@@ -699,6 +754,23 @@
   author = {Lewis, David},
   langid = {english},
   file = {/Users/henry/Zotero/storage/BK3RBICM/Lewis - Logic for Equivocators.pdf}
+}
+
+@article{maccallumProblemEquivalentModels1993,
+  title = {The Problem of Equivalent Models in Applications of Covariance Structure Analysis},
+  author = {MacCallum, Robert C. and Wegener, Duane T. and Uchino, Bert N. and Fabrigar, Leandre R.},
+  year = 1993,
+  journal = {Psychological Bulletin},
+  volume = {114},
+  number = {1},
+  pages = {185--199},
+  publisher = {American Psychological Association},
+  address = {US},
+  issn = {1939-1455},
+  doi = {10.1037/0033-2909.114.1.185},
+  abstract = {For any given covariance structure model, there will often be alternative models that are indistinguishable from the original model in terms of goodness of fit to data. The existence of such equivalent models is almost universally ignored in empirical studies. A study of 53 published applications showed that equivalent models exist routinely, often in large numbers. Detailed study of 3 applications showed that equivalent models may often offer substantively meaningful alternative explanations of data. The importance of the equivalent model phenomenon and recommendations for managing and confronting the problem in practice are discussed. (PsycInfo Database Record (c) 2025 APA, all rights reserved)},
+  keywords = {Analysis of Covariance,causal-indistinguishability,Models,multiple-realisability},
+  file = {/Users/henry/Zotero/storage/XYTVE325/The-Problem-of-Equivalent-Models-in-Applications-of-Covariance-Structure-Analysis.pdf;/Users/henry/Zotero/storage/NE9LJVIV/1993-39917-001.html}
 }
 
 @article{marsmanIntroductionNetworkPsychometrics2018,
@@ -778,6 +850,22 @@
   archiveprefix = {arXiv},
   keywords = {Condensed Matter - Disordered Systems and Neural Networks,Quantitative Biology - Genomics,Quantitative Biology - Molecular Networks,Quantitative Biology - Neurons and Cognition},
   file = {/Users/henry/Zotero/storage/7WG64YRD/Nguyen et al. - 2017 - Inverse statistical problems from the inverse Ising problem to data science.pdf;/Users/henry/Zotero/storage/MR6KEFZN/1702.html}
+}
+
+@misc{parkCausalDiscoveryInterventionSimulation2025,
+  title = {From {{Causal Discovery}} to {{InterventionSimulation}}: {{Modeling Precariousness}} and {{Depression}} in the {{HELIUS Study}}},
+  shorttitle = {From {{Causal Discovery}} to {{InterventionSimulation}}},
+  author = {Park, Kyuri and Elsenburg, Leonie and Nicolaou, Mary and Stronks, Karien and Vasconcelos, V{\'i}tor V.},
+  year = 2025,
+  month = aug,
+  number = {396hc\_v2},
+  eprint = {396hc\_v2},
+  publisher = {OSF Preprints},
+  doi = {10.31219/osf.io/396hc_v2},
+  urldate = {2026-02-25},
+  abstract = {This study investigates how the internal structure of depression--precariousness dynamics shapes responsiveness to external support. Using cross-sectional data from the HELIUS study, we first apply cycle-capable causal discovery algorithms to estimate directional dependencies between financial stress, domain-specific precariousness, and depressive symptoms. Our multi-resolution analysis---spanning both aggregate and symptom-level constructs---highlights financial stress as a plausible upstream driver of depression, with symptoms such as sleep disturbance and depressed mood emerging as initiators of broader social vulnerability.   To translate these structural insights into dynamic predictions, we construct a family of analytically calibrated linear stochastic models. Simulations reveal that variations in internal structure can substantially alter system responses to financial stress reduction. Some models show rapid but transient improvements in depression, while others adjust more slowly yet sustain gains over time. Precariousness tends to respond more immediately across all configurations, though its trajectory also shifts subtly with structural variation.   Together, these findings demonstrate that intervention outcomes depend not only on the magnitude of external input but also on latent properties of the system. More broadly, this study illustrates how combining causal discovery with dynamical modeling supports principled, simulation-based exploration of intervention scenarios---grounded in data, yet able to probe counterfactual structure. This approach offers a scalable framework for diagnosing hidden system constraints and informing targeted public health strategies in complex psychosocial domains.},
+  archiveprefix = {OSF Preprints},
+  file = {/Users/henry/Zotero/storage/RQPHF4XW/Park et al. - 2025 - From Causal Discovery to InterventionSimulation Modeling Precariousness and Depression in the HELIU.pdf}
 }
 
 @article{parkDiscoveringCyclicCausal2024,
@@ -883,6 +971,13 @@
   langid = {english},
   keywords = {Cognitive science,Phase diagrams,Population density,Social communication,Social influence,Social networks,Social systems,Sports},
   file = {/Users/henry/Zotero/storage/L2663RPZ/Rodriguez et al. - 2016 - Collective Dynamics of Belief Evolution under Cognitive Coherence and Social Conformity.pdf}
+}
+
+@article{sherlaw-johnsonEstimatingMarkovTransition,
+  title = {Estimating a {{Markov Transition Matrix}} from {{Observational Data}}},
+  author = {{Sherlaw-Johnson'}, Chris and Gallivan', Steve and Burridge, Jim},
+  langid = {english},
+  file = {/Users/henry/Zotero/storage/KIK2CHJK/Sherlaw-Johnson' et al. - Estimating a Markov Transition Matrix from Observational Data.pdf}
 }
 
 @misc{spirtesCausalInferencePresence2013,
@@ -1021,6 +1116,23 @@
   file = {/Users/henry/Zotero/storage/NBK3YAR7/Trevors - 2020 - The Roles of Identity Conflict, Emotion, and Threat in Learning from Refutation Texts.pdf}
 }
 
+@article{vanborkuloNewMethodConstructing2014,
+  title = {A New Method for Constructing Networks from Binary Data},
+  author = {Van Borkulo, Claudia D. and Borsboom, Denny and Epskamp, Sacha and Blanken, Tessa F. and Boschloo, Lynn and Schoevers, Robert A. and Waldorp, Lourens J.},
+  year = 2014,
+  month = aug,
+  journal = {Scientific Reports},
+  volume = {4},
+  number = {1},
+  pages = {5918},
+  issn = {2045-2322},
+  doi = {10.1038/srep05918},
+  urldate = {2026-02-18},
+  langid = {english},
+  keywords = {pmrf},
+  file = {/Users/henry/Zotero/storage/7H8HLSQ4/Van Borkulo et al. - 2014 - A new method for constructing networks from binary data.pdf}
+}
+
 @article{vandermaasPolarizationIndividualsHierarchical2020,
   title = {The Polarization within and across Individuals: The Hierarchical {{Ising}} Opinion Model},
   shorttitle = {The Polarization within and across Individuals},
@@ -1052,6 +1164,7 @@
   doi = {10.1093/esr/jcae011},
   urldate = {2025-12-20},
   abstract = {We investigate the structure of political belief systems across Europe to investigate what belief systems in European societies, and those who hold them, have in common. In doing so, we answer three questions: First, are political belief system structures similar across Europe? Second, which demographic groups are likely to have similar belief systems within countries? Third, how are belief systems related to voting behaviour? Results from Correlational Class Analyses on data from 23 European countries indicate that a wide variety of belief systems exist in Europe (2--5 per country), but that these can be summarized into two diverse groups, although belief systems in one group were more similar than in the other. Unexpectedly, the groups did not differ in the strength of association between beliefs. While cultural and economic belief dimensions were not consistently found, and tended to be weak, they were positively associated in the first group and negatively associated in the second. Belief systems of the first group were more likely to be from Western European countries and its members more likely to be higher educated compared to the second group. Membership in the second group was associated with more populist far-right voting and vote abstention.},
+  keywords = {pearson-correlation},
   file = {/Users/henry/Zotero/storage/GWEY99DU/van Noord et al. - 2025 - The nature and structure of European belief systems exploring the varieties of belief systems acros.pdf;/Users/henry/Zotero/storage/Z954NINB/jcae011.html}
 }
 
@@ -1113,4 +1226,22 @@
   title = {Preregistration (Science) --- {{Wikipedia}}, the Free Encyclopedia},
   author = {{Wikipedia contributors}},
   year = 2025
+}
+
+@article{yinSPARSECONDITIONALGAUSSIAN2011,
+  title = {A {{SPARSE CONDITIONAL GAUSSIAN GRAPHICAL MODEL FOR ANALYSIS OF GENETICAL GENOMICS DATA}}},
+  author = {Yin, Jianxin and Li, Hongzhe},
+  year = 2011,
+  month = dec,
+  journal = {The annals of applied statistics},
+  volume = {5},
+  number = {4},
+  pages = {2630--2650},
+  issn = {1932-6157},
+  doi = {10.1214/11-AOAS494},
+  urldate = {2026-02-17},
+  abstract = {Genetical genomics experiments have now been routinely conducted to measure both the genetic markers and gene expression data on the same subjects. The gene expression levels are often treated as quantitative traits and are subject to standard genetic analysis in order to identify the gene expression quantitative loci (eQTL). However, the genetic architecture for many gene expressions may be complex, and poorly estimated genetic architecture may compromise the inferences of the dependency structures of the genes at the transcriptional level. In this paper, we introduce a sparse conditional Gaussian graphical model for studying the conditional independent relationships among a set of gene expressions adjusting for possible genetic effects where the gene expressions are modeled with seemingly unrelated regressions. We present an efficient coordinate descent algorithm to obtain the penalized estimation of both the regression coefficients and sparse concentration matrix. The corresponding graph can be used to determine the conditional independence among a group of genes while adjusting for shared genetic effects. Simulation experiments and asymptotic convergence rates and sparsistency are used to justify our proposed methods. By sparsistency, we mean the property that all parameters that are zero are actually estimated as zero with probability tending to one. We apply our methods to the analysis of a yeast eQTL data set and demonstrate that the conditional Gaussian graphical model leads to more interpretable gene network than standard Gaussian graphical model based on gene expression data alone.},
+  pmcid = {PMC3419502},
+  pmid = {22905077},
+  file = {/Users/henry/Zotero/storage/B6CJCKSJ/Yin and Li - 2011 - A SPARSE CONDITIONAL GAUSSIAN GRAPHICAL MODEL FOR ANALYSIS OF GENETICAL GENOMICS DATA.pdf}
 }

@@ -103,10 +103,22 @@ relevant to the project:
 
 : In a belief system, a position on a particular issue (e.g., low taxes).
 
+`Pairwise Markov Random Field` { #pmrf }
+
+: TODO ([@vanborkuloNewMethodConstructing2014])
+
 `Plausibility judgement`
 
 : An individual's evaluation of the potential truthfulness of a new explanation,
   with respect to their pre-existing beliefs.
+
+`Polychoric correlation` { #polychoric-correlation }
+
+: TODO; maybe Epskamp 2016
+
+`Precision matrix` { #precision-matrix }
+
+: The inverse of the variance-covariance matrix, if it exists.
 
 `Preference congruence`
 
@@ -116,6 +128,12 @@ relevant to the project:
 
 : "The practice of registering the hypotheses, methods, or analyses of a scientific study before 
   it is conducted."[@wikipediacontributorsPreregistrationScienceWikipedia2025]
+
+`Psychological network` { #psychological-network }
+
+: Model linking psychological behaviour to underlying psychological and other components, 
+  where nodes are observed variables and edges are statistical relationships.
+  [@epskampEstimatingPsychologicalNetworks2018]
 
 `Regularised partial correlation network` { #partial-correlation-network }
 
