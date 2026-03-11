@@ -40,13 +40,6 @@ DATASETS := \
 	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
 	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
 
-# ASSETS := \
-# 		${CA_BUILT_ASSETS}/item.parquet \
-# 		${CA_BUILT_ASSETS}/question.parquet \
-# 		${CA_BUILT_ASSETS}/columns.parquet \
-# 		${CA_BUILT_ASSETS}/participant.parquet \
-# 		${CA_BUILT_ASSETS}/response.parquet 
-
 .PHONY: clean serve data-assets quarto-reports all-reports
 
 all: site/site/index.html all-reports
@@ -56,7 +49,6 @@ all-reports: $(REPORTS)
 quarto-reports: $(QUARTO_REPORTS)
 
 data-assets: $(DATASETS)
-
 
 # Serve site locally
 serve:
@@ -108,7 +100,8 @@ outputs:
 
 outputs/reports/index_eda_%/index_eda.html: \
 			reports/index-eda/index_eda.qmd \
-			${CA_BUILT_ASSETS}/%/metadata.json
+			${CA_BUILT_ASSETS}/%/metadata.json \
+			| outputs/reports
 	uv run quarto render $< \
 		--execute-daemon-restart \
 		--output-dir ../../outputs/reports/index_eda_$* \
@@ -138,22 +131,6 @@ ${CA_BUILT_ASSETS}/base/metadata.json: \
 			${CA_STATIC_ASSETS}/lee_2025_items.csv
 	uv run cadata create base-dataset --prune-error-participants --filter-valid
 
-
-
-# # Extract raw climate attitudes data
-# ${CA_BUILT_ASSETS}/.extract: src/climate_attitudes/schema/extract.py \
-# 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-# 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
-# 			${CA_STATIC_ASSETS}/item_columns.json \
-# 			${CA_STATIC_ASSETS}/error_items.csv \
-# 			${CA_STATIC_ASSETS}/ideology_type.csv \
-# 			${CA_STATIC_ASSETS}/lee_2025_items.csv \
-# 			| ${CA_BUILT_ASSETS}/extract
-# 	uv run cadata extract && touch $@
-#
-#
-# ${CA_BUILT_ASSETS}/extract: 
-# 	mkdir -p $@
 
 # == Convert Rdata response files to parquet.
 # WARNING: Takes ~12 minutes
