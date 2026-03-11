@@ -7,8 +7,40 @@ Goals for the week:
 - Re-do analysis within the beliefs, attitudes categories. Identify broad trends/factors.
 - Start planning thesis writing, likely for methods section.
 
+### Tuesday
+- Cleaned up repo a bit
+- Worked on constructed variables:
+    - Supplement `pol_party` with `pol_lean` responses to create a 5-point scale
+    - Include `cc2` (CC causes) and re-code such that human-causes are high.
+
 ### Monday
-Met with Kyuri and Katinka to go back over main points from Thursday ENLENS meeting.
+- Met with Kyuri and Katinka to go back over main points from Thursday ENLENS meeting.
+- Implemented 'cut' hierarchical clustering (a.k.a. feature clustering).
+
+#### Feature clustering
+Hierarchical clustering algorithms typically take as input a set of $M$ observations 
+in $N$ dimensions, then iteratively merge these observations based on (i) a given 
+distance measure, and (ii) a merge rule (e.g., 'single' or 'ward'). The algorithm
+terminates either when the observations have been reduced to a pre-specified number 
+of clusters, or when all observations have been recursively merged under a unifying 
+root.
+
+For the purpose of identifying non-linear relationships between survey variables, we 
+need a slight variation on this algorithm. In particular, we want to treat each variable
+(aka column; aka dimension) as a leaf comprising all observed values, then cluster these 
+leaves such that similar variables are grouped together. Critically, we must be careful
+to remember that observations from different variables are still grouped at the level of 
+individual survey participants, as well as survey waves.
+
+To achieve this, we instead pass pre-computed distance matrix (with shape $N \times N$)
+to the clustering algorithm. The values of this matrix are calculated according to the 
+merge rule used for the clustering algorithm. In the case of the 'single' merge rule, 
+we use the minimal (euclidean) distance between any pair of observations from the same 
+survey response (same participant and wave). For the 'complete' rule, we take the 
+maximum such distance, and for 'average' we take the mean. I'm not sure yet how to 
+implement this for the Ward merge rule.
+
+
 
 
 ## March 2 - March 8
