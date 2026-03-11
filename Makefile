@@ -103,9 +103,11 @@ outputs/reports/index_eda_%/index_eda.html: \
 			${CA_BUILT_ASSETS}/%/metadata.json \
 			| outputs/reports
 	uv run quarto render $< \
-		--execute-daemon-restart \
-		--output-dir ../../outputs/reports/index_eda_$* \
-		-P ds_name:$*
+			--execute-daemon-restart \
+			--output-dir index_eda_$* \
+			-P ds_name:$* && \
+		mv reports/index-eda/index_eda_$* $(@D)
+		
 
 
 ${CA_BUILT_ASSETS}/ds1_5/metadata.json: ${CA_BUILT_ASSETS}/base/metadata.json
@@ -146,12 +148,12 @@ ${CA_BUILT_ASSETS}/base/metadata.json: \
 
 # Remove all generated files 
 clean: 
-	rm -rf outputs
-	rm -rf site/site
+	@rm -rf outputs
+	@rm -rf site/site
 	@$(MAKE) clean -C reports/proposal
 	@$(MAKE) clean -C reports/reading_summary
 	@$(MAKE) clean -C reports/climate-attitudes-eda
 	@$(MAKE) clean -C presentations/project_plan
-	rm .docker-r
-	rm ${CA_BUILT_ASSETS}/.extract
+	@rm .docker-r
+	@rm ${CA_BUILT_ASSETS}/.extract
 
