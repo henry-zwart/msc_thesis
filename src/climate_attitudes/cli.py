@@ -10,6 +10,8 @@ from pydantic_settings import (
 from rich.console import Console
 
 from climate_attitudes.settings import Config
+import climate_attitudes.datasets.imputed as imp_ds
+import climate_attitudes.datasets.imputed_reduced as red_ds
 
 console = Console()
 
@@ -43,7 +45,40 @@ class BuildDataCommand(BaseCommand):
             self.prune_error_participants,
             self.filter_valid,
         )
-        ds.write()
+        ds.write(force=True)
+
+
+class CreateImputedDatasetCommand(BaseCommand):
+    name: str
+    force: bool = False
+
+    def cli_cmd(self) -> None:
+        match self.name:
+            case "ds1":
+                ds_spec = imp_ds
+            case "ds1_5":
+                ds_spec = red_ds
+            case _:
+                raise RuntimeError(f"Unknown dataset: '{self.name}'")
+
+        ds = (
+            Dataset.load(self.settings)
+            .filter_columns(ds_spec.ALL_COLS)
+            .filter_at_least_one_resp(ds_spec.QUESTION_COLS)
+            .cast_enum_to_int()
+            .transform(*ds_spec.TRANSFORMS)
+            .reverse_coding(ds_spec.REVERSE_CODING)
+            .impute_viterbi(ds_spec.QUESTION_COLS)
+        )
+        ds.write(name=self.name, force=self.force)
+
+
+class CreateSubCommand(BaseModel):
+    base_dataset: CliSubCommand[BuildDataCommand]
+    imputed_dataset: CliSubCommand[CreateImputedDatasetCommand]
+
+    def cli_cmd(self) -> None:
+        CliApp.run_subcommand(self)
 
 
 class CAData(
@@ -56,6 +91,7 @@ class CAData(
     """Climate attitudes dataset CLI."""
 
     build: CliSubCommand[BuildDataCommand]
+    create: CliSubCommand[CreateSubCommand]
 
     def cli_cmd(self):
         """Run the CLI application."""

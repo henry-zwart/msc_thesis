@@ -430,12 +430,6 @@ class DataExtract:
             response = response.with_columns(expr)
 
         # Cast enum-type columns
-        print(
-            response.select("participant_id", "wave", pl.col("cc2"))
-            .sort(by=("participant_id", "wave"))
-            .collect()
-            .head(5)
-        )
         response = response.with_columns(
             pl.col("dem_educ").cast(Education),
             pl.col("dem_male").cast(Gender),

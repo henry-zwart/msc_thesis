@@ -1,3 +1,4 @@
+from sklearn.covariance import GraphicalLasso
 from enum import StrEnum
 
 import numpy as np
@@ -9,6 +10,7 @@ import polars.selectors as cs
 class Correlation(StrEnum):
     PEARSON = "Pearson correlation"
     PARTIAL = "partial correlation"
+    PARTIAL_GLASSO = "partial correlation (graphical LASSO)"
     VAR_TEMPORAL = "VAR (Temporal)"
     VAR_CONTEMPORANEOUS = "VAR (Contemporaneous)"
 
@@ -24,7 +26,7 @@ class Correlation(StrEnum):
                         f"One or more required columns were missing for VAR "
                         f"calculation: {not_present}"
                     )
-            case Correlation.PEARSON | Correlation.PARTIAL:
+            case Correlation.PEARSON | Correlation.PARTIAL | Correlation.PARTIAL_GLASSO:
                 # Remove survey metadata columns
                 found_cols = []
                 for col in ("wave", "participant_id"):
@@ -38,6 +40,16 @@ class Correlation(StrEnum):
                 return df.to_pandas().corr().values
             case Correlation.PARTIAL:
                 return pcorr(df).to_numpy()
+            case Correlation.PARTIAL_GLASSO:
+                X = df.to_numpy()
+                glasso = GraphicalLasso(max_iter=1000)
+                glasso.fit(X)
+                precision = glasso.precision_
+                partial_corr = -precision / np.sqrt(
+                    np.outer(np.diag(precision), np.diag(precision))
+                )  # ty: ignore
+                np.fill_diagonal(partial_corr, 1)
+                return partial_corr
             case Correlation.VAR_TEMPORAL:
                 B, _ = fit_var(df)
                 return B

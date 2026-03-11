@@ -245,3 +245,4 @@ Cargo.lock
 site/site/**
 **/*.html
 .docker-r
+outputs/**

@@ -30,20 +30,33 @@ SITE_REPORTS = \
 SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
           $(wildcard site/**/*.css) $(wildcard site/**/*.js)
 
-ASSETS := \
-		${CA_BUILT_ASSETS}/item.parquet \
-		${CA_BUILT_ASSETS}/question.parquet \
-		${CA_BUILT_ASSETS}/columns.parquet \
-		${CA_BUILT_ASSETS}/participant.parquet \
-		${CA_BUILT_ASSETS}/response.parquet 
 
-.PHONY: clean serve data-assets all-reports
+QUARTO_REPORTS := \
+		outputs/reports/index_eda_ds1_5/index_eda.html \
+		outputs/reports/index_eda_ds1/index_eda.html
+
+DATASETS := \
+	    ${CA_BUILT_ASSETS}/base/metadata.json \
+	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
+	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
+
+# ASSETS := \
+# 		${CA_BUILT_ASSETS}/item.parquet \
+# 		${CA_BUILT_ASSETS}/question.parquet \
+# 		${CA_BUILT_ASSETS}/columns.parquet \
+# 		${CA_BUILT_ASSETS}/participant.parquet \
+# 		${CA_BUILT_ASSETS}/response.parquet 
+
+.PHONY: clean serve data-assets quarto-reports all-reports
 
 all: site/site/index.html all-reports
 
 all-reports: $(REPORTS)
 
-data-assets: $(ASSETS)
+quarto-reports: $(QUARTO_REPORTS)
+
+data-assets: $(DATASETS)
+
 
 # Serve site locally
 serve:
@@ -93,20 +106,54 @@ outputs:
 	@mkdir -p outputs
 
 
-# Extract raw climate attitudes data
-${CA_BUILT_ASSETS}/.extract: src/climate_attitudes/schema/extract.py \
+outputs/reports/index_eda_%/index_eda.html: \
+			reports/index-eda/index_eda.qmd \
+			${CA_BUILT_ASSETS}/%/metadata.json
+	uv run quarto render $< \
+		--execute-daemon-restart \
+		--output-dir ../../outputs/reports/index_eda_$* \
+		-P ds_name:$*
+
+
+${CA_BUILT_ASSETS}/ds1_5/metadata.json: ${CA_BUILT_ASSETS}/base/metadata.json
+	uv run cadata create imputed-dataset --name ds1_5 --force
+
+${CA_BUILT_ASSETS}/ds1/metadata.json: ${CA_BUILT_ASSETS}/base/metadata.json
+	uv run cadata create imputed-dataset --name ds1 --force
+
+
+${CA_BUILT_ASSETS}/base/metadata.json: \
+			src/climate_attitudes/dataset.py \
+			src/climate_attitudes/data_extract.py \
+			src/climate_attitudes/schema/dataset.py \
+			src/climate_attitudes/schema/extract.py \
 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
 			${CA_STATIC_ASSETS}/item_columns.json \
+			${CA_STATIC_ASSETS}/item_groups.csv \
+			${CA_STATIC_ASSETS}/categories.csv \
 			${CA_STATIC_ASSETS}/error_items.csv \
+			${CA_STATIC_ASSETS}/variable_names.csv \
 			${CA_STATIC_ASSETS}/ideology_type.csv \
-			${CA_STATIC_ASSETS}/lee_2025_items.csv \
-			| ${CA_BUILT_ASSETS}/extract
-	uv run cadata extract && touch $@
+			${CA_STATIC_ASSETS}/lee_2025_items.csv
+	uv run cadata create base-dataset --prune-error-participants --filter-valid
 
 
-${CA_BUILT_ASSETS}/extract: 
-	mkdir -p $@
+
+# # Extract raw climate attitudes data
+# ${CA_BUILT_ASSETS}/.extract: src/climate_attitudes/schema/extract.py \
+# 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+# 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
+# 			${CA_STATIC_ASSETS}/item_columns.json \
+# 			${CA_STATIC_ASSETS}/error_items.csv \
+# 			${CA_STATIC_ASSETS}/ideology_type.csv \
+# 			${CA_STATIC_ASSETS}/lee_2025_items.csv \
+# 			| ${CA_BUILT_ASSETS}/extract
+# 	uv run cadata extract && touch $@
+#
+#
+# ${CA_BUILT_ASSETS}/extract: 
+# 	mkdir -p $@
 
 # == Convert Rdata response files to parquet.
 # WARNING: Takes ~12 minutes

@@ -22,6 +22,8 @@ class Dataset:
     participant: pl.LazyFrame
     response: pl.LazyFrame
 
+    validated: bool = False
+
     def __init__(self, config: Config):
         self.config = config
 
@@ -71,77 +73,96 @@ class Dataset:
 
         return self
 
-    def write(self):
-        self.codebook.sink_parquet(self.config.built_assets / "codebook.parquet")
-        self.item.sink_parquet(self.config.built_assets / "item.parquet")
-        self.question.sink_parquet(self.config.built_assets / "question.parquet")
-        self.columns.sink_parquet(self.config.built_assets / "columns.parquet")
-        self.participant.sink_parquet(self.config.built_assets / "participant.parquet")
-        self.response.sink_parquet(self.config.built_assets / "response.parquet")
+    def write(self, name: str = "base", force: bool = False):
+        dir = self.config.built_assets / name
+        if (dir / "metadata.json").exists() and not force:
+            raise RuntimeError(
+                f"Dataset already exists at path '{dir}'. Pass `force=True` to "
+                f"overwrite."
+            )
+        elif (dir / "metadata.json").exists() and force:
+            print(f"Overwriting existing dataset at path '{dir}'.")
+        else:
+            print(f"Creating new directory at path '{dir}'.")
+            # If dir exists without metadata file, treat as partial dataset; overwrite
+            dir.mkdir(parents=True, exist_ok=True)
+
+        self.codebook.sink_parquet(dir / "codebook.parquet")
+        self.item.sink_parquet(dir / "item.parquet")
+        self.question.sink_parquet(dir / "question.parquet")
+        self.columns.sink_parquet(dir / "columns.parquet")
+        self.participant.sink_parquet(dir / "participant.parquet")
+        self.response.sink_parquet(dir / "response.parquet")
 
         md = dict(
             prune_survey_error_participants=self.prune_survey_error_participants,
             filter_valid=self.filter_valid,
+            validated=self.validated,
         )
-        with (self.config.built_assets / "metadata.json").open("w") as f:
+        with (dir / "metadata.json").open("w") as f:
             json.dump(md, f)
 
     @classmethod
-    def load(cls, config: Config) -> Dataset:
+    def load(cls, config: Config, name: str = "base") -> Dataset:
         ds = cls(config)
+        dir = config.built_assets / name
+        if not (dir / "metadata.json").exists():
+            raise FileExistsError(f"No dataset found at path '{dir}'.")
 
-        try:
-            with (config.built_assets / "metadata.json").open("r") as f:
-                md = json.load(f)
-
-        except FileExistsError:
-            raise RuntimeError(
-                f"Could not find metadata file for built assets at "
-                f"`{config.built_assets}`. Try rebuilding assets."
-            )
+        with (dir / "metadata.json").open("r") as f:
+            md = json.load(f)
 
         print("Loading built assets:")
         for k, v in md.items():
             print(f"  {k}={v}")
 
-        ds.codebook = pl.scan_parquet(config.built_assets / "codebook.parquet")
-        ds.item = pl.scan_parquet(config.built_assets / "item.parquet")
-        ds.question = pl.scan_parquet(config.built_assets / "question.parquet")
-        ds.columns = pl.scan_parquet(config.built_assets / "columns.parquet")
-        ds.participant = pl.scan_parquet(config.built_assets / "participant.parquet")
-        ds.response = pl.scan_parquet(config.built_assets / "response.parquet")
-        ds._validate()
+        ds.prune_survey_error_participants = md["prune_survey_error_participants"]
+        ds.filter_valid = md["filter_valid"]
+        ds.validated = md["validated"]
+
+        ds.codebook = pl.scan_parquet(dir / "codebook.parquet")
+        ds.item = pl.scan_parquet(dir / "item.parquet")
+        ds.question = pl.scan_parquet(dir / "question.parquet")
+        ds.columns = pl.scan_parquet(dir / "columns.parquet")
+        ds.participant = pl.scan_parquet(dir / "participant.parquet")
+        ds.response = pl.scan_parquet(dir / "response.parquet")
+
+        if not ds.validated:
+            ds._validate()
+
+        return ds
+
+    def clone(self) -> Dataset:
+        ds = Dataset(self.config.copy())
+
+        ds.prune_survey_error_participants = self.prune_survey_error_participants
+        ds.filter_valid = self.filter_valid
+        ds.validated = self.validated
+
+        ds.codebook = self.codebook.clone()
+        ds.item = self.item.clone()
+        ds.question = self.question.clone()
+        ds.columns = self.columns.clone()
+        ds.participant = self.participant.clone()
+        ds.response = self.response.clone()
+
         return ds
 
     def impute_viterbi(
         self, columns: list[str | pl.Expr], impute_waves: list[int] | None = None
     ) -> Dataset:
-        new_resp = impute_viterbi(
+        ds = self.clone()
+        ds.response = impute_viterbi(
             self.response.clone().collect(),  # ty: ignore
             columns=columns,
             impute_waves=impute_waves,
-        )
-
-        ds = Dataset(self.config.copy())
-        ds.codebook = self.codebook.clone()
-        ds.item = self.item.clone()
-        ds.question = self.question.clone()
-        ds.columns = self.columns.clone()
-        ds.participant = self.participant.clone()
-        ds.response = new_resp.lazy()
+        ).lazy()
 
         return ds
 
     def filter_columns(self, columns: list[str | pl.Expr]) -> Dataset:
-        new_resp = self.response.select(*columns).clone()
-
-        ds = Dataset(self.config.copy())
-        ds.codebook = self.codebook.clone()
-        ds.item = self.item.clone()
-        ds.question = self.question.clone()
-        ds.columns = self.columns.clone()
-        ds.participant = self.participant.clone()
-        ds.response = new_resp
+        ds = self.clone()
+        ds.response = self.response.select(*columns).clone()
 
         return ds
 
@@ -162,39 +183,27 @@ class Dataset:
             .implode()
         )
 
-        new_resp = self.response.filter(
+        ds = self.clone()
+        ds.participant = self.participant.filter(
             pl.col("participant_id").is_in(keep_pids)
         ).clone()
-        new_part = self.participant.filter(
+        ds.response = self.response.filter(
             pl.col("participant_id").is_in(keep_pids)
         ).clone()
-
-        ds = Dataset(self.config.copy())
-        ds.codebook = self.codebook.clone()
-        ds.item = self.item.clone()
-        ds.question = self.question.clone()
-        ds.columns = self.columns.clone()
-        ds.participant = new_part
-        ds.response = new_resp
 
         return ds
 
     def transform(self, *expr: pl.Expr) -> Dataset:
-        new_resp = self.response.clone().with_columns(*expr)
-
-        ds = Dataset(self.config.copy())
-        ds.codebook = self.codebook.clone()
-        ds.item = self.item.clone()
-        ds.question = self.question.clone()
-        ds.columns = self.columns.clone()
-        ds.participant = self.participant.clone()
-        ds.response = new_resp
+        ds = self.clone()
+        ds.response = self.response.clone().with_columns(*expr)
 
         return ds
 
     def cast_enum_to_int(self) -> Dataset:
-        self.response = self.response.with_columns(cs.enum().cast(pl.Int64))
-        return self
+        ds = self.clone()
+        ds.response = self.response.with_columns(cs.enum().cast(pl.Int64)).clone()
+
+        return ds
 
     def reverse_coding(self, columns: list[str | pl.Expr]) -> Dataset:
         exprs = []
@@ -207,20 +216,16 @@ class Dataset:
             else:
                 raise TypeError(f"Unsupported column type: {type(col)}")
 
-        self.response = self.response.with_columns(exprs)
-        return self
+        ds = self.clone()
+        ds.response = self.response.with_columns(exprs).clone()
+
+        return ds
 
     def standardise(self, columns: cs.Selector | pl.Expr) -> Dataset:
-        new_resp = self.response.with_columns(
+        ds = self.clone()
+        ds.response = self.response.with_columns(
             (columns - columns.mean()) / columns.std()
         )
-        ds = Dataset(self.config.copy())
-        ds.codebook = self.codebook.clone()
-        ds.item = self.item.clone()
-        ds.question = self.question.clone()
-        ds.columns = self.columns.clone()
-        ds.participant = self.participant.clone()
-        ds.response = new_resp
 
         return ds
 
@@ -231,6 +236,8 @@ class Dataset:
         schema.OutputItemColumnsSchema.validate(self.columns)
         schema.OutputParticipantSchema.validate(self.participant)
         schema.OutputResponseSchema.validate(self.response)
+
+        self.validated = True
 
     def _reorder_columns(self):
         # Response
