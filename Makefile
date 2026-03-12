@@ -33,16 +33,20 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 
 QUARTO_REPORTS := \
 		outputs/reports/index_eda_ds1_5/index_eda.html \
-		outputs/reports/index_eda_ds1/index_eda.html
+		outputs/reports/index_eda_ds1/index_eda.html \
+		outputs/reports/index_eda_beliefs/index_eda.html \
+		outputs/reports/index_eda_attitudes/index_eda.html
 
 DATASETS := \
 	    ${CA_BUILT_ASSETS}/base/metadata.json \
 	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
+	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json \
+	    ${CA_BUILT_ASSETS}/beliefs/metadata.json \
+	    ${CA_BUILT_ASSETS}/attitudes/metadata.json
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
-all: site/site/index.html all-reports
+all: site/site/index.html all-reports quarto-reports
 
 all-reports: $(REPORTS)
 
@@ -65,7 +69,7 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 	done
 	@cp -r outputs/* site/docs
 	@printf "Site    → Building site...\n"
-	@uv run --only-group docs mkdocs build -f site/mkdocs.yml
+	@uv run --only-group docs mkdocs build -f site/mkdocs.yml --quiet
 	@printf "Site    → Done.\n"
 
 
@@ -102,19 +106,43 @@ outputs/reports/index_eda_%/index_eda.html: \
 			reports/index-eda/index_eda.qmd \
 			${CA_BUILT_ASSETS}/%/metadata.json \
 			| outputs/reports
-	uv run quarto render $< \
+	@printf "Quarto  → Build 'index_eda_$*.html'...\n"
+	@uv run quarto render $< \
 			--execute-daemon-restart \
 			--output-dir index_eda_$* \
 			-P ds_name:$* && \
+		printf "Quarto  → Removing old 'index_eda_$*.html'...\n"
+		rm -rf $(@D) && \
+		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
 		mv reports/index-eda/index_eda_$* $(@D)
 		
 
 
-${CA_BUILT_ASSETS}/ds1_5/metadata.json: ${CA_BUILT_ASSETS}/base/metadata.json
-	uv run cadata create imputed-dataset --name ds1_5 --force
+# === Dataset construction ===
+${CA_BUILT_ASSETS}/beliefs/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/beliefs.py
+	@printf "Dataset → Build beliefs dataset...\n"
+	@uv run cadata create imputed-dataset --name beliefs --force
 
-${CA_BUILT_ASSETS}/ds1/metadata.json: ${CA_BUILT_ASSETS}/base/metadata.json
-	uv run cadata create imputed-dataset --name ds1 --force
+${CA_BUILT_ASSETS}/attitudes/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/attitudes.py
+	@printf "Dataset → Build attitudes dataset...\n"
+	@uv run cadata create imputed-dataset --name attitudes --force
+
+${CA_BUILT_ASSETS}/ds1_5/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/imputed_reduced.py
+	@printf "Dataset → Build reduced imputed dataset...\n"
+	@uv run cadata create imputed-dataset --name ds1_5 --force
+
+
+${CA_BUILT_ASSETS}/ds1/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/imputed.py
+	@printf "Dataset → Build imputed dataset...\n"
+	@uv run cadata create imputed-dataset --name ds1 --force
 
 
 ${CA_BUILT_ASSETS}/base/metadata.json: \
@@ -131,7 +159,8 @@ ${CA_BUILT_ASSETS}/base/metadata.json: \
 			${CA_STATIC_ASSETS}/variable_names.csv \
 			${CA_STATIC_ASSETS}/ideology_type.csv \
 			${CA_STATIC_ASSETS}/lee_2025_items.csv
-	uv run cadata create base-dataset --prune-error-participants --filter-valid
+	@printf "Dataset → Build base dataset...\n"
+	@uv run cadata create base-dataset --prune-error-participants --filter-valid
 
 
 # == Convert Rdata response files to parquet.
@@ -154,6 +183,4 @@ clean:
 	@$(MAKE) clean -C reports/reading_summary
 	@$(MAKE) clean -C reports/climate-attitudes-eda
 	@$(MAKE) clean -C presentations/project_plan
-	@rm .docker-r
-	@rm ${CA_BUILT_ASSETS}/.extract
 

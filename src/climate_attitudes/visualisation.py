@@ -1,4 +1,7 @@
+from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 from pathlib import Path
+
+import scipy as sp
 
 import iplotx as ipx
 import matplotlib.colors as mcolors
@@ -268,7 +271,7 @@ def plot_corr_with_dendro(
     y_labels = np.asarray(df.columns)
 
     # If y_vars specified, select the required rows
-    if y_vars is None:
+    if y_vars is None or (isinstance(y_vars, np.ndarray) and y_vars.size == 0):
         keep_idxes = np.arange(len(y_labels))
     else:
         keep_idxes: npt.NDArray[np.int64] = np.asarray(
@@ -293,12 +296,19 @@ def plot_corr_with_dendro(
         width = corr.shape[1] * 0.25 + 0.5
         figsize = (width, height)
 
-    category_pal = sns.husl_palette(5, s=0.45)
+    category_pal = sns.husl_palette(6, s=0.45)
     category_lut = dict(
         zip(
             map(
                 str,
-                ["Belief", "Experience", "Attitude", "Behaviour", "Demographic"],
+                [
+                    "Belief",
+                    "Experience",
+                    "Attitude",
+                    "Behaviour",
+                    "Demographic",
+                    "External factor",
+                ],
             ),
             category_pal,
         )
@@ -312,9 +322,16 @@ def plot_corr_with_dendro(
     else:
         y_category_colours = None
 
+    if kind == Correlation.PARTIAL_GLASSO:
+        mask = abs(corr) < 0.01
+    else:
+        mask = None
+    mask = None
+
     if no_cbar:
         g = sns.clustermap(
             corr,
+            mask=mask,
             center=0,
             cmap=DIVERGING_CMAP,
             row_colors=y_category_colours,
@@ -332,6 +349,7 @@ def plot_corr_with_dendro(
     else:
         g = sns.clustermap(
             corr,
+            mask=mask,
             center=0,
             cmap=DIVERGING_CMAP,
             row_colors=y_category_colours,
@@ -360,3 +378,23 @@ def plot_corr_with_dendro(
 
     if y_vars is None:
         g.ax_row_dendrogram.remove()
+
+
+def plot_feature_dendro(
+    df: pl.DataFrame,
+    method: LinkageMethod = LinkageMethod.SINGLE,
+    ax: Axes | None = None,
+):
+    ax = ax or plt.gca()
+
+    X = df.to_numpy()
+    linkage_mat = features_linkage(X, method=method)
+    sp.cluster.hierarchy.dendrogram(
+        linkage_mat, labels=df.columns, orientation="right", ax=ax
+    )
+    plt.step(ax.collections, linewidth=1)
+
+    ax.set_xticks([])
+
+    for spine in ax.spines.values():
+        spine.set_visible(False)

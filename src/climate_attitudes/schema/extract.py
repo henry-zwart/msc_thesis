@@ -1112,6 +1112,8 @@ class OutputResponseSchema(BaseSchema):
     pol_worry_econ: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
 
     # Trust in ...
+    # Congress
+    pol_trust_cong: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     # State government / governer
     pol_trust_state: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     # International orgs (e.g. UN, WHO)

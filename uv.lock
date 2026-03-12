@@ -80,6 +80,15 @@ wheels = [
 ]
 
 [[package]]
+name = "array-api-compat"
+version = "1.14.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/89/e5/9a12dd1c2b0ad61f3c3ad0fc14b888c65fd735dd9d26805f77317303cbe5/array_api_compat-1.14.0.tar.gz", hash = "sha256:c819ba707f5c507800cb545f7e6348ff1ecc46538381d9ad9b371ffc9cd6d784", size = 106369, upload-time = "2026-02-26T12:02:42.452Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a0/d3/54cd560804a8c2b898824778e86c13c2a14600bc83532a9c4f69f2f469c3/array_api_compat-1.14.0-py3-none-any.whl", hash = "sha256:ed5af1f9b6595a199c942505f281ec994892556b6efc24679a0501e87a7d6279", size = 60124, upload-time = "2026-02-26T12:02:41.127Z" },
+]
+
+[[package]]
 name = "arrow"
 version = "1.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -438,6 +447,22 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a9/95/a3dbbb5028f35eafb79008e7522a75244477d2838f38cbb722248dabc2a8/cycler-0.12.1.tar.gz", hash = "sha256:88bb128f02ba341da8ef447245a9e138fae777f6a23943da4540077d3601eb1c", size = 7615, upload-time = "2023-10-07T05:32:18.335Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl", hash = "sha256:85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30", size = 8321, upload-time = "2023-10-07T05:32:16.783Z" },
+]
+
+[[package]]
+name = "dcor"
+version = "0.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "array-api-compat" },
+    { name = "joblib" },
+    { name = "numba" },
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/14/87/2a3141de80310e503d11d5f23d951c41a7f86aeae2045bbec54a480c748a/dcor-0.7.tar.gz", hash = "sha256:386d408596d7ec39af28b52c89e9fc438c4f13d8ed3d673e2c3b21029f57cbce", size = 69061, upload-time = "2026-01-17T18:01:58.04Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a4/70/d82c194d53d684b6e75a228170a36f414cc86f5824693f6b0e443032461d/dcor-0.7-py3-none-any.whl", hash = "sha256:2a5875467d2b554a9d7673e574a26f9ba06fc53f3229d49cd9a18c90d7d25042", size = 44580, upload-time = "2026-01-17T18:01:56.926Z" },
 ]
 
 [[package]]
@@ -1553,6 +1578,7 @@ name = "msc-thesis"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "dcor" },
     { name = "fastexcel" },
     { name = "graphviz" },
     { name = "iplotx" },
@@ -1589,6 +1615,7 @@ docs = [
 
 [package.metadata]
 requires-dist = [
+    { name = "dcor", specifier = ">=0.7" },
     { name = "fastexcel", specifier = ">=0.18.0" },
     { name = "graphviz", specifier = ">=0.21" },
     { name = "iplotx", specifier = ">=1.7.0" },

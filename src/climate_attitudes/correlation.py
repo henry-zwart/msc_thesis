@@ -1,6 +1,10 @@
 from sklearn.covariance import GraphicalLasso
 from enum import StrEnum
 
+from dcor import distance_correlation, partial_distance_correlation
+
+from tqdm import trange
+
 import numpy as np
 import numpy.typing as npt
 import polars as pl
@@ -13,6 +17,8 @@ class Correlation(StrEnum):
     PARTIAL_GLASSO = "partial correlation (graphical LASSO)"
     VAR_TEMPORAL = "VAR (Temporal)"
     VAR_CONTEMPORANEOUS = "VAR (Contemporaneous)"
+    DISTANCE_CORR = "distance correlation"
+    PARTIAL_DISTANCE_CORR = "partial distance correlation"
 
     def calculate(self, df: pl.DataFrame) -> npt.NDArray[np.float64]:
         match self:
@@ -26,7 +32,13 @@ class Correlation(StrEnum):
                         f"One or more required columns were missing for VAR "
                         f"calculation: {not_present}"
                     )
-            case Correlation.PEARSON | Correlation.PARTIAL | Correlation.PARTIAL_GLASSO:
+            case (
+                Correlation.PEARSON
+                | Correlation.PARTIAL
+                | Correlation.PARTIAL_GLASSO
+                | Correlation.DISTANCE_CORR
+                | Correlation.PARTIAL_DISTANCE_CORR
+            ):
                 # Remove survey metadata columns
                 found_cols = []
                 for col in ("wave", "participant_id"):
@@ -56,6 +68,25 @@ class Correlation(StrEnum):
             case Correlation.VAR_CONTEMPORANEOUS:
                 _, K = fit_var(df)
                 return K
+            case Correlation.DISTANCE_CORR:
+                X = df.to_numpy().T.astype(np.float64)
+                C = np.eye(X.shape[0], dtype=np.float64)
+                for i in trange(X.shape[0]):
+                    for k in range(i):
+                        dist_corr = distance_correlation(X[i], X[k])
+                        C[i, k] = C[k, i] = dist_corr
+                return C
+            case Correlation.PARTIAL_DISTANCE_CORR:
+                X = df.to_numpy().T.astype(np.float64)
+                C = np.eye(X.shape[0], dtype=np.float64)
+                for i in trange(X.shape[0]):
+                    for k in range(i):
+                        Z = X[[j for j in range(X.shape[0]) if j not in (i, k)]]
+                        partial_dist_corr = partial_distance_correlation(
+                            X[i], X[k], Z.T
+                        )
+                        C[i, k] = C[k, i] = partial_dist_corr
+                return C
 
 
 def filter_vars_by_abs_corr(

@@ -315,3 +315,5 @@ PoliticalAffiliation = pl.Enum(
 PoliticalIdeology = pl.Enum(
     ["Very conservative", "Conservative", "Moderate", "Liberal", "Very liberal"]
 )
+
+President = pl.Enum(["Trump", "Biden"])

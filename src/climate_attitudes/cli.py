@@ -12,6 +12,8 @@ from rich.console import Console
 from climate_attitudes.settings import Config
 import climate_attitudes.datasets.imputed as imp_ds
 import climate_attitudes.datasets.imputed_reduced as red_ds
+import climate_attitudes.datasets.beliefs as beliefs_ds
+import climate_attitudes.datasets.attitudes as attitudes_ds
 
 console = Console()
 
@@ -58,6 +60,10 @@ class CreateImputedDatasetCommand(BaseCommand):
                 ds_spec = imp_ds
             case "ds1_5":
                 ds_spec = red_ds
+            case "beliefs":
+                ds_spec = beliefs_ds
+            case "attitudes":
+                ds_spec = attitudes_ds
             case _:
                 raise RuntimeError(f"Unknown dataset: '{self.name}'")
 

@@ -21,8 +21,8 @@ BELIEF_COLS = [
     "cc11",
     "cc12",
     "cvcc4_will",
-    "soc_trust",
-    "soc_help",
+    # "soc_trust",
+    # "soc_help",
     "cvcc10_cc",
 ]
 
@@ -51,6 +51,7 @@ ATTITUDE_COLS = [
     "pol9",
     "pol_affiliation",
     "pol_ideology",
+    "pol_trust_cong",
     "pol_trust_state",
     "pol_trust_io",
     "pol_trust_cdc",
@@ -58,7 +59,7 @@ ATTITUDE_COLS = [
     "pol_trust_epa",
     "pol_trust_sci",
     "pol_laws_cong",
-    "pol_laws_state",
+    # "pol_laws_state",
     # "pol_vote_support",
 ]
 
@@ -69,6 +70,10 @@ BEHAVIOUR_COLS = [
 
 DEMOGRAPHIC_COLS = [
     # "dem_age",
+]
+
+EXTERNAL_FACTORS = [
+    # "current_pres",
 ]
 
 TREATMENT_COLUMNS = [
@@ -92,7 +97,12 @@ TRANSFORMS = [
 ]
 
 QUESTION_COLS = (
-    BELIEF_COLS + EXPERIENCE_COLS + ATTITUDE_COLS + BEHAVIOUR_COLS + DEMOGRAPHIC_COLS
+    BELIEF_COLS
+    + EXPERIENCE_COLS
+    + ATTITUDE_COLS
+    + BEHAVIOUR_COLS
+    + DEMOGRAPHIC_COLS
+    + EXTERNAL_FACTORS
 )
 
 ALL_COLS = SURVEY_COLS + QUESTION_COLS + TREATMENT_COLUMNS
@@ -103,4 +113,5 @@ CATEGORIES = np.asarray(
     + ["Attitude"] * len(ATTITUDE_COLS)
     + ["Behaviour"] * len(BEHAVIOUR_COLS)
     + ["Demographic"] * len(DEMOGRAPHIC_COLS)
+    + ["External factor"] * len(EXTERNAL_FACTORS)
 )

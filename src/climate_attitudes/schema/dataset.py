@@ -4,6 +4,7 @@ from climate_attitudes.schema.enums import (
     ItemCategory,
     UrbanArea,
     PoliticalAffiliation,
+    President,
 )
 import polars as pl
 import pandera.polars as pa
@@ -398,6 +399,8 @@ class OutputResponseSchema(BaseSchema):
     pol_worry_econ: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
 
     # Trust in ...
+    # Congress
+    pol_trust_cong: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     # State government / governer
     pol_trust_state: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     # International orgs (e.g. UN, WHO)
@@ -449,6 +452,7 @@ class OutputResponseSchema(BaseSchema):
     pol_interest: int = pa.Field(in_range=(1, 5))
     pol_affiliation: PoliticalAffiliation  # ty: ignore
     pol_ideology: PoliticalIdeology  # ty: ignore
+    current_pres: President  # ty: ignore
 
     # Would proposal of climate policies make you more or less likely to support a political candidate
     # Change in support for political candidate after proposing climate/covid policies

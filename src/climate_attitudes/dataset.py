@@ -1,5 +1,6 @@
 from __future__ import annotations
-from climate_attitudes.schema.enums import PoliticalAffiliation
+from datetime import date
+from climate_attitudes.schema.enums import PoliticalAffiliation, President
 import json
 
 import polars as pl
@@ -412,6 +413,13 @@ class Dataset:
                     .cast(PoliticalAffiliation)
                     .alias("pol_affiliation")
                 ),
+            )
+            .with_columns(
+                pl.when(pl.col("start_date") <= date(2021, 1, 20))
+                .then(pl.lit("Trump"))
+                .otherwise(pl.lit("Biden"))
+                .cast(President)
+                .alias("current_pres")
             )
             .drop("pol_party", "pol_lean")
         )

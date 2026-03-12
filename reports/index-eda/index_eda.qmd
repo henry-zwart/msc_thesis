@@ -12,27 +12,27 @@ execute:
 from pathlib import Path
 
 import numpy as np
-import scipy as sp
 
-import polars as pl
 import polars.selectors as cs
 
-from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 import seaborn as sns
 
 from statsmodels.multivariate.factor import Factor
-from sklearn.decomposition import PCA, FactorAnalysis
+from sklearn.decomposition import PCA
 
 from climate_attitudes.settings import Config
 from climate_attitudes.dataset import Dataset
 from climate_attitudes.correlation import Correlation, filter_vars_by_abs_corr
 from climate_attitudes import configure_mpl
-from climate_attitudes.visualisation import plot_corr, plot_corr_with_dendro
+from climate_attitudes.visualisation import plot_corr_with_dendro, plot_feature_dendro
 from climate_attitudes.parallel_analysis import pa_random_eigs, pa_true_eigs
-from climate_attitudes.datasets import imputed as imp_ds
-from climate_attitudes.datasets import imputed_reduced as red_ds
+import climate_attitudes.datasets.imputed as imp_ds
+import climate_attitudes.datasets.imputed_reduced as red_ds
+import climate_attitudes.datasets.beliefs as beliefs_ds
+import climate_attitudes.datasets.attitudes as attitudes_ds
+
+from climate_attitudes.feature_clustering import LinkageMethod
 
 FONT_PATH = Path("../../fonts")
 configure_mpl(FONT_PATH)
@@ -52,6 +52,10 @@ match ds_name:
         ds_spec = imp_ds
     case "ds1_5":
         ds_spec = red_ds
+    case "beliefs":
+        ds_spec = beliefs_ds
+    case "attitudes":
+        ds_spec = attitudes_ds
     case _:
         raise RuntimeError(f"Unknown dataset: '{ds_name}'.")
 ```
@@ -83,15 +87,17 @@ For VAR: the contemporaneous GGM reflects the partial correlation heatmap; the t
 
 ```{python}
 plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
-#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
-#plot_corr(resp_std, kind=Correlation.PEARSON, ax=ax);
+```
+
+## Distance
+
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ## Partial
 
 ```{python}
-#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
-#plot_corr(resp_std, kind=Correlation.PARTIAL, ax=ax);
 plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
@@ -104,16 +110,12 @@ plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x
 ## VAR (Contemporaneous)
 
 ```{python}
-#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
-#plot_corr(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, ax=ax);
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ## VAR (Temporal)
 
 ```{python}
-#fig, ax = plt.subplots(figsize=(12,12), constrained_layout=True)
-#plot_corr(resp_std, kind=Correlation.VAR_TEMPORAL, ax=ax);
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
@@ -235,27 +237,32 @@ categories_low_corr = ds_spec.CATEGORIES[low_corr_idxes]
 ::: {.panel-tabset}
 ### Pearson
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### Partial
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### Partial (GLASSO)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### VAR (Contemporaneous)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### VAR (Temporal)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 :::
 
@@ -268,29 +275,59 @@ categories_low_corr = ds_spec.CATEGORIES[low_corr_idxes]
 ::: {.panel-tabset}
 ### Pearson
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PEARSON, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### Partial
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### Partial (GLASSO)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### VAR (Contemporaneous)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
 ### VAR (Temporal)
 ```{python}
-plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
+if low_corr_idxes.any():
+    plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 :::
+
+# Hierarchical feature clustering
+
+::: {.panel-tabset}
+
+## Single linkage
+```{python}
+fig, ax = plt.subplots(figsize=(3,7), constrained_layout=True)
+plot_feature_dendro(resp_std.drop(*ds_spec.SURVEY_COLS), method=LinkageMethod.SINGLE, ax=ax)
+```
+
+## Complete linkage
+```{python}
+fig, ax = plt.subplots(figsize=(3,7), constrained_layout=True)
+plot_feature_dendro(resp_std.drop(*ds_spec.SURVEY_COLS), method=LinkageMethod.COMPLETE, ax=ax)
+```
+
+## Average linkage
+```{python}
+fig, ax = plt.subplots(figsize=(3,7), constrained_layout=True)
+plot_feature_dendro(resp_std.drop(*ds_spec.SURVEY_COLS), method=LinkageMethod.AVERAGE, ax=ax)
+```
+
+:::
+
 
 # EFA
 
@@ -342,19 +379,14 @@ efa = Factor(
 ).fit()
 
 pca = PCA(n_components=n_factor)
-pca.fit(X);
+pca.fit(X)
 ```
 
 ```{python}
-category_pal = sns.husl_palette(5, s=0.45)
+all_categories = ["Belief", "Experience", "Attitude", "Behaviour", "Demographic", "External factor"]
+category_pal = sns.husl_palette(len(all_categories), s=0.45)
 category_lut = dict(
-    zip(
-        map(
-            str,
-            ["Belief", "Experience", "Attitude", "Behaviour", "Demographic"],
-        ),
-        category_pal,
-    )
+    zip(map(str, all_categories), category_pal)
 )
 
 category_colours = [category_lut[c] for c in ds_spec.CATEGORIES]

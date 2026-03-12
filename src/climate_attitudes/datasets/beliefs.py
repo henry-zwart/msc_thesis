@@ -21,83 +21,24 @@ BELIEF_COLS = [
     "cc11",
     "cc12",
     "cvcc4_will",
-    "soc_trust",
-    "soc_help",
-    "future",
+    # "soc_trust",
+    # "soc_help",
     "cvcc10_cc",
 ]
 
 EXPERIENCE_COLS = []
 
-ATTITUDE_COLS = [
-    "cc3",
-    "cc6",
-    # "ccIO",
-    # "ccGovt",
-    "cvcc_worryothers",
-    "ew5",
-    "cvcc4_should",
-    "cvcc6",
-    "cvcc9_econ",
-    "cvcc9_cc",
-    "cvcc9_cv",
-    "cc_ica",
-    "cc_pol_tax",
-    "cc_pol_car",
-    "pol4",
-    "pol7",
-    "pol7_pi",
-    "pol8",
-    "pol8_pi",
-    "pol9",
-    "pol10",
-    "pol11",
-    "pol11_pi",
-    "pol_affiliation",
-    "pol_ideology",
-    "pol_worry_econ",
-    "pol_trust_cong",
-    "pol_trust_state",
-    "pol_trust_io",
-    "pol_trust_cdc",
-    "pol_trust_news",
-    "pol_trust_epa",
-    "pol_trust_sci",
-    "pol_laws_cong",
-    "pol_laws_state",
-    # "pol_vote_support",
-]
+ATTITUDE_COLS = []
 
-BEHAVIOUR_COLS = [
-    "ew6",
-    "cvcc4_personal",
-]
+BEHAVIOUR_COLS = []
 
-DEMOGRAPHIC_COLS = [
-    # "dem_age",
-    "dem_income",
-    "dem_urban",
-]
+DEMOGRAPHIC_COLS = []
 
-EXTERNAL_FACTORS = [
-    "current_pres",
-]
+EXTERNAL_FACTORS = []
 
-TREATMENT_COLUMNS = [
-    # "Group_pol_vote_support",
-]
+TREATMENT_COLUMNS = []
 
-REVERSE_CODING = [
-    "cc10",
-    "pol4",
-    "pol8",
-    "pol8_pi",
-    "pol9",
-    "pol10",
-    "pol11",
-    "pol11_pi",
-    "dem_urban",
-]
+REVERSE_CODING = ["cc10"]
 
 TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
