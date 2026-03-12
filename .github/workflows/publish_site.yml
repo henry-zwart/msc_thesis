@@ -27,6 +27,12 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v7
 
+    - name: Install thesis template
+      run: |
+          mkdir -p ~/.local/share/typst/packages/local/drifting-cls-thesis
+          git clone https://github.com/henry-zwart/drifting-cls-thesis.git \
+            ~/.local/share/typst/packages/local/drifting-cls-thesis/0.1.0
+
     - name: Build site
       run: make site/site/index.html
 
