@@ -28,7 +28,7 @@ jobs:
       uses: astral-sh/setup-uv@v7
 
     - name: Build site
-      run: make
+      run: make site/site/index.html
 
     - name: Upload site artefacts
       id: deployment

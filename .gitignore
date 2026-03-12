@@ -243,6 +243,9 @@ Cargo.lock
 
 # Site files
 site/site/**
+site/docs/reports
+site/docs/slides
 **/*.html
+
 .docker-r
 outputs/**

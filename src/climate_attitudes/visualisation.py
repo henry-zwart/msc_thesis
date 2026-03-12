@@ -392,7 +392,7 @@ def plot_feature_dendro(
     sp.cluster.hierarchy.dendrogram(
         linkage_mat, labels=df.columns, orientation="right", ax=ax
     )
-    plt.step(ax.collections, linewidth=1)
+    plt.setp(ax.collections, linewidth=1)
 
     ax.set_xticks([])
 
