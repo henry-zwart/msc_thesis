@@ -1,0 +1,3 @@
+[submodule "typst-packages/local/drifting-cls-thesis/0.1.0"]
+	path = typst-packages/local/drifting-cls-thesis/0.1.0
+	url = git@github.com:henry-zwart/drifting-cls-thesis.git

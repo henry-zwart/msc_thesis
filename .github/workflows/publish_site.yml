@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
+      with:
+        submodules: recursive
 
     - name: Install Typst
       uses: typst-community/setup-typst@v4
@@ -27,14 +29,10 @@ jobs:
     - name: Install uv
       uses: astral-sh/setup-uv@v7
 
-    - name: Install thesis template
-      run: |
-          mkdir -p ~/.local/share/typst/packages/local/drifting-cls-thesis
-          git clone https://github.com/henry-zwart/drifting-cls-thesis.git \
-            ~/.local/share/typst/packages/local/drifting-cls-thesis/0.1.0
-
     - name: Build site
       run: make site/site/index.html
+      env:
+        TYPST_PACKAGE_PATH: ${{ github.workspace }}/typst-packages
 
     - name: Upload site artefacts
       id: deployment
