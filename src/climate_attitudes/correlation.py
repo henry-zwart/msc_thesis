@@ -1,9 +1,8 @@
-from sklearn.covariance import GraphicalLasso
+from sklearn.linear_model import MultiTaskLassoCV
+from sklearn.covariance import GraphicalLassoCV
 from enum import StrEnum
 
 from dcor import distance_correlation, partial_distance_correlation
-
-from tqdm import trange
 
 import numpy as np
 import numpy.typing as npt
@@ -20,7 +19,12 @@ class Correlation(StrEnum):
     DISTANCE_CORR = "distance correlation"
     PARTIAL_DISTANCE_CORR = "partial distance correlation"
 
-    def calculate(self, df: pl.DataFrame) -> npt.NDArray[np.float64]:
+    def calculate(
+        self,
+        df: pl.DataFrame,
+        assume_centred: bool = False,
+        regularised: bool = False,
+    ) -> npt.NDArray[np.float64]:
         match self:
             case Correlation.VAR_CONTEMPORANEOUS | Correlation.VAR_TEMPORAL:
                 not_present = []
@@ -54,7 +58,7 @@ class Correlation(StrEnum):
                 return pcorr(df).to_numpy()
             case Correlation.PARTIAL_GLASSO:
                 X = df.to_numpy()
-                glasso = GraphicalLasso(max_iter=1000)
+                glasso = GraphicalLassoCV(max_iter=100, assume_centred=assume_centred)
                 glasso.fit(X)
                 precision = glasso.precision_
                 partial_corr = -precision / np.sqrt(
@@ -63,15 +67,19 @@ class Correlation(StrEnum):
                 np.fill_diagonal(partial_corr, 1)
                 return partial_corr
             case Correlation.VAR_TEMPORAL:
-                B, _ = fit_var(df)
+                B, _ = fit_var(
+                    df, assume_centred=assume_centred, regularised=regularised
+                )
                 return B
             case Correlation.VAR_CONTEMPORANEOUS:
-                _, K = fit_var(df)
+                _, K = fit_var(
+                    df, assume_centred=assume_centred, regularised=regularised
+                )
                 return K
             case Correlation.DISTANCE_CORR:
                 X = df.to_numpy().T.astype(np.float64)
                 C = np.eye(X.shape[0], dtype=np.float64)
-                for i in trange(X.shape[0]):
+                for i in range(X.shape[0]):
                     for k in range(i):
                         dist_corr = distance_correlation(X[i], X[k])
                         C[i, k] = C[k, i] = dist_corr
@@ -79,7 +87,7 @@ class Correlation(StrEnum):
             case Correlation.PARTIAL_DISTANCE_CORR:
                 X = df.to_numpy().T.astype(np.float64)
                 C = np.eye(X.shape[0], dtype=np.float64)
-                for i in trange(X.shape[0]):
+                for i in range(X.shape[0]):
                     for k in range(i):
                         Z = X[[j for j in range(X.shape[0]) if j not in (i, k)]]
                         partial_dist_corr = partial_distance_correlation(
@@ -144,6 +152,8 @@ def pcorr(df: pl.DataFrame) -> pl.DataFrame:
 
 def fit_var(
     df: pl.DataFrame,
+    assume_centred: bool = False,
+    regularised: bool = False,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     df = df.clone()
 
@@ -152,6 +162,13 @@ def fit_var(
     min_wave, max_wave = df.select(
         pl.col("wave").min().alias("min_wave"), pl.col("wave").max().alias("max_wave")
     ).row(0)
+
+    # Centre to avoid dealing with intercepts
+    if not assume_centred:
+        df = df.with_columns(
+            cs.exclude("participant_id", "wave")
+            - cs.exclude("participant_id", "wave").mean()
+        )
 
     # Extract regressors and responses (first wave, second wave for each participant)
     regressor_waves = df.filter(pl.col("wave") < max_wave).sort(
@@ -163,14 +180,20 @@ def fit_var(
     X = regressor_waves.select(cs.exclude("participant_id", "wave")).to_numpy()
     Y = response_waves.select(cs.exclude("participant_id", "wave")).to_numpy()
 
-    # Centre to avoid dealing with intercepts
-    X_mean = X.mean(axis=0)
-    X = X - X_mean
-    Y = Y - X_mean
+    # # Centre to avoid dealing with intercepts
+    # X_mean = X.mean(axis=0)
+    # X = X - X_mean
+    # Y = Y - X_mean
 
     # Regress on prev wave
     # B: Temporal network
-    B, *_ = np.linalg.lstsq(X, Y)
+    # Values in a column are the regression coefficients for that column's question
+    if not regularised:
+        B, *_ = np.linalg.lstsq(X, Y)
+    else:
+        lasso = MultiTaskLassoCV()
+        lasso.fit(X, Y)
+        B = lasso.coef_
 
     # Calculate contemporaneous network (K)
     # 1. Variance-covariance matrix of residuals
