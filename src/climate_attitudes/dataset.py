@@ -150,7 +150,9 @@ class Dataset:
         return ds
 
     def impute_viterbi(
-        self, columns: list[str | pl.Expr], impute_waves: list[int] | None = None
+        self,
+        columns: list[str | pl.Expr],
+        impute_waves: list[int] | None = None,
     ) -> Dataset:
         ds = self.clone()
         ds.response = impute_viterbi(
@@ -158,6 +160,17 @@ class Dataset:
             columns=columns,
             impute_waves=impute_waves,
         ).lazy()
+
+        return ds
+
+    def impute_fill(
+        self,
+        columns: pl.Expr,
+    ) -> Dataset:
+        ds = self.clone()
+        ds.response = ds.response.with_columns(
+            columns.fill_null(strategy="forward")
+        ).with_columns(columns.fill_null(strategy="backward"))
 
         return ds
 
