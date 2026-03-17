@@ -256,8 +256,10 @@ def plot_corr_with_dendro(
     y_vars: list[str] | None = None,
     figsize: tuple[int, int] | tuple[float, float] | None = None,
     no_cbar: bool = False,
+    row_cluster: bool = False,
+    regularised: bool = False,
 ):
-    corr = kind.calculate(df)
+    corr = kind.calculate(df, regularised=regularised)
 
     # Remove survey metadata columns
     found_cols = []
@@ -314,11 +316,11 @@ def plot_corr_with_dendro(
         )
     )
     if x_categories is not None:
-        x_category_colours = [category_lut[c] for c in x_categories]
+        x_category_colours = np.asarray([category_lut[c] for c in x_categories])
     else:
         x_category_colours = None
     if y_categories is not None:
-        y_category_colours = [category_lut[c] for c in y_categories]
+        y_category_colours = np.asarray([category_lut[c] for c in y_categories])
     else:
         y_category_colours = None
 
@@ -327,6 +329,20 @@ def plot_corr_with_dendro(
     else:
         mask = None
     mask = None
+
+    if not row_cluster:
+        cm = sns.clustermap(corr, method=dendro_method, row_cluster=False)
+        col_order = cm.dendrogram_col.reordered_ind
+        ordered_cols = x_labels[col_order]
+        row_order = [i for i, label in enumerate(y_labels) if label in ordered_cols]
+        row_order = sorted(
+            row_order, key=lambda i: np.where(ordered_cols == y_labels[i])[0][0]
+        )
+        plt.close(cm.fig)
+        corr = corr[row_order]
+        y_labels = y_labels[row_order]
+        if y_category_colours is not None:
+            y_category_colours = y_category_colours[row_order]
 
     if no_cbar:
         g = sns.clustermap(
@@ -345,6 +361,7 @@ def plot_corr_with_dendro(
             figsize=figsize,
             fmt=".1f",
             annot=True,
+            row_cluster=row_cluster,
         )
     else:
         g = sns.clustermap(
@@ -363,10 +380,14 @@ def plot_corr_with_dendro(
             figsize=figsize,
             fmt=".1f",
             annot=True,
+            row_cluster=row_cluster,
         )
 
     x_labels = x_labels[g.dendrogram_col.reordered_ind]
-    y_labels = y_labels[g.dendrogram_row.reordered_ind]
+    if row_cluster:
+        y_labels = y_labels[g.dendrogram_row.reordered_ind]
+    else:
+        y_labels = y_labels
 
     g.ax_heatmap.set_xticks(
         np.arange(len(x_labels)) + 0.5,
@@ -376,7 +397,7 @@ def plot_corr_with_dendro(
     )
     g.ax_heatmap.set_yticks(np.arange(len(y_labels)) + 0.5, y_labels, rotation=0)
 
-    if y_vars is None:
+    if y_vars is None and row_cluster:
         g.ax_row_dendrogram.remove()
 
 
