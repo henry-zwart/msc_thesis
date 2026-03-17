@@ -28,6 +28,10 @@ INPUT_QUESTION_COLUMNS = [
     # "ccSolving",
     # "ccCompensation",
     "cvcc_worryothers",
+    "ew3_phy_recent",
+    "ew3_mat_recent",
+    "ew3_men_recent",
+    "ew3_fin_recent",
     "ew5",
     "cvcc4_should",
     "cvcc6",
@@ -65,16 +69,22 @@ TRANSFORMS = [
 VITERBI_IMPUTE_COLS = [
     col
     for col in INPUT_QUESTION_COLUMNS
-    # if col
-    # not in (
-    #     "dem_age",
-    #     # "ccSolving",
-    #     # "ccCompensation",
-    #     # "Variant_ccSolving",
-    #     # "Variant_ccCompensation",
-    # )
+    if col
+    not in (
+        "ew3_phy_recent",
+        "ew3_mat_recent",
+        "ew3_men_recent",
+        "ew3_fin_recent",
+        # "dem_age",
+        # "ccSolving",
+        # "ccCompensation",
+        # "Variant_ccSolving",
+        # "Variant_ccCompensation",
+    )
 ]
-FILL_IMPUTE_COLS = []  # pl.none()#pl.col("dem_age")
+FILL_IMPUTE_COLS = [
+    pl.col(r"^ew3_(phy|mat|fin|men)(_recent)?$")
+]  # pl.none()#pl.col("dem_age")
 
 
 BELIEF_COLS = [
@@ -104,6 +114,10 @@ ATTITUDE_COLS = [
     # "wtp_solve",
     # "wtp_compensation",
     "cvcc_worryothers",
+    "ew3_phy_recent",
+    "ew3_mat_recent",
+    "ew3_men_recent",
+    "ew3_fin_recent",
     "ew5",
     "cvcc4_should",
     "cvcc6",

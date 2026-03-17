@@ -409,10 +409,19 @@ class Dataset:
                 pl.coalesce(pl.col(r"^ew_attribution_(apr|jun|nov)$")).alias(
                     "ew_attribution_recent"
                 ),
-                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$")).alias("ew3_phy_delta"),
-                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$")).alias("ew3_mat_delta"),
-                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$")).alias("ew3_fin_delta"),
-                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$")).alias("ew3_men_delta"),
+                pl.col(r"^ew3_(phy|mat|fin|men)$").fill_null(1),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_phy$"))
+                .fill_null(1)
+                .alias("ew3_phy_recent"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_mat$"))
+                .fill_null(1)
+                .alias("ew3_mat_recent"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_fin$"))
+                .fill_null(1)
+                .alias("ew3_fin_recent"),
+                pl.coalesce(pl.col(r"^ew3_(apr|jun|nov)_men$"))
+                .fill_null(1)
+                .alias("ew3_men_recent"),
             )
             .with_columns(
                 (

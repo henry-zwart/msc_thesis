@@ -188,7 +188,7 @@ def fit_var(
     else:
         lasso = MultiTaskLassoCV()
         lasso.fit(X, Y)
-        B = lasso.coef_
+        B = lasso.coef_.T
 
     # Calculate contemporaneous network (K)
     # 1. Variance-covariance matrix of residuals
