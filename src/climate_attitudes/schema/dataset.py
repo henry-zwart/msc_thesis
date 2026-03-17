@@ -125,6 +125,7 @@ class OutputResponseSchema(BaseSchema):
     dem_male_77_TEXT: str = pa.Field(nullable=True)  # Nonempty if dem_male == 77
     dem_age: int = pa.Field(gt=0, le=99)
     dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
+    dem_income_percep: int = pa.Field(isin=[1, 2, 3, 4])
     dem_urban: UrbanArea = pa.Field(nullable=True)  # ty: ignore
 
     # Extreme weather
