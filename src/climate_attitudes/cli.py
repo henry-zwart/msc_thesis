@@ -1,4 +1,3 @@
-from climate_attitudes.stats_models.wtp import WTPModel
 from climate_attitudes.dataset import Dataset
 from pathlib import Path
 from pydantic import BaseModel
@@ -73,26 +72,26 @@ class CreateImputedDatasetCommand(BaseCommand):
             .impute_fill(ds_spec.FILL_IMPUTE_COLS)
         )
 
-        wtp_solve_model = WTPModel(ds.response.collect(), col="ccSolving", k=5)
-        wtp_solve_model.sample()
-        wtp_solve = wtp_solve_model.wtp(ds.response.collect())
-
-        wtp_compensation_model = WTPModel(
-            ds.response.collect(), col="ccCompensation", k=5
-        )
-        wtp_compensation_model.sample()
-        wtp_compensation = wtp_compensation_model.wtp(ds.response.collect())
-
-        ds.response = ds.response.with_columns(
-            wtp_solve=wtp_solve, wtp_compensation=wtp_compensation
-        ).drop(
-            "ccSolving",
-            "ccCompensation",
-            "Variant_ccSolving",
-            "Variant_ccCompensation",
-            "dem_age",
-            "dem_income",
-        )
+        # wtp_solve_model = WTPModel(ds.response.collect(), col="ccSolving", k=5)
+        # wtp_solve_model.sample()
+        # wtp_solve = wtp_solve_model.wtp(ds.response.collect())
+        #
+        # wtp_compensation_model = WTPModel(
+        #     ds.response.collect(), col="ccCompensation", k=5
+        # )
+        # wtp_compensation_model.sample()
+        # wtp_compensation = wtp_compensation_model.wtp(ds.response.collect())
+        #
+        # ds.response = ds.response.with_columns(
+        #     wtp_solve=wtp_solve, wtp_compensation=wtp_compensation
+        # ).drop(
+        #     "ccSolving",
+        #     "ccCompensation",
+        #     "Variant_ccSolving",
+        #     "Variant_ccCompensation",
+        #     "dem_age",
+        #     "dem_income",
+        # )
 
         ds.write(name=self.name, force=self.force)
 

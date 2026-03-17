@@ -29,8 +29,8 @@ INPUT_QUESTION_COLUMNS = [
     "cc6",
     # "ccIO",
     # "ccGovt",
-    "ccSolving",
-    "ccCompensation",
+    # "ccSolving",
+    # "ccCompensation",
     "cvcc_worryothers",
     "ew5",
     "cvcc4_should",
@@ -67,10 +67,11 @@ INPUT_QUESTION_COLUMNS = [
     "cvcc4_personal",
     "dem_age",
     "dem_income",
+    "dem_income_percep",
     "dem_urban",
     "current_pres",
-    "Variant_ccSolving",
-    "Variant_ccCompensation",
+    # "Variant_ccSolving",
+    # "Variant_ccCompensation",
 ]
 
 ALL_INPUT_COLUMNS = SURVEY_COLS + INPUT_QUESTION_COLUMNS
@@ -101,13 +102,13 @@ VITERBI_IMPUTE_COLS = [
     if col
     not in (
         "dem_age",
-        "ccSolving",
-        "ccCompensation",
-        "Variant_ccSolving",
-        "Variant_ccCompensation",
+        # "ccSolving",
+        # "ccCompensation",
+        # "Variant_ccSolving",
+        # "Variant_ccCompensation",
     )
 ]
-FILL_IMPUTE_COLS = pl.col("dem_age")
+FILL_IMPUTE_COLS = [pl.col("dem_age")]
 
 BELIEF_COLS = [
     "cc1",
@@ -137,8 +138,8 @@ ATTITUDE_COLS = [
     "cc6",
     # "ccIO",
     # "ccGovt",
-    "wtp_solve",
-    "wtp_compensation",
+    # "wtp_solve",
+    # "wtp_compensation",
     "cvcc_worryothers",
     "ew5",
     "cvcc4_should",
@@ -180,6 +181,9 @@ BEHAVIOUR_COLS = [
 
 DEMOGRAPHIC_COLS = [
     "dem_urban",
+    "dem_income",
+    "dem_income_percep",
+    "dem_age",
 ]
 
 EXTERNAL_FACTORS = [

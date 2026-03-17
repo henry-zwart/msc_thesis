@@ -22,7 +22,7 @@ class Correlation(StrEnum):
     def calculate(
         self,
         df: pl.DataFrame,
-        assume_centred: bool = False,
+        assume_centered: bool = False,
         regularised: bool = False,
     ) -> npt.NDArray[np.float64]:
         match self:
@@ -58,7 +58,7 @@ class Correlation(StrEnum):
                 return pcorr(df).to_numpy()
             case Correlation.PARTIAL_GLASSO:
                 X = df.to_numpy()
-                glasso = GraphicalLassoCV(max_iter=100, assume_centred=assume_centred)
+                glasso = GraphicalLassoCV(max_iter=100, assume_centered=assume_centered)
                 glasso.fit(X)
                 precision = glasso.precision_
                 partial_corr = -precision / np.sqrt(
@@ -68,12 +68,12 @@ class Correlation(StrEnum):
                 return partial_corr
             case Correlation.VAR_TEMPORAL:
                 B, _ = fit_var(
-                    df, assume_centred=assume_centred, regularised=regularised
+                    df, assume_centered=assume_centered, regularised=regularised
                 )
                 return B
             case Correlation.VAR_CONTEMPORANEOUS:
                 _, K = fit_var(
-                    df, assume_centred=assume_centred, regularised=regularised
+                    df, assume_centered=assume_centered, regularised=regularised
                 )
                 return K
             case Correlation.DISTANCE_CORR:
@@ -152,7 +152,7 @@ def pcorr(df: pl.DataFrame) -> pl.DataFrame:
 
 def fit_var(
     df: pl.DataFrame,
-    assume_centred: bool = False,
+    assume_centered: bool = False,
     regularised: bool = False,
 ) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]:
     df = df.clone()
@@ -164,7 +164,7 @@ def fit_var(
     ).row(0)
 
     # Centre to avoid dealing with intercepts
-    if not assume_centred:
+    if not assume_centered:
         df = df.with_columns(
             cs.exclude("participant_id", "wave")
             - cs.exclude("participant_id", "wave").mean()
@@ -179,11 +179,6 @@ def fit_var(
     )
     X = regressor_waves.select(cs.exclude("participant_id", "wave")).to_numpy()
     Y = response_waves.select(cs.exclude("participant_id", "wave")).to_numpy()
-
-    # # Centre to avoid dealing with intercepts
-    # X_mean = X.mean(axis=0)
-    # X = X - X_mean
-    # Y = Y - X_mean
 
     # Regress on prev wave
     # B: Temporal network

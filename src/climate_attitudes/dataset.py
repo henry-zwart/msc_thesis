@@ -165,12 +165,12 @@ class Dataset:
 
     def impute_fill(
         self,
-        columns: pl.Expr,
+        columns: list[pl.Expr],
     ) -> Dataset:
         ds = self.clone()
         ds.response = ds.response.with_columns(
-            columns.fill_null(strategy="forward")
-        ).with_columns(columns.fill_null(strategy="backward"))
+            [col.fill_null(strategy="forward") for col in columns]
+        ).with_columns([col.fill_null(strategy="backward") for col in columns])
 
         return ds
 
