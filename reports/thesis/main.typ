@@ -5,6 +5,12 @@
   surname: "Zwart",
 )
 
+#let supervision-team = (
+  supervisor: link("https://www.vvvasconcelos.net/")[Vítor Vasconcelos],
+  examiner: link("https://scholar.google.com/citations?user=jDmcdsUAAAAJ&hl=en")[Johan Bollen],
+  assessor: link("https://sustainability.stanford.edu/people/sara-constantino")[Sara Constantino],
+)
+
 #let group = (
   name: "Computational Science Lab",
   site: "https://uva.computationalscience.nl/"
@@ -38,6 +44,7 @@
   title: "Asymmetric Belief Networks
   Inference and Intervention",
   author: author,
+  supervision-team: supervision-team,
   degree: degree,
   group: group,
   dept: dept,

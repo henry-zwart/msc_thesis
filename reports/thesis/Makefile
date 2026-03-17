@@ -1,4 +1,10 @@
-COMPILE_ARGS ?= --root "$$(pwd)" 
+# Include environment variables from .env if exists 
+ifneq (,$(wildcard ../../.env))
+    include ../../.env
+    export
+endif
+
+COMPILE_ARGS ?= --root "$$(pwd)"
 
 .PHONY: clean preview
 
@@ -8,7 +14,7 @@ all: main.pdf
 
 # ==== Report
 main.pdf: $(REPORT_FILES)
-	@typst compile $<
+	typst compile $< 
 
 preview:
 	typst compile main.typ $(COMPILE_ARGS) && \
