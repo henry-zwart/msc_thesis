@@ -33,16 +33,12 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 
 QUARTO_REPORTS := \
 		outputs/reports/index_eda_ds1_5/index_eda.html \
-		outputs/reports/index_eda_ds1/index_eda.html \
-		outputs/reports/index_eda_beliefs/index_eda.html \
-		outputs/reports/index_eda_attitudes/index_eda.html
+		outputs/reports/index_eda_ds1/index_eda.html
 
 DATASETS := \
 	    ${CA_BUILT_ASSETS}/base/metadata.json \
 	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json \
-	    ${CA_BUILT_ASSETS}/beliefs/metadata.json \
-	    ${CA_BUILT_ASSETS}/attitudes/metadata.json
+	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
@@ -119,18 +115,6 @@ outputs/reports/index_eda_%/index_eda.html: \
 
 
 # === Dataset construction ===
-${CA_BUILT_ASSETS}/beliefs/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/beliefs.py
-	@printf "Dataset → Build beliefs dataset...\n"
-	@uv run cadata create imputed-dataset --name beliefs --force
-
-${CA_BUILT_ASSETS}/attitudes/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/attitudes.py
-	@printf "Dataset → Build attitudes dataset...\n"
-	@uv run cadata create imputed-dataset --name attitudes --force
-
 ${CA_BUILT_ASSETS}/ds1_5/metadata.json: \
 			${CA_BUILT_ASSETS}/base/metadata.json \
 			src/climate_attitudes/datasets/imputed_reduced.py
