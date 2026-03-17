@@ -78,7 +78,12 @@
 
 #lorem(130)
 
+= Climate beliefs and attitudes dataset
+
+
 = Methods
+
+
 
 #lorem(200)
 
