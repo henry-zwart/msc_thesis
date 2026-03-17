@@ -119,9 +119,21 @@ plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=Tr
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
+## Regularised VAR (Contemporaneous)
+
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES, regularised=True)
+```
+
+## Regularised VAR (Temporal)
+
+```{python}
+plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES, regularised=True)
+```
+
 :::
 
-## High-correlation variables (Pearson $\geq 0.75$)
+## High-correlation variables (Pearson $\geq 0.5$)
 
 Questions with high Pearson correlation all belong to either the `cc4/5_X` group, or `cvcc9_cc`. Three clusters emerge in the partial correlations between these variables:
 
@@ -134,11 +146,11 @@ Notably `cc4_world` is only strongly linked to `cc4_poorUS`, perhaps reflecting 
 The contemporaneous network clusters differently to the partial correlations in this case, and contains several negative weights, particularly associated with `cc3` (belief about the 'crisis-level' of CC). These negative weights are surprising (e.g., with `cc4_poorUS`), and perhaps reflect a form of bias due to the calculation process.
 
 ```{python}
-plt.rc("figure", dpi=250)
+plt.rc("figure", dpi=100)
 ```
 
 ```{python}
-high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.75)
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.5)
 resp_std_high_corr = resp.select(*ds_spec.SURVEY_COLS, *high_corr_cols)
 categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
 ```
@@ -148,6 +160,11 @@ categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
 ### Pearson
 ```{python}
 plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Distance
+```{python}
+plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
 ### Partial
@@ -172,15 +189,208 @@ plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar
 
 :::
 
-
-## Moderate--high correlation variables (Pearson $\geq 0.5$)
+## High distance correlation (> 0.3)
 
 ```{python}
-plt.rc("figure", dpi=125)
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.25, kind=Correlation.DISTANCE_CORR)
+resp_std_high_corr = resp.select(*ds_spec.SURVEY_COLS, *high_corr_cols)
+categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Distance
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial (GLASSO)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Temporal)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+:::
+
+## High partial (> 0.15)
+
+```{python}
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.15, kind=Correlation.PARTIAL)
+resp_std_high_corr = resp.select(*ds_spec.SURVEY_COLS, *high_corr_cols)
+categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Distance
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial (GLASSO)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Temporal)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+:::
+
+## High contemporaneous (> 0.15)
+
+```{python}
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.15, kind=Correlation.VAR_CONTEMPORANEOUS)
+resp_std_high_corr = resp.select(*ds_spec.SURVEY_COLS, *high_corr_cols)
+categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Distance
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial (GLASSO)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Temporal)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+:::
+
+## High temporal (> 0.1)
+
+```{python}
+high_corr_cols, high_corr_idxes = filter_vars_by_abs_corr(resp_std, 0.1, kind=Correlation.VAR_TEMPORAL)
+resp_std_high_corr = resp.select(*ds_spec.SURVEY_COLS, *high_corr_cols)
+categories_high_corr = ds_spec.CATEGORIES[high_corr_idxes]
+```
+
+::: {.panel-tabset}
+
+### Pearson
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PEARSON, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Distance
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### Partial (GLASSO)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Contemporaneous)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+### VAR (Temporal)
+```{python}
+if high_corr_idxes.any():
+    plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
+```
+
+:::
+
+
+
+## Moderate--high correlation variables (Pearson $\geq 0.3$)
+
+```{python}
+plt.rc("figure", dpi=100)
 ```
 
 ```{python}
-mod_corr_cols, med_corr_idxes  = filter_vars_by_abs_corr(resp_std, 0.5)
+mod_corr_cols, med_corr_idxes  = filter_vars_by_abs_corr(resp_std, 0.35)
 resp_std_mod_corr = resp.select(*ds_spec.SURVEY_COLS, *mod_corr_cols)
 categories_med_corr = ds_spec.CATEGORIES[med_corr_idxes]
 ```
