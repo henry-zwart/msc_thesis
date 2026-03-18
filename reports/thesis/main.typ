@@ -30,6 +30,8 @@
 
 #let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
 
+#let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
+
 #let abstract = include "sections/abstract.typ"
 
 #let acknowledgements = [Thank the people that have helped: supervisors, family, etc.]
@@ -41,8 +43,7 @@
 ]
 
 #show: thesis.with(
-  title: "Asymmetric Belief Networks
-  Inference and Intervention",
+  title: title,
   author: author,
   supervision-team: supervision-team,
   degree: degree,
@@ -85,8 +86,9 @@
 
 #lorem(130)
 
-= Climate beliefs and attitudes dataset
+= Climate beliefs dataset
 
+#include "sections/dataset.typ"
 
 = Methods
 
