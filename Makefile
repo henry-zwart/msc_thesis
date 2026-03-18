@@ -12,7 +12,9 @@ endif
 
 RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w /code msc-thesis-r:latest
 
-REPORT_TYPES := proposal reading_summary climate-attitudes-eda
+REPORT_TYPES := thesis
+#proposal reading_summary climate-attitudes-eda
+
 PRESENTATION_TYPES := project_plan  # collider-bias feb-echo-talk
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
@@ -70,11 +72,11 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 
 
 # Compile project reports
-outputs/reports/%.pdf: reports/%/main.typ \
-			$$(wildcard reports/%/sections/*.typ) \
-			| outputs/reports
-	@printf "Compile → Report '$*'.\n"
-	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
+# outputs/reports/%.pdf: reports/%/main.typ \
+# 			$$(wildcard reports/%/sections/*.typ) \
+# 			| outputs/reports
+# 	@printf "Compile → Report '$*'.\n"
+# 	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
 
 # Compile project presentations to PDF
 outputs/slides/%.pdf: | outputs/slides
@@ -112,6 +114,62 @@ outputs/reports/index_eda_%/index_eda.html: \
 		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
 		mv reports/index-eda/index_eda_$* $(@D)
 		
+
+# === Thesis ===
+#COMPILE_ARGS ?= --root "$$(pwd)"
+THESIS_DIR := reports/thesis
+PKG_PATH := src/climate_attitudes
+
+THESIS_DATA_DEPS := $(THESIS_DIR)/results/data/dataset_metadata.json
+
+THESIS_FIGURES_DATASET := \
+		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf
+
+THESIS_FIGURES := \
+		$(THESIS_FIGURES_DATASET)
+
+THESIS_TYPST_DEPS := \
+		$(THESIS_DIR)/main.typ \
+		$(THESIS_DIR)/sections/abstract.typ \
+		$(THESIS_DIR)/sections/dataset.typ
+
+THESIS_DEPS := \
+	       $(THESIS_TYPST_DEPS) \
+	       $(THESIS_DATA_DEPS) \
+	       $(THESIS_FIGURES)
+
+# ==== Report
+outputs/reports/thesis.pdf: $(THESIS_DEPS)
+	echo ${TYPST_PACKAGE_PATH}
+	typst compile $(THESIS_DIR)/main.typ $@
+
+# Results, figures, data
+$(THESIS_DIR)/results/data/dataset_metadata.json: \
+			$(PKG_PATH)/cli/info.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/data
+	uv run cadata info dataset --output $@
+
+$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
+			$(PKG_PATH)/cli/visualisation/response_eventplot.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/figures/dataset
+	uv run cadata plot response-events --output $@
+
+
+$(THESIS_DIR)/results/data: | $(THESIS_DIR)/results
+	@mkdir -p $@
+
+$(THESIS_DIR)/results/figures/dataset: | $(THESIS_DIR)/results/figures
+	@mkdir -p $@
+
+$(THESIS_DIR)/results/figures: | $(THESIS_DIR)/results
+	@mkdir -p $@
+
+$(THESIS_DIR)/results: 
+	@mkdir -p $(THESIS_DIR)/results
 
 
 # === Dataset construction ===
