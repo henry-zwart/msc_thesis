@@ -18,12 +18,29 @@ from climate_attitudes.correlation import Correlation
 
 DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
 
+# Colour-blind safe; from https://sronpersonalpages.nl/~pault/
+QUALITATIVE_SCHEME = mcolors.ListedColormap(
+    [
+        "#4477aa",  # blue
+        "#66ccee",  # cyan
+        "#228833",  # green
+        "#ccbb44",  # yellow
+        "#ee6677",  # red
+        "#aa3377",  # purple
+        "#bbbbbb",  # grey
+    ]
+)
+
 
 def configure_mpl(fonts_path: Path = Path("fonts")):
     """Configure Matplotlib style."""
-    FONT_SIZE_SMALL = 8
+    _FONT_SIZE_SMALL = 8
     FONT_SIZE_DEFAULT = 10
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Semibold.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-BoldItalic.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Italic.otf")
 
     plt.rc("font", family="Libertinus Serif")
     plt.rc("font", weight="normal")  # controls default font
@@ -44,8 +61,8 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
             "xtick.major.width": 0.5,
             "ytick.major.width": 0.5,
             "ytick.minor.width": 0.4,
-            "xtick.labelsize": FONT_SIZE_SMALL,
-            "ytick.labelsize": FONT_SIZE_SMALL,
+            "xtick.labelsize": FONT_SIZE_DEFAULT,
+            "ytick.labelsize": FONT_SIZE_DEFAULT,
         },
     )
 
