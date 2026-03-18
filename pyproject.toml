@@ -43,7 +43,7 @@ requires = ["uv_build>=0.9.26,<0.10.0"]
 build-backend = "uv_build"
 
 [project.scripts]
-cadata = "climate_attitudes:cli.main"
+cadata = "climate_attitudes.cli:cli.main"
 
 [tool.uv.build-backend]
 module-name = "climate_attitudes"

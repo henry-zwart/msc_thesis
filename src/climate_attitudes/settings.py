@@ -48,6 +48,8 @@ class RawDataFile(Enum):
         match self:
             case RawDataFile.Waves1to5Responses:
                 return pl.scan_parquet(self.filepath(config))
+            case RawDataFile.Wave6Responses:
+                return pl.scan_parquet(self.filepath(config))
             case RawDataFile.Codebook:
                 return pl.read_excel(
                     RawDataFile.Codebook.filepath(config),
@@ -56,8 +58,6 @@ class RawDataFile(Enum):
                         "Randomization": pl.String,
                     },
                 ).lazy()
-            case _:
-                raise NotImplementedError
 
 
 class StaticAsset(Enum):

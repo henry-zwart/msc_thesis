@@ -1,39 +1,20 @@
+from climate_attitudes.cli.visualisation.response_eventplot import (
+    ResponseEventPlotCommand,
+)
 from climate_attitudes.dataset import Dataset
-from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import (
-    BaseSettings,
     CliApp,
     CliSubCommand,
-    SettingsConfigDict,
 )
 from rich.console import Console
+from .common import BaseCommand
+from .info import DatasetInfoCommand, WaveInfoCommand
 
-from climate_attitudes.settings import Config
 import climate_attitudes.datasets.imputed as imp_ds
 import climate_attitudes.datasets.imputed_reduced as red_ds
 
 console = Console()
-
-
-class BaseCommand(BaseSettings):
-    """Base command with common settings."""
-
-    # raw_assets_path: Path
-    raw_assets: Path = Path("assets/raw")
-    static_assets: Path = Path("assets/static")
-    built_assets: Path = Path("assets/built")
-
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="CA_", extra="ignore")
-
-    @property
-    def settings(self) -> Config:
-        """Get the settings."""
-        return Config(
-            raw_assets=self.raw_assets,
-            static_assets=self.static_assets,
-            built_assets=self.built_assets,
-        )
 
 
 class BuildDataCommand(BaseCommand):
@@ -104,6 +85,21 @@ class CreateSubCommand(BaseModel):
         CliApp.run_subcommand(self)
 
 
+class InfoSubCommand(BaseModel):
+    dataset: CliSubCommand[DatasetInfoCommand]
+    wave: CliSubCommand[WaveInfoCommand]
+
+    def cli_cmd(self) -> None:
+        CliApp.run_subcommand(self)
+
+
+class PlotSubCommand(BaseModel):
+    response_events: CliSubCommand[ResponseEventPlotCommand]
+
+    def cli_cmd(self) -> None:
+        CliApp.run_subcommand(self)
+
+
 class CAData(
     BaseModel,
     cli_parse_args=True,
@@ -115,6 +111,8 @@ class CAData(
 
     build: CliSubCommand[BuildDataCommand]
     create: CliSubCommand[CreateSubCommand]
+    info: CliSubCommand[InfoSubCommand]
+    plot: CliSubCommand[PlotSubCommand]
 
     def cli_cmd(self):
         """Run the CLI application."""
