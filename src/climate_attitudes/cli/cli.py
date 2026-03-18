@@ -1,18 +1,19 @@
-from climate_attitudes.cli.visualisation.response_eventplot import (
-    ResponseEventPlotCommand,
-)
-from climate_attitudes.dataset import Dataset
 from pydantic import BaseModel
 from pydantic_settings import (
     CliApp,
     CliSubCommand,
 )
 from rich.console import Console
-from .common import BaseCommand
-from .info import DatasetInfoCommand, WaveInfoCommand
 
 import climate_attitudes.datasets.imputed as imp_ds
 import climate_attitudes.datasets.imputed_reduced as red_ds
+from climate_attitudes.cli.visualisation.response_eventplot import (
+    ResponseEventPlotCommand,
+)
+from climate_attitudes.dataset import Dataset
+
+from .common import BaseCommand
+from .info import DatasetInfoCommand, WaveInfoCommand
 
 console = Console()
 

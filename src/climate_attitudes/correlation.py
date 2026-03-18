@@ -1,13 +1,12 @@
-from sklearn.linear_model import MultiTaskLassoCV
-from sklearn.covariance import GraphicalLassoCV
 from enum import StrEnum
-
-from dcor import distance_correlation, partial_distance_correlation
 
 import numpy as np
 import numpy.typing as npt
 import polars as pl
 import polars.selectors as cs
+from dcor import distance_correlation, partial_distance_correlation
+from sklearn.covariance import GraphicalLassoCV
+from sklearn.linear_model import MultiTaskLassoCV
 
 
 class Correlation(StrEnum):

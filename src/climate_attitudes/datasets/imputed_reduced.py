@@ -18,7 +18,7 @@ INPUT_QUESTION_COLUMNS = [
     "cc5_poorUS",
     "cc5_comm",
     "cc10",
-    "cc11",  # If included, cc10 and cc12 related. If excluded, they are less so. Possible collider.
+    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
     "cc12",
     "cvcc4_will",
     "cc3",
@@ -62,7 +62,7 @@ TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
         {1: 0, 2: 1, 99: 2}
-    ),  # Shift "not at all", "only a little" down; insert "don't know" between "only a little" and "a moderate amount"
+    ),  # "Don't know" between 'only a little' and 'a moderate amount'
     pl.col(r"^cc5_(world|wealthUS|poorUS|comm)$").replace({1: 0, 2: 1, 99: 2}),
 ]
 
@@ -99,7 +99,7 @@ BELIEF_COLS = [
     "cc5_poorUS",
     "cc5_comm",
     "cc10",
-    "cc11",  # If included, cc10 and cc12 related. If excluded, they are less so. Possible collider.
+    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
     "cc12",
     "cvcc4_will",
 ]

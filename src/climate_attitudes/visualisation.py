@@ -1,7 +1,4 @@
-from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 from pathlib import Path
-
-import scipy as sp
 
 import iplotx as ipx
 import matplotlib.colors as mcolors
@@ -10,11 +7,13 @@ import networkx as nx
 import numpy as np
 import numpy.typing as npt
 import polars as pl
+import scipy as sp
 import seaborn as sns
 from matplotlib import font_manager
 from matplotlib.axes import Axes
 
 from climate_attitudes.correlation import Correlation
+from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 
 DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
 
@@ -330,6 +329,7 @@ def plot_corr_with_dendro(
                 ],
             ),
             category_pal,
+            strict=True,
         )
     )
     if x_categories is not None:
@@ -341,10 +341,7 @@ def plot_corr_with_dendro(
     else:
         y_category_colours = None
 
-    if kind == Correlation.PARTIAL_GLASSO:
-        mask = abs(corr) < 0.01
-    else:
-        mask = None
+    mask = abs(corr) < 0.01 if kind == Correlation.PARTIAL_GLASSO else None
     mask = None
 
     if not row_cluster:
@@ -401,10 +398,7 @@ def plot_corr_with_dendro(
         )
 
     x_labels = x_labels[g.dendrogram_col.reordered_ind]
-    if row_cluster:
-        y_labels = y_labels[g.dendrogram_row.reordered_ind]
-    else:
-        y_labels = y_labels
+    y_labels = y_labels[g.dendrogram_row.reordered_ind] if row_cluster else y_labels
 
     g.ax_heatmap.set_xticks(
         np.arange(len(x_labels)) + 0.5,

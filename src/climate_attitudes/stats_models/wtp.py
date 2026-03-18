@@ -1,11 +1,8 @@
-import pymc as pm
-
 import arviz as az
-
-import polars as pl
 import numpy as np
 import numpy.typing as npt
-
+import polars as pl
+import pymc as pm
 
 CC1_RESPONSES = ["No", "Yes", "Don't know"]
 

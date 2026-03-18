@@ -128,9 +128,10 @@ def relative_entropy(
     assert actual.shape == expected.shape, "Distributions do not have the same length"
 
     excess_surprise = [
-        np.log2(p / q) if q > 0 else np.inf for p, q in zip(actual, expected)
+        np.log2(p / q) if q > 0 else np.inf
+        for p, q in zip(actual, expected, strict=True)
     ]
-    relative_entropy = sum(p * x for p, x in zip(actual, excess_surprise))
+    relative_entropy = sum(p * x for p, x in zip(actual, excess_surprise, strict=True))
 
     return float(relative_entropy)
 

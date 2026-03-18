@@ -1,13 +1,15 @@
 from __future__ import annotations
-from pydantic_settings import CliPositionalArg
-from pathlib import Path
-from climate_attitudes.settings import RawDataFile
-from pydantic import BaseModel, Field
-from climate_attitudes.cli.common import BaseCommand
-from datetime import date
-import polars as pl
 
+from datetime import date
+from pathlib import Path
+
+import polars as pl
+from pydantic import BaseModel, Field
+from pydantic_settings import CliPositionalArg
 from rich.console import Console
+
+from climate_attitudes.cli.common import BaseCommand
+from climate_attitudes.settings import RawDataFile
 
 console = Console()
 

@@ -1,9 +1,11 @@
 from pathlib import Path
+
 import polars as pl
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
 )
+
 from climate_attitudes.settings import Config
 
 

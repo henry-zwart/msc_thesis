@@ -1,10 +1,9 @@
 from enum import Enum, auto
-
 from pathlib import Path
 from typing import ClassVar
-from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import polars as pl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ITEM_NAME_MAP_PATH = "variable_names.parquet"
 

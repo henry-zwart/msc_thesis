@@ -92,7 +92,7 @@ TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
         {1: 0, 2: 1, 99: 2}
-    ),  # Shift "not at all", "only a little" down; insert "don't know" between "only a little" and "a moderate amount"
+    ),  # Insert "Don't know" between 'only a little' and 'a moderate amount'
     pl.col(r"^cc5_(world|wealthUS|poorUS|comm)$").replace({1: 0, 2: 1, 99: 2}),
 ]
 

@@ -1,15 +1,15 @@
 from __future__ import annotations
-from pathlib import Path
-from climate_attitudes.settings import RawDataFile
-from climate_attitudes.cli.common import BaseCommand, normalise_raw_response_schema
+
 from datetime import date
+from pathlib import Path
 
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
-from climate_attitudes.visualisation import configure_mpl, QUALITATIVE_SCHEME
-
+import matplotlib.pyplot as plt
 from rich.console import Console
+
+from climate_attitudes.cli.common import BaseCommand, normalise_raw_response_schema
+from climate_attitudes.settings import RawDataFile
+from climate_attitudes.visualisation import QUALITATIVE_SCHEME, configure_mpl
 
 console = Console()
 

@@ -1,38 +1,43 @@
 from __future__ import annotations
-from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
-from climate_attitudes.schema.extract import (
-    OutputResponseSchema,
-    ConditionalColumns,
-    NULLABLE_COLUMNS,
-    RESPONSE_REMAP_SUB_1,
-    RESPONSE_REMAP,
-    SurveyError,
-)
+
+import json
+
+import polars as pl
+import polars.selectors as cs
+
 from climate_attitudes.schema import extract as schema
 from climate_attitudes.schema.enums import (
-    ResponseType,
-    ParticipantType,
-    Education,
-    StateAbbrev,
-    NaturalDisaster,
-    Gender,
-    StormAttribution,
-    OutageAttribution,
+    WAVES,
     ClimateChangeCause,
     ClimateChangeInducedAction,
     ClimatePolicyBenefit,
-    ReasonOpposeGreenInfra,
-    ReasonSupportGreenInfra,
-    ReasonOpposeInfra,
-    ReasonSupportInfra,
     CovidPolicyFlowonPriority,
-    PoliticalParty,
-    PoliticalLeaning,
+    Education,
+    Gender,
+    ItemCategory,
+    NaturalDisaster,
+    OutageAttribution,
+    ParticipantType,
     PoliticalIdeology,
+    PoliticalLeaning,
+    PoliticalParty,
+    ReasonOpposeGreenInfra,
+    ReasonOpposeInfra,
+    ReasonSupportGreenInfra,
+    ReasonSupportInfra,
+    ResponseType,
+    StateAbbrev,
+    StormAttribution,
+    UrbanArea,
 )
-import json
-import polars as pl
-import polars.selectors as cs
+from climate_attitudes.schema.extract import (
+    NULLABLE_COLUMNS,
+    RESPONSE_REMAP,
+    RESPONSE_REMAP_SUB_1,
+    ConditionalColumns,
+    OutputResponseSchema,
+    SurveyError,
+)
 from climate_attitudes.settings import Config, RawDataFile, StaticAsset
 
 
@@ -109,7 +114,7 @@ class DataExtract:
         self.codebook = self.codebook.rename(
             {
                 "variable_name": "codebook_name",
-                "response_format": "response_type",  # I find these column names a little less ambiguous
+                "response_format": "response_type",  # I personally find less ambiguous
                 "response_fields": "response_schema",
                 "wave_1": "w1_new",  # All participants are new in wave 1
                 "wave_2_new": "w2_new",
@@ -440,7 +445,7 @@ class DataExtract:
             pl.col("ew1_jun").list.eval(pl.element().cast(NaturalDisaster)),
             pl.col("ew1_nov").list.eval(pl.element().cast(NaturalDisaster)),
             pl.col("attr_storm").list.eval(pl.element().cast(StormAttribution)),
-            pl.col("attr_outage").list.eval((pl.element().cast(OutageAttribution))),
+            pl.col("attr_outage").list.eval(pl.element().cast(OutageAttribution)),
             (
                 pl.col("cc2")
                 .replace(
@@ -487,7 +492,7 @@ class DataExtract:
             response.with_columns(
                 pl.col("wave").min().over("participant_id").alias("wave_joined")
             )
-            # 2. If a response wave is equal to this, mark as 'new', otherwise 'repeating'
+            # 2. If wave == join wave, mark as 'new', otherwise 'repeating'
             .with_columns(
                 pl.when(pl.col("wave_joined") == pl.col("wave"))
                 .then(pl.lit("new"))

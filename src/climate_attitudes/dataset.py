@@ -1,18 +1,19 @@
 from __future__ import annotations
-from datetime import date
-from climate_attitudes.schema.enums import PoliticalAffiliation, President
+
 import json
+from datetime import date
 
 import polars as pl
 import polars.selectors as cs
 
+from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.imputation import impute_viterbi
+from climate_attitudes.schema import dataset as schema
+from climate_attitudes.schema.enums import PoliticalAffiliation, President
 from climate_attitudes.schema.extract import (
     EXPERIMENT_CONDITION_COLUMNS,
 )
-from climate_attitudes.schema import dataset as schema
 from climate_attitudes.settings import Config
-from climate_attitudes.data_extract import DataExtract
-from climate_attitudes.imputation import impute_viterbi
 
 
 class Dataset:
@@ -226,7 +227,7 @@ class Dataset:
             if isinstance(col, str):
                 exprs.append((-pl.col(col)).alias(col))
             elif isinstance(col, pl.Expr):
-                exprs.append((-col))
+                exprs.append(-col)
             else:
                 raise TypeError(f"Unsupported column type: {type(col)}")
 
