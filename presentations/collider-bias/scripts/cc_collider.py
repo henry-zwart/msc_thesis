@@ -1,10 +1,8 @@
 import polars as pl
-
 import seaborn as sns
 
-
-from climate_attitudes.settings import Config
 from climate_attitudes.dataset import Dataset
+from climate_attitudes.settings import Config
 
 
 def main():
