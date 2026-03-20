@@ -1,3 +1,61 @@
+## March 16 - March 22
+
+### Thursday
+- Meeting with Vítor
+- Converting questions groups into indices
+- Sent data + EDA report to Kyuri
+
+#### Meeting with Vítor
+Past two weeks:
+
+- Pruned low-association variables as discussed with Sara
+- Reproduced 'willingness-to-pay' analysis: comparable measure of costed policy 
+  support for solving CC/compensating affected communities
+- Included `cc2` (beliefs regarding causes of climate change) in question set;
+  remapped such that human-causes are high, natural-causes only/CC not happening 
+  are low
+- Constructed 5-point `pol_affiliation` scale from political party alignment and party
+  leaning variables
+- Implemented regularised partial correlation (using GLASSO) and VAR (using LASSO 
+  regression)
+- Added 'distance correlation' measure to EDA, to identify possible hidden non-linear
+  associations
+- Identified sets of variables which consistently cluster together under different 
+  measures of association. Roughly 7--8 such groups. Some variables not included 
+  in any group, or appear in different groups for different metrics, but have high 
+  betweenness centrality.
+- Started planning + writing thesis section on dataset (context, validation, cleaning,
+  imputation)
+
+Next week:
+
+- Create indices:
+    - Transform each identified variable group according to its first principle
+      component.
+    - Evaluate index consistency using cronbach's alpha; set pre-defined quality 
+      threshold based on established standards.
+    - For indices which do not meet criteria, investigate alternatives (e.g., first 
+      two PCA components; leave variables split) 
+- Understand the reduced dataset:
+    - Marginal distributions for variables + indices
+    - What do the indices represent? (Check PCA vectors -- any oddities?)
+    - Plot correlation/association figures, clustering, networks
+    - Is binarisation reasonable?
+- Create baseline models:
+    - Ising (may require binarisation): undirected, directed
+    - Partial correlation networks
+- Continue writing:
+    - Finish draft of dataset section
+    - Plan index construction section; theory (models, metrics, etc.)
+
+Discussion points:
+
+- ENLENS: Dataset info and citations; what to call the dataset; possibly publish 
+  validated/cleaned dataset (may need to extend set of validated variables).
+- Vítor meeting: 
+    - Touch base with examiner (Johan); 
+    - Timeline: defence date
+
 ## March 9 - March 15
 Goals for the week:
 
