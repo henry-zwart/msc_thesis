@@ -7,8 +7,12 @@ import polars as pl
 from pydantic import BaseModel, Field
 from pydantic_settings import CliPositionalArg
 from rich.console import Console
+from rich.table import Table
+from rich.text import Text
 
 from climate_attitudes.cli.common import BaseCommand
+from climate_attitudes.dataset import Dataset
+from climate_attitudes.exceptions import DatasetExistsException
 from climate_attitudes.settings import RawDataFile
 
 console = Console()
@@ -139,3 +143,79 @@ class WaveInfoCommand(BaseCommand):
                 f.write(metadata.model_dump_json())
         else:
             console.print(metadata)
+
+
+class DisplayCodebookCommand(BaseCommand):
+    dataset: str = "base"
+
+    def cli_cmd(self) -> None:
+        # Try load dataset (either imputed or not -- doesn't matter)
+        for imp in (False, True):
+            try:
+                ds = Dataset.load(
+                    self.settings,
+                    name=self.dataset,
+                    with_imputation=imp,
+                    verbose=False,
+                )
+                break
+            except DatasetExistsException:
+                continue
+        else:
+            raise DatasetExistsException(f"No dataset found with name '{self.dataset}'")
+
+        # Vars:
+        #  - Item (item_name);
+        #  - Type (response_type);
+        #  - Question (question_text);
+        #  - Wave X (new/repeating/both; indicate with colours)
+        table = Table(title=f"Codebook: '{self.dataset}'", leading=1)
+
+        table.add_column("Item", justify="left", no_wrap=True)
+        table.add_column("Type", justify="left", no_wrap=True)
+        table.add_column("Question", justify="left", no_wrap=False, max_width=80)
+
+        unique_waves = (
+            ds.response.select(pl.col("wave").unique().sort()).collect().to_series()  # ty: ignore
+        )
+        for wave in unique_waves:
+            table.add_column(f"Wave {wave}", justify="center", no_wrap=True)
+
+        codebook = (
+            ds.codebook
+            # Add w1_rep column to simplify table logic
+            .with_columns(pl.lit(False).alias("w1_rep"))
+            .select(
+                "item_name",
+                "response_type",
+                "question_text",
+                pl.col(*[f"^w{i}_(new|rep)$" for i in unique_waves]),
+            )
+            .collect()
+        )
+
+        def format_wave_cell(new: bool, rep: bool = False):
+            match new, rep:
+                case True, False:
+                    return Text("New", style="bold blue")
+                case False, True:
+                    return Text("Repeating", style="bold yellow")
+                case True, True:
+                    return Text("Both", style="bold green")
+
+        for row in codebook.iter_rows():  # ty: ignore
+            item, item_type, question, *waves = row
+
+            wave_cells = []
+            for i in range(len(unique_waves)):
+                wave_cells.append(format_wave_cell(waves[2 * i], waves[2 * i + 1]))
+
+            table.add_row(
+                item,
+                item_type,
+                question,
+                *wave_cells,
+            )
+
+        console = Console()
+        console.print(table)

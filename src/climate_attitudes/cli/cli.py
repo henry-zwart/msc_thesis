@@ -13,7 +13,7 @@ from climate_attitudes.cli.visualisation.response_eventplot import (
 from climate_attitudes.dataset import Dataset
 
 from .common import BaseCommand
-from .info import DatasetInfoCommand, WaveInfoCommand
+from .info import DatasetInfoCommand, DisplayCodebookCommand, WaveInfoCommand
 
 console = Console()
 
@@ -87,6 +87,7 @@ class CreateSubCommand(BaseModel):
 
 
 class InfoSubCommand(BaseModel):
+    codebook: CliSubCommand[DisplayCodebookCommand]
     dataset: CliSubCommand[DatasetInfoCommand]
     wave: CliSubCommand[WaveInfoCommand]
 
