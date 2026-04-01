@@ -308,19 +308,22 @@ def plot_corr_with_dendro(
     # Determine figure size if not specified.
     # - Each cell needs ~0.25
     # - Labels need ~0.5
+    # cell_length = 0.25
+    # label_length = 0.5
+    cell_length = 0.125
+    label_length = 0.25
     if figsize is None:
-        height = corr.shape[0] * 0.25 + 0.5
-        width = corr.shape[1] * 0.25 + 0.5
+        height = corr.shape[0] * cell_length + label_length
+        width = corr.shape[1] * cell_length + label_length
         figsize = (width, height)
 
-    category_pal = sns.husl_palette(6, s=0.45)
+    category_pal = sns.husl_palette(5, s=0.45)
     category_lut = dict(
         zip(
             map(
                 str,
                 [
                     "Belief",
-                    "Experience",
                     "Attitude",
                     "Behaviour",
                     "Demographic",
@@ -370,11 +373,14 @@ def plot_corr_with_dendro(
             method=dendro_method,
             dendrogram_ratio=(0.1, 0.2),
             cbar_pos=None,
-            linewidths=0.75,
+            # linewidths=0.75,
+            linewidths=0.35,
             figsize=figsize,
             fmt=".1f",
             annot=True,
             row_cluster=row_cluster,
+            annot_kws={"size": 3.5},
+            tree_kws={"linewidths": 0.25},
         )
     else:
         g = sns.clustermap(
@@ -406,6 +412,7 @@ def plot_corr_with_dendro(
         horizontalalignment="right",
     )
     g.ax_heatmap.set_yticks(np.arange(len(y_labels)) + 0.5, y_labels, rotation=0)
+    g.ax_heatmap.tick_params(axis="both", labelsize=4, width=0.25, length=1)
 
     if y_vars is None and row_cluster:
         g.ax_row_dendrogram.remove()
@@ -421,9 +428,13 @@ def plot_feature_dendro(
     X = df.to_numpy()
     linkage_mat = features_linkage(X, method=method)
     sp.cluster.hierarchy.dendrogram(
-        linkage_mat, labels=df.columns, orientation="right", ax=ax
+        linkage_mat,
+        labels=df.columns,
+        orientation="right",
+        ax=ax,
+        leaf_font_size=4,
     )
-    plt.setp(ax.collections, linewidth=1)
+    plt.setp(ax.collections, linewidth=0.5)
 
     ax.set_xticks([])
 
