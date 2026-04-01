@@ -11,6 +11,7 @@ from sklearn.linear_model import MultiTaskLassoCV
 
 class Correlation(StrEnum):
     PEARSON = "Pearson correlation"
+    SPEARMAN = "Spearman correlation"
     PARTIAL = "partial correlation"
     PARTIAL_GLASSO = "partial correlation (graphical LASSO)"
     VAR_TEMPORAL = "VAR (Temporal)"
@@ -37,6 +38,7 @@ class Correlation(StrEnum):
                     )
             case (
                 Correlation.PEARSON
+                | Correlation.SPEARMAN
                 | Correlation.PARTIAL
                 | Correlation.PARTIAL_GLASSO
                 | Correlation.DISTANCE_CORR
@@ -53,6 +55,8 @@ class Correlation(StrEnum):
         match self:
             case Correlation.PEARSON:
                 return df.to_pandas().corr().values
+            case Correlation.SPEARMAN:
+                return df.to_pandas().corr(method="spearman").values
             case Correlation.PARTIAL:
                 return pcorr(df).to_numpy()
             case Correlation.PARTIAL_GLASSO:
