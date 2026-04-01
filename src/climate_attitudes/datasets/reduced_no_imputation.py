@@ -41,10 +41,7 @@ INPUT_QUESTION_COLUMNS = [
 
 ALL_INPUT_COLUMNS = SURVEY_COLS + INPUT_QUESTION_COLUMNS
 
-REVERSE_CODING = [
-    # "cc2",
-    # "cc10",
-]
+REVERSE_CODING = []
 
 TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
@@ -64,14 +61,9 @@ BELIEF_COLS = [
     "cc4_wealthUS",
     "cc4_poorUS",
     "cc4_comm",
-    # "cc5_world",
-    # "cc5_wealthUS",
-    # "cc5_poorUS",
-    # "cc5_comm",
     "cc10",
     "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
     "cc12",
-    # "cvcc4_will",
 ]
 
 EXPERIENCE_COLS = []

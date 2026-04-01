@@ -571,9 +571,11 @@ internal association under various measures:
 - **Extreme weather:** Experience with, and preparation for extreme weather (`ew5`, 
 	`ew6`)
 
-- **CC Behaviour Change:** Prescriptive norms, intentions, and second-order beliefs 
-	about others' intentions to adopt environmentally-friendly behaviours 
-	(`cvcc4_should`, `cvcc4_personal`, `cvcc4_will`)
+<!--
+ - **CC Behaviour Change:** Prescriptive norms, intentions, and second-order beliefs 
+ 	about others' intentions to adopt environmentally-friendly behaviours 
+ 	(`cvcc4_should`, `cvcc4_personal`, `cvcc4_will`)
+-->
 
 - **CC Rational:** Beliefs about individuals' capacity to self-manage the effects 
 	of climate change (`cc10`, `cc11`, `cc12`)
@@ -653,8 +655,8 @@ group_lookup = {
     "climate_impacts": "Climate Impacts",
     "climate_policy": "Climate Policy",
 }
-if with_imputation:
-	group_lookup["climate_behaviour"] = "Climate Behaviour"
+# if with_imputation:
+# 	group_lookup["climate_behaviour"] = "Climate Behaviour"
 
 
 fig, axes = plt.subplots(nrows=len(group_lookup), figsize=(2.5,0.7*len(group_lookup)), constrained_layout=True)
