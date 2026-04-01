@@ -39,8 +39,12 @@ QUARTO_REPORTS := \
 
 DATASETS := \
 	    ${CA_BUILT_ASSETS}/base/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
+	    ${CA_BUILT_ASSETS}/full_imp/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced_imp/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+	    ${CA_BUILT_ASSETS}/behaviour/metadata.json \
+	    ${CA_BUILT_ASSETS}/behaviour_imp/metadata.json
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
@@ -99,110 +103,62 @@ outputs/reports: | outputs
 outputs:
 	@mkdir -p outputs
 
-
-outputs/reports/index_eda_%/index_eda.html: \
-			reports/index-eda/index_eda.qmd \
-			${CA_BUILT_ASSETS}/%/metadata.json \
-			| outputs/reports
-	@printf "Quarto  → Build 'index_eda_$*.html'...\n"
-	@uv run quarto render $< \
-			--execute-daemon-restart \
-			--output-dir index_eda_$* \
-			-P ds_name:$* && \
-		printf "Quarto  → Removing old 'index_eda_$*.html'...\n"
-		rm -rf $(@D) && \
-		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
-		mv reports/index-eda/index_eda_$* $(@D)
-		
-
-# === Thesis ===
-#COMPILE_ARGS ?= --root "$$(pwd)"
-THESIS_DIR := reports/thesis
-PKG_PATH := src/climate_attitudes
-
-THESIS_DATA_DEPS := $(THESIS_DIR)/results/data/dataset_metadata.json
-
-THESIS_FIGURES_DATASET := \
-		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf
-
-THESIS_FIGURES := \
-		$(THESIS_FIGURES_DATASET)
-
-THESIS_TYPST_DEPS := \
-		$(THESIS_DIR)/main.typ \
-		$(THESIS_DIR)/sections/abstract.typ \
-		$(THESIS_DIR)/sections/dataset.typ
-
-THESIS_DEPS := \
-	       $(THESIS_TYPST_DEPS) \
-	       $(THESIS_DATA_DEPS) \
-	       $(THESIS_FIGURES)
-
-# ==== Report
-outputs/reports/thesis.pdf: $(THESIS_DEPS)
-	echo ${TYPST_PACKAGE_PATH}
-	typst compile $(THESIS_DIR)/main.typ $@
-
-# Results, figures, data
-$(THESIS_DIR)/results/data/dataset_metadata.json: \
-			$(PKG_PATH)/cli/info.py \
-			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
-			| $(THESIS_DIR)/results/data
-	uv run cadata info dataset --output $@
-
-$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
-			$(PKG_PATH)/cli/visualisation/response_eventplot.py \
-			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
-			| $(THESIS_DIR)/results/figures/dataset
-	uv run cadata plot response-events --output $@
-
-
-$(THESIS_DIR)/results/data: | $(THESIS_DIR)/results
-	@mkdir -p $@
-
-$(THESIS_DIR)/results/figures/dataset: | $(THESIS_DIR)/results/figures
-	@mkdir -p $@
-
-$(THESIS_DIR)/results/figures: | $(THESIS_DIR)/results
-	@mkdir -p $@
-
-$(THESIS_DIR)/results: 
-	@mkdir -p $(THESIS_DIR)/results
-
-
 # === Dataset construction ===
-${CA_BUILT_ASSETS}/ds1_5/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/imputed_reduced.py
-	@printf "Dataset → Build reduced imputed dataset...\n"
-	@uv run cadata create imputed-dataset --name ds1_5 --force
+include Makefile.dataset
 
-
-${CA_BUILT_ASSETS}/ds1/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/imputed.py
-	@printf "Dataset → Build imputed dataset...\n"
-	@uv run cadata create imputed-dataset --name ds1 --force
-
-
-${CA_BUILT_ASSETS}/base/metadata.json: \
-			src/climate_attitudes/dataset.py \
-			src/climate_attitudes/data_extract.py \
-			src/climate_attitudes/schema/dataset.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
-			${CA_STATIC_ASSETS}/item_columns.json \
-			${CA_STATIC_ASSETS}/item_groups.csv \
-			${CA_STATIC_ASSETS}/categories.csv \
-			${CA_STATIC_ASSETS}/error_items.csv \
-			${CA_STATIC_ASSETS}/variable_names.csv \
-			${CA_STATIC_ASSETS}/ideology_type.csv \
-			${CA_STATIC_ASSETS}/lee_2025_items.csv
-	@printf "Dataset → Build base dataset...\n"
-	@uv run cadata create base-dataset --prune-error-participants --filter-valid
+# ${CA_BUILT_ASSETS}/behaviour_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/behaviour.py
+# 	@printf "Dataset → Build CC behaviour dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name behaviour --force --with-imputation
+#
+# ${CA_BUILT_ASSETS}/behaviour/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/behaviour.py
+# 	@printf "Dataset → Build CC behaviour dataset...\n"
+# 	@uv run cadata create dataset --name behaviour --force
+#
+# ${CA_BUILT_ASSETS}/reduced_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced.py
+# 	@printf "Dataset → Build reduced dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name reduced --force --with-imputation --with-indices --index efa
+#
+# ${CA_BUILT_ASSETS}/reduced/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced.py
+# 	@printf "Dataset → Build reduced dataset...\n"
+# 	@uv run cadata create dataset --name reduced --force
+#
+# ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced_no_imputation.py
+# 	@printf "Dataset → Build reduced dataset (only full values)...\n"
+# 	@uv run cadata create dataset --name reduced_no_imputation --force --with-indices --index efa --filter-null --waves [3,4]
+#
+# ${CA_BUILT_ASSETS}/full_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/full.py
+# 	@printf "Dataset → Build full dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name full --force --with-imputation
+#
+#
+# ${CA_BUILT_ASSETS}/base/metadata.json: \
+# 			src/climate_attitudes/dataset.py \
+# 			src/climate_attitudes/data_extract.py \
+# 			src/climate_attitudes/schema/dataset.py \
+# 			src/climate_attitudes/schema/extract.py \
+# 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+# 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
+# 			${CA_STATIC_ASSETS}/item_columns.json \
+# 			${CA_STATIC_ASSETS}/item_groups.csv \
+# 			${CA_STATIC_ASSETS}/categories.csv \
+# 			${CA_STATIC_ASSETS}/error_items.csv \
+# 			${CA_STATIC_ASSETS}/variable_names.csv \
+# 			${CA_STATIC_ASSETS}/ideology_type.csv \
+# 			${CA_STATIC_ASSETS}/lee_2025_items.csv
+# 	@printf "Dataset → Build base dataset...\n"
+# 	@uv run cadata create base-dataset --prune-error-participants --filter-valid
 
 
 # == Convert Rdata response files to parquet.

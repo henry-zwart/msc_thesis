@@ -28,10 +28,10 @@ INPUT_QUESTION_COLUMNS = [
     # "ccSolving",
     # "ccCompensation",
     "cvcc_worryothers",
-    "ew3_phy_recent",
-    "ew3_mat_recent",
-    "ew3_men_recent",
-    "ew3_fin_recent",
+    # "ew3_phy_recent",
+    # "ew3_mat_recent",
+    # "ew3_men_recent",
+    # "ew3_fin_recent",
     "ew5",
     "cvcc4_should",
     "cvcc6",
@@ -40,7 +40,7 @@ INPUT_QUESTION_COLUMNS = [
     "cc_pol_tax",
     "cc_pol_car",
     "pol7",
-    "pol7_pi",
+    # "pol7_pi",
     "pol_affiliation",
     "pol_ideology",
     "ew6",
@@ -55,7 +55,7 @@ INPUT_QUESTION_COLUMNS = [
 ALL_INPUT_COLUMNS = SURVEY_COLS + INPUT_QUESTION_COLUMNS
 
 REVERSE_CODING = [
-    "cc10",
+    # "cc10",
 ]
 
 TRANSFORMS = [
@@ -114,10 +114,10 @@ ATTITUDE_COLS = [
     # "wtp_solve",
     # "wtp_compensation",
     "cvcc_worryothers",
-    "ew3_phy_recent",
-    "ew3_mat_recent",
-    "ew3_men_recent",
-    "ew3_fin_recent",
+    # "ew3_phy_recent",
+    # "ew3_mat_recent",
+    # "ew3_men_recent",
+    # "ew3_fin_recent",
     "ew5",
     "cvcc4_should",
     "cvcc6",
@@ -126,7 +126,7 @@ ATTITUDE_COLS = [
     "cc_pol_tax",
     "cc_pol_car",
     "pol7",
-    "pol7_pi",
+    # "pol7_pi",
     "pol_affiliation",
     "pol_ideology",
 ]
@@ -167,3 +167,31 @@ CATEGORIES = np.asarray(
     + ["Demographic"] * len(DEMOGRAPHIC_COLS)
     + ["External factor"] * len(EXTERNAL_FACTORS)
 )
+
+GROUPS: dict[str, list[str | pl.Expr]] = {
+    "Politics": ["pol_ideology", "pol_affiliation"],
+    "Extreme weather": ["ew5", "ew6"],
+    "Climate Behaviour": ["cvcc4_should", "cvcc4_will", "cvcc4_personal"],
+    "Self Efficacy": ["cc10", "cc11", "cc12"],
+    "Climate Impacts": [
+        "cc4_world",
+        "cc4_poorUS",
+        "cc4_wealthUS",
+        "cc4_comm",
+        "cc5_world",
+        "cc5_poorUS",
+        "cc5_wealthUS",
+        "cc5_comm",
+    ],
+    "Climate Policy": ["cc_pol_car", "cc_pol_tax", "cc_ica", "pol7"],
+}
+
+RENAME: dict[str, str] = {
+    "cc1": "Climate change",
+    "cc2": "CC anthropogenic",
+    "cc3": "CC threat level",
+    "cc6": "CC worry",
+    "cvcc_worryothers": "CC worry (others)",
+    "cvcc6": "CC indiv. action",
+    "cvcc9_cc": "CC scientists role",
+}

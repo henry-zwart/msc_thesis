@@ -1,13 +1,20 @@
 from __future__ import annotations
 
 import json
+import pickle
+from copy import copy
 from datetime import date
+from typing import Any
 
 import polars as pl
 import polars.selectors as cs
+from sklearn.decomposition import PCA
+from statsmodels.multivariate.factor import FactorResults
 
 from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.exceptions import DatasetExistsException
 from climate_attitudes.imputation import impute_viterbi
+from climate_attitudes.indices import Index
 from climate_attitudes.schema import dataset as schema
 from climate_attitudes.schema.enums import PoliticalAffiliation, President
 from climate_attitudes.schema.extract import (
@@ -23,11 +30,23 @@ class Dataset:
     columns: pl.LazyFrame
     participant: pl.LazyFrame
     response: pl.LazyFrame
+    indices: pl.LazyFrame | None = None
+    index_result: (
+        dict[str, PCA | FactorResults]
+        | dict[str, PCA]
+        | dict[str, FactorResults]
+        | None
+    ) = None
 
-    validated: bool = False
+    metadata: dict[str, Any]
 
     def __init__(self, config: Config):
         self.config = config
+        self.metadata = dict(
+            validated=False,
+            has_indices=False,
+            imputation=False,
+        )
 
     def build(
         self,
@@ -41,8 +60,8 @@ class Dataset:
         """
         print("Building climate attitudes dataset.")
 
-        self.prune_survey_error_participants = prune_error_participants
-        self.filter_valid = filter_valid
+        self.metadata["exclude_error"] = prune_error_participants
+        self.metadata["exclude_invalid"] = filter_valid
 
         if prune_error_participants:
             print("Removing participants with survey errors.")
@@ -76,9 +95,12 @@ class Dataset:
         return self
 
     def write(self, name: str = "base", force: bool = False):
+        if self.metadata["imputation"]:
+            name = f"{name}_imp"
+
         dir = self.config.built_assets / name
         if (dir / "metadata.json").exists() and not force:
-            raise RuntimeError(
+            raise DatasetExistsException(
                 f"Dataset already exists at path '{dir}'. Pass `force=True` to "
                 f"overwrite."
             )
@@ -96,31 +118,38 @@ class Dataset:
         self.participant.sink_parquet(dir / "participant.parquet")
         self.response.sink_parquet(dir / "response.parquet")
 
-        md = dict(
-            prune_survey_error_participants=self.prune_survey_error_participants,
-            filter_valid=self.filter_valid,
-            validated=self.validated,
-        )
+        if self.indices is not None:
+            self.indices.sink_parquet(dir / "indices.parquet")
+            with (dir / "index_result.pkl").open("wb") as f:
+                pickle.dump(self.index_result, f)
+
         with (dir / "metadata.json").open("w") as f:
-            json.dump(md, f)
+            json.dump(self.metadata, f)
 
     @classmethod
-    def load(cls, config: Config, name: str = "base") -> Dataset:
+    def load(
+        cls,
+        config: Config,
+        name: str = "base",
+        with_imputation: bool = True,
+        verbose: bool = True,
+    ) -> Dataset:
         ds = cls(config)
+
+        if with_imputation:
+            name = f"{name}_imp"
+
         dir = config.built_assets / name
         if not (dir / "metadata.json").exists():
-            raise FileExistsError(f"No dataset found at path '{dir}'.")
+            raise DatasetExistsException(f"No dataset found at path '{dir}'.")
 
         with (dir / "metadata.json").open("r") as f:
-            md = json.load(f)
+            ds.metadata = json.load(f)
 
-        print("Loading built assets:")
-        for k, v in md.items():
-            print(f"  {k}={v}")
-
-        ds.prune_survey_error_participants = md["prune_survey_error_participants"]
-        ds.filter_valid = md["filter_valid"]
-        ds.validated = md["validated"]
+        if verbose:
+            print("Loading built assets:")
+            for k, v in ds.metadata.items():
+                print(f"  {k}={v}")
 
         ds.codebook = pl.scan_parquet(dir / "codebook.parquet")
         ds.item = pl.scan_parquet(dir / "item.parquet")
@@ -128,8 +157,12 @@ class Dataset:
         ds.columns = pl.scan_parquet(dir / "columns.parquet")
         ds.participant = pl.scan_parquet(dir / "participant.parquet")
         ds.response = pl.scan_parquet(dir / "response.parquet")
+        if ds.metadata["has_indices"]:
+            ds.indices = pl.scan_parquet(dir / "indices.parquet")
+            with (dir / "index_result.pkl").open("rb") as f:
+                ds.index_result = pickle.load(f)
 
-        if not ds.validated:
+        if not ds.metadata["validated"]:
             ds._validate()
 
         return ds
@@ -137,9 +170,7 @@ class Dataset:
     def clone(self) -> Dataset:
         ds = Dataset(self.config.copy())
 
-        ds.prune_survey_error_participants = self.prune_survey_error_participants
-        ds.filter_valid = self.filter_valid
-        ds.validated = self.validated
+        ds.metadata = {k: copy(v) for k, v in self.metadata.items()}
 
         ds.codebook = self.codebook.clone()
         ds.item = self.item.clone()
@@ -147,12 +178,41 @@ class Dataset:
         ds.columns = self.columns.clone()
         ds.participant = self.participant.clone()
         ds.response = self.response.clone()
+        ds.indices = self.indices.clone() if self.indices is not None else None
+        ds.index_result = self.index_result.copy() if self.index_result else None
+
+        return ds
+
+    def compute_indices(
+        self,
+        groups: dict[str, list[str | pl.Expr]],
+        kind: Index,
+    ) -> Dataset:
+        # If no groups defined, can't compute indices
+        if not groups:
+            return self.clone()
+
+        ds = self.clone()
+        ds.indices = ds.response.clone()
+        ds.index_result = {}
+        for group_name, columns in groups.items():
+            X = ds.response.select(*columns).collect().to_numpy()  # ty: ignore
+            result = kind.eval(X)
+            colname = group_name.lower().replace(" ", "_")
+            ds.indices = ds.indices.with_columns(pl.Series(result.index).alias(colname))
+            ds.index_result[colname] = result.result
+
+        # Drop collapsed columns from indices table
+        for columns in groups.values():
+            ds.indices = ds.indices.drop(*columns)  # ty: ignore
+
+        ds.metadata["has_indices"] = True
 
         return ds
 
     def impute_viterbi(
         self,
-        columns: list[str | pl.Expr],
+        columns: list[str | pl.Expr] | list[str] | list[pl.Expr],
         impute_waves: list[int] | None = None,
     ) -> Dataset:
         ds = self.clone()
@@ -161,6 +221,8 @@ class Dataset:
             columns=columns,
             impute_waves=impute_waves,
         ).lazy()
+
+        ds.metadata["imputation"] = True
 
         return ds
 
@@ -173,15 +235,69 @@ class Dataset:
             [col.fill_null(strategy="forward") for col in columns]
         ).with_columns([col.fill_null(strategy="backward") for col in columns])
 
+        ds.metadata["imputation"] = True
+
         return ds
 
-    def filter_columns(self, columns: list[str | pl.Expr]) -> Dataset:
+    def rename(
+        self,
+        rename_dict: dict[str, str],
+    ) -> Dataset:
+        ds = self.clone()
+        ds.response = ds.response.rename(rename_dict)
+        if ds.indices is not None:
+            ds.indices = ds.indices.rename(rename_dict)
+        return ds
+
+    def filter_columns(
+        self,
+        columns: list[str | pl.Expr] | list[str] | list[pl.Expr],
+    ) -> Dataset:
         ds = self.clone()
         ds.response = self.response.select(*columns).clone()
 
+        new_cols = ds.response.collect_schema().names()
+        ds.item = self.item.filter(pl.col("item_name").is_in(new_cols))
+        ds.question = self.question.filter(pl.col("item_name").is_in(new_cols))
+        ds.codebook = self.codebook.filter(pl.col("item_name").is_in(new_cols))
+
         return ds
 
-    def filter_at_least_one_resp(self, columns: list[str | pl.Expr]) -> Dataset:
+    def filter_waves(self, waves: list[int]) -> Dataset:
+        ds = self.clone()
+        ds.response = self.response.filter(pl.col("wave").is_in(waves))
+        return ds
+
+    def filter_no_nulls(
+        self,
+    ) -> Dataset:
+        n_waves = self.response.select(pl.col("wave").n_unique()).collect().item()  # ty: ignore
+        keep_pids = (
+            self.response.group_by("participant_id")  # ty: ignore
+            .agg(
+                pl.all_horizontal(pl.all().is_not_null()).sum().alias("non_null_count")
+            )
+            .filter(pl.col("non_null_count") == n_waves)
+            .select("participant_id")
+            .collect()
+            .to_series()
+            .implode()
+        )
+
+        ds = self.clone()
+        ds.participant = self.participant.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+        ds.response = self.response.filter(
+            pl.col("participant_id").is_in(keep_pids)
+        ).clone()
+
+        return ds
+
+    def filter_at_least_one_resp(
+        self,
+        columns: list[str | pl.Expr] | list[str] | list[pl.Expr],
+    ) -> Dataset:
         keep_pids = (
             self.response.select("participant_id", *columns)
             .group_by("participant_id")
@@ -220,7 +336,10 @@ class Dataset:
 
         return ds
 
-    def reverse_coding(self, columns: list[str | pl.Expr]) -> Dataset:
+    def reverse_coding(
+        self,
+        columns: list[str | pl.Expr] | list[str] | list[pl.Expr],
+    ) -> Dataset:
         exprs = []
 
         for col in columns:
@@ -241,6 +360,10 @@ class Dataset:
         ds.response = self.response.with_columns(
             (columns - columns.mean()) / columns.std()
         )
+        if self.indices is not None:
+            ds.indices = self.indices.with_columns(
+                (columns - columns.mean()) / columns.std()
+            )
 
         return ds
 
@@ -252,7 +375,7 @@ class Dataset:
         schema.OutputParticipantSchema.validate(self.participant)
         schema.OutputResponseSchema.validate(self.response)
 
-        self.validated = True
+        self.metadata["validated"] = True
 
     def _reorder_columns(self):
         # Response
