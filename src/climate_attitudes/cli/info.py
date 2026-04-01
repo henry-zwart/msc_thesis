@@ -13,6 +13,7 @@ from rich.text import Text
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
 from climate_attitudes.exceptions import DatasetExistsException
+from climate_attitudes.schema.enums import ParticipantType
 from climate_attitudes.settings import RawDataFile
 
 console = Console()
@@ -147,6 +148,7 @@ class WaveInfoCommand(BaseCommand):
 
 class DisplayCodebookCommand(BaseCommand):
     dataset: str = "base"
+    deduplicate: bool = True
 
     def cli_cmd(self) -> None:
         # Try load dataset (either imputed or not -- doesn't matter)
@@ -189,15 +191,106 @@ class DisplayCodebookCommand(BaseCommand):
                 "item_name",
                 "response_type",
                 "question_text",
-                pl.col(*[f"^w{i}_(new|rep)$" for i in unique_waves]),
+                *[f"^w{i}_{kind}$" for i in unique_waves for kind in ("new", "rep")],
             )
             .collect()
         )
 
+        # Concat question text changes across waves; record aggregate question presence
+        if self.deduplicate:
+            codebook = (
+                codebook.with_row_index()  # ty: ignore
+                .with_columns(pl.col("index").min().over("item_name"))
+                .unpivot(
+                    index=["index", "item_name", "response_type", "question_text"],
+                    variable_name="occur_condition",
+                    value_name="occurs",
+                )
+                .with_columns(
+                    pl.col("occur_condition")
+                    .str.extract(r"^w(\d).*$")
+                    .cast(pl.Int64)
+                    .alias("wave"),
+                    pl.col("occur_condition")
+                    .str.extract(r"^w\d_(new|rep)$")
+                    .replace({"new": "new", "rep": "repeating"})
+                    .cast(ParticipantType)
+                    .alias("participant_type"),
+                )
+                .filter(pl.col("occurs"))
+                .drop("occur_condition", "occurs")
+                # Get participant types per question text variant and wave
+                .group_by(
+                    "index",
+                    "item_name",
+                    "response_type",
+                    "question_text",
+                    "wave",
+                    maintain_order=True,
+                )
+                .agg(pl.col("participant_type").unique().sort().cast(str))
+                # Create column with coloured wave numbers showing question presence
+                .with_columns(
+                    pl.col("participant_type")
+                    .list.join(",")
+                    .replace(
+                        {
+                            "new,repeating": "both",
+                        }
+                    )
+                    .replace(
+                        {
+                            "new": "[bold blue]",
+                            "repeating": "[bold yellow]",
+                            "both": "[bold green]",
+                        }
+                    )
+                    .alias("participant_type_text_style")
+                )
+                .with_columns(
+                    pl.concat_str(
+                        pl.col("participant_type_text_style"),
+                        pl.col("wave").cast(str),
+                        pl.lit("[/]"),
+                    ).alias("show_cond")
+                )
+                .drop("wave", "participant_type", "participant_type_text_style")
+                # For each item and unique question text, prepend the styled waves
+                .group_by(
+                    "index",
+                    "item_name",
+                    "response_type",
+                    "question_text",
+                    maintain_order=True,
+                )
+                .agg(pl.col("show_cond").str.join())
+                .with_columns(
+                    pl.concat_str(
+                        pl.col("show_cond"), pl.lit("\n"), pl.col("question_text")
+                    ).alias("question_text")
+                )
+                .drop("show_cond")
+                # For each item, concat all diff. question texts with newline sep
+                .group_by("index", "item_name", "response_type", maintain_order=True)
+                .agg(pl.col("question_text").str.join("\n\n"))
+                .sort(by="index")
+                .drop("index")
+                .join(
+                    (
+                        codebook.group_by("item_name").agg(  # ty: ignore
+                            pl.col(r"^w\d_(new|rep)$").any()
+                        )
+                    ),
+                    on="item_name",
+                    how="left",
+                )
+            )
+
         def format_wave_cell(new: bool, rep: bool = False):
             match new, rep:
                 case True, False:
-                    return Text("New", style="bold blue")
+                    return "[bold blue]New[/]"
+                    # return Text("New", style="bold blue")
                 case False, True:
                     return Text("Repeating", style="bold yellow")
                 case True, True:
