@@ -1,0 +1,60 @@
+start: 2025-12-01
+end: 2026-08-31
+tasks:
+  - name: "Survey data analysis"
+    subtasks:
+      - id: data-access
+        name: Data access
+        start: 2025-12-01
+        end: 2025-12-19
+        done: 2025-12-02
+      - name: ELT; Cleaning; Validation
+        start: 2026-01-15
+        end: 2026-02-13
+        dependencies: 
+          - id: data-access
+      - name: EDA
+        start: 2026-02-13
+        end: 2026-03-05
+      - name: Construct reduced dataset
+        start: 2026-03-05
+        end: 2026-03-27
+
+
+  - name: "Theoretical model extension"
+    subtasks:
+      - name: Review belief-system literature
+        intervals:
+        - start: 2026-01-05
+          end: 2026-01-14
+        - start: 2026-03-27
+          end: 2026-04-03
+      - name: "Formalise model"
+        start: 2026-04-01
+        end: 2026-04-10
+
+  - name: Implementation
+    subtasks:
+      - name: Baseline models
+        start: 2026-03-28
+        end: 2026-03-31
+      - name: Asymmetric belief model
+        start: 2026-04-13
+        end: 2026-04-17
+
+  - name: Experiments and analysis
+    subtasks:
+      - name: Fit models to survey data
+        start: 2026-04-20
+        end: 2026-04-24
+
+
+
+
+milestones:
+  - name: "Complete draft #1"
+    date: 2026-07-01
+  - name: "Submission"
+    date: 2026-08-11
+  - name: "Defence (tentative)"
+    date: 2026-08-25

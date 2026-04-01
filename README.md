@@ -19,6 +19,9 @@ Ongoing or draft reports must be compiled locally, or accessed via the links bel
 > authenticated by GitHub.
 
 
+![Project timeline](outputs/project_timeline.png)
+
+
 ## Building reports locally
 
 **Requirements:**

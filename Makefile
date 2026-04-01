@@ -55,7 +55,7 @@ DATASETS := \
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
-all: site/site/index.html all-reports quarto-reports
+all: site/site/index.html outputs/project_timeline.png all-reports quarto-reports
 
 all-reports: $(REPORTS)
 
@@ -80,6 +80,14 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 	@printf "Site    → Building site...\n"
 	@uv run --only-group docs mkdocs build -f site/mkdocs.yml --quiet
 	@printf "Site    → Done.\n"
+
+
+# Compile project timeline
+outputs/project_timeline.png: \
+			timeline/main.typ \
+			timeline/gantt.yaml \
+			| outputs
+	typst compile $< $@ -f png
 
 
 # Compile project reports
