@@ -48,7 +48,7 @@ class ResponseEventPlotCommand(BaseCommand):
                 orientation="horizontal",
                 linewidth=0.05,
                 linelengths=0.9,
-                colors=QUALITATIVE_SCHEME.colors[wave],  # ty: ignore
+                colors=QUALITATIVE_SCHEME.colors[wave - 1],  # ty: ignore
                 zorder=1,
             )
             # Annotate each wave at its midpoint
