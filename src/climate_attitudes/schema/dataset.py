@@ -295,6 +295,7 @@ class OutputResponseSchema(BaseSchema):
 
     # Actions taken due to current/future CC impacts
     cc13: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
+    cc13_cumulative: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
     cc13_apr: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
 
     # behaviors taken to help address CC

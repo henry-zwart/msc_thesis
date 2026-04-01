@@ -569,3 +569,32 @@ class Dataset:
             )
             .drop("pol_party", "pol_lean")
         )
+
+        # Propagate cc13 responses forward cumulatively
+        sub_df = self.response.select(
+            "participant_id",
+            "wave",
+            pl.col("cc13").list.set_difference(["None of the above"]),
+        )
+        new_cc13 = (
+            sub_df.join(
+                sub_df,
+                how="left",
+                on="participant_id",
+            )
+            .filter(pl.col("wave_right") <= pl.col("wave"))
+            .drop("wave_right", "cc13")
+            .rename({"cc13_right": "cc13"})
+            .group_by("participant_id", "wave", maintain_order=True)
+            .agg(
+                pl.col("cc13")
+                .list.explode()
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("cc13_cumulative")
+            )
+        )
+        self.response = self.response.join(
+            new_cc13, how="left", on=("participant_id", "wave")
+        )
