@@ -1,3 +1,73 @@
+## March 30 - April 3
+### Wednesday
+To-do:
+
+- Review proposal timeline for meeting with Vítor
+- Prepare agenda to send to Vítor and Kyuri
+- Review TCS assignment; derivations; what is necessary to change for asymmetric
+  relations?
+
+- Sent agenda to Vítor and Kyuri for Thursday catchup
+- Sent agenda to ENLENS for bi-weekly meeting
+
+### Tuesday
+- Symmetric Ising model code: implement glauber dynamics, optimise performance.
+- Write most of the ENLENS presentation.
+
+### Monday
+- Weekly catchup
+- Planning content for ENLENS presentation
+- Refactoring Ising model simulation code from TCS assignment for general use
+
+
+## March 23 - March 29
+### Thursday
+- Meeting with Vítor
+
+#### Meeting with Vítor
+- Quarto report on EDA --> indices
+- First component of PCA same as linear regression? (No, but maybe same as total least 
+  squares -- minimising euclidean distance to the line.)
+- Flipping cc10 shouldn't change PCA result? (Actually it does!)
+- Can include cc13 in no-imputation version, since asked in both waves 
+  3 and 4.
+- Behavioural variables in wave 5: 
+    - In general belief state influences behaviour, but also behaviour can influence
+      belief state.
+    - However, behaviours can only influence beliefs after they are adopted. i.e., 
+      behaviour is adopted at some point in time, partially due to existing/prior 
+      belief state.
+    - So we can consider wave 5 behaviour variables as influenced unidirectionally 
+      by prior belief state.
+    - Note that depending on when behaviour was adopted, time of adoption may coincide
+      with or predate the last measured belief state, in which case this assumption 
+      doesn't hold.
+
+I felt this meeting went off-track several times, and resultingly we didn't manage to 
+cover several important topics. For future meetings: 
+
++ Set agenda + meeting goals at the start of the meeting (or ideally email ahead of time);
+    - Perhaps also summarise what I have been doing, and what I plan to do next week.
++ When meeting starts to go off-track, take note of the discussion point and suggest 
+  returning to it at a dedicated time.
++ Aim to finish core of the meeting five minutes ahead of schedule, and use the extra 
+  time to review the meeting goals and outcomes. This helps ensure that all parties 
+  are on the same page.
+
+#### Meeting with Kyuri
+- Removing pol7_pi: our goal is to find a plausible structure of beliefs + attitudes
+  so can remove pol7_pi if associations show it isn't central to the network we're interested in. 
+- Presentation for next week with Julian
+
+### Monday
+- Sent indices to Kyuri
+- Started summarising data exploration work in Quarto document
+
+Tomorrow:
+
+- Add community detection to Quarto doc, showing variable clusterings
+- Writeup on PCA reduction, EDA on indices
+
 ## March 16 - March 22
 
 ### Thursday
