@@ -1,0 +1,66 @@
+THESIS_DIR := reports/thesis
+PKG_PATH := src/climate_attitudes
+
+THESIS_DATA_DEPS := $(THESIS_DIR)/results/data/dataset_metadata.json
+
+THESIS_FIGURES_DATASET := \
+		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf \
+		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf
+
+THESIS_FIGURES := \
+		$(THESIS_FIGURES_DATASET)
+
+THESIS_TYPST_DEPS := \
+		$(THESIS_DIR)/main.typ \
+		$(THESIS_DIR)/sections/abstract.typ \
+		$(THESIS_DIR)/sections/dataset.typ
+
+THESIS_DEPS := \
+	       $(THESIS_TYPST_DEPS) \
+	       $(THESIS_DATA_DEPS) \
+	       $(THESIS_FIGURES)
+
+# ==== Report
+outputs/reports/thesis.pdf: $(THESIS_DEPS)
+	echo ${TYPST_PACKAGE_PATH}
+	typst compile $(THESIS_DIR)/main.typ $@
+
+# Results, figures, data
+$(THESIS_DIR)/results/data/dataset_metadata.json: \
+			$(PKG_PATH)/cli/info.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/data
+	uv run cadata info dataset --output $@
+
+# === Figures
+$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf: \
+			$(PKG_PATH)/cli/visualisation/interresponse_time.py \
+			$(PKG_PATH)/visualisation.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/figures/dataset
+	uv run cadata plot interresponse-times --output $@
+
+
+$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
+			$(PKG_PATH)/cli/visualisation/response_eventplot.py \
+			$(PKG_PATH)/visualisation.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/figures/dataset
+	uv run cadata plot response-events --output $@
+
+
+$(THESIS_DIR)/results/data: | $(THESIS_DIR)/results
+	@mkdir -p $@
+
+$(THESIS_DIR)/results/figures/dataset: | $(THESIS_DIR)/results/figures
+	@mkdir -p $@
+
+$(THESIS_DIR)/results/figures: | $(THESIS_DIR)/results
+	@mkdir -p $@
+
+$(THESIS_DIR)/results: 
+	@mkdir -p $(THESIS_DIR)/results
+

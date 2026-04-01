@@ -1,0 +1,42 @@
+outputs/reports/index_eda_reduced_no_imputation/index_eda.html: \
+			reports/index-eda/index_eda.qmd \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| outputs/reports
+	@printf "Quarto  → Build 'index_eda_reduced_no_imputation.html'...\n"
+	@uv run quarto render $< \
+			--execute-daemon-restart \
+			--output-dir index_eda_reduced_no_imputation \
+			-P ds_name:reduced_no_imputation && \
+		printf "Quarto  → Removing old 'index_eda_reduced_no_imputation.html'...\n"
+		rm -rf $(@D) && \
+		printf "Quarto  → Moving new 'index_eda_reduced_no_imputation.html' to destination...\n"
+		mv reports/index-eda/index_eda_reduced_no_imputation $(@D)
+
+outputs/reports/indices/indices.html: \
+			reports/indices/indices.qmd \
+			${CA_BUILT_ASSETS}/reduced_imp/metadata.json \
+			| outputs/reports
+	@printf "Quarto  → Build 'indices.html' (with imputation)...\n"
+	@uv run quarto render $< \
+			--execute-daemon-restart \
+			--output-dir indices \
+ 			-P with_imputation:true && \
+		printf "Quarto  → Removing old 'indices.html'...\n"
+		rm -rf $(@D) && \
+		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+		mv reports/indices/indices $(@D)
+
+outputs/reports/indices_no_imputation/indices.html: \
+			reports/indices/indices.qmd \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| outputs/reports
+	@printf "Quarto  → Build 'indices.html' (no imputation)...\n"
+	@uv run quarto render $< \
+			--execute-daemon-restart \
+			--output-dir indices \
+ 			-P with_imputation:false && \
+		printf "Quarto  → Removing old 'indices.html'...\n"
+		rm -rf $(@D) && \
+		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+		mv reports/indices/indices $(@D)
+

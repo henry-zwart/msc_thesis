@@ -15,7 +15,8 @@ RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w 
 REPORT_TYPES := thesis
 #proposal reading_summary climate-attitudes-eda
 
-PRESENTATION_TYPES := project_plan  # collider-bias feb-echo-talk
+PRESENTATION_TYPES := project_plan april-enlens-talk  # collider-bias feb-echo-talk
+
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
@@ -34,8 +35,14 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 
 
 QUARTO_REPORTS := \
-		outputs/reports/index_eda_ds1_5/index_eda.html \
-		outputs/reports/index_eda_ds1/index_eda.html
+		outputs/reports/index_eda_full/index_eda.html \
+		outputs/reports/index_eda_reduced/index_eda.html \
+		outputs/reports/index_eda_reduced_no_imputation/index_eda.html \
+		outputs/reports/indices/indices.html
+QUARTO_REPORTS := outputs/reports/index_eda_reduced_no_imputation/index_eda.html  \
+		outputs/reports/indices/indices.html \
+		outputs/reports/indices_no_imputation/indices.html
+
 
 DATASETS := \
 	    ${CA_BUILT_ASSETS}/base/metadata.json \
@@ -76,22 +83,86 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 
 
 # Compile project reports
-# outputs/reports/%.pdf: reports/%/main.typ \
-# 			$$(wildcard reports/%/sections/*.typ) \
-# 			| outputs/reports
-# 	@printf "Compile → Report '$*'.\n"
-# 	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
+outputs/reports/%.pdf: reports/%/main.typ \
+			$$(wildcard reports/%/sections/*.typ) \
+			| outputs/reports
+	@printf "Compile → Report '$*'.\n"
+	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
 
 # Compile project presentations to PDF
-outputs/slides/%.pdf: | outputs/slides
-	@printf "Compile → Presentation '$*' to PDF.\n"
-	@$(MAKE) -C presentations/$* main.pdf && cp presentations/$*/main.pdf $@
+outputs/slides/%.pdf: \
+			presentations/%/main.pdf \
+			| outputs/slides
+	cp presentations/$*/main.pdf $@
 
-# Compile project presentations to HTML (for presenting)
-outputs/slides/%.html: | outputs/slides
-	@printf "Compile → Presentation '$*' to HTML.\n"
-	@$(MAKE) -C presentations/$* main.html && cp presentations/$*/main.html $@
+outputs/slides/%.html: \
+			presentations/%/main.html \
+			| outputs/slides
+	cp presentations/$*/main.html $@
 
+include presentations/april-enlens-talk/Makefile
+
+
+# outputs/reports/index_eda_%/index_eda.html: \
+# 			reports/index-eda/index_eda.qmd \
+# 			${CA_BUILT_ASSETS}/%_imp/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'index_eda_$*.html'...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir index_eda_$* \
+# 			-P ds_name:$* && \
+# 		printf "Quarto  → Removing old 'index_eda_$*.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
+# 		mv reports/index-eda/index_eda_$* $(@D)
+
+include Makefile.quarto
+
+# outputs/reports/index_eda_reduced_no_imputation/index_eda.html: \
+# 			reports/index-eda/index_eda.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'index_eda_reduced_no_imputation.html'...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir index_eda_reduced_no_imputation \
+# 			-P ds_name:reduced_no_imputation && \
+# 		printf "Quarto  → Removing old 'index_eda_reduced_no_imputation.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'index_eda_reduced_no_imputation.html' to destination...\n"
+# 		mv reports/index-eda/index_eda_reduced_no_imputation $(@D)
+#
+# outputs/reports/indices/indices.html: \
+# 			reports/indices/indices.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_imp/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'indices.html' (with imputation)...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir indices \
+#  			-P with_imputation:true && \
+# 		printf "Quarto  → Removing old 'indices.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+# 		mv reports/indices/indices $(@D)
+#
+# outputs/reports/indices_no_imputation/indices.html: \
+# 			reports/indices/indices.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'indices.html' (no imputation)...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir indices \
+#  			-P with_imputation:false && \
+# 		printf "Quarto  → Removing old 'indices.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+# 		mv reports/indices/indices $(@D)
+
+# === Thesis ===
+include Makefile.thesis
 
 # == Create results and output directories
 outputs/slides: | outputs
