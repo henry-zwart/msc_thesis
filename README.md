@@ -2,6 +2,8 @@
 
 Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 
+![Project timeline](outputs/project_timeline.png)
+
 Whenever `main` receives new changes, all _completed_ reports are recompiled in GitHub CI and published 
 at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
 are easily accessible. 
@@ -17,9 +19,6 @@ Ongoing or draft reports must be compiled locally, or accessed via the links bel
 > Such work should not be published to the static site. However, it is okay to publish 
 > links which refer to documents stored directly in the repo, i.e., for which access is 
 > authenticated by GitHub.
-
-
-![Project timeline](outputs/project_timeline.png)
 
 
 ## Building reports locally
