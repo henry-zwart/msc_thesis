@@ -69,6 +69,12 @@ removed.
   caption: [Longitudinal survey response dates per-wave.]
 ) <fig:dataset-longitudinal-response-eventplot>
 
+#figure(
+  image("../results/figures/dataset/interresponse_times.pdf"), 
+  placement: top,
+  caption: [Distribution of inter-response times across individuals.]
+) <fig:dataset-longitudinal-interresponse-times>
+
 
 
 - Context of the survey:
