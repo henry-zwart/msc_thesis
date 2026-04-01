@@ -172,8 +172,6 @@ def main():
                 ax=ax,
             )[0]
 
-            # network_artist.get_nodes().set(norm=mcolors.Normalise(0,1))
-
         plt.colorbar(network_artist.get_vertices(), ax=ax)
 
         ax.set_title(dimension)

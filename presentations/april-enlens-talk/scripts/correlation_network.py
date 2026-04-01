@@ -85,7 +85,7 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
                     "color": edge_colours,
                     "alpha": 1,
                     "cmap": DIVERGING_CMAP,
-                    "norm": mcolors.Normalise(vmin=-0.5, vmax=0.5),
+                    "norm": mcolors.Normalize(vmin=-0.5, vmax=0.5),
                 },
             },
         ]

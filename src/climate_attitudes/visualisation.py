@@ -153,7 +153,7 @@ def plot_corr_network(
                     "color": edge_colours,
                     "alpha": 1,
                     "cmap": DIVERGING_CMAP,
-                    "norm": mcolors.Normalise(vmin=-1, vmax=1),
+                    "norm": mcolors.Normalize(vmin=-1, vmax=1),
                 },
             },
         ]
