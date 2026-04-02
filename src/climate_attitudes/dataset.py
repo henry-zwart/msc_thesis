@@ -355,15 +355,15 @@ class Dataset:
 
         return ds
 
-    def standardise(self, columns: cs.Selector | pl.Expr) -> Dataset:
+    def standardise(
+        self, columns: cs.Selector | pl.Expr, centre: bool = True
+    ) -> Dataset:
         ds = self.clone()
-        ds.response = self.response.with_columns(
-            (columns - columns.mean()) / columns.std()
-        )
+        centred_cols = columns - columns.mean() if centre else columns
+
+        ds.response = self.response.with_columns(centred_cols / columns.std())
         if self.indices is not None:
-            ds.indices = self.indices.with_columns(
-                (columns - columns.mean()) / columns.std()
-            )
+            ds.indices = self.indices.with_columns(centred_cols / columns.std())
 
         return ds
 
