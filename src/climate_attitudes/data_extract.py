@@ -452,8 +452,8 @@ class DataExtract:
                     {  # Remap so human is high
                         3: 0,  # Not happening
                         1: 1,  # Natural causes
-                        0: 2,  # Human causes
-                        2: 3,  # Both
+                        2: 2,  # Both
+                        0: 3,  # Human causes
                     }
                 )
                 .cast(ClimateChangeCause)
