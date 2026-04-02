@@ -67,7 +67,8 @@ else:
 	ds_spec = ds_spec_reduced_no_imputation
 	dataset_no_std = Dataset.load(config, name="reduced_no_imputation", with_imputation=False)
 
-dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS))
+dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS), centre=True)
+#dataset = dataset_no_std
 resp = dataset.response.collect()
 indices = dataset.indices.collect()
 
@@ -75,6 +76,7 @@ indices = dataset.indices.collect()
 
 <!--TODO: Add diagram showing how internal states give rise to survey responses-->
 
+<!--
 - Infer internal belief system regarding climate change
 - Intervention dynamics:
 	- If we want to shift a certain belief, how should we intervene?
@@ -103,6 +105,7 @@ Then we use this data to infer the network structure which supports it.
 - Variation in questions
 - Variable participation
 
+-->
 
 ## Variable selection
 
@@ -248,12 +251,14 @@ as well as `current_pres` also exhibit low associations with all others.
 
 ## Recovering cognitive states
 
+<!--
 - Consistent sets of variables
 	- Which sets cluster together consistently under different measures?
 	- What do results from different measures imply?
 	- Labels, characterisation of different sets: look closer at internal 
 		consistency, correlation, explanatory factors
 	- Which variables do not consistently cluster together with others?
+-->
 
 ```{python}
 #| label: efa-setup
@@ -387,10 +392,12 @@ ax.legend(fontsize=6);
 
 #### F1: General 'pro-environment' attitude
 
+<!--
 **F1** does not load highly (above $\pm 0.5$) on questions regarding the causes of 
 climate change (`cc2`), extreme weather (`ew5`, `ew6`), or second-order beliefs 
 regarding climate change (`cc10`, `cc11`, `cc12`, `cvcc_worryothers`), climate 
 policy (`pol7_pi`), or behavioural intentions (`cvcc4_will`).
+-->
 
 <!-- The remaining questions --- spanning current and future climate impacts, personal -->
 <!-- attitudes on climate-related policies, political stances, climate-related behavioural -->
@@ -405,66 +412,26 @@ and ideology corresponding to shared attitudes along party lines.
 #### F2: CC impact distribution, or expectations about local impacts?
 **F2** is relatively sparse, with no high loadings (above $\pm 0.5$). It exhibits 
 two groups of low-to-moderate loadings (above $\pm 0.3$), with opposite loading 
-polarities. The first group comprises beliefs about current and future impacts of 
-climate change on wealthy US communities, and current impacts on the participants' 
-own community. The second group comprises environmentally-friendly behavioural 
-intentions and prescriptive norms, and support for increased emissions standards 
-for auto-manufacturers. 
+polarities: 
 
-Since these groups differ in polarity, the associated latent factor is such that 
-it induces belief in the current and future impacts of climate change on these 
-communities, while decreasing attitudes and intentions toward 
-environmentally-friendly behaviour-change, and decreasing support for stricter 
-emissions standards. 
++ Beliefs about current impacts of climate change on wealthy US communities and 
+	the participants' own community. To a lesser degree, extreme weather 
+	variables, impacts on other communities, and worry about climate change.
 
-Possible explanation: **F2** concerns the distribution of impacts of climate change.
++ Political affiliation and support for climate-policies. 
 
-If an individual believes that the impacts of climate change are not evenly felt,
-with wealthy communities shielded from its effects, they may have a lower sense of 
-responsibility to change their behaviour, or expectation of others to do so.
+Since these groups have opposite polarity, the corresponding latent factor is
+such that it:
 
-Alternative explanation: **F2** reflects expectations about local impacts.
+- Increases belief/worry about climate change, while decreasing support for climate policies, or conversely.
 
-Since `cc4_comm` also loads highly, this factor may reflect a negative relationship
-between the perceived security from the effects of climate change and willingness to 
-act. 
-
-#### F3: Impact of extreme weather on CC behavioural attitudes (and ?)
-
-**F3** has low-to-moderate loadings (above $\pm 0.3$) on intentions, prescriptive 
-norms, and second-order beliefs regarding others intentions for 
-environmentally-friendly behaviour change. It also has low-to-moderate loadings for 
-attitudes and behaviour regarding extreme weather, second-order beliefs about others'
-worry regarding climate change, and political ideology. The loading for political 
-ideology has opposite polarity to these other variables.
-
-This may reflect the impact of extreme weather on environmentally-friendly behavioural 
-intentions (and prescriptive norms, second-order beliefs). I am unsure how to explain 
-the negative loading on political ideology.
-
-#### F4: Belief in individual capacity to manage CC impacts
-
-**F4** loads highly (above $\pm 0.5$) on `cc11`, and low-to-moderately (above 
-$\pm 0.3$) on `cc10` (with opposite polarity) and `cc12`. `cc11` and `cc12` 
-concern an individual's capacity for self-security in the face of climate change, 
-and second-order beliefs about others' calmness or dread regarding climate change 
-risks, thus the negative loading on these questions may reflect a general attitude 
-on individuals' capacity to self-manage the effects of climate change. 
-`cc10` assesses a second-order belief about others' knowledge of the climate risks
-they are exposed to, where a high value indicates precise knowledge. The positive 
-loading is then consistent with our above interpretation, i.e., that individuals 
-know the risks, and therefore can manage them independently.
-
-#### F5: _?_
-
-**F5** exhibits moderate-to-high loadings (above $\pm 0.3$) on measures of political
-stance, and belief regarding the future global impacts of climate change. The latter 
-is loaded oppositely to the former two. The negative loading on political stance 
-indicates that conservative/republican positions are more likely when the latent factor
-is high. The positive loading on future global climate impacts indicates that belief 
-is stronger when the factor is high. I am not sure how to interpret this.
+- Leads to stronger policy support, despite low belief/worry regarding the current impacts of climate change.
 
 
+#### F3: Political stance
+
+**F3** loads highly only on the two political variables, indicating that this factor
+may reflect general political views.
 
 ### Correlational measures
 
@@ -473,6 +440,8 @@ We next examine three measures of direct association:
 **Pearson correlation** measures the total correlation between each pair of variables, with 
 values in the interval $[-1, 1]$ reflecting the tendency for variables to be high (low)
 together, for a positive correlation, or oppositely, for a negative correlation.
+
+**Spearman correlation** measures the total strength of correlation between ranked variables.
 
 **Partial correlation** measures the correlation between a pair of variables, after 
 adjusting for linear relationships with all other variables. That is, partial 
@@ -575,40 +544,43 @@ internal association under various measures:
  - **CC Behaviour Change:** Prescriptive norms, intentions, and second-order beliefs 
  	about others' intentions to adopt environmentally-friendly behaviours 
  	(`cvcc4_should`, `cvcc4_personal`, `cvcc4_will`)
--->
 
 - **CC Rational:** Beliefs about individuals' capacity to self-manage the effects 
 	of climate change (`cc10`, `cc11`, `cc12`)
+-->
 
-- **CC Impacts:** Beliefs regarding the current and future impacts of climate change
-	on different communities (`cc(4|5)_(world|poorUS|wealthUS|comm)`)
+- **CC Impacts:** Beliefs regarding the current impacts of climate change
+	on different communities (`cc4_(world|poorUS|wealthUS|comm)`)
 
-- **CC Policy:** Attitudes toward, and support for climate-related policies 
+- **CC Policy:** Attitudes toward, and support for climate-related policies
 	(`cc_pol_car`, `cc_pol_tax`, `cc_ica`, `pol7`)
 
-For each group, we replace the constituent columns with an index calculated by 
-projecting the observed response values onto the first principle component.
+Two additional variables have been included in **CC Policy** due to consistent moderate-high
+association, although they are not directly policy-related:
+
+- `cvcc6`: Attitude concerning the importance of individual action on climate change,
+- `cvcc9_cc`: Attitude concerning the role of scientists (with appropriate expertise) 
+	in guiding the climate change response, and
 
 Several variables did not cluster consistently with any others. These have been retained
 as individual variables:
 
-- `cc1`: Belief in climate change,
-- `cc2`: Belief in the causes of climate change,
-- `cc3`: Attitude regarding the current crisis level of climate change,
-- `cc6`: Level of worry regarding current and future climate change,
-- `cvcc_worryothers`: Second-order belief concerning others' level of worry regarding 
+- **Climate change:** `cc1`: Belief in climate change,
+- **CC Anthropogenic:** `cc2`: Belief in the causes of climate change,
+- **CC Worry:** `cc6`: Level of worry regarding current and future climate change,
+- **CC Worry (others):** `cvcc_worryothers`: Second-order belief concerning others' level of worry regarding 
 	climate change,
-- `cvcc6`: Attitude concerning the importance of individual action on climate change,
-- `cvcc9_cc`: Attitude concerning the role of scientists (with appropriate expertise) 
-	in guiding the climate change response, and
-- `pol7_pi`: Second-order belief concerning others attitude on the economic trade-off
-	of stricter environmental regulations.
-	
-### Index evaluation
 
+For each group, we replace the constituent columns with an index calculated by 
+projecting the observed response values onto the first principle component.
+
+	
+## Index evaluation
+<!--
 We first examine the variance explained by the first principle component for each of the
 constructed indices. Values are given as proportions. Higher values indicate that an 
 index more accurately reflects the collapsed variables. 
+-->
 
 ```{python}
 #| label: indices-explained-variance
@@ -644,14 +616,14 @@ if index_kind == Index.PCA:
 	ax.spines["right"].set_visible(False)
 ```
 
-### PCA Components (check matches expectations)
+### EFA Loadings (check matches expectations)
 
 ```{python}
 #| label: indices-pca-components
 group_lookup = {
     "politics": "Politics",
     "extreme_weather": "Extreme weather",
-    "self_efficacy": "Self Efficacy",
+    # "self_efficacy": "Self Efficacy",
     "climate_impacts": "Climate Impacts",
     "climate_policy": "Climate Policy",
 }
@@ -715,18 +687,43 @@ for col, ax in zip(group_lookup, axes, strict=True):
 
 ```{python}
 #| label: indices-marginal-distributions
-plot_data = dataset_no_std.indices.drop("participant_id", "wave").collect()
+RENAME_MAP = {
+	"cc1": "Climate change",
+	"cc2": "CC Anthropogenic",
+	"cc6": "CC Worry",
+	"cvcc_worryothers": "CC Worry (others)",
+	"politics": "Politics",
+	"extreme_weather": "Extreme Weather",
+	"climate_impacts": "Climate Impacts",
+	"climate_policy": "Climate Policy",
+}
+
+plot_data = dataset_no_std.indices.drop("participant_id", "wave").collect().rename(RENAME_MAP)
 n_vars = plot_data.shape[1]
 col_wrap = 2
 n_rows = ((n_vars - 1) // col_wrap) + 1
 
 # Determine which cols aren't indices
 non_index_cols = {
-	col for col in resp.columns
-	if col in plot_data.columns and col not in ("participant_id", "wave")
+	RENAME_MAP[col] for col in resp.columns
+	if RENAME_MAP.get(col, None) in plot_data.columns and col not in ("participant_id", "wave")
 }
 
 fig, axes = plt.subplots(nrows=n_rows, ncols=col_wrap, figsize=(2.5, 1*n_rows), constrained_layout=True)
+
+XTICKS = {
+	"Climate change": (np.arange(3), ["No", "Don't know", "Yes"]),
+	"CC Anthropogenic": ([-1, 1], ["No", "Yes" ]),
+	"CC Worry": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
+	"CC Worry (others)": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
+}
+
+N_BINS = {
+	"Politics": 5,
+	"Extreme Weather": 6,
+	"Climate Impacts": 10,
+	"Climate Policy": 10,
+}
 
 for col, ax in zip(plot_data.columns, axes.flatten(), strict=False):
 	if col in non_index_cols:
@@ -739,9 +736,11 @@ for col, ax in zip(plot_data.columns, axes.flatten(), strict=False):
 			shrink=0.75, 
 			linewidth=0.25,
 		)
-		ax.set_xticks(plot_data.select(pl.col(col).unique().sort()).to_series().to_numpy().flatten())
+		ax.set_xticks(*XTICKS[col], rotation=35, horizontalalignment="right")
+		#ax.set_xticks(plot_data.select(pl.col(col).unique().sort()).to_series().to_numpy().flatten())
 	else:
-	    sns.histplot(plot_data, x=col, ax=ax, stat="probability", linewidth=0.25)
+		n_bins = N_BINS.get(col, "auto")
+		sns.histplot(plot_data, x=col, ax=ax, stat="probability", linewidth=0.25, bins=n_bins)
 	ax.set_title(col, fontdict={'fontsize': 6})
 	ax.set_xlabel(None)
 	ax.yaxis.label.set_fontsize(6)
@@ -756,21 +755,23 @@ for ax in axes[:,1:].flatten():
 ```
 
 
+<!--
 - What do we see in the indices:
 	- Is binarisation possible? Maybe splitting down middle?
 	- Correlation/Distance corr/partial correlation/VAR/clustering
 	- Partial correlation network
+-->
 
 <!--TODO: Can we do a correlational class analysis on the reduced dataset to try and partition 
 the population into groups of similar-structure individuals?-->
 
+### Pairwise association
+
 ::: {.panel-tabset}
 
-### Pearson correlation
+#### Pearson correlation
 ```{python}
 #| label: indices-corr-pearson
-#plt.rc("figure", dpi=200)
-
 plot_corr_with_dendro(
 	indices, 
 	kind=Correlation.PEARSON, 
@@ -778,7 +779,7 @@ plot_corr_with_dendro(
 )
 ```
 
-### Partial correlation 
+#### Partial correlation 
 ```{python}
 #| label: indices-corr-partial
 import warnings
@@ -790,7 +791,7 @@ plot_corr_with_dendro(
 )
 ```
 
-### VAR (Temporal)
+#### VAR (Temporal)
 ```{python}
 #| label: indices-corr-var-temporal
 plot_corr_with_dendro(
@@ -800,7 +801,7 @@ plot_corr_with_dendro(
 )
 ```
 
-### VAR (Contemporaneous)
+#### VAR (Contemporaneous)
 ```{python}
 #| label: indices-corr-var-contemporaneous
 plot_corr_with_dendro(
@@ -812,6 +813,8 @@ plot_corr_with_dendro(
 
 :::
 
+### Partial correlation network
+
 ```{python}
 #| label: indices-pc-network
 
@@ -822,7 +825,7 @@ label_remap = {
 }
 
 def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False):
-	fig, ax = plt.subplots(figsize=(2.5, 5), constrained_layout=True)
+	fig, ax = plt.subplots(figsize=(2.3, 4), constrained_layout=True)
 
 	DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
 
@@ -862,9 +865,9 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
 	else:
 		G = nx.from_numpy_array(adj)
 
-	edge_linewidths = {(u, v): z["weight"] * 12 for u, v, z in G.edges(data=True)}
+	edge_linewidths = {(u, v): z["weight"] * 4 for u, v, z in G.edges(data=True)}
 	edge_colours = [z["weight"] for u, v, z in G.edges(data=True)]
-	edge_labels = [f"{z['weight']:.2f}" for u, v, z in G.edges(data=True)]
+	edge_labels = [f"{z['weight']:.1f}" for u, v, z in G.edges(data=True)]
 	layout = nx.forceatlas2_layout(G, gravity=0.3, scaling_ratio=5, seed=202603)
 
 	with ipx.style.context(
@@ -879,7 +882,7 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
 					"color": edge_colours,
 					"alpha": 1,
 					"cmap": DIVERGING_CMAP,
-					"norm": mcolors.Normalize(vmin=-1, vmax=1),
+					"norm": mcolors.Normalize(vmin=-0.45, vmax=0.45),
 				},
 			},
 		]
@@ -903,10 +906,10 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
 			edge_label_rotate=True,
 			vertex_facecolor="white",
 			vertex_zorder=3,
-			#node_label_size=6,
-			#edge_label_size=4,
-			node_label_size=3.5,
-			edge_label_size=3,
+			# node_label_size=3.5,
+			# edge_label_size=3,
+			node_label_size=4,
+			edge_label_size=3.5,
 			ax=ax,
 		)[0]
 		#fig.colorbar(
@@ -922,4 +925,21 @@ corr = Correlation.PARTIAL_GLASSO.calculate(indices, assume_centered=True)
 plot_corr_network(indices.drop("participant_id", "wave"), corr, threshold=0.1)
 ```
 
+Indices:
 
+- **Politics:** General political stance (`pol_ideology`, `pol_affiliation`)
+- **Extreme weather:** Experience with, and preparation for extreme weather (`ew5`, 
+	`ew6`)
+- **CC Impacts:** Beliefs regarding the current impacts of climate change
+	on different communities (`cc4_(world|poorUS|wealthUS|comm)`)
+- **CC Policy:** Attitudes toward, and support for climate-related policies
+	(`cc_pol_car`, `cc_pol_tax`, `cc_ica`, `pol7`); also `cvcc6` (individual action)
+	and `cvcc9_cc` (role of scientists)
+
+Individual variables:
+
+- **Climate change:** `cc1`: Belief in climate change,
+- **CC Anthropogenic:** `cc2`: Belief in the causes of climate change,
+- **CC Worry:** `cc6`: Level of worry regarding current and future climate change,
+- **CC Worry (others):** `cvcc_worryothers`: Second-order belief concerning others' level of worry regarding 
+	climate change,
