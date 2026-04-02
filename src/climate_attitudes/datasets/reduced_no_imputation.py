@@ -17,9 +17,9 @@ INPUT_QUESTION_COLUMNS = [
     # "cc5_wealthUS",
     # "cc5_poorUS",
     # "cc5_comm",
-    "cc10",
-    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
-    "cc12",
+    # "cc10",
+    # "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
+    # "cc12",
     # "cvcc4_will",
     # "cc3",
     "cc6",
@@ -61,9 +61,9 @@ BELIEF_COLS = [
     "cc4_wealthUS",
     "cc4_poorUS",
     "cc4_comm",
-    "cc10",
-    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
-    "cc12",
+    # "cc10",
+    # "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
+    # "cc12",
 ]
 
 EXPERIENCE_COLS = []
@@ -119,7 +119,7 @@ CATEGORIES = np.asarray(
 GROUPS: dict[str, list[str | pl.Expr]] = {
     "Politics": ["pol_ideology", "pol_affiliation"],
     "Extreme weather": ["ew5", "ew6"],
-    "Self Efficacy": ["cc10", "cc11", "cc12"],
+    # "Self Efficacy": ["cc10", "cc11", "cc12"],
     "Climate Impacts": [
         "cc4_world",
         "cc4_poorUS",

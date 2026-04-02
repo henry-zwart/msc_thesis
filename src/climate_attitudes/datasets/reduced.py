@@ -17,9 +17,9 @@ INPUT_QUESTION_COLUMNS = [
     # "cc5_wealthUS",
     # "cc5_poorUS",
     # "cc5_comm",
-    "cc10",
-    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
-    "cc12",
+    # "cc10",
+    # "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
+    # "cc12",
     # "cvcc4_will",
     # "cc3",
     "cc6",
@@ -65,9 +65,9 @@ BELIEF_COLS = [
     # "cc5_wealthUS",
     # "cc5_poorUS",
     # "cc5_comm",
-    "cc10",
-    "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
-    "cc12",
+    # "cc10",
+    # "cc11",  # If included, cc10 ~ cc12. If excluded, less so. Possible collider.
+    # "cc12",
     # "cvcc4_will",
 ]
 
@@ -125,7 +125,7 @@ GROUPS: dict[str, list[str | pl.Expr]] = {
     "Politics": ["pol_ideology", "pol_affiliation"],
     "Extreme weather": ["ew5", "ew6"],
     # "Climate Behaviour": ["cvcc4_should", "cvcc4_will", "cvcc4_personal"],
-    "Self Efficacy": ["cc10", "cc11", "cc12"],
+    # "Self Efficacy": ["cc10", "cc11", "cc12"],
     "Climate Impacts": [
         "cc4_world",
         "cc4_poorUS",
