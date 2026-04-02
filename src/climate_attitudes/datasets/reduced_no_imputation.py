@@ -45,10 +45,36 @@ REVERSE_CODING = []
 
 TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
+    pl.col("cc2").replace({0: 0, 1: 0, 2: 1, 3: 1}),
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
         {1: 0, 2: 1, 99: 2}
     ),  # "Don't know" between 'only a little' and 'a moderate amount'
 ]
+# TRANSFORMS = [
+#     pl.col("cc1").replace({1: 2, 99: 1}) - 1,  # Move "yes" to 2, "don't know" to 1
+#     pl.col("cc2").replace({0: -1, 1: -1, 2: 1, 3: 1}),
+#     (pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace({1: 0, 2: 1, 99: 2}) - 2)
+#     / 2,  # "Don't know" between 'only a little' and 'a moderate amount'
+#     (pl.col("ew5", "ew6", "cc6", "cvcc_worryothers") - 2.5) / 1.5,
+#     (
+#         pl.col(
+#             "cvcc6",
+#             "cvcc9_cc",
+#             "cc_pol_tax",
+#             "cc_pol_car",
+#             "pol_affiliation",
+#             "pol_ideology",
+#         )
+#         - 3
+#     )
+#     / 2,
+#     (
+#         pl.col("cc_ica").replace_strict(
+#             {0: -1.0, 1: 0.5, 2: 1.0}, return_dtype=pl.Float64
+#         )
+#     ),
+#     (pl.col("pol7") - 1.5) * 2,
+# ]
 
 VITERBI_IMPUTE_COLS = []
 FILL_IMPUTE_COLS = []
