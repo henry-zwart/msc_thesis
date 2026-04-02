@@ -33,7 +33,7 @@ class Index(StrEnum):
             case Index.EFA:
                 efa = Factor(X, n_factor=1).fit()
                 result = IndexResult(
-                    index=efa.factor_scoring().flatten(),
+                    index=efa.factor_scoring(method="reg").flatten(),
                     result=efa,
                 )
         return result
