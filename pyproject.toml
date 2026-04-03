@@ -8,6 +8,7 @@ dependencies = [
     "graphviz>=0.21",
     "iplotx>=1.7.0",
     "ipywidgets>=8.1.8",
+    "ising",
     "jax>=0.9.0",
     "jupyter>=1.1.1",
     "jupyterlab>=4.5.2",
@@ -47,6 +48,14 @@ cadata = "climate_attitudes.cli:cli.main"
 
 [tool.uv.build-backend]
 module-name = "climate_attitudes"
+
+[tool.uv.workspace]
+members = [
+    "ising",
+]
+
+[tool.uv.sources]
+ising = { workspace = true, editable = true }
 
 [tool.ruff.lint]
 select = [
