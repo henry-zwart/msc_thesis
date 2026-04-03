@@ -35,7 +35,7 @@ INPUT_QUESTION_COLUMNS = [
     # "pol7_pi",
     "pol_affiliation",
     "pol_ideology",
-    "ew6",
+    # "ew6",
     # "cvcc4_personal",
 ]
 
@@ -112,7 +112,7 @@ ATTITUDE_COLS = [
 ]
 
 BEHAVIOUR_COLS = [
-    "ew6",
+    # "ew6",
     # "cvcc4_personal",
 ]
 
@@ -144,7 +144,7 @@ CATEGORIES = np.asarray(
 
 GROUPS: dict[str, list[str | pl.Expr]] = {
     "Politics": ["pol_ideology", "pol_affiliation"],
-    "Extreme weather": ["ew5", "ew6"],
+    # "Extreme weather": ["ew5", "ew6"],
     # "Self Efficacy": ["cc10", "cc11", "cc12"],
     "Climate Impacts": [
         "cc4_world",
@@ -167,4 +167,6 @@ RENAME: dict[str, str] = {
     "cc2": "CC anthropogenic",
     "cc6": "CC worry",
     "cvcc_worryothers": "CC worry (others)",
+    "ew5": "Weather worry",
+    # "ew6": "Weather preparation",
 }

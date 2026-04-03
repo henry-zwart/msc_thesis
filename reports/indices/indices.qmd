@@ -70,7 +70,7 @@ else:
 dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS), centre=True)
 #dataset = dataset_no_std
 resp = dataset.response.collect()
-indices = dataset.indices.collect()
+indices = dataset.indices.collect().with_columns(-pl.col("politics"))
 
 ```
 
@@ -622,7 +622,7 @@ if index_kind == Index.PCA:
 #| label: indices-pca-components
 group_lookup = {
     "politics": "Politics",
-    "extreme_weather": "Extreme weather",
+    #"extreme_weather": "Extreme weather",
     # "self_efficacy": "Self Efficacy",
     "climate_impacts": "Climate Impacts",
     "climate_policy": "Climate Policy",
@@ -693,7 +693,9 @@ RENAME_MAP = {
 	"cc6": "CC Worry",
 	"cvcc_worryothers": "CC Worry (others)",
 	"politics": "Politics",
-	"extreme_weather": "Extreme Weather",
+	#"extreme_weather": "Extreme Weather",
+	"ew5": "Weather worry",
+	#"ew6": "Weather preparation",
 	"climate_impacts": "Climate Impacts",
 	"climate_policy": "Climate Policy",
 }
@@ -716,6 +718,8 @@ XTICKS = {
 	"CC Anthropogenic": ([-1, 1], ["No", "Yes" ]),
 	"CC Worry": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
 	"CC Worry (others)": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
+	"Weather worry": (np.arange(4)+1, ["Not at all", "A little", "Moderate", "A great deal"]),
+	#"Weather preparation": (np.arange(4)+1, ["Not at all", "A little", "Moderate", "A great deal"]),
 }
 
 N_BINS = {
@@ -821,7 +825,7 @@ plot_corr_with_dendro(
 label_remap = {
 	"cc_behaviour_change": "cc_behav",
 	"cvcc_worryothers": "cc_2worry",
-	"extreme_weather": "ew",
+	#"extreme_weather": "ew",
 }
 
 def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False):
