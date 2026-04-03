@@ -1,4 +1,17 @@
 ## March 30 - April 3
+### Thursday
+Notes for Friday:
+
+- Write up notes from meeting with Sara
+- Email Sara regarding the dataset citing questions
+- We can include some other cc4 variables if just looking at waves 3 and 4
+- Send updated datasets to Katinka
+- Investigate different states derived from the index groups (e.g., psychological distance, disparate impacts)
+- Consider more targeted methods of deriving indexes, such that the results are more interpretable.
+- Look at the policies states by themselves. Any interesting interactions there, temporal relationships? Sara 
+  advised that the more interesting cases are those where people agree with some but not others, i.e., the 
+  persuadables.
+
 ### Wednesday
 To-do:
 
