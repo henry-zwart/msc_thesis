@@ -40,8 +40,8 @@ QUARTO_REPORTS := \
 		outputs/reports/index_eda_reduced_no_imputation/index_eda.html \
 		outputs/reports/indices/indices.html
 QUARTO_REPORTS := outputs/reports/index_eda_reduced_no_imputation/index_eda.html  \
-		outputs/reports/indices_no_imputation/indices.html 
-		# outputs/reports/indices/indices.html \
+		outputs/reports/indices_no_imputation/indices.html \
+		outputs/reports/indices/indices.html
 
 
 DATASETS := \

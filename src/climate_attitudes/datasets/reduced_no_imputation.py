@@ -155,10 +155,10 @@ GROUPS: dict[str, list[str | pl.Expr]] = {
     "Climate Policy": [
         "cc_pol_car",
         "cc_pol_tax",
+        "cc_ica",
+        "pol7",
         "cvcc6",
         "cvcc9_cc",
-        "pol7",
-        "cc_ica",
     ],
 }
 

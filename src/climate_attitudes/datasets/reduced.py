@@ -35,7 +35,7 @@ INPUT_QUESTION_COLUMNS = [
     # "pol7_pi",
     "pol_affiliation",
     "pol_ideology",
-    "ew6",
+    # "ew6",
     # "cvcc4_personal",
 ]
 
@@ -45,6 +45,7 @@ REVERSE_CODING = []
 
 TRANSFORMS = [
     pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
+    pl.col("cc2").replace({0: 0, 1: 0, 2: 1, 3: 1}),
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
         {1: 0, 2: 1, 99: 2}
     ),  # "Don't know" between 'only a little' and 'a moderate amount'
@@ -91,7 +92,7 @@ ATTITUDE_COLS = [
 ]
 
 BEHAVIOUR_COLS = [
-    "ew6",
+    # "ew6",
     # "cvcc4_personal",
 ]
 
@@ -123,7 +124,7 @@ CATEGORIES = np.asarray(
 
 GROUPS: dict[str, list[str | pl.Expr]] = {
     "Politics": ["pol_ideology", "pol_affiliation"],
-    "Extreme weather": ["ew5", "ew6"],
+    # "Extreme weather": ["ew5", "ew6"],
     # "Climate Behaviour": ["cvcc4_should", "cvcc4_will", "cvcc4_personal"],
     # "Self Efficacy": ["cc10", "cc11", "cc12"],
     "Climate Impacts": [
@@ -152,6 +153,7 @@ RENAME: dict[str, str] = {
     # "cc3": "CC threat level",
     "cc6": "CC worry",
     "cvcc_worryothers": "CC worry (others)",
+    "ew5": "Weather worry",
     # "cvcc6": "CC indiv. action",
     # "cvcc9_cc": "CC scientists role",
 }
