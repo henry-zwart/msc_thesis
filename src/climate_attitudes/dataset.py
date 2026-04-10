@@ -14,7 +14,7 @@ from statsmodels.multivariate.factor import FactorResults
 from climate_attitudes.data_extract import DataExtract
 from climate_attitudes.exceptions import DatasetExistsException
 from climate_attitudes.imputation import impute_viterbi
-from climate_attitudes.indices import Index
+from climate_attitudes.indices import IndexMethod
 from climate_attitudes.schema import dataset as schema
 from climate_attitudes.schema.enums import PoliticalAffiliation, President
 from climate_attitudes.schema.extract import (
@@ -186,7 +186,7 @@ class Dataset:
     def compute_indices(
         self,
         groups: dict[str, list[str | pl.Expr]],
-        kind: Index,
+        kind: IndexMethod,
     ) -> Dataset:
         # If no groups defined, can't compute indices
         if not groups:
@@ -251,10 +251,14 @@ class Dataset:
 
     def filter_columns(
         self,
-        columns: list[str | pl.Expr] | list[str] | list[pl.Expr],
+        columns: list[str | pl.Expr] | list[str] | list[pl.Expr] | pl.Expr,
     ) -> Dataset:
         ds = self.clone()
-        ds.response = self.response.select(*columns).clone()
+        match columns:
+            case pl.Expr():
+                ds.response = self.response.select(columns).clone()
+            case _:
+                ds.response = self.response.select(*columns).clone()
 
         new_cols = ds.response.collect_schema().names()
         ds.item = self.item.filter(pl.col("item_name").is_in(new_cols))
@@ -264,6 +268,7 @@ class Dataset:
         return ds
 
     def filter_waves(self, waves: list[int]) -> Dataset:
+        # TODO: Also filter participants, questions, codebook accordingly
         ds = self.clone()
         ds.response = self.response.filter(pl.col("wave").is_in(waves))
         return ds

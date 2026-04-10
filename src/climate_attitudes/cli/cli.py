@@ -11,7 +11,7 @@ import climate_attitudes.datasets.reduced as reduced_ds
 import climate_attitudes.datasets.reduced_no_imputation as reduced_no_imputation_ds
 from climate_attitudes.cli import visualisation as vis_cli
 from climate_attitudes.dataset import Dataset
-from climate_attitudes.indices import Index
+from climate_attitudes.indices import IndexMethod
 
 from .common import BaseCommand
 from .info import DatasetInfoCommand, DisplayCodebookCommand, WaveInfoCommand
@@ -35,7 +35,7 @@ class CreateDerivedDatasetCommand(BaseCommand):
     name: str
     with_imputation: bool = False
     with_indices: bool = False
-    index: Index
+    index: IndexMethod
     force: bool = False
     filter_null: bool = False
     waves: list[int] = [1, 2, 3, 4, 5]
