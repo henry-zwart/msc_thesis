@@ -1,3 +1,32 @@
+## April 7 - April 10
+### Friday
+Plan: Writing dataset section of thesis.
+
+### Thursday
+- Fit Blume-Capel to policy support data
+- Tidied up model visualisations 
+- Meeting with Vítor and Kyuri
+- Started refactoring Ising and BC models to use shared base class
+
+### Wednesday
+- Fixed sampling by deriving transition probabilities for BC model.
+- Fixed fitting (which I discovered was broken). Still a patch-job -- may need
+  to specify an analytical derivative for the negative log likelihood.
+
+To-do:
+
+- Figure out model sampling for Blume-Capel. Can't use Glauber dynamics (at least not 
+  in the same way) since we now have three states. Can instead calculate update 
+  probabilities and explicitly sample new state according to these.
+- ...?
+
+### Tuesday
+- Attended Dhruv's defence
+- Sent updated dataset to Kyuri and Katinka
+- Working on Blume-Capel implementation; I believe model fitting is done. Need to fix
+  sampling.
+
+
 ## March 30 - April 3
 ### Thursday
 Notes for Friday:
