@@ -19,13 +19,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
       with:
-        persist-credentials: false
-        #submodules: recursive
+        submodules: false
 
-    - name: Checkout submodule
+    - name: Setup SSH for submodules
       run: |
-        git submodule sync --recursive
-        git -c protocol.version=2 submodule update --init --force --depth=1 --recursive
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    - name: Init and update submodules
+      run: |
+        git submodule sync
+        git submodule update --init --recursive
 
     - name: Install Typst
       uses: typst-community/setup-typst@v4
