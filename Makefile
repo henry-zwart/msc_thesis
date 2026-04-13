@@ -12,8 +12,11 @@ endif
 
 RUN_R := docker run -it --rm  -v $$(pwd):/code -v ${CA_RAW_ASSETS}:/raw-data -w /code msc-thesis-r:latest
 
-REPORT_TYPES := proposal reading_summary climate-attitudes-eda
-PRESENTATION_TYPES := project_plan  # collider-bias feb-echo-talk
+REPORT_TYPES := thesis
+#proposal reading_summary climate-attitudes-eda
+
+PRESENTATION_TYPES := project_plan april-enlens-talk  # collider-bias feb-echo-talk
+
 REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(REPORT_TYPES)) \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
@@ -32,17 +35,27 @@ SITE_SOURCES = $(MKDOCS_CONFIG) $(wildcard site/**/*.md) $(wildcard site/*.md) \
 
 
 QUARTO_REPORTS := \
-		outputs/reports/index_eda_ds1_5/index_eda.html \
-		outputs/reports/index_eda_ds1/index_eda.html
+		outputs/reports/index_eda_full/index_eda.html \
+		outputs/reports/index_eda_reduced/index_eda.html \
+		outputs/reports/index_eda_reduced_no_imputation/index_eda.html \
+		outputs/reports/indices/indices.html
+QUARTO_REPORTS := outputs/reports/index_eda_reduced_no_imputation/index_eda.html  \
+		outputs/reports/indices_no_imputation/indices.html \
+		outputs/reports/indices/indices.html
+
 
 DATASETS := \
 	    ${CA_BUILT_ASSETS}/base/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1/metadata.json \
-	    ${CA_BUILT_ASSETS}/ds1_5/metadata.json
+	    ${CA_BUILT_ASSETS}/full_imp/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced_imp/metadata.json \
+	    ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+	    ${CA_BUILT_ASSETS}/behaviour/metadata.json \
+	    ${CA_BUILT_ASSETS}/behaviour_imp/metadata.json
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
-all: site/site/index.html all-reports quarto-reports
+all: site/site/index.html outputs/project_timeline.png all-reports quarto-reports
 
 all-reports: $(REPORTS)
 
@@ -69,6 +82,14 @@ site/site/index.html: $(SITE_REPORTS) $(SITE_SOURCES)
 	@printf "Site    → Done.\n"
 
 
+# Compile project timeline
+outputs/project_timeline.png: \
+			timeline/main.typ \
+			timeline/gantt.yaml \
+			| outputs
+	typst compile $< $@ -f png
+
+
 # Compile project reports
 outputs/reports/%.pdf: reports/%/main.typ \
 			$$(wildcard reports/%/sections/*.typ) \
@@ -77,15 +98,79 @@ outputs/reports/%.pdf: reports/%/main.typ \
 	@$(MAKE) -C reports/$* && cp reports/$*/main.pdf $@
 
 # Compile project presentations to PDF
-outputs/slides/%.pdf: | outputs/slides
-	@printf "Compile → Presentation '$*' to PDF.\n"
-	@$(MAKE) -C presentations/$* main.pdf && cp presentations/$*/main.pdf $@
+outputs/slides/%.pdf: \
+			presentations/%/main.pdf \
+			| outputs/slides
+	cp presentations/$*/main.pdf $@
 
-# Compile project presentations to HTML (for presenting)
-outputs/slides/%.html: | outputs/slides
-	@printf "Compile → Presentation '$*' to HTML.\n"
-	@$(MAKE) -C presentations/$* main.html && cp presentations/$*/main.html $@
+outputs/slides/%.html: \
+			presentations/%/main.html \
+			| outputs/slides
+	cp presentations/$*/main.html $@
 
+include presentations/april-enlens-talk/Makefile
+
+
+# outputs/reports/index_eda_%/index_eda.html: \
+# 			reports/index-eda/index_eda.qmd \
+# 			${CA_BUILT_ASSETS}/%_imp/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'index_eda_$*.html'...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir index_eda_$* \
+# 			-P ds_name:$* && \
+# 		printf "Quarto  → Removing old 'index_eda_$*.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
+# 		mv reports/index-eda/index_eda_$* $(@D)
+
+include Makefile.quarto
+
+# outputs/reports/index_eda_reduced_no_imputation/index_eda.html: \
+# 			reports/index-eda/index_eda.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'index_eda_reduced_no_imputation.html'...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir index_eda_reduced_no_imputation \
+# 			-P ds_name:reduced_no_imputation && \
+# 		printf "Quarto  → Removing old 'index_eda_reduced_no_imputation.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'index_eda_reduced_no_imputation.html' to destination...\n"
+# 		mv reports/index-eda/index_eda_reduced_no_imputation $(@D)
+#
+# outputs/reports/indices/indices.html: \
+# 			reports/indices/indices.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_imp/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'indices.html' (with imputation)...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir indices \
+#  			-P with_imputation:true && \
+# 		printf "Quarto  → Removing old 'indices.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+# 		mv reports/indices/indices $(@D)
+#
+# outputs/reports/indices_no_imputation/indices.html: \
+# 			reports/indices/indices.qmd \
+# 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+# 			| outputs/reports
+# 	@printf "Quarto  → Build 'indices.html' (no imputation)...\n"
+# 	@uv run quarto render $< \
+# 			--execute-daemon-restart \
+# 			--output-dir indices \
+#  			-P with_imputation:false && \
+# 		printf "Quarto  → Removing old 'indices.html'...\n"
+# 		rm -rf $(@D) && \
+# 		printf "Quarto  → Moving new 'indices.html' to destination...\n"
+# 		mv reports/indices/indices $(@D)
+
+# === Thesis ===
+include Makefile.thesis
 
 # == Create results and output directories
 outputs/slides: | outputs
@@ -97,54 +182,62 @@ outputs/reports: | outputs
 outputs:
 	@mkdir -p outputs
 
-
-outputs/reports/index_eda_%/index_eda.html: \
-			reports/index-eda/index_eda.qmd \
-			${CA_BUILT_ASSETS}/%/metadata.json \
-			| outputs/reports
-	@printf "Quarto  → Build 'index_eda_$*.html'...\n"
-	@uv run quarto render $< \
-			--execute-daemon-restart \
-			--output-dir index_eda_$* \
-			-P ds_name:$* && \
-		printf "Quarto  → Removing old 'index_eda_$*.html'...\n"
-		rm -rf $(@D) && \
-		printf "Quarto  → Moving new 'index_eda_$*.html' to destination...\n"
-		mv reports/index-eda/index_eda_$* $(@D)
-		
-
-
 # === Dataset construction ===
-${CA_BUILT_ASSETS}/ds1_5/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/imputed_reduced.py
-	@printf "Dataset → Build reduced imputed dataset...\n"
-	@uv run cadata create imputed-dataset --name ds1_5 --force
+include Makefile.dataset
 
-
-${CA_BUILT_ASSETS}/ds1/metadata.json: \
-			${CA_BUILT_ASSETS}/base/metadata.json \
-			src/climate_attitudes/datasets/imputed.py
-	@printf "Dataset → Build imputed dataset...\n"
-	@uv run cadata create imputed-dataset --name ds1 --force
-
-
-${CA_BUILT_ASSETS}/base/metadata.json: \
-			src/climate_attitudes/dataset.py \
-			src/climate_attitudes/data_extract.py \
-			src/climate_attitudes/schema/dataset.py \
-			src/climate_attitudes/schema/extract.py \
-			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
-			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
-			${CA_STATIC_ASSETS}/item_columns.json \
-			${CA_STATIC_ASSETS}/item_groups.csv \
-			${CA_STATIC_ASSETS}/categories.csv \
-			${CA_STATIC_ASSETS}/error_items.csv \
-			${CA_STATIC_ASSETS}/variable_names.csv \
-			${CA_STATIC_ASSETS}/ideology_type.csv \
-			${CA_STATIC_ASSETS}/lee_2025_items.csv
-	@printf "Dataset → Build base dataset...\n"
-	@uv run cadata create base-dataset --prune-error-participants --filter-valid
+# ${CA_BUILT_ASSETS}/behaviour_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/behaviour.py
+# 	@printf "Dataset → Build CC behaviour dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name behaviour --force --with-imputation
+#
+# ${CA_BUILT_ASSETS}/behaviour/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/behaviour.py
+# 	@printf "Dataset → Build CC behaviour dataset...\n"
+# 	@uv run cadata create dataset --name behaviour --force
+#
+# ${CA_BUILT_ASSETS}/reduced_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced.py
+# 	@printf "Dataset → Build reduced dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name reduced --force --with-imputation --with-indices --index efa
+#
+# ${CA_BUILT_ASSETS}/reduced/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced.py
+# 	@printf "Dataset → Build reduced dataset...\n"
+# 	@uv run cadata create dataset --name reduced --force
+#
+# ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/reduced_no_imputation.py
+# 	@printf "Dataset → Build reduced dataset (only full values)...\n"
+# 	@uv run cadata create dataset --name reduced_no_imputation --force --with-indices --index efa --filter-null --waves [3,4]
+#
+# ${CA_BUILT_ASSETS}/full_imp/metadata.json: \
+# 			${CA_BUILT_ASSETS}/base/metadata.json \
+# 			src/climate_attitudes/datasets/full.py
+# 	@printf "Dataset → Build full dataset (imputed)...\n"
+# 	@uv run cadata create dataset --name full --force --with-imputation
+#
+#
+# ${CA_BUILT_ASSETS}/base/metadata.json: \
+# 			src/climate_attitudes/dataset.py \
+# 			src/climate_attitudes/data_extract.py \
+# 			src/climate_attitudes/schema/dataset.py \
+# 			src/climate_attitudes/schema/extract.py \
+# 			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+# 			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
+# 			${CA_STATIC_ASSETS}/item_columns.json \
+# 			${CA_STATIC_ASSETS}/item_groups.csv \
+# 			${CA_STATIC_ASSETS}/categories.csv \
+# 			${CA_STATIC_ASSETS}/error_items.csv \
+# 			${CA_STATIC_ASSETS}/variable_names.csv \
+# 			${CA_STATIC_ASSETS}/ideology_type.csv \
+# 			${CA_STATIC_ASSETS}/lee_2025_items.csv
+# 	@printf "Dataset → Build base dataset...\n"
+# 	@uv run cadata create base-dataset --prune-error-participants --filter-valid
 
 
 # == Convert Rdata response files to parquet.

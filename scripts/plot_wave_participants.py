@@ -1,9 +1,10 @@
 import os
-import polars as pl
 from pathlib import Path
+
 import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
 import numpy as np
+import polars as pl
+from matplotlib.axes import Axes
 
 
 def draw_tree_recursive(

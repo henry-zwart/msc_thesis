@@ -1,0 +1,949 @@
+---
+title: Climate Belief Dataset
+author: Henry Zwart
+date: today
+toc: true
+format:
+  html:
+    code-fold: true
+execute:
+  echo: false
+fig-dpi: 300
+---
+
+```{python}
+#| tags: [parameters]
+from climate_attitudes.indices import Index
+from sklearn.decomposition import PCA
+
+with_imputation: bool = True
+```
+
+```{python}
+#| label: imports
+
+from pathlib import Path
+
+import numpy as np
+
+import polars as pl
+import polars.selectors as cs
+
+from statsmodels.multivariate.factor import Factor
+
+import networkx as nx
+import iplotx as ipx
+
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import seaborn as sns
+
+from climate_attitudes.settings import Config
+from climate_attitudes.dataset import Dataset
+from climate_attitudes.correlation import Correlation, filter_vars_by_abs_corr
+from climate_attitudes import configure_mpl
+from climate_attitudes.visualisation import plot_corr_with_dendro, plot_feature_dendro, DIVERGING_CMAP
+from climate_attitudes.parallel_analysis import pa_random_eigs, pa_true_eigs
+from climate_attitudes.datasets import reduced_no_imputation as ds_spec_reduced_no_imputation
+from climate_attitudes.datasets import reduced as ds_spec_reduced
+
+from climate_attitudes.feature_clustering import LinkageMethod
+
+FONT_PATH = Path("../../fonts")
+configure_mpl(FONT_PATH)
+
+
+#plt.rc("figure", dpi=100)
+```
+
+```{python}
+#| label: load dataset
+#| output: false
+config = Config(_env_file="../../.env")
+if with_imputation:
+	ds_spec = ds_spec_reduced
+	dataset_no_std = Dataset.load(config, name="reduced", with_imputation=True)
+else:
+	ds_spec = ds_spec_reduced_no_imputation
+	dataset_no_std = Dataset.load(config, name="reduced_no_imputation", with_imputation=False)
+
+dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS), centre=True)
+#dataset = dataset_no_std
+resp = dataset.response.collect()
+indices = dataset.indices.collect().with_columns(-pl.col("politics"))
+
+```
+
+<!--TODO: Add diagram showing how internal states give rise to survey responses-->
+
+<!--
+- Infer internal belief system regarding climate change
+- Intervention dynamics:
+	- If we want to shift a certain belief, how should we intervene?
+	- Intervention effect and outcome (direction) may vary depending on beliefs, both direct
+		and auxiliary ones.
+	- Interventions are heavy-handed; expected to impact multiple beliefs/attitudes at once.
+- Considerations:
+	- Survey data is a measurement of this system 
+	- Measurement is also conditional on other biases (assumes people can accurately gauge their
+		own internal state), context. 
+	- Measurement is also subject to noise (internal state might not change, but people responds
+		differently due to random contextual differences)
+	- Ordinal scales not necessarily linear, and aren't necessarily equivalent across individuals
+		('strongly agree' for one person may be 'agree' for another)
+
+**This report concerns the first stage: Inferring internal belief system.**
+
+There are two components to this. First we need to recover the internal belief _states_ (i.e., the data).
+Then we use this data to infer the network structure which supports it. 
+
+## Climate attitudes survey
+
+- Summary
+- Wave distribution
+	- Also distribution over time between responses? 
+- Variation in questions
+- Variable participation
+
+-->
+
+## Variable selection
+
+We filter the set of survey questions, keeping only those which are present in at 
+least two waves, and which meet at least one of the following criteria:
+
+- Directly concerned with beliefs, attitudes, or experiences regarding climate change;
+
+- Expected to relate indirectly to climate change beliefs or attitudes (e.g., political 
+	views).
+
+We also include several demographic variables: participant age, income 
+bracket, perceived income sufficiency, and residential urban-rural classification. 
+
+
+The selected questions are organised into five categories:
+
+- **Beliefs:** Epistemic stances about states of affairs (e.g., 'climate change is 
+	happening' (`cc1`) or 'most Americans consider stricter environmental 
+	regulation too costly to the economy' (`pol7_pi`)).
+
+- **Attitudes:** Evaluative positions, typically on scales such as 'good-to-bad' or 
+	'oppose-to-support' (e.g., 'How worried are you about current and future 
+	climate change?' (`cc6`) or 'Scientists with the appropriate expertise should 
+	guide how we response to global warming/climate change' (`cvcc9_cc`)).
+
+- **Behaviour:** Questions concerning behavioural intentions and past actions (e.g., 
+	'How prepared are you for future extreme weather events?' (`ew6`) or 'I _will_ 
+	adopt environmentally-friendly behaviours after the epidemic.' 
+	(`cvcc4_personal`)).
+
+- **Demographic:** *As mentioned above*.
+
+- **External factors:** States or events external to any particular survey participant.
+	Currently there is only one variable in this category, which specifies the 
+	current President of the United States. 
+
+### Excluded variables
+
+In some cases, we have excluded variables which we expect to be useful. For instance:
+
+- `cc_behaviour_X`, where X in {`meat`, `travel`, `active`, `discuss`, `evacuate`, `move`},
+
+- `cc_behaviorchange`, 
+
+- `pol_vote_CCX`, where X in {`dem`, `rep`}, 
+
+- `ccSolveX`, where X in $\{0,1,10,50,100\}$, and
+
+- `ccCompX`, where X in $\{0,1,10,25,50,100\}$. 
+
+For `cc_behaviour_X` and `cc_behaviorchange`, these variables are not considered due 
+to only being present in Wave 5 (and possibly Wave 6). The remaining three variables 
+are excluded due to complexities involved in comparing responses across treatment 
+variations. 
+
+ 
+<!--
+::: {.panel-tabset}
+
+### Belief
+
+| Item | Summary | Extreme weather | Climate change | Political stance | Policy support | Society |
+|:-----|:--------|:---------------:|:--------------:|:----------------:|:--------------:|:-------:|
+| `cc1` | CC Happening | | $X$ | | | |
+| `cc2` | CC Causes | | $X$ | | | |
+| `cc4_world` | CC Impact (world) | | $X$ | | | |
+| `cc4_wealthUS` | CC Impact (wealthy US communities) | | $X$ | | | |
+| `cc4_poorUS` | CC Impact (poor US communities) | | $X$ | | | |
+| `cc4_comm` | CC Impact (own community) | | $X$ | | | |
+| `cc5_world` | CC Future impact (world) | | $X$ | | | |
+| `cc5_wealthUS` | CC Future impact (wealthy US communities) | | $X$ | | | |
+| `cc5_poorUS` | CC Future impact (poor US communities) | | $X$ | | | |
+| `cc5_comm` | CC Future impact (own community) | | $X$ | | | |
+| `cc10` | 2nd-order: Risks known | $X$ | $X$ | | | $X$ |
+| `cc11` | Risks avoidable | $X$ | $X$ | | | |
+| `cc12` | 2nd-order: Capacity for rational thinking | | $X$ | | | $X$ |
+| `cvcc4_will` | People will adopt CC-friendly behaviours after epidemic | | $X$ | | | |
+| `future` | Expected change in 5y quality-of-life | | | | | |
+| `cvcc10_cc` | Optimism abt. technological CC solutions | | $X$ | | | |
+| `soc_trust` | People are generally trustworthy | | | | | $X$ |
+| `soc_help` | People generally try to help others | | | | | $X$ |
+
+
+
+### Attitude
+
+| Item | Summary | Extreme weather | Climate change | Political stance | Policy support | Society |
+|:-----|:--------|:---------------:|:--------------:|:----------------:|:--------------:|:-------:|
+| `cc3` | CC Crisis level | | X | | | |
+| `cc6` | Worry about CC | | X | | | |
+| `cvcc_worryothers` | 2nd-order: Worry about CC | | X | | | $X$ |
+| `ew5` | Worry about future extreme weather | X | | | | |
+| `cvcc4_should` | People _should_ adopt CC-friendly behaviours after epidemic | | X | | | X |
+| `cvcc6` | Importance of individual action | | X | | | |
+| `cvcc9_cc` | Scientists should guide CC response | | X | | | |
+| `cc_ica` | International emissions reduction agreement | | X | | X | |
+| `cc_pol_tax` | Tax on carbon-based fuels | | X | | X | |
+| `cc_pol_car` | Stronger carbon emission standards for manufacturers | | X | | X | |
+| `pol7` | Environmental regulation vs. cost to economy | | X | | X | |
+| `pol7_pi` | Environmental regulation vs. cost to economy | | X | | X | X |
+| `pol_affiliation` | Political party alignment | | | X | | |
+| `pol_ideology` | Conservative vs. Liberal | | | X | | |
+
+### Behaviour
+
+| Item | Summary | Extreme weather | Climate change | Political stance | Policy support | Society |
+|:-----|:--------|:---------------:|:--------------:|:----------------:|:--------------:|:-------:|
+| `ew6` | Preparation for future extreme weather | X | | | | |
+| `cvcc4_personal` | _I will_ adopt CC-friendly behaviours after epidemic | | X | | | |
+
+### Demographic
+
+| Item | Summary | Extreme weather | Climate change | Political stance | Policy support | Society |
+|:-----|:--------|:---------------:|:--------------:|:----------------:|:--------------:|:-------:|
+| `dem_urban` | Urban/Suburban/Rural | | | | | |
+| `dem_income` | Household income bracket | | | | | |
+| `dem_income_percep` | Perceived income sufficiency | | | | | |
+| `dem_age` | Participant age | | | | | |
+
+### External factors
+
+| Item | Summary | Extreme weather | Climate change | Political stance | Policy support | Society |
+|:-----|:--------|:---------------:|:--------------:|:----------------:|:--------------:|:-------:|
+| `current_pres` | Current president of the USA | | | | | |
+
+:::
+
+-->
+
+
+### Question pruning
+
+We remove several questions from consideration based on theoretical justification, or consistently
+low association with the core variables of interest. 
+
+`future` exhibits relative low association with all climate-change variables. Since participants 
+are not explicitly cued to consider climate change when responding to this question, we expect that 
+the responses instead reflect a more general, economic or political outlook. 
+
+`soc_help` and `soc_trust` have strong associations only with each other. All demographic variables,
+as well as `current_pres` also exhibit low associations with all others.
+
+## Recovering cognitive states
+
+<!--
+- Consistent sets of variables
+	- Which sets cluster together consistently under different measures?
+	- What do results from different measures imply?
+	- Labels, characterisation of different sets: look closer at internal 
+		consistency, correlation, explanatory factors
+	- Which variables do not consistently cluster together with others?
+-->
+
+```{python}
+#| label: efa-setup
+efa_df = resp.drop(*ds_spec.SURVEY_COLS)
+labels = np.asarray(efa_df.columns)
+
+all_categories = ["Belief", "Attitude", "Behaviour", "Demographic", "External factor"]
+category_pal = sns.husl_palette(len(all_categories), s=0.45)
+category_lut = dict(
+    zip(map(str, all_categories), category_pal)
+)
+
+category_colours = [category_lut[c] for c in ds_spec.CATEGORIES]
+```
+
+<!--TODO: Can we do a correlational class analysis on the reduced dataset to try and partition 
+the population into groups of similar-structure individuals?-->
+
+We first perform an exploratory factor analysis, to identify sets of variables 
+which are well-explained by hypothetical common latent factors. 
+
+
+### Exploratory Factor Analysis
+
+```{python}
+#| label: efa-parallel-analysis
+rng = np.random.default_rng(202603251524)
+
+true_eigs = pa_true_eigs(efa_df)
+rand_eigs = pa_random_eigs(efa_df, repeats=1000, rng=rng)
+
+n_factor = int(np.argmax((true_eigs <= rand_eigs)))
+
+match n_factor:
+	case 1:
+		n_factor_en = "first"
+	case 2:
+		n_factor_en = "second"
+	case 3:
+		n_factor_en = "third"
+	case 4:
+		n_factor_en = "fourth"
+	case 5:
+		n_factor_en = "fifth"
+	case 6:
+		n_factor_en = "sixth"
+	case 7:
+		n_factor_en = "seventh"
+	case _:
+		raise ValueError(f"Unexpected value: {n_factor=}. Expected in [1,7]")
+```
+
+We determine the appropriate number of factors using a parallel analysis, comparing 
+the ranked eigenvalues of the observed data with those of random samples. The parallel 
+analysis shows an intersection after the `{python} n_factor_en` eigenvalue, so we take 
+$k=`{python} n_factor`$. 
+
+::: {.panel-tabset}
+
+#### EFA
+```{python}
+#| label: efa-run
+efa = Factor(
+    efa_df.to_numpy(),
+    n_factor=n_factor,
+).fit()
+```
+
+```{python}
+#| label: efa-plot
+
+#plt.rc("figure", dpi=100)
+#7.5 + 0.5 = 8
+#cell_length = 0.0675
+#ylabel_length = 0.125
+#xlabel_length = 0.375 + 0.3
+cell_length = 0.085
+ylabel_length = 0.125
+xlabel_length = 0.375
+xlabel_length = 0.22
+dendro_length = 0.5
+figsize = (cell_length * efa.loadings.shape[0] + ylabel_length, cell_length * n_factor + xlabel_length + dendro_length)
+
+g = sns.clustermap(
+    efa.loadings.T,
+    center=0,
+    cmap=DIVERGING_CMAP,
+    col_colors=category_colours,
+    vmin=-1,
+    vmax=1,
+    method="ward",
+    dendrogram_ratio=(0, (dendro_length / (xlabel_length + cell_length * n_factor + dendro_length))),
+    cbar_pos=None,
+    linewidths=0.2,
+    figsize=figsize,
+    fmt=".1f",
+    annot=True,
+    annot_kws={"size": 2.5},
+    tree_kws={"linewidths": 0.25},
+)
+g.ax_heatmap.tick_params(axis="both", labelsize=3.5, width=0.2, length=1)
+
+ord_labels = labels[g.dendrogram_col.reordered_ind]
+
+g.ax_heatmap.set_xticks(np.arange(efa.loadings.shape[0]) + 0.5, ord_labels, rotation=45, horizontalalignment="right");
+g.ax_heatmap.set_yticks(np.arange(n_factor) + 0.5, [f"F{i}" for i in range(1,n_factor + 1)], rotation=0)
+```
+
+#### Parallel analysis
+```{python}
+#| label: efa-parallel-analysis-plot
+
+fig, ax = plt.subplots(figsize=(2.5,1.0), constrained_layout=True)
+ax.plot(np.arange(len(true_eigs)), true_eigs, color="tab:blue", label="Data", linewidth=0.75)
+ax.plot(np.arange(len(rand_eigs)), rand_eigs, color="tab:red", label="Random", linewidth=0.75)
+ax.set_xticks(np.arange(0, len(true_eigs), 2), np.arange(0, len(true_eigs), 2) + 1)
+
+ax.set_xlim(0, len(true_eigs))
+ax.set_ylim(0, None)
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.set_xlabel("Eigenvalue sorted index (decreasing)")
+ax.set_ylabel("Eigenvalue")
+ax.tick_params(axis="both", labelsize=5, width=0.2, length=1)
+ax.yaxis.label.set_fontsize(6)
+ax.xaxis.label.set_fontsize(6)
+ax.legend(fontsize=6);
+```
+
+:::
+
+#### F1: General 'pro-environment' attitude
+
+<!--
+**F1** does not load highly (above $\pm 0.5$) on questions regarding the causes of 
+climate change (`cc2`), extreme weather (`ew5`, `ew6`), or second-order beliefs 
+regarding climate change (`cc10`, `cc11`, `cc12`, `cvcc_worryothers`), climate 
+policy (`pol7_pi`), or behavioural intentions (`cvcc4_will`).
+-->
+
+<!-- The remaining questions --- spanning current and future climate impacts, personal -->
+<!-- attitudes on climate-related policies, political stances, climate-related behavioural -->
+<!-- intentions and prescriptive norms, belief and concern regarding climate change, and  -->
+<!-- assessment of the climate crisis level --- all load highly on this factor. -->
+
+Since all climate-related questions have been coded such that typically 
+pro-environmental responses are high, **F1** may reflect a general pro-environment 
+(or 'climate-action') attitude, with the high loadings on political affiliation 
+and ideology corresponding to shared attitudes along party lines.
+
+#### F2: CC impact distribution, or expectations about local impacts?
+**F2** is relatively sparse, with no high loadings (above $\pm 0.5$). It exhibits 
+two groups of low-to-moderate loadings (above $\pm 0.3$), with opposite loading 
+polarities: 
+
++ Beliefs about current impacts of climate change on wealthy US communities and 
+	the participants' own community. To a lesser degree, extreme weather 
+	variables, impacts on other communities, and worry about climate change.
+
++ Political affiliation and support for climate-policies. 
+
+Since these groups have opposite polarity, the corresponding latent factor is
+such that it:
+
+- Increases belief/worry about climate change, while decreasing support for climate policies, or conversely.
+
+- Leads to stronger policy support, despite low belief/worry regarding the current impacts of climate change.
+
+
+#### F3: Political stance
+
+**F3** loads highly only on the two political variables, indicating that this factor
+may reflect general political views.
+
+### Correlational measures
+
+We next examine three measures of direct association: 
+
+**Pearson correlation** measures the total correlation between each pair of variables, with 
+values in the interval $[-1, 1]$ reflecting the tendency for variables to be high (low)
+together, for a positive correlation, or oppositely, for a negative correlation.
+
+**Spearman correlation** measures the total strength of correlation between ranked variables.
+
+**Partial correlation** measures the correlation between a pair of variables, after 
+adjusting for linear relationships with all other variables. That is, partial 
+correlation aims to measure the _direct_ correlation between variables.
+
+**Distance correlation** (**TODO**) measures pairwise dependence with sensitivity 
+to non-linear relationships. Values lie in the interval $[0,1]$ where $0$ indicates 
+that the two variables are independent.
+
+::: {.panel-tabset}
+
+#### Pearson correlation
+```{python}
+#| label: full-corr-pearson
+#plt.rc("figure", dpi=100)
+plot_corr_with_dendro(
+	resp, 
+	kind=Correlation.PEARSON, 
+	no_cbar=True, 
+	x_categories=ds_spec.CATEGORIES, 
+	y_categories=ds_spec.CATEGORIES,
+)
+```
+
+#### Spearman correlation
+```{python}
+#| label: full-corr-spearman
+#plt.rc("figure", dpi=100)
+plot_corr_with_dendro(
+	resp, 
+	kind=Correlation.SPEARMAN, 
+	no_cbar=True, 
+	x_categories=ds_spec.CATEGORIES, 
+	y_categories=ds_spec.CATEGORIES,
+)
+```
+
+#### Partial correlation
+```{python}
+#| label: full-corr-partial
+import warnings
+warnings.filterwarnings('ignore')
+plot_corr_with_dendro(
+	resp, 
+	kind=Correlation.PARTIAL, 
+	no_cbar=True, 
+	x_categories=ds_spec.CATEGORIES, 
+	y_categories=ds_spec.CATEGORIES,
+)
+```
+
+#### Distance correlation
+```{python}
+#| label: full-corr-distance
+plot_corr_with_dendro(
+	resp, 
+	kind=Correlation.DISTANCE_CORR, 
+	no_cbar=True, 
+	x_categories=ds_spec.CATEGORIES, 
+	y_categories=ds_spec.CATEGORIES,
+)
+```
+
+:::
+
+### Feature clustering
+
+::: {.panel-tabset}
+
+#### Complete linkage (max dist)
+```{python}
+#| label: feature-clustering-complete
+fig, ax = plt.subplots(figsize=(2,3), constrained_layout=True)
+plot_feature_dendro(resp.drop(*ds_spec.SURVEY_COLS), method=LinkageMethod.COMPLETE, ax=ax)
+```
+
+#### Average linkage
+```{python}
+#| label: feature-clustering-average
+fig, ax = plt.subplots(figsize=(2,3), constrained_layout=True)
+plot_feature_dendro(resp.drop(*ds_spec.SURVEY_COLS), method=LinkageMethod.AVERAGE, ax=ax)
+```
+
+:::
+
+
+
+  
+## Constructing indices 
+
+In the previous section we identified six sets of variables that exhibit high
+internal association under various measures:
+
+- **Politics:** General political stance (`pol_ideology`, `pol_affiliation`)
+
+- **Extreme weather:** Experience with, and preparation for extreme weather (`ew5`, 
+	`ew6`)
+
+<!--
+ - **CC Behaviour Change:** Prescriptive norms, intentions, and second-order beliefs 
+ 	about others' intentions to adopt environmentally-friendly behaviours 
+ 	(`cvcc4_should`, `cvcc4_personal`, `cvcc4_will`)
+
+- **CC Rational:** Beliefs about individuals' capacity to self-manage the effects 
+	of climate change (`cc10`, `cc11`, `cc12`)
+-->
+
+- **CC Impacts:** Beliefs regarding the current impacts of climate change
+	on different communities (`cc4_(world|poorUS|wealthUS|comm)`)
+
+- **CC Policy:** Attitudes toward, and support for climate-related policies
+	(`cc_pol_car`, `cc_pol_tax`, `cc_ica`, `pol7`)
+
+Two additional variables have been included in **CC Policy** due to consistent moderate-high
+association, although they are not directly policy-related:
+
+- `cvcc6`: Attitude concerning the importance of individual action on climate change,
+- `cvcc9_cc`: Attitude concerning the role of scientists (with appropriate expertise) 
+	in guiding the climate change response, and
+
+Several variables did not cluster consistently with any others. These have been retained
+as individual variables:
+
+- **Climate change:** `cc1`: Belief in climate change,
+- **CC Anthropogenic:** `cc2`: Belief in the causes of climate change,
+- **CC Worry:** `cc6`: Level of worry regarding current and future climate change,
+- **CC Worry (others):** `cvcc_worryothers`: Second-order belief concerning others' level of worry regarding 
+	climate change,
+
+For each group, we replace the constituent columns with an index calculated by 
+projecting the observed response values onto the first principle component.
+
+	
+## Index evaluation
+<!--
+We first examine the variance explained by the first principle component for each of the
+constructed indices. Values are given as proportions. Higher values indicate that an 
+index more accurately reflects the collapsed variables. 
+-->
+
+```{python}
+#| label: indices-explained-variance
+if isinstance(next(iter(dataset.index_result.values())), PCA):
+	index_kind = Index.PCA
+else:
+	index_kind = Index.EFA
+
+if index_kind == Index.PCA:
+	group_names = []
+	explained_variance_prop = []
+	for name, pca_result in dataset.index_result.items():
+	    group_names.append(name)
+	    explained_variance_prop.append(pca_result.explained_variance_ratio_.item())
+
+	sort_order = np.argsort(explained_variance_prop)[::-1]
+	explained_variance_prop = np.asarray(explained_variance_prop)[sort_order]
+	group_names = np.asarray(group_names)[sort_order]
+
+	fig, ax = plt.subplots(figsize=(2.5,1.4), constrained_layout=True)
+
+	sns.barplot(x=group_names, y=explained_variance_prop)
+
+	ax.set_xticks(np.arange(len(group_names)), group_names, rotation=45, horizontalalignment="right")
+	ax.set_ylim(0, 1)
+
+	ax.set_ylabel("Explained variance")
+
+	ax.yaxis.label.set_fontsize(6)
+	ax.tick_params(axis="both", labelsize=6)
+
+	ax.spines["top"].set_visible(False)
+	ax.spines["right"].set_visible(False)
+```
+
+### EFA Loadings (check matches expectations)
+
+```{python}
+#| label: indices-pca-components
+group_lookup = {
+    "politics": "Politics",
+    #"extreme_weather": "Extreme weather",
+    # "self_efficacy": "Self Efficacy",
+    "climate_impacts": "Climate Impacts",
+    "climate_policy": "Climate Policy",
+}
+# if with_imputation:
+# 	group_lookup["climate_behaviour"] = "Climate Behaviour"
+
+
+fig, axes = plt.subplots(nrows=len(group_lookup), figsize=(2.5,0.7*len(group_lookup)), constrained_layout=True)
+
+if index_kind == Index.PCA:
+	max_cols = max(
+		(dataset.index_result[col].components_.shape[1])
+		for col in group_lookup
+	)
+else:
+	max_cols = max(
+		(dataset.index_result[col].loadings.shape[0])
+		for col in group_lookup
+	)
+
+
+for col, ax in zip(group_lookup, axes, strict=True):
+	res = dataset.index_result[col]
+	match index_kind:
+		case Index.PCA:
+			loadings = (res.components_.T * np.sqrt(res.explained_variance_)).T
+		case Index.EFA:
+			loadings = res.loadings.T
+	sns.heatmap(
+		loadings,
+		center=0,
+		annot=True,
+		fmt=".2f",
+		linewidths=0.5,
+		square=True,
+		cbar=None,
+		vmin=-1,
+		vmax=1,
+		cmap=DIVERGING_CMAP,
+		ax=ax,
+		annot_kws={"size": 4, "weight": "bold"}
+	)
+
+	# Y-axis ticks not meaningful since only using one PCA component
+	ax.set_yticks([])
+	ax.set_ylabel(group_lookup[col], rotation=0, labelpad=25, va="center", fontweight="bold")
+	ax.yaxis.label.set_fontsize(4)
+
+	constituent_cols = ds_spec.GROUPS[group_lookup[col]]
+	ax.xaxis.tick_top()
+	ax.xaxis.set_label_position('top')
+	ax.set_xticks(np.arange(len(constituent_cols)) + 0.5, constituent_cols, rotation=30, ha="left")
+	ax.tick_params(axis="x", labelsize=4)
+	ax.set_xlim(0, max_cols)
+    
+	# Left-align heatmaps
+	ax.set_anchor('W')
+```
+
+### Marginal distributions
+
+```{python}
+#| label: indices-marginal-distributions
+RENAME_MAP = {
+	"cc1": "Climate change",
+	"cc2": "CC Anthropogenic",
+	"cc6": "CC Worry",
+	"cvcc_worryothers": "CC Worry (others)",
+	"politics": "Politics",
+	#"extreme_weather": "Extreme Weather",
+	"ew5": "Weather worry",
+	#"ew6": "Weather preparation",
+	"climate_impacts": "Climate Impacts",
+	"climate_policy": "Climate Policy",
+}
+
+plot_data = dataset_no_std.indices.drop("participant_id", "wave").collect().rename(RENAME_MAP)
+n_vars = plot_data.shape[1]
+col_wrap = 2
+n_rows = ((n_vars - 1) // col_wrap) + 1
+
+# Determine which cols aren't indices
+non_index_cols = {
+	RENAME_MAP[col] for col in resp.columns
+	if RENAME_MAP.get(col, None) in plot_data.columns and col not in ("participant_id", "wave")
+}
+
+fig, axes = plt.subplots(nrows=n_rows, ncols=col_wrap, figsize=(2.5, 1*n_rows), constrained_layout=True)
+
+XTICKS = {
+	"Climate change": (np.arange(3), ["No", "Don't know", "Yes"]),
+	"CC Anthropogenic": ([-1, 1], ["No", "Yes" ]),
+	"CC Worry": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
+	"CC Worry (others)": (np.arange(4)+1, ["Not at all", "Not much", "Somewhat", "Very"]),
+	"Weather worry": (np.arange(4)+1, ["Not at all", "A little", "Moderate", "A great deal"]),
+	#"Weather preparation": (np.arange(4)+1, ["Not at all", "A little", "Moderate", "A great deal"]),
+}
+
+N_BINS = {
+	"Politics": 5,
+	"Extreme Weather": 6,
+	"Climate Impacts": 10,
+	"Climate Policy": 10,
+}
+
+for col, ax in zip(plot_data.columns, axes.flatten(), strict=False):
+	if col in non_index_cols:
+		sns.histplot(
+			plot_data, 
+			x=col, 
+			ax=ax, 
+			stat="probability", 
+			discrete=True, 
+			shrink=0.75, 
+			linewidth=0.25,
+		)
+		ax.set_xticks(*XTICKS[col], rotation=35, horizontalalignment="right")
+		#ax.set_xticks(plot_data.select(pl.col(col).unique().sort()).to_series().to_numpy().flatten())
+	else:
+		n_bins = N_BINS.get(col, "auto")
+		sns.histplot(plot_data, x=col, ax=ax, stat="probability", linewidth=0.25, bins=n_bins)
+	ax.set_title(col, fontdict={'fontsize': 6})
+	ax.set_xlabel(None)
+	ax.yaxis.label.set_fontsize(6)
+	ax.tick_params(axis="both", labelsize=5, width=0.2, length=1)
+	ax.spines["top"].set_visible(False)
+	ax.spines["right"].set_visible(False)
+	ax.spines["left"].set_linewidth(0.2)
+	ax.spines["bottom"].set_linewidth(0.2)
+
+for ax in axes[:,1:].flatten():
+    ax.set_ylabel(None)
+```
+
+
+<!--
+- What do we see in the indices:
+	- Is binarisation possible? Maybe splitting down middle?
+	- Correlation/Distance corr/partial correlation/VAR/clustering
+	- Partial correlation network
+-->
+
+<!--TODO: Can we do a correlational class analysis on the reduced dataset to try and partition 
+the population into groups of similar-structure individuals?-->
+
+### Pairwise association
+
+::: {.panel-tabset}
+
+#### Pearson correlation
+```{python}
+#| label: indices-corr-pearson
+plot_corr_with_dendro(
+	indices, 
+	kind=Correlation.PEARSON, 
+	no_cbar=True, 
+)
+```
+
+#### Partial correlation 
+```{python}
+#| label: indices-corr-partial
+import warnings
+warnings.filterwarnings('ignore')
+plot_corr_with_dendro(
+	indices, 
+	kind=Correlation.PARTIAL, 
+	no_cbar=True, 
+)
+```
+
+#### VAR (Temporal)
+```{python}
+#| label: indices-corr-var-temporal
+plot_corr_with_dendro(
+	indices, 
+	kind=Correlation.VAR_TEMPORAL, 
+	no_cbar=True, 
+)
+```
+
+#### VAR (Contemporaneous)
+```{python}
+#| label: indices-corr-var-contemporaneous
+plot_corr_with_dendro(
+	indices, 
+	kind=Correlation.VAR_CONTEMPORANEOUS, 
+	no_cbar=True, 
+)
+```
+
+:::
+
+### Partial correlation network
+
+```{python}
+#| label: indices-pc-network
+
+label_remap = {
+	"cc_behaviour_change": "cc_behav",
+	"cvcc_worryothers": "cc_2worry",
+	#"extreme_weather": "ew",
+}
+
+def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False):
+	fig, ax = plt.subplots(figsize=(2.3, 4), constrained_layout=True)
+
+	DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
+
+	# Generate a mask for the upper triangle
+	if not directed:
+		mask = np.triu(np.ones_like(corr, dtype=bool), k=1)
+	else:
+		mask = np.full_like(corr, fill_value=False, dtype=bool)
+
+	# If `mask_below` set, reset square colour below abs value to zero
+	mask[abs(corr) < threshold] = True
+
+	# Remove questions where only diagonal is unmasked
+	keep_idxes = (2 * mask.shape[1] - (mask.sum(axis=1) + mask.sum(axis=0))) > 2
+	corr = corr[keep_idxes][:, keep_idxes]
+	mask = mask[keep_idxes][:, keep_idxes]
+	_node_labels = np.asarray(df.columns)[keep_idxes]
+	node_labels = []
+	for col in np.asarray(df.columns)[keep_idxes]:
+		if col in group_lookup:
+			node_labels.append(group_lookup[col])
+		elif col in ds_spec.RENAME:
+			node_labels.append(ds_spec.RENAME[col])
+		else:
+			raise RuntimeError(
+				f"Could not find display name for column {col}"
+			)
+	node_labels = np.asarray(node_labels)
+	#node_labels = np.asarray([label_remap.get(label, label) for label in node_labels])
+
+	# ======== Network
+	adj = corr
+	adj[np.diag_indices_from(adj)] = 0
+	adj[mask] = 0
+	if directed:
+		G = nx.from_numpy_array(adj, create_using=nx.DiGraph)
+	else:
+		G = nx.from_numpy_array(adj)
+
+	edge_linewidths = {(u, v): z["weight"] * 4 for u, v, z in G.edges(data=True)}
+	edge_colours = [z["weight"] for u, v, z in G.edges(data=True)]
+	edge_labels = [f"{z['weight']:.1f}" for u, v, z in G.edges(data=True)]
+	layout = nx.forceatlas2_layout(G, gravity=0.3, scaling_ratio=5, seed=202603)
+
+	with ipx.style.context(
+		[
+			"hollow",
+			{
+				"vertex": {
+					"linewidth": 0.3,
+					"label": dict(hpadding=23, vpadding=5),
+				},
+				"edge": {
+					"color": edge_colours,
+					"alpha": 1,
+					"cmap": DIVERGING_CMAP,
+					"norm": mcolors.Normalize(vmin=-0.45, vmax=0.45),
+				},
+			},
+		]
+	):
+		network_artist = ipx.network(
+			G,
+			layout=layout,
+			tension=1,
+			edge_labels=edge_labels,
+			node_labels=node_labels,
+			edge_linewidth=edge_linewidths,
+			edge_curved=False,
+			# aspect="equal",
+			margins=0.1,
+			edge_label_bbox=dict(
+				edgecolor="black",
+				facecolor="white",
+				linewidth=0.25,
+				boxstyle="round,pad=0.3",
+			),
+			edge_label_rotate=True,
+			vertex_facecolor="white",
+			vertex_zorder=3,
+			# node_label_size=3.5,
+			# edge_label_size=3,
+			node_label_size=4,
+			edge_label_size=3.5,
+			ax=ax,
+		)[0]
+		#fig.colorbar(
+		#    network_artist.get_edges(),
+		#    shrink=0.6,
+		#    aspect=30,
+		#    ax=ax,
+		#)
+
+	fig.suptitle("Partial correlation (GLASSO regularisation)")
+
+corr = Correlation.PARTIAL_GLASSO.calculate(indices, assume_centered=True)
+plot_corr_network(indices.drop("participant_id", "wave"), corr, threshold=0.1)
+```
+
+Indices:
+
+- **Politics:** General political stance (`pol_ideology`, `pol_affiliation`)
+- **Extreme weather:** Experience with, and preparation for extreme weather (`ew5`, 
+	`ew6`)
+- **CC Impacts:** Beliefs regarding the current impacts of climate change
+	on different communities (`cc4_(world|poorUS|wealthUS|comm)`)
+- **CC Policy:** Attitudes toward, and support for climate-related policies
+	(`cc_pol_car`, `cc_pol_tax`, `cc_ica`, `pol7`); also `cvcc6` (individual action)
+	and `cvcc9_cc` (role of scientists)
+
+Individual variables:
+
+- **Climate change:** `cc1`: Belief in climate change,
+- **CC Anthropogenic:** `cc2`: Belief in the causes of climate change,
+- **CC Worry:** `cc6`: Level of worry regarding current and future climate change,
+- **CC Worry (others):** `cvcc_worryothers`: Second-order belief concerning others' level of worry regarding 
+	climate change,

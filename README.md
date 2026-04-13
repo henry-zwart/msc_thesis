@@ -2,6 +2,8 @@
 
 Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 
+![Project timeline](outputs/project_timeline.png)
+
 Whenever `main` receives new changes, all _completed_ reports are recompiled in GitHub CI and published 
 at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
 are easily accessible. 

@@ -1,0 +1,314 @@
+from __future__ import annotations
+
+from datetime import date
+from pathlib import Path
+
+import polars as pl
+from pydantic import BaseModel, Field
+from pydantic_settings import CliPositionalArg
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+
+from climate_attitudes.cli.common import BaseCommand
+from climate_attitudes.dataset import Dataset
+from climate_attitudes.exceptions import DatasetExistsException
+from climate_attitudes.schema.enums import ParticipantType
+from climate_attitudes.settings import RawDataFile
+
+console = Console()
+
+
+class WaveMetadata(BaseModel):
+    wave: int
+    response_count: int
+    null_pid_count: int
+    first_response_date: date
+    last_response_date: date
+
+    @classmethod
+    def from_responses(cls, responses: pl.LazyFrame, wave: int) -> WaveMetadata:
+        data = (
+            responses.clone()
+            .rename(
+                {
+                    "WAVE": "wave",
+                    "PID": "participant_id",
+                    "StartDate": "start_date",
+                    "EndDate": "end_date",
+                }
+            )
+            .with_columns(
+                pl.col("wave").cast(pl.Int64),
+                pl.col("participant_id").cast(pl.UInt32).alias("participant_id"),
+                pl.col("start_date", "end_date").str.strptime(
+                    pl.Datetime, format="%-m/%-d/%y %R", strict=True
+                ),
+            )
+            .filter(pl.col("wave") == wave)
+        )
+
+        null_pid_count = len(data.filter(pl.col("participant_id").is_null()).collect())  # ty: ignore
+        data = data.filter(pl.col("participant_id").is_not_null())
+        response_count = len(data.collect())  # ty: ignore
+
+        first_response_date, last_response_date = (
+            data.select(  # ty: ignore
+                pl.col("start_date").dt.date().min().alias("first_start_date"),
+                pl.col("start_date").dt.date().max().alias("last_start_date"),
+            )
+            .collect()
+            .row(0)
+        )
+
+        return cls(
+            wave=wave,
+            response_count=response_count,
+            null_pid_count=null_pid_count,
+            first_response_date=first_response_date,
+            last_response_date=last_response_date,
+        )
+
+
+class SurveyMetadata(BaseModel):
+    participant_count: int
+    wave_metadata: list[WaveMetadata]
+    first_response_date: date
+    last_response_date: date
+
+
+class DatasetInfoCommand(BaseCommand):
+    output: Path | None = None
+
+    def cli_cmd(self) -> None:
+        # Load responses from first five waves, and the last wave
+        w1_to_5 = RawDataFile.Waves1to5Responses.scan(self.settings)
+        w6 = RawDataFile.Wave6Responses.scan(self.settings)
+
+        # Count unique participants
+        w1_to_5_pids = (
+            w1_to_5.filter(pl.col("PID").is_not_null())  # ty: ignore
+            .select(pl.col("PID").cast(pl.UInt32))
+            .collect()
+            .to_series()
+        )
+        w6_pids = (
+            w6.filter(pl.col("PID").is_not_null())  # ty: ignore
+            .select(pl.col("PID").cast(pl.UInt32))
+            .collect()
+            .to_series()
+        )
+        pid_count = len(set(w1_to_5_pids) | set(w6_pids))
+
+        waves_metadata = [WaveMetadata.from_responses(w1_to_5, w) for w in range(1, 6)]
+        waves_metadata.append(WaveMetadata.from_responses(w6, 6))
+
+        first_response_date = waves_metadata[0].first_response_date
+        last_response_date = waves_metadata[-1].last_response_date
+
+        metadata = SurveyMetadata(
+            participant_count=pid_count,
+            wave_metadata=waves_metadata,
+            first_response_date=first_response_date,
+            last_response_date=last_response_date,
+        )
+
+        # Print, or write to file
+        if self.output:
+            with self.output.open("w") as f:
+                f.write(metadata.model_dump_json())
+        else:
+            console.print(metadata)
+
+
+class WaveInfoCommand(BaseCommand):
+    wave: CliPositionalArg[int] = Field(ge=1, le=6)
+    output: Path | None = None
+
+    def cli_cmd(self) -> None:
+        # Load wave data
+        match self.wave:
+            case 6:
+                data = RawDataFile.Wave6Responses.scan(self.settings)
+            case 1 | 2 | 3 | 4 | 5:
+                data = RawDataFile.Waves1to5Responses.scan(self.settings)
+            case _:
+                raise RuntimeError(
+                    f"Expected wave in [1,2,3,4,5,6]. Found '{self.wave}'."
+                )
+
+        metadata = WaveMetadata.from_responses(data, self.wave)
+
+        if self.output:
+            with self.output.open("w") as f:
+                f.write(metadata.model_dump_json())
+        else:
+            console.print(metadata)
+
+
+class DisplayCodebookCommand(BaseCommand):
+    dataset: str = "base"
+    deduplicate: bool = True
+
+    def cli_cmd(self) -> None:
+        # Try load dataset (either imputed or not -- doesn't matter)
+        for imp in (False, True):
+            try:
+                ds = Dataset.load(
+                    self.settings,
+                    name=self.dataset,
+                    with_imputation=imp,
+                    verbose=False,
+                )
+                break
+            except DatasetExistsException:
+                continue
+        else:
+            raise DatasetExistsException(f"No dataset found with name '{self.dataset}'")
+
+        # Vars:
+        #  - Item (item_name);
+        #  - Type (response_type);
+        #  - Question (question_text);
+        #  - Wave X (new/repeating/both; indicate with colours)
+        table = Table(title=f"Codebook: '{self.dataset}'", leading=1)
+
+        table.add_column("Item", justify="left", no_wrap=True)
+        table.add_column("Type", justify="left", no_wrap=True)
+        table.add_column("Question", justify="left", no_wrap=False, max_width=80)
+
+        unique_waves = (
+            ds.response.select(pl.col("wave").unique().sort()).collect().to_series()  # ty: ignore
+        )
+        for wave in unique_waves:
+            table.add_column(f"Wave {wave}", justify="center", no_wrap=True)
+
+        codebook = (
+            ds.codebook
+            # Add w1_rep column to simplify table logic
+            .with_columns(pl.lit(False).alias("w1_rep"))
+            .select(
+                "item_name",
+                "response_type",
+                "question_text",
+                *[f"^w{i}_{kind}$" for i in unique_waves for kind in ("new", "rep")],
+            )
+            .collect()
+        )
+
+        # Concat question text changes across waves; record aggregate question presence
+        if self.deduplicate:
+            codebook = (
+                codebook.with_row_index()  # ty: ignore
+                .with_columns(pl.col("index").min().over("item_name"))
+                .unpivot(
+                    index=["index", "item_name", "response_type", "question_text"],
+                    variable_name="occur_condition",
+                    value_name="occurs",
+                )
+                .with_columns(
+                    pl.col("occur_condition")
+                    .str.extract(r"^w(\d).*$")
+                    .cast(pl.Int64)
+                    .alias("wave"),
+                    pl.col("occur_condition")
+                    .str.extract(r"^w\d_(new|rep)$")
+                    .replace({"new": "new", "rep": "repeating"})
+                    .cast(ParticipantType)
+                    .alias("participant_type"),
+                )
+                .filter(pl.col("occurs"))
+                .drop("occur_condition", "occurs")
+                # Get participant types per question text variant and wave
+                .group_by(
+                    "index",
+                    "item_name",
+                    "response_type",
+                    "question_text",
+                    "wave",
+                    maintain_order=True,
+                )
+                .agg(pl.col("participant_type").unique().sort().cast(str))
+                # Create column with coloured wave numbers showing question presence
+                .with_columns(
+                    pl.col("participant_type")
+                    .list.join(",")
+                    .replace(
+                        {
+                            "new,repeating": "both",
+                        }
+                    )
+                    .replace(
+                        {
+                            "new": "[bold blue]",
+                            "repeating": "[bold yellow]",
+                            "both": "[bold green]",
+                        }
+                    )
+                    .alias("participant_type_text_style")
+                )
+                .with_columns(
+                    pl.concat_str(
+                        pl.col("participant_type_text_style"),
+                        pl.col("wave").cast(str),
+                        pl.lit("[/]"),
+                    ).alias("show_cond")
+                )
+                .drop("wave", "participant_type", "participant_type_text_style")
+                # For each item and unique question text, prepend the styled waves
+                .group_by(
+                    "index",
+                    "item_name",
+                    "response_type",
+                    "question_text",
+                    maintain_order=True,
+                )
+                .agg(pl.col("show_cond").str.join())
+                .with_columns(
+                    pl.concat_str(
+                        pl.col("show_cond"), pl.lit("\n"), pl.col("question_text")
+                    ).alias("question_text")
+                )
+                .drop("show_cond")
+                # For each item, concat all diff. question texts with newline sep
+                .group_by("index", "item_name", "response_type", maintain_order=True)
+                .agg(pl.col("question_text").str.join("\n\n"))
+                .sort(by="index")
+                .drop("index")
+                .join(
+                    (
+                        codebook.group_by("item_name").agg(  # ty: ignore
+                            pl.col(r"^w\d_(new|rep)$").any()
+                        )
+                    ),
+                    on="item_name",
+                    how="left",
+                )
+            )
+
+        def format_wave_cell(new: bool, rep: bool = False):
+            match new, rep:
+                case True, False:
+                    return "[bold blue]New[/]"
+                    # return Text("New", style="bold blue")
+                case False, True:
+                    return Text("Repeating", style="bold yellow")
+                case True, True:
+                    return Text("Both", style="bold green")
+
+        for row in codebook.iter_rows():  # ty: ignore
+            item, item_type, question, *waves = row
+
+            wave_cells = []
+            for i in range(len(unique_waves)):
+                wave_cells.append(format_wave_cell(waves[2 * i], waves[2 * i + 1]))
+
+            table.add_row(
+                item,
+                item_type,
+                question,
+                *wave_cells,
+            )
+
+        console = Console()
+        console.print(table)

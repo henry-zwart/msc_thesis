@@ -1,34 +1,37 @@
 from __future__ import annotations
+
+import pandera.polars as pa
+import polars as pl
+
 from climate_attitudes.schema.enums import (
     WAVES,
     ItemCategory,
-    UrbanArea,
     PoliticalAffiliation,
     President,
+    UrbanArea,
 )
-import polars as pl
-import pandera.polars as pa
+
 from .enums import (
-    ResponseType,
-    ParticipantType,
-    GroupCCGlobalResponse,
-    GroupCleanAir,
-    GroupPolVoteSupport,
-    Education,
-    StateAbbrev,
-    NaturalDisaster,
-    Gender,
-    StormAttribution,
-    OutageAttribution,
     ClimateChangeCause,
     ClimateChangeInducedAction,
     ClimatePolicyBenefit,
-    ReasonOpposeGreenInfra,
-    ReasonSupportGreenInfra,
-    ReasonOpposeInfra,
-    ReasonSupportInfra,
     CovidPolicyFlowonPriority,
+    Education,
+    Gender,
+    GroupCCGlobalResponse,
+    GroupCleanAir,
+    GroupPolVoteSupport,
+    NaturalDisaster,
+    OutageAttribution,
+    ParticipantType,
     PoliticalIdeology,
+    ReasonOpposeGreenInfra,
+    ReasonOpposeInfra,
+    ReasonSupportGreenInfra,
+    ReasonSupportInfra,
+    ResponseType,
+    StateAbbrev,
+    StormAttribution,
 )
 
 
@@ -156,10 +159,10 @@ class OutputResponseSchema(BaseSchema):
     ew3_nov_mat: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew3_nov_fin: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew3_nov_men: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
-    ew3_phy_delta: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
-    ew3_mat_delta: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
-    ew3_fin_delta: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
-    ew3_men_delta: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_phy_recent: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_mat_recent: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_fin_recent: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
+    ew3_men_recent: int = pa.Field(isin=[1, 2, 3, 4], nullable=True)
     ew5: int = pa.Field(isin=[1, 2, 3, 4])
     ew6: int = pa.Field(isin=[1, 2, 3, 4])
     attr_storm: pl.List(StormAttribution) = pa.Field(nullable=True)  # ty: ignore
@@ -252,19 +255,19 @@ class OutputResponseSchema(BaseSchema):
     # Willingness to pay X amt. for policy to compensate climate-affected communities
     ccCompensation: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Willingness to pay X amt. for policy to response to/solve climate-affected communities
+    # Willingness to pay X amt. for policy to solve CC
     ccSolving: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
     # Support US financially supporting global resposne to climate change
     cc_global_response: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Support international climate agreement committing US (and others) to reduce carbon emissions
+    # Support intl climate agreement committing US (and others) to reduce emissions
     cc_ica: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Support $10B for climate change investments
     cc_fedinvest: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
-    # If an international agreement is made to reduce emissions, what commitments should US make relative to other countries
+    # If intl emissions agreement made, what relative commitments should US make
     cc_commit: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Policy support
@@ -292,6 +295,7 @@ class OutputResponseSchema(BaseSchema):
 
     # Actions taken due to current/future CC impacts
     cc13: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
+    cc13_cumulative: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
     cc13_apr: pl.List(ClimateChangeInducedAction) = pa.Field(nullable=True)  # ty: ignore
 
     # behaviors taken to help address CC
@@ -358,8 +362,6 @@ class OutputResponseSchema(BaseSchema):
 
     # Policy support: reducing emissions to reduce impact of future pandemics/CC
     cvcc_clean_air_policy: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
-
-    # Policy support: reducing emissions to reduce impact of global warming/climate change
 
     # Scientists with appropriate expertise should guide ...
     # Economic growth and employment
@@ -455,7 +457,6 @@ class OutputResponseSchema(BaseSchema):
     pol_ideology: PoliticalIdeology  # ty: ignore
     current_pres: President  # ty: ignore
 
-    # Would proposal of climate policies make you more or less likely to support a political candidate
     # Change in support for political candidate after proposing climate/covid policies
     pol_vote_support: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 

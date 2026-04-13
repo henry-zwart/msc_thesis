@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import polars as pl
 
 
@@ -73,7 +74,9 @@ class ConditionalColumn:
         return self
 
     def treatment_condition(self) -> pl.Expr:
-        # NOTE: This is still useful since we create the treatment groups by checking if the treatment is satisfied, which should be irrespective of the survey conditions being met.
+        # NOTE: This is still useful since we create the treatment groups by checking
+        # if the treatment is satisfied, which should be irrespective of the survey
+        # conditions being met.
 
         # TODO: Make this check === 1
         wave_treatments = [
@@ -238,8 +241,8 @@ class ConditionGroup:
         null values are concerned.
 
         This function coalesces group-partitioned responses, replacing the response and
-        group indicator columns with a single column for responses, and a separate column
-        indicating group membership using an index (1..=M), represented as a
+        group indicator columns with a single column for responses, and a separate
+        column indicating group membership using an index (1..=M), represented as a
         human-readable enum value.
         """
         coalesced_lf = (

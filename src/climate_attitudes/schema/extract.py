@@ -9,7 +9,8 @@ Errors:
 To check:
 ---------
 
-- cc_timeframe_w4new: Codebook says originally coded as Q423. Check if this also means the question was asked prior to wave 4.
+- cc_timeframe_w4new: Codebook says originally coded as Q423. Check if this also means
+    the question was asked prior to wave 4.
 - pol7_DO: Is this question ordering? Entries are of form "1|2", "2|1"
 """
 
@@ -18,40 +19,42 @@ To check:
 # required for each column, and simplify treatment group logic.
 
 from __future__ import annotations
-from pydantic import BaseModel
-from climate_attitudes.schema.columns import (
-    ConditionGroup,
-    ConditionalColumn,
-    GroupColumn,
-)
-from climate_attitudes.settings import Config, InterimAsset
-from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
+
+import pandera.polars as pa
 import polars as pl
 import polars.selectors as cs
-import pandera.polars as pa
 from pandera.polars import PolarsData
+from pydantic import BaseModel
+
+from climate_attitudes.schema.columns import (
+    ConditionalColumn,
+    ConditionGroup,
+    GroupColumn,
+)
+from climate_attitudes.schema.enums import WAVES, ItemCategory, UrbanArea
+from climate_attitudes.settings import Config, InterimAsset
+
 from .enums import (
-    ResponseType,
-    ParticipantType,
-    Education,
-    StateAbbrev,
-    NaturalDisaster,
-    Gender,
-    StormAttribution,
-    OutageAttribution,
     ClimateChangeCause,
     ClimateChangeInducedAction,
     ClimatePolicyBenefit,
-    ReasonOpposeGreenInfra,
-    ReasonSupportGreenInfra,
-    ReasonOpposeInfra,
-    ReasonSupportInfra,
     CovidPolicyFlowonPriority,
-    PoliticalParty,
-    PoliticalLeaning,
+    Education,
+    Gender,
+    NaturalDisaster,
+    OutageAttribution,
+    ParticipantType,
     PoliticalIdeology,
+    PoliticalLeaning,
+    PoliticalParty,
+    ReasonOpposeGreenInfra,
+    ReasonOpposeInfra,
+    ReasonSupportGreenInfra,
+    ReasonSupportInfra,
+    ResponseType,
+    StateAbbrev,
+    StormAttribution,
 )
-
 
 """Columns for which Null is a valid response."""
 NULLABLE_COLUMNS: list[str] = [
@@ -494,9 +497,10 @@ class ClimateAttitudesNullResponses:
 
         1. Check not in wave, or to participant type ==> response is null
         2. Check question conditions not satisfied ==> response is null
-        3. For unconditional questions, check response is null ==> not in wave OR not shown to participant type
-        4. For conditional questions, check response is null ==> not in wave OR not shown to participant type OR conditions not met.
-
+        3. For unconditional questions, check response is null ==> not in wave OR not
+                shown to participant type
+        4. For conditional questions, check response is null ==> not in wave OR not
+                shown to participant type OR conditions not met.
         """
 
         # Remove unnecessary non-question survey/metadata columns
@@ -952,28 +956,28 @@ class OutputResponseSchema(BaseSchema):
     ccComp1: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccComp0: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Willingness to pay X amt. for policy to response to/solve climate-affected communities
+    # Willingness to pay X amt. for policy to solve CC
     ccSolve100: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccSolve50: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccSolve10: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccSolve1: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccSolve0: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Support US financially supporting international orgs launch global response to fight climate change
+    # Support US finan. supporting intl orgs to launch global response to fight CC
     ccIO: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccIOinterest: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Support US financially supporting other countries to launch global response to fight climate change
+    # Support US finan. supporting other countries to launch response to fight CC
     ccGovt: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     ccGovtinterest: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Support international climate agreement committing US (and others) to reduce carbon emissions
+    # Support intl climate agreement committing US (and others) to reduce emissions
     cc_ica: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Support $10B for climate change investments
     cc_fedinvest: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
-    # If an international agreement is made to reduce emissions, what commitments should US make relative to other countries
+    # If intl emissions agreement made, what relative commitments should US make
     cc_commit: int = pa.Field(isin=[0, 1, 2], nullable=True)
 
     # Policy support
@@ -1071,7 +1075,7 @@ class OutputResponseSchema(BaseSchema):
     cvccAirRepHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvccAirHealth: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
 
-    # Policy support: reducing emissions to reduce impact of global warming/climate change
+    # Policy support: reduce emissions to reduce global warming/climate change impact
     cvccAirDemCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvccAirRepCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     cvccAirCC: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
@@ -1168,7 +1172,8 @@ class OutputResponseSchema(BaseSchema):
     pol_lean: PoliticalLeaning = pa.Field(nullable=True)  # ty: ignore
     pol_ideology: PoliticalIdeology  # ty: ignore
 
-    # Would proposal of climate policies make you more or less likely to support a political candidate
+    # Would proposal of climate policies make you more or less likely to
+    #    support a political candidate
     pol_vote_CCdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CCrep: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)
     pol_vote_CVdem: int = pa.Field(isin=[1, 2, 3, 4, 5], nullable=True)

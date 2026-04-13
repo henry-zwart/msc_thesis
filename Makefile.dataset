@@ -1,0 +1,65 @@
+${CA_BUILT_ASSETS}/behaviour_imp/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/behaviour.py
+	@printf "Dataset → Build CC behaviour dataset (imputed)...\n"
+	@uv run cadata create dataset --name behaviour --force --with-imputation
+
+${CA_BUILT_ASSETS}/behaviour/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/behaviour.py
+	@printf "Dataset → Build CC behaviour dataset...\n"
+	@uv run cadata create dataset --name behaviour --force
+
+${CA_BUILT_ASSETS}/reduced_imp/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/reduced.py
+	@printf "Dataset → Build reduced dataset (imputed)...\n"
+	@uv run cadata create dataset --name reduced --force --with-imputation --with-indices --index efa
+
+${CA_BUILT_ASSETS}/reduced/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/reduced.py
+	@printf "Dataset → Build reduced dataset...\n"
+	@uv run cadata create dataset --name reduced --force
+
+${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/reduced_no_imputation.py
+	@printf "Dataset → Build reduced dataset (only full values)...\n"
+	@uv run cadata create dataset --name reduced_no_imputation --force --with-indices --index efa --filter-null --waves [3,4]
+
+${CA_BUILT_ASSETS}/full_imp/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/full.py
+	@printf "Dataset → Build full dataset (imputed)...\n"
+	@uv run cadata create dataset --name full --force --with-imputation
+
+
+${CA_BUILT_ASSETS}/base/metadata.json: \
+			src/climate_attitudes/dataset.py \
+			src/climate_attitudes/data_extract.py \
+			src/climate_attitudes/schema/dataset.py \
+			src/climate_attitudes/schema/extract.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/Codebook_220528.xlsx \
+			${CA_STATIC_ASSETS}/item_columns.json \
+			${CA_STATIC_ASSETS}/item_groups.csv \
+			${CA_STATIC_ASSETS}/categories.csv \
+			${CA_STATIC_ASSETS}/error_items.csv \
+			${CA_STATIC_ASSETS}/variable_names.csv \
+			${CA_STATIC_ASSETS}/ideology_type.csv \
+			${CA_STATIC_ASSETS}/lee_2025_items.csv
+	@printf "Dataset → Build base dataset...\n"
+	@uv run cadata create base-dataset --prune-error-participants --filter-valid
+
+# == Convert Rdata response files to parquet.
+# WARNING: Takes ~12 minutes
+#
+# ${CA_RAW_ASSETS}/%.parquet: \
+# 			rscripts/convert_rdata_to_parquet.r \
+# 			${CA_RAW_ASSETS}/%.Rdata \
+# 			.docker-r
+# 	$(RUN_R) bash -c "Rscript $< /raw-data/$*.rdata /raw-data/$*.parquet"
+#
+# .docker-r: rscripts/Dockerfile
+# 	docker build -t msc-thesis-r rscripts && touch $@

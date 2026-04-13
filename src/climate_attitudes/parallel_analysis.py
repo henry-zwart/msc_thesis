@@ -1,6 +1,6 @@
-import polars as pl
 import numpy as np
 import numpy.typing as npt
+import polars as pl
 
 
 def pa_random_eigs(

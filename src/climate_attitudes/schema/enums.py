@@ -206,9 +206,18 @@ ClimateChangeInducedAction = pl.Enum(
         "Use public transportation more",
         "Eat less or no meat",
         "Fly less",
-        "Help others with deliveries, gifts of food, or other acts during/after disasters",
-        "Send messages to members of your religious or social organization (including social media) about global warming/climate change",
-        "Send messages to public officials or sign online petitions about global warming/climate change",
+        (
+            "Help others with deliveries, gifts of food, or other acts "
+            "during/after disasters"
+        ),
+        (
+            "Send messages to members of your religious or social organization "
+            "(including social media) about global warming/climate change"
+        ),
+        (
+            "Send messages to public officials or sign online petitions "
+            "about global warming/climate change"
+        ),
         "Give money to charitable/environmental organizations",
         "Reduce your energy use",
         "Support a political candidate or politician (e.g. donate, make calls, etc.)",
@@ -222,14 +231,29 @@ ClimatePolicyBenefit = pl.Enum(
         "Subsidies for the renewable energy sector (solar, wind, hydro power)",
         "Funding for public transportation infrastructure",
         "Funding for restoration of existing ecosystems",
-        "Subsidies for carbon sequestration (carbon capture & storage) development and implementation",
-        "Funding for people to fortify property/belongings against extreme weather events",
-        "Funding for people to relocate away from areas that experience extreme weather events",
-        "Funding to assist people purchasing electric vehicles or electrifying their homes",
+        (
+            "Subsidies for carbon sequestration (carbon capture & storage) "
+            "development and implementation"
+        ),
+        (
+            "Funding for people to fortify property/belongings against "
+            "extreme weather events"
+        ),
+        (
+            "Funding for people to relocate away from areas that experience "
+            "extreme weather events"
+        ),
+        (
+            "Funding to assist people purchasing electric vehicles or "
+            "electrifying their homes"
+        ),
         "Tax or fee on the production or distribution of fossil fuels",
         "Stronger emissions standards for power plants, vehicles, and other industries",
         "Stronger extreme weather risk disclosure standards for properties",
-        "Limitations on development in areas that experience repeated extreme weather events",
+        (
+            "Limitations on development in areas that experience repeated "
+            "extreme weather events"
+        ),
         "Strict regulation of political donations and lobbying",
     ]
 )
@@ -241,7 +265,10 @@ ReasonOpposeGreenInfra = pl.Enum(
         "It will cost too much money",
         "It is not an effective tool to fight the current economic problems",
         "It doesn't go far enough in addressing existing social issues",
-        "Addressing environmental issues should not be the focus of a stimulus plan right now",
+        (
+            "Addressing environmental issues should not be the focus of a "
+            "stimulus plan right now"
+        ),
         "Other (text entry)",
     ]
 )
@@ -251,11 +278,28 @@ ReasonSupportGreenInfra = pl.Enum(
     [
         "The scale of the economic crisis demands bold government action",
         "The scale of the environmental crisis demands bold government action",
-        "The costs of a large-scale program will be outweighed by the long-term economic benefits",
-        "The focus of government efforts should be on creating new green jobs, not bailing out large polluters such as airlines and oil companies",
-        "This crisis has revealed unequal access to resources such as high-speed internet in rural and low-income communities that the government should address",
-        "The government should help marginalized communities that are also most vulnerable to the effects of climate change",
-        "This is a once-in-a-lifetime opportunity to put the country on the path to a carbon neutral future",
+        (
+            "The costs of a large-scale program will be outweighed by the "
+            "long-term economic benefits"
+        ),
+        (
+            "The focus of government efforts should be on creating new green "
+            "jobs, not bailing out large polluters such as airlines and oil "
+            "companies"
+        ),
+        (
+            "This crisis has revealed unequal access to resources such as "
+            "high-speed internet in rural and low-income communities that "
+            "the government should address"
+        ),
+        (
+            "The government should help marginalized communities that are also "
+            "most vulnerable to the effects of climate change"
+        ),
+        (
+            "This is a once-in-a-lifetime opportunity to put the country on "
+            "the path to a carbon neutral future"
+        ),
         "Other (text entry)",
     ]
 )
@@ -276,10 +320,23 @@ ReasonOpposeInfra = pl.Enum(
 ReasonSupportInfra = pl.Enum(
     [
         "The scale of the economic crisis demands bold government action",
-        "The costs of a large-scale program will be outweighed by the long-term economic benefits",
-        "The focus of government efforts should be on creating new jobs, not bailing out large companies",
-        "This crisis has revealed unequal access to resources such as high-speed internet in rural and low-income communities that the government should address",
-        "This is a once-in-a-lifetime opportunity to transform the nation's infrastructure",
+        (
+            "The costs of a large-scale program will be outweighed by the long-term "
+            "economic benefits"
+        ),
+        (
+            "The focus of government efforts should be on creating new jobs, not "
+            "bailing out large companies"
+        ),
+        (
+            "This crisis has revealed unequal access to resources such as "
+            "high-speed internet in rural and low-income communities that "
+            "the government should address"
+        ),
+        (
+            "This is a once-in-a-lifetime opportunity to transform the "
+            "nation's infrastructure"
+        ),
         "Other (text entry)",
     ]
 )
@@ -293,7 +350,10 @@ CovidPolicyFlowonPriority = pl.Enum(
         "Poverty and inequality",
         "Immigration",
         "Federal deficit",
-        "Policy should focus on coronavirus, now is not the time to think about other issues",
+        (
+            "Policy should focus on coronavirus, now is not the time to think "
+            "about other issues"
+        ),
         "Other policy (text entry)",
         "Healthcare",
         "Economy and employment",

@@ -27,8 +27,9 @@ from climate_attitudes.correlation import Correlation, filter_vars_by_abs_corr
 from climate_attitudes import configure_mpl
 from climate_attitudes.visualisation import plot_corr_with_dendro, plot_feature_dendro
 from climate_attitudes.parallel_analysis import pa_random_eigs, pa_true_eigs
-import climate_attitudes.datasets.imputed as imp_ds
-import climate_attitudes.datasets.imputed_reduced as red_ds
+import climate_attitudes.datasets.full as full_ds
+import climate_attitudes.datasets.reduced as reduced_ds
+import climate_attitudes.datasets.reduced_no_imputation as reduced_no_imputation_ds
 
 from climate_attitudes.feature_clustering import LinkageMethod
 
@@ -41,15 +42,17 @@ plt.rc("figure", dpi=100)
 ```{python}
 #| tags: [parameters]
 
-ds_name: str = "ds1"
+ds_name: str = "full"
 ```
 
 ```{python}
 match ds_name:
-    case "ds1":
-        ds_spec = imp_ds
-    case "ds1_5":
-        ds_spec = red_ds
+    case "full":
+        ds_spec = full_ds
+    case "reduced":
+        ds_spec = reduced_ds
+    case "reduced_no_imputation":
+        ds_spec = reduced_no_imputation_ds
     case _:
         raise RuntimeError(f"Unknown dataset: '{ds_name}'.")
 ```
@@ -59,7 +62,7 @@ match ds_name:
 #| output: false
 # Load data
 config = Config(_env_file="../../.env")
-dataset = Dataset.load(config, name=ds_name)
+dataset = Dataset.load(config, name=ds_name, with_imputation=False)
 dataset_std = dataset.standardise(cs.exclude(*ds_spec.SURVEY_COLS))
 resp = dataset.response.collect()
 resp_std = dataset_std.response.collect()
@@ -95,7 +98,7 @@ plot_corr_with_dendro(resp_std, kind=Correlation.DISTANCE_CORR, no_cbar=True, x_
 plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
-## Partial (GLASSO)
+## Partial (regularised)
 
 ```{python}
 plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
@@ -113,13 +116,13 @@ plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=Tr
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
-## Regularised VAR (Contemporaneous)
+## VAR (Contemporaneous; regularised)
 
 ```{python}
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_CONTEMPORANEOUS, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES, regularised=True)
 ```
 
-## Regularised VAR (Temporal)
+## VAR (Temporal; regularised)
 
 ```{python}
 plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES, regularised=True)
@@ -127,7 +130,9 @@ plot_corr_with_dendro(resp_std, kind=Correlation.VAR_TEMPORAL, no_cbar=True, x_c
 
 :::
 
+<!--
 ## High-correlation variables (Pearson $\geq 0.5$)
+
 
 Questions with high Pearson correlation all belong to either the `cc4/5_X` group, or `cvcc9_cc`. Three clusters emerge in the partial correlations between these variables:
 
@@ -166,7 +171,7 @@ plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.DISTANCE_CORR, no_cba
 plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
@@ -211,7 +216,7 @@ if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
@@ -259,7 +264,7 @@ if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
@@ -307,7 +312,7 @@ if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
@@ -355,7 +360,7 @@ if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if high_corr_idxes.any():
     plot_corr_with_dendro(resp_std_high_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_high_corr, y_categories=categories_high_corr)
@@ -375,9 +380,9 @@ if high_corr_idxes.any():
 
 :::
 
+-->
 
-
-## Moderate--high correlation variables (Pearson $\geq 0.3$)
+## Moderate--high correlation variables (Pearson $\geq 0.35$)
 
 ```{python}
 plt.rc("figure", dpi=100)
@@ -401,7 +406,7 @@ plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.PEARSON, no_cbar=True,
 plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.PARTIAL, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.PARTIAL_GLASSO, no_cbar=True, x_categories=categories_med_corr, y_categories=categories_med_corr)
 ```
@@ -420,6 +425,7 @@ plot_corr_with_dendro(resp_std_mod_corr, kind=Correlation.VAR_TEMPORAL, no_cbar=
 
 # Low-correlation variables
 
+<!--
 We select those questions with maximum correlation less than some threshold (0.2 for Pearson correlation, 0.15 for partial correlation). Five questions feature in both sets:
 
 - `pol_worry_econ`: Worry about the economy
@@ -431,8 +437,9 @@ We select those questions with maximum correlation less than some threshold (0.2
 The Pearson correlation analysis also highlights `cc11` (capacity to avoid CC-related death through own actions), `pol11` (political viewpoint: in times of crisis, the govt should take control vs. maintain civil liberties), and `pol11_pi` (second-order social belief for `pol11`).
 
 The partial correlation analysis also highlights `cc1` (belief that climate change is happening), `cvcc_worryothers` (how worried are people, generally, about CC), and `pol10` (regarding the fairness of the American political system).
+-->
 
-## Pearson $\leq 0.2$
+## Pearson $\leq 0.25$
 ```{python}
 low_corr_cols, low_corr_idxes = filter_vars_by_abs_corr(resp_std, upper=0.25, predicate="all")
 categories_low_corr = ds_spec.CATEGORIES[low_corr_idxes]
@@ -451,7 +458,7 @@ if low_corr_idxes.any():
     plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if low_corr_idxes.any():
     plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
@@ -489,7 +496,7 @@ if low_corr_idxes.any():
     plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)
 ```
 
-### Partial (GLASSO)
+### Partial (regularised)
 ```{python}
 if low_corr_idxes.any():
     plot_corr_with_dendro(resp_std, kind=Correlation.PARTIAL_GLASSO, y_vars=low_corr_cols, no_cbar=True, x_categories=ds_spec.CATEGORIES, y_categories=ds_spec.CATEGORIES)

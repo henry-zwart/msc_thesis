@@ -1,9 +1,8 @@
 """Example of problem inferring within-person belief system from cross-sectional data."""
 
-import numpy as np
-
-import scipy.stats as stats
 import matplotlib.pyplot as plt
+import numpy as np
+import scipy.stats as stats
 
 
 def main():

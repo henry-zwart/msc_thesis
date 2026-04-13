@@ -1,21 +1,14 @@
-COMPILE_ARGS ?= --root "$$(pwd)" 
+PROJECT_PLAN_DIR := presentations/project_plan
+PROJECT_PLAN_REPORT_FILES := $(PROJECT_PLAN_DIR)/main.typ
 
-.PHONY: clean preview
-
-REPORT_FILES = main.typ
-
-all: main.html main.pdf
+#all: $(PROJECT_PLAN_DIR)/main.html $(PROJECT_PLAN_DIR)/main.pdf
 
 # ==== Report
-main.pdf: $(REPORT_FILES)
+$(PROJECT_PLAN_DIR)/main.pdf: $(REPORT_FILES)
 	@uvx touying compile $< \
 		--format pdf \
 		--silent 1 \
 		--sys-inputs '{"handout":"true"}'		# Collapse slide animations for PDF
 
-main.html: $(REPORT_FILES)
+$(PROJECT_PLAN_DIR)/main.html: $(REPORT_FILES)
 	@uvx touying compile $< --format html --silent 1
-
-clean:
-	rm main.html main.pdf
-

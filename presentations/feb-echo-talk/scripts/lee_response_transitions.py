@@ -1,12 +1,11 @@
+import iplotx as ipx
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import polars as pl
 
-import matplotlib.pyplot as plt
-import iplotx as ipx
-
-from climate_attitudes.settings import Config
 from climate_attitudes.dataset import Dataset
+from climate_attitudes.settings import Config
 
 
 def main():
@@ -86,7 +85,8 @@ def main():
         "Future generation harm": np.array(
             [[0, 0], [1, 0], [1, 0.5], [0, 0.5], [0, 1]]
         ),
-        # "Future generation harm": np.array([[0.7, 0], [0, 0.45], [0, 1], [1.1, 1], [0.5, 1.5]])
+        # "Future generation harm":
+        # np.array([[0.7, 0], [0, 0.45], [0, 1], [1.1, 1], [0.5, 1.5]])
     }
 
     for i, (dimension, dimension_metadata) in enumerate(columns.items()):
@@ -136,10 +136,7 @@ def main():
             for u, v, z in G.edges(data=True)
         ]
 
-        if dimension in pos:
-            layout = pos[dimension]
-        else:
-            layout = nx.spring_layout(G, k=1)
+        layout = pos[dimension] if dimension in pos else nx.spring_layout(G, k=1)
 
         with ipx.style.context(
             [
@@ -174,8 +171,6 @@ def main():
                 edge_label_rotate=False,
                 ax=ax,
             )[0]
-
-            # network_artist.get_nodes().set(norm=mcolors.Normalise(0,1))
 
         plt.colorbar(network_artist.get_vertices(), ax=ax)
 

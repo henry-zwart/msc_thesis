@@ -1,3 +1,173 @@
+## April 7 - April 10
+### Friday
+Plan: Writing dataset section of thesis.
+
+### Thursday
+- Fit Blume-Capel to policy support data
+- Tidied up model visualisations 
+- Meeting with Vítor and Kyuri
+- Started refactoring Ising and BC models to use shared base class
+
+### Wednesday
+- Fixed sampling by deriving transition probabilities for BC model.
+- Fixed fitting (which I discovered was broken). Still a patch-job -- may need
+  to specify an analytical derivative for the negative log likelihood.
+
+To-do:
+
+- Figure out model sampling for Blume-Capel. Can't use Glauber dynamics (at least not 
+  in the same way) since we now have three states. Can instead calculate update 
+  probabilities and explicitly sample new state according to these.
+- ...?
+
+### Tuesday
+- Attended Dhruv's defence
+- Sent updated dataset to Kyuri and Katinka
+- Working on Blume-Capel implementation; I believe model fitting is done. Need to fix
+  sampling.
+
+
+## March 30 - April 3
+### Thursday
+Notes for Friday:
+
+- Write up notes from meeting with Sara
+- Email Sara regarding the dataset citing questions
+- We can include some other cc4 variables if just looking at waves 3 and 4
+- Send updated datasets to Katinka
+- Investigate different states derived from the index groups (e.g., psychological distance, disparate impacts)
+- Consider more targeted methods of deriving indexes, such that the results are more interpretable.
+- Look at the policies states by themselves. Any interesting interactions there, temporal relationships? Sara 
+  advised that the more interesting cases are those where people agree with some but not others, i.e., the 
+  persuadables.
+
+### Wednesday
+To-do:
+
+- Review proposal timeline for meeting with Vítor
+- Prepare agenda to send to Vítor and Kyuri
+- Review TCS assignment; derivations; what is necessary to change for asymmetric
+  relations?
+
+- Sent agenda to Vítor and Kyuri for Thursday catchup
+- Sent agenda to ENLENS for bi-weekly meeting
+
+### Tuesday
+- Symmetric Ising model code: implement glauber dynamics, optimise performance.
+- Write most of the ENLENS presentation.
+
+### Monday
+- Weekly catchup
+- Planning content for ENLENS presentation
+- Refactoring Ising model simulation code from TCS assignment for general use
+
+
+## March 23 - March 29
+### Thursday
+- Meeting with Vítor
+
+#### Meeting with Vítor
+- Quarto report on EDA --> indices
+- First component of PCA same as linear regression? (No, but maybe same as total least 
+  squares -- minimising euclidean distance to the line.)
+- Flipping cc10 shouldn't change PCA result? (Actually it does!)
+- Can include cc13 in no-imputation version, since asked in both waves 
+  3 and 4.
+- Behavioural variables in wave 5: 
+    - In general belief state influences behaviour, but also behaviour can influence
+      belief state.
+    - However, behaviours can only influence beliefs after they are adopted. i.e., 
+      behaviour is adopted at some point in time, partially due to existing/prior 
+      belief state.
+    - So we can consider wave 5 behaviour variables as influenced unidirectionally 
+      by prior belief state.
+    - Note that depending on when behaviour was adopted, time of adoption may coincide
+      with or predate the last measured belief state, in which case this assumption 
+      doesn't hold.
+
+I felt this meeting went off-track several times, and resultingly we didn't manage to 
+cover several important topics. For future meetings: 
+
++ Set agenda + meeting goals at the start of the meeting (or ideally email ahead of time);
+    - Perhaps also summarise what I have been doing, and what I plan to do next week.
++ When meeting starts to go off-track, take note of the discussion point and suggest 
+  returning to it at a dedicated time.
++ Aim to finish core of the meeting five minutes ahead of schedule, and use the extra 
+  time to review the meeting goals and outcomes. This helps ensure that all parties 
+  are on the same page.
+
+#### Meeting with Kyuri
+- Removing pol7_pi: our goal is to find a plausible structure of beliefs + attitudes
+  so can remove pol7_pi if associations show it isn't central to the network we're interested in. 
+- Presentation for next week with Julian
+
+### Monday
+- Sent indices to Kyuri
+- Started summarising data exploration work in Quarto document
+
+Tomorrow:
+
+- Add community detection to Quarto doc, showing variable clusterings
+- Writeup on PCA reduction, EDA on indices
+
+## March 16 - March 22
+
+### Thursday
+- Meeting with Vítor
+- Converting questions groups into indices
+- Sent data + EDA report to Kyuri
+
+#### Meeting with Vítor
+Past two weeks:
+
+- Pruned low-association variables as discussed with Sara
+- Reproduced 'willingness-to-pay' analysis: comparable measure of costed policy 
+  support for solving CC/compensating affected communities
+- Included `cc2` (beliefs regarding causes of climate change) in question set;
+  remapped such that human-causes are high, natural-causes only/CC not happening 
+  are low
+- Constructed 5-point `pol_affiliation` scale from political party alignment and party
+  leaning variables
+- Implemented regularised partial correlation (using GLASSO) and VAR (using LASSO 
+  regression)
+- Added 'distance correlation' measure to EDA, to identify possible hidden non-linear
+  associations
+- Identified sets of variables which consistently cluster together under different 
+  measures of association. Roughly 7--8 such groups. Some variables not included 
+  in any group, or appear in different groups for different metrics, but have high 
+  betweenness centrality.
+- Started planning + writing thesis section on dataset (context, validation, cleaning,
+  imputation)
+
+Next week:
+
+- Create indices:
+    - Transform each identified variable group according to its first principle
+      component.
+    - Evaluate index consistency using cronbach's alpha; set pre-defined quality 
+      threshold based on established standards.
+    - For indices which do not meet criteria, investigate alternatives (e.g., first 
+      two PCA components; leave variables split) 
+- Understand the reduced dataset:
+    - Marginal distributions for variables + indices
+    - What do the indices represent? (Check PCA vectors -- any oddities?)
+    - Plot correlation/association figures, clustering, networks
+    - Is binarisation reasonable?
+- Create baseline models:
+    - Ising (may require binarisation): undirected, directed
+    - Partial correlation networks
+- Continue writing:
+    - Finish draft of dataset section
+    - Plan index construction section; theory (models, metrics, etc.)
+
+Discussion points:
+
+- ENLENS: Dataset info and citations; what to call the dataset; possibly publish 
+  validated/cleaned dataset (may need to extend set of validated variables).
+- Vítor meeting: 
+    - Touch base with examiner (Johan); 
+    - Timeline: defence date
+
 ## March 9 - March 15
 Goals for the week:
 

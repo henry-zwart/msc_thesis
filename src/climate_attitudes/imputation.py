@@ -1,10 +1,9 @@
 import itertools
 
-from tqdm import tqdm
-
 import numpy as np
 import numpy.typing as npt
 import polars as pl
+from tqdm import tqdm
 
 
 def count_observed_transitions(
@@ -108,7 +107,7 @@ def estimate_transition_matrix(
         return T_p
 
     T_i = T_0
-    for i in range(1, iters + 1):
+    for _ in range(1, iters + 1):
         S_i = step_expectation(T_i)
         T_i = step_maximisation(S_i)
 

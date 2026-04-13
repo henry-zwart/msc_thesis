@@ -1,7 +1,4 @@
-from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 from pathlib import Path
-
-import scipy as sp
 
 import iplotx as ipx
 import matplotlib.colors as mcolors
@@ -10,20 +7,39 @@ import networkx as nx
 import numpy as np
 import numpy.typing as npt
 import polars as pl
+import scipy as sp
 import seaborn as sns
 from matplotlib import font_manager
 from matplotlib.axes import Axes
 
 from climate_attitudes.correlation import Correlation
+from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 
 DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
+
+# Colour-blind safe; from https://sronpersonalpages.nl/~pault/
+QUALITATIVE_SCHEME = mcolors.ListedColormap(
+    [
+        "#4477aa",  # blue
+        "#66ccee",  # cyan
+        "#228833",  # green
+        "#ccbb44",  # yellow
+        "#ee6677",  # red
+        "#aa3377",  # purple
+        "#bbbbbb",  # grey
+    ]
+)
 
 
 def configure_mpl(fonts_path: Path = Path("fonts")):
     """Configure Matplotlib style."""
-    FONT_SIZE_SMALL = 8
+    _FONT_SIZE_SMALL = 8
     FONT_SIZE_DEFAULT = 10
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Semibold.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-BoldItalic.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Italic.otf")
 
     plt.rc("font", family="Libertinus Serif")
     plt.rc("font", weight="normal")  # controls default font
@@ -32,7 +48,7 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
     plt.rc("axes", titlesize=FONT_SIZE_DEFAULT)  # fontsize of the axes title
     plt.rc("axes", labelsize=FONT_SIZE_DEFAULT)  # fontsize of the x and y labels
     plt.rc("figure", labelsize=FONT_SIZE_DEFAULT)
-    plt.rc("figure", dpi=100)
+    plt.rc("figure", dpi=300)
 
     sns.set_context(
         "paper",
@@ -44,8 +60,8 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
             "xtick.major.width": 0.5,
             "ytick.major.width": 0.5,
             "ytick.minor.width": 0.4,
-            "xtick.labelsize": FONT_SIZE_SMALL,
-            "ytick.labelsize": FONT_SIZE_SMALL,
+            "xtick.labelsize": FONT_SIZE_DEFAULT,
+            "ytick.labelsize": FONT_SIZE_DEFAULT,
         },
     )
 
@@ -138,7 +154,7 @@ def plot_corr_network(
                     "color": edge_colours,
                     "alpha": 1,
                     "cmap": DIVERGING_CMAP,
-                    "norm": mcolors.Normalise(vmin=-1, vmax=1),
+                    "norm": mcolors.Normalize(vmin=-1, vmax=1),
                 },
             },
         ]
@@ -293,19 +309,22 @@ def plot_corr_with_dendro(
     # Determine figure size if not specified.
     # - Each cell needs ~0.25
     # - Labels need ~0.5
+    # cell_length = 0.25
+    # label_length = 0.5
+    cell_length = 0.125
+    label_length = 0.25
     if figsize is None:
-        height = corr.shape[0] * 0.25 + 0.5
-        width = corr.shape[1] * 0.25 + 0.5
+        height = corr.shape[0] * cell_length + label_length
+        width = corr.shape[1] * cell_length + label_length
         figsize = (width, height)
 
-    category_pal = sns.husl_palette(6, s=0.45)
+    category_pal = sns.husl_palette(5, s=0.45)
     category_lut = dict(
         zip(
             map(
                 str,
                 [
                     "Belief",
-                    "Experience",
                     "Attitude",
                     "Behaviour",
                     "Demographic",
@@ -313,6 +332,7 @@ def plot_corr_with_dendro(
                 ],
             ),
             category_pal,
+            strict=True,
         )
     )
     if x_categories is not None:
@@ -324,10 +344,7 @@ def plot_corr_with_dendro(
     else:
         y_category_colours = None
 
-    if kind == Correlation.PARTIAL_GLASSO:
-        mask = abs(corr) < 0.01
-    else:
-        mask = None
+    mask = abs(corr) < 0.01 if kind == Correlation.PARTIAL_GLASSO else None
     mask = None
 
     if not row_cluster:
@@ -357,11 +374,14 @@ def plot_corr_with_dendro(
             method=dendro_method,
             dendrogram_ratio=(0.1, 0.2),
             cbar_pos=None,
-            linewidths=0.75,
+            # linewidths=0.75,
+            linewidths=0.35,
             figsize=figsize,
             fmt=".1f",
             annot=True,
             row_cluster=row_cluster,
+            annot_kws={"size": 3.5},
+            tree_kws={"linewidths": 0.25},
         )
     else:
         g = sns.clustermap(
@@ -384,10 +404,7 @@ def plot_corr_with_dendro(
         )
 
     x_labels = x_labels[g.dendrogram_col.reordered_ind]
-    if row_cluster:
-        y_labels = y_labels[g.dendrogram_row.reordered_ind]
-    else:
-        y_labels = y_labels
+    y_labels = y_labels[g.dendrogram_row.reordered_ind] if row_cluster else y_labels
 
     g.ax_heatmap.set_xticks(
         np.arange(len(x_labels)) + 0.5,
@@ -396,6 +413,7 @@ def plot_corr_with_dendro(
         horizontalalignment="right",
     )
     g.ax_heatmap.set_yticks(np.arange(len(y_labels)) + 0.5, y_labels, rotation=0)
+    g.ax_heatmap.tick_params(axis="both", labelsize=4, width=0.25, length=1)
 
     if y_vars is None and row_cluster:
         g.ax_row_dendrogram.remove()
@@ -411,9 +429,13 @@ def plot_feature_dendro(
     X = df.to_numpy()
     linkage_mat = features_linkage(X, method=method)
     sp.cluster.hierarchy.dendrogram(
-        linkage_mat, labels=df.columns, orientation="right", ax=ax
+        linkage_mat,
+        labels=df.columns,
+        orientation="right",
+        ax=ax,
+        leaf_font_size=4,
     )
-    plt.setp(ax.collections, linewidth=1)
+    plt.setp(ax.collections, linewidth=0.5)
 
     ax.set_xticks([])
 

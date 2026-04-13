@@ -1,10 +1,9 @@
 from enum import Enum, auto
-
 from pathlib import Path
 from typing import ClassVar
-from pydantic_settings import BaseSettings, SettingsConfigDict
 
 import polars as pl
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ITEM_NAME_MAP_PATH = "variable_names.parquet"
 
@@ -48,6 +47,8 @@ class RawDataFile(Enum):
         match self:
             case RawDataFile.Waves1to5Responses:
                 return pl.scan_parquet(self.filepath(config))
+            case RawDataFile.Wave6Responses:
+                return pl.scan_parquet(self.filepath(config))
             case RawDataFile.Codebook:
                 return pl.read_excel(
                     RawDataFile.Codebook.filepath(config),
@@ -56,8 +57,6 @@ class RawDataFile(Enum):
                         "Randomization": pl.String,
                     },
                 ).lazy()
-            case _:
-                raise NotImplementedError
 
 
 class StaticAsset(Enum):

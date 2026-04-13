@@ -1,39 +1,22 @@
-from climate_attitudes.dataset import Dataset
-from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import (
-    BaseSettings,
     CliApp,
     CliSubCommand,
-    SettingsConfigDict,
 )
 from rich.console import Console
 
-from climate_attitudes.settings import Config
-import climate_attitudes.datasets.imputed as imp_ds
-import climate_attitudes.datasets.imputed_reduced as red_ds
+import climate_attitudes.datasets.behaviour as behaviour_ds
+import climate_attitudes.datasets.full as full_ds
+import climate_attitudes.datasets.reduced as reduced_ds
+import climate_attitudes.datasets.reduced_no_imputation as reduced_no_imputation_ds
+from climate_attitudes.cli import visualisation as vis_cli
+from climate_attitudes.dataset import Dataset
+from climate_attitudes.indices import IndexMethod
+
+from .common import BaseCommand
+from .info import DatasetInfoCommand, DisplayCodebookCommand, WaveInfoCommand
 
 console = Console()
-
-
-class BaseCommand(BaseSettings):
-    """Base command with common settings."""
-
-    # raw_assets_path: Path
-    raw_assets: Path = Path("assets/raw")
-    static_assets: Path = Path("assets/static")
-    built_assets: Path = Path("assets/built")
-
-    model_config = SettingsConfigDict(env_file=".env", env_prefix="CA_", extra="ignore")
-
-    @property
-    def settings(self) -> Config:
-        """Get the settings."""
-        return Config(
-            raw_assets=self.raw_assets,
-            static_assets=self.static_assets,
-            built_assets=self.built_assets,
-        )
 
 
 class BuildDataCommand(BaseCommand):
@@ -48,29 +31,56 @@ class BuildDataCommand(BaseCommand):
         ds.write(force=True)
 
 
-class CreateImputedDatasetCommand(BaseCommand):
+class CreateDerivedDatasetCommand(BaseCommand):
     name: str
+    with_imputation: bool = False
+    with_indices: bool = False
+    index: IndexMethod
     force: bool = False
+    filter_null: bool = False
+    waves: list[int] = [1, 2, 3, 4, 5]
+    sample: bool = False
 
     def cli_cmd(self) -> None:
         match self.name:
-            case "ds1":
-                ds_spec = imp_ds
-            case "ds1_5":
-                ds_spec = red_ds
+            case "full":
+                ds_spec = full_ds
+            case "reduced":
+                ds_spec = reduced_ds
+            case "behaviour":
+                ds_spec = behaviour_ds
+            case "reduced_no_imputation":
+                ds_spec = reduced_no_imputation_ds
             case _:
                 raise RuntimeError(f"Unknown dataset: '{self.name}'")
 
         ds = (
-            Dataset.load(self.settings)
+            Dataset.load(self.settings, name="base", with_imputation=False)
             .filter_columns(ds_spec.ALL_INPUT_COLUMNS)
-            .filter_at_least_one_resp(ds_spec.INPUT_QUESTION_COLUMNS)
-            .cast_enum_to_int()
+            .filter_waves(self.waves)
+        )
+
+        if self.sample:
+            ds.response = ds.response.collect().sample(fraction=0.35).lazy()  # ty: ignore
+
+        if self.filter_null:
+            ds = ds.filter_no_nulls()
+        else:
+            ds = ds.filter_at_least_one_resp(ds_spec.INPUT_QUESTION_COLUMNS)
+
+        ds = (
+            ds.cast_enum_to_int()
             .transform(*ds_spec.TRANSFORMS)
             .reverse_coding(ds_spec.REVERSE_CODING)
-            .impute_viterbi(ds_spec.VITERBI_IMPUTE_COLS)
-            .impute_fill(ds_spec.FILL_IMPUTE_COLS)
         )
+
+        if not self.filter_null and self.with_imputation:
+            ds = ds.impute_viterbi(ds_spec.VITERBI_IMPUTE_COLS).impute_fill(
+                ds_spec.FILL_IMPUTE_COLS
+            )
+
+        if self.with_indices:
+            ds = ds.compute_indices(ds_spec.GROUPS, self.index)
 
         # wtp_solve_model = WTPModel(ds.response.collect(), col="ccSolving", k=5)
         # wtp_solve_model.sample()
@@ -98,7 +108,24 @@ class CreateImputedDatasetCommand(BaseCommand):
 
 class CreateSubCommand(BaseModel):
     base_dataset: CliSubCommand[BuildDataCommand]
-    imputed_dataset: CliSubCommand[CreateImputedDatasetCommand]
+    dataset: CliSubCommand[CreateDerivedDatasetCommand]
+
+    def cli_cmd(self) -> None:
+        CliApp.run_subcommand(self)
+
+
+class InfoSubCommand(BaseModel):
+    codebook: CliSubCommand[DisplayCodebookCommand]
+    dataset: CliSubCommand[DatasetInfoCommand]
+    wave: CliSubCommand[WaveInfoCommand]
+
+    def cli_cmd(self) -> None:
+        CliApp.run_subcommand(self)
+
+
+class PlotSubCommand(BaseModel):
+    response_events: CliSubCommand[vis_cli.ResponseEventPlotCommand]
+    interresponse_times: CliSubCommand[vis_cli.InterResponseTimePlotCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
@@ -115,6 +142,8 @@ class CAData(
 
     build: CliSubCommand[BuildDataCommand]
     create: CliSubCommand[CreateSubCommand]
+    info: CliSubCommand[InfoSubCommand]
+    plot: CliSubCommand[PlotSubCommand]
 
     def cli_cmd(self):
         """Run the CLI application."""
