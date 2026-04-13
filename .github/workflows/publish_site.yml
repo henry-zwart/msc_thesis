@@ -19,7 +19,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
       with:
-        submodules: recursive
+        persist-credentials: false
+        #submodules: recursive
+
+    - name: Checkout submodule
+      run: |
+        git submodule sync --recursive
+        git -c protocol.version=2 submodule update --init --force --depth=1 --recursive
 
     - name: Install Typst
       uses: typst-community/setup-typst@v4
