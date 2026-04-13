@@ -22,7 +22,7 @@ REPORTS = \
 		$(patsubst %,outputs/slides/%.html, $(PRESENTATION_TYPES)) \
 		$(patsubst %,outputs/slides/%.pdf, $(PRESENTATION_TYPES))
 
-SITE_REPORT_TYPES := proposal thesis
+SITE_REPORT_TYPES := proposal
 SITE_PRESENTATION_TYPES := project_plan
 SITE_REPORTS = \
 		$(patsubst %,outputs/reports/%.pdf, $(SITE_REPORT_TYPES)) \
