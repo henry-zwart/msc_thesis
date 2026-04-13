@@ -109,6 +109,7 @@ outputs/slides/%.html: \
 	cp presentations/$*/main.html $@
 
 include presentations/april-enlens-talk/Makefile
+include presentations/project_plan/Makefile
 
 
 # outputs/reports/index_eda_%/index_eda.html: \
