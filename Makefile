@@ -111,6 +111,8 @@ outputs/slides/%.html: \
 include presentations/april-enlens-talk/Makefile
 include presentations/project_plan/Makefile
 
+include Makefile.experiments
+
 
 # outputs/reports/index_eda_%/index_eda.html: \
 # 			reports/index-eda/index_eda.qmd \

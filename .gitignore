@@ -252,3 +252,6 @@ outputs/**
 
 # Compressed datasets
 **/*.tgz
+
+# Data files
+**/*.parquet

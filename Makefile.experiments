@@ -1,0 +1,10 @@
+results/data/round_trip.parquet: \
+			scripts/analysis/round_trip_data_reqs.py \
+			| results/data
+	uv run $<
+
+results/data: | results
+	mkdir $@
+
+results: 
+	mkdir $@
