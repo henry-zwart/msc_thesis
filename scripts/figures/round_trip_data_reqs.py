@@ -12,9 +12,14 @@ def main():
         data=df,
         x="samples",
         y="relative_entropy",
+        hue="n",
+        col="h_intensity",
+        row="j_intensity",
         kind="line",
     )
     plt.show()
+
+    print(df.filter(n=6, j_intensity=1.0))
 
 
 if __name__ == "__main__":

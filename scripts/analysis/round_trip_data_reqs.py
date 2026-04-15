@@ -57,12 +57,12 @@ def sample_interaction_terms(
 
 def main():
     N: npt.NDArray[np.int64] = np.arange(2, 8, 2, dtype=np.int64)
-    INTENSITY: npt.NDArray[np.float64] = np.array([0.25, 1.0])
+    INTENSITY: npt.NDArray[np.float64] = np.array([0.0, 0.25, 1.0])
     # INTENSITY: npt.NDArray[np.float64] = np.linspace(0.2, 1.0, 9, endpoint=True)
 
-    SAMPLES: npt.NDArray[np.int64] = np.arange(500, 3000, 1000, dtype=np.int64)
+    SAMPLES: npt.NDArray[np.int64] = np.arange(500, 6000, 1000, dtype=np.int64)
 
-    REPEATS: int = 10
+    REPEATS: int = 30
 
     rng = np.random.default_rng(202604131628)
 
