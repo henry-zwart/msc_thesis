@@ -1,3 +1,17 @@
+## April 13 - April 17
+Weekly notes:
+
+- Meeting Tuesday morning with Vítor, Kyuri, Žan
+
+To-do:
+
+- Implement time-series model fitting for Ising and BC models
+
+### Monday
+Writing 'round-trip' code to investigate how data requirements for model fitting
+vary with model size (number of spins), parameter intensity (magnitude), and model 
+structure (e.g., cycles, stars).
+
 ## April 7 - April 10
 ### Friday
 Plan: Writing dataset section of thesis.
