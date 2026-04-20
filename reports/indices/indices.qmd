@@ -13,7 +13,7 @@ fig-dpi: 300
 
 ```{python}
 #| tags: [parameters]
-from climate_attitudes.indices import Index
+from climate_attitudes.indices import IndexMethod
 from sklearn.decomposition import PCA
 
 with_imputation: bool = True
@@ -585,11 +585,11 @@ index more accurately reflects the collapsed variables.
 ```{python}
 #| label: indices-explained-variance
 if isinstance(next(iter(dataset.index_result.values())), PCA):
-	index_kind = Index.PCA
+	index_kind = IndexMethod.PCA
 else:
-	index_kind = Index.EFA
+	index_kind = IndexMethod.EFA
 
-if index_kind == Index.PCA:
+if index_kind == IndexMethod.PCA:
 	group_names = []
 	explained_variance_prop = []
 	for name, pca_result in dataset.index_result.items():
@@ -633,7 +633,7 @@ group_lookup = {
 
 fig, axes = plt.subplots(nrows=len(group_lookup), figsize=(2.5,0.7*len(group_lookup)), constrained_layout=True)
 
-if index_kind == Index.PCA:
+if index_kind == IndexMethod.PCA:
 	max_cols = max(
 		(dataset.index_result[col].components_.shape[1])
 		for col in group_lookup
@@ -648,9 +648,9 @@ else:
 for col, ax in zip(group_lookup, axes, strict=True):
 	res = dataset.index_result[col]
 	match index_kind:
-		case Index.PCA:
+		case IndexMethod.PCA:
 			loadings = (res.components_.T * np.sqrt(res.explained_variance_)).T
-		case Index.EFA:
+		case IndexMethod.EFA:
 			loadings = res.loadings.T
 	sns.heatmap(
 		loadings,
