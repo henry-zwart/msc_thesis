@@ -5,6 +5,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import polars as pl
 import polars.selectors as cs
 
 from climate_attitudes import configure_mpl
@@ -25,7 +26,7 @@ configure_mpl(FONT_PATH)
 def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False):
     group_lookup = {
         "politics": "Politics",
-        "extreme_weather": "Extreme weather",
+        # "extreme_weather": "Extreme weather",
         "self_efficacy": "Self Efficacy",
         "climate_impacts": "Climate Impacts",
         "climate_policy": "Climate Policy",
@@ -68,7 +69,7 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
     else:
         G = nx.from_numpy_array(adj)
 
-    edge_linewidths = {(u, v): z["weight"] * 9 for u, v, z in G.edges(data=True)}
+    edge_linewidths = {(u, v): abs(z["weight"]) * 9 for u, v, z in G.edges(data=True)}
     edge_colours = [z["weight"] for u, v, z in G.edges(data=True)]
     edge_labels = [f"{z['weight']:.1f}" for u, v, z in G.edges(data=True)]
     layout = nx.forceatlas2_layout(G, gravity=0.3, scaling_ratio=5, seed=202603)
@@ -127,7 +128,7 @@ def main():
         config, name="reduced_no_imputation", with_imputation=False
     )
     dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS))
-    indices = dataset.indices.collect()  # ty: ignore
+    indices = dataset.indices.collect().with_columns(-pl.col("politics"))  # ty: ignore
 
     corr = Correlation.PARTIAL_GLASSO.calculate(indices, assume_centered=True)  # ty: ignore
     fig = plot_corr_network(indices.drop("participant_id", "wave"), corr, threshold=0.1)  # ty: ignore
