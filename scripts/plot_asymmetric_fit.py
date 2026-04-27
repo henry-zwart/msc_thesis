@@ -1,10 +1,12 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from ising.evaluation import round_trip
-from ising.model_library.three import MODELS
+from ising.evaluation import fit_round_trip
+from ising.model_library import MODELS
 
 # from climate_attitudes.visualisation import configure_mpl
+
+RANDOM_SEED = 202604231658
 
 
 def main():
@@ -13,10 +15,17 @@ def main():
 
     FIG_DIR = Path("results/figures")
 
-    for name, model in MODELS.items():
-        fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
+    models = {
+        (size, name): model
+        for size, models in MODELS.items()
+        for name, model in models.items()
+    }
 
-        refit_model = round_trip(model, n=N, timepoints=T).model
+    for (size, name), model in models.items():
+        model.reset_rng(RANDOM_SEED)
+        fig, axes = plt.subplots(ncols=2, figsize=(20, 10), constrained_layout=True)
+
+        refit_model = fit_round_trip(model, n=N, timepoints=T)
 
         # Draw original model
         model.draw(ax=axes[0])
@@ -26,18 +35,19 @@ def main():
         refit_model.draw(ax=axes[1], use_layout_from=model)
         axes[1].set_title("Fit model")
 
-        size = model.size
+        savedir = FIG_DIR / "asymmetric_ts"
         fig.savefig(
-            FIG_DIR / f"toy_model_fit_with_structure/{name}_n{size}.pdf",
+            savedir / f"{name}_n{size}.pdf",
             dpi=200,
             bbox_inches="tight",
         )
         plt.close()
 
-    for name, model in MODELS.items():
-        fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
+    for (size, name), model in models.items():
+        model.reset_rng(RANDOM_SEED)
+        fig, axes = plt.subplots(ncols=2, figsize=(20, 10), constrained_layout=True)
 
-        refit_model = round_trip(model, n=N, timepoints=T, use_structure=False).model
+        refit_model = fit_round_trip(model, n=N, timepoints=T, use_structure=False)
 
         # Draw original model
         model.draw(ax=axes[0])
@@ -47,9 +57,9 @@ def main():
         refit_model.draw(ax=axes[1], use_layout_from=model)
         axes[1].set_title("Fit model")
 
-        size = model.size
+        savedir = FIG_DIR / "asymmetric_ts_no_structure"
         fig.savefig(
-            FIG_DIR / f"toy_model_fit_without_structure/{name}_n{size}.pdf",
+            savedir / f"{name}_n{size}.pdf",
             dpi=200,
             bbox_inches="tight",
         )
