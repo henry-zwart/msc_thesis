@@ -33,7 +33,7 @@ QUALITATIVE_SCHEME = mcolors.ListedColormap(
 
 def configure_mpl(fonts_path: Path = Path("fonts")):
     """Configure Matplotlib style."""
-    _FONT_SIZE_SMALL = 8
+    FONT_SIZE_SMALL = 8
     FONT_SIZE_DEFAULT = 10
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")
@@ -48,7 +48,7 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
     plt.rc("axes", titlesize=FONT_SIZE_DEFAULT)  # fontsize of the axes title
     plt.rc("axes", labelsize=FONT_SIZE_DEFAULT)  # fontsize of the x and y labels
     plt.rc("figure", labelsize=FONT_SIZE_DEFAULT)
-    plt.rc("figure", dpi=300)
+    plt.rc("figure", dpi=200)
 
     sns.set_context(
         "paper",
@@ -60,8 +60,8 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
             "xtick.major.width": 0.5,
             "ytick.major.width": 0.5,
             "ytick.minor.width": 0.4,
-            "xtick.labelsize": FONT_SIZE_DEFAULT,
-            "ytick.labelsize": FONT_SIZE_DEFAULT,
+            "xtick.labelsize": FONT_SIZE_SMALL,
+            "ytick.labelsize": FONT_SIZE_SMALL,
         },
     )
 
