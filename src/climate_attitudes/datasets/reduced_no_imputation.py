@@ -7,6 +7,10 @@ SURVEY_COLS = [
 ]
 
 INPUT_QUESTION_COLUMNS = [
+    "dem_male",
+    "dem_educ",
+    "dem_income_percep",
+    "dem_urban",
     "cc1",
     "cc2",
     "cc4_world",
@@ -44,11 +48,25 @@ ALL_INPUT_COLUMNS = SURVEY_COLS + INPUT_QUESTION_COLUMNS
 REVERSE_CODING = []
 
 TRANSFORMS = [
-    pl.col("cc1").replace({1: 2, 99: 1}),  # Move "yes" to 2, "don't know" to 1
-    pl.col("cc2").replace({0: 0, 1: 0, 2: 1, 3: 1}),
+    pl.col("cc1").replace({0: -1, 99: 0}),  # (-1, 0, +1) = (no, dont know, yes)
+    pl.col("cc2").replace({0: -1, 1: -1, 2: 1, 3: 1}),  # (-1, +1) = (not human, human)
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
-        {1: 0, 2: 1, 99: 2}
-    ),  # "Don't know" between 'only a little' and 'a moderate amount'
+        {1: -2, 2: -1, 99: 0, 3: 1, 4: 2}
+    ),  # (-2, -1, 0, 1, 2) = (not at all, a little, dont know, moderate, great deal)
+    pl.col("cc6", "cvcc_worryothers").replace(
+        {1: -2, 2: -1, 3: 1, 4: 2}
+    ),  # (-2, -1, 1, 2) = (not at all, not very, somewhat, very)
+    pl.col("ew5").replace(
+        {1: -2, 2: -1, 3: 1, 4: 2}
+    ),  # (-2, -1, 1, 2) = (not at all, a little, moderate, great deal)
+    (pl.col("cvcc6", "cvcc9_cc") - 3),  # -2..=2 is strongly disagree to strongly agree
+    pl.col("cc_ica").replace(
+        {0: -1, 1: 1, 2: 1}
+    ),  # (-1, 1) = (No, Yes [legally binding or otherwise])
+    (pl.col("cc_pol_tax", "cc_pol_car") - 3),  # -2..=2 is strong opp to strong supp
+    pl.col("pol7").replace({1: -1, 2: 1}),  # (-1,1) = (env regulation bad, worth it)
+    (pl.col("pol_affiliation").cast(pl.Int64) - 2),  # -2..=2 is repub to democ
+    (pl.col("pol_ideology").cast(pl.Int64) - 2),  # -2..=2 is very cons to very liberal
 ]
 # TRANSFORMS = [
 #     pl.col("cc1").replace({1: 2, 99: 1}) - 1,  # Move "yes" to 2, "don't know" to 1
@@ -116,7 +134,12 @@ BEHAVIOUR_COLS = [
     # "cvcc4_personal",
 ]
 
-DEMOGRAPHIC_COLS = []
+DEMOGRAPHIC_COLS = [
+    "dem_male",
+    "dem_educ",
+    "dem_income_percep",
+    "dem_urban",
+]
 
 EXTERNAL_FACTORS = []
 
@@ -168,5 +191,8 @@ RENAME: dict[str, str] = {
     "cc6": "CC worry",
     "cvcc_worryothers": "CC worry (others)",
     "ew5": "Weather worry",
+    "politics": "Politics",
+    "climate_policy": "Climate policy",
+    "climate_impacts": "Climate impacts",
     # "ew6": "Weather preparation",
 }

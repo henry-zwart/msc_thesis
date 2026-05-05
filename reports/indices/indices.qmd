@@ -925,8 +925,8 @@ def plot_corr_network(df, corr, threshold: float = 0.05, directed: bool = False)
 
 	fig.suptitle("Partial correlation (GLASSO regularisation)")
 
-corr = Correlation.PARTIAL_GLASSO.calculate(indices, assume_centered=True)
-plot_corr_network(indices.drop("participant_id", "wave"), corr, threshold=0.1)
+corr = Correlation.PARTIAL_GLASSO.calculate(indices.drop(*ds_spec.DEMOGRAPHIC_COLS), assume_centered=True)
+plot_corr_network(indices.drop("participant_id", "wave", *ds_spec.DEMOGRAPHIC_COLS), corr, threshold=0.1)
 ```
 
 Indices:

@@ -26,7 +26,14 @@ ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
 			${CA_BUILT_ASSETS}/base/metadata.json \
 			src/climate_attitudes/datasets/reduced_no_imputation.py
 	@printf "Dataset → Build reduced dataset (only full values)...\n"
-	@uv run cadata create dataset --name reduced_no_imputation --force --with-indices --index efa --filter-null --waves [3,4]
+	@uv run cadata create dataset \
+		--name reduced_no_imputation \
+		--force \
+		--no-centre-columns \
+		--with-indices \
+		--index efa \
+		--filter-null \
+		--waves [3,4]
 
 ${CA_BUILT_ASSETS}/full_imp/metadata.json: \
 			${CA_BUILT_ASSETS}/base/metadata.json \

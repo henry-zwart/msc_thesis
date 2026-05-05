@@ -71,6 +71,8 @@ NULLABLE_COLUMNS: list[str] = [
 RESPONSE_REMAP_SUB_1 = {
     "dem_educ",
     "dem_urban",
+    "dem_income",
+    "dem_income_percep",
     "attr_storm",
     "attr_outage",
     "cc2",
@@ -830,8 +832,8 @@ class OutputResponseSchema(BaseSchema):
     dem_male: Gender  # ty: ignore
     dem_male_77_TEXT: str = pa.Field(nullable=True)
     dem_age: int = pa.Field(gt=0, le=99)
-    dem_income: int = pa.Field(isin=[1, 2, 3, 4, 5, 6])
-    dem_income_percep: int = pa.Field(isin=[1, 2, 3, 4])
+    dem_income: int = pa.Field(isin=[0, 1, 2, 3, 4, 5])
+    dem_income_percep: int = pa.Field(isin=[0, 1, 2, 3])
     dem_urban: UrbanArea = pa.Field(nullable=True)  # ty: ignore
 
     # Extreme weather

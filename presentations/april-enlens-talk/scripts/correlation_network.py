@@ -130,8 +130,14 @@ def main():
     dataset = dataset_no_std.standardise(cs.exclude(*ds_spec.SURVEY_COLS))
     indices = dataset.indices.collect().with_columns(-pl.col("politics"))  # ty: ignore
 
-    corr = Correlation.PARTIAL_GLASSO.calculate(indices, assume_centered=True)  # ty: ignore
-    fig = plot_corr_network(indices.drop("participant_id", "wave"), corr, threshold=0.1)  # ty: ignore
+    corr = Correlation.PARTIAL_GLASSO.calculate(
+        indices.drop(*ds_spec.DEMOGRAPHIC_COLS), assume_centered=True
+    )  # ty: ignore
+    fig = plot_corr_network(
+        indices.drop(*ds_spec.SURVEY_COLS, *ds_spec.DEMOGRAPHIC_COLS),
+        corr,
+        threshold=0.1,
+    )  # ty: ignore
     fig.savefig(
         "presentations/april-enlens-talk/figures/partial-correlation-network.pdf",
         bbox_inches="tight",

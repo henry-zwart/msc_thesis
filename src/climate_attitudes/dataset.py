@@ -168,7 +168,7 @@ class Dataset:
         return ds
 
     def clone(self) -> Dataset:
-        ds = Dataset(self.config.copy())
+        ds = Dataset(self.config.model_copy())
 
         ds.metadata = {k: copy(v) for k, v in self.metadata.items()}
 
@@ -187,6 +187,7 @@ class Dataset:
         self,
         groups: dict[str, list[str | pl.Expr]],
         kind: IndexMethod,
+        centre: bool = True,
     ) -> Dataset:
         # If no groups defined, can't compute indices
         if not groups:
@@ -197,7 +198,7 @@ class Dataset:
         ds.index_result = {}
         for group_name, columns in groups.items():
             X = ds.response.select(*columns).collect().to_numpy()  # ty: ignore
-            result = kind.eval(X)
+            result = kind.eval(X, centre)
             colname = group_name.lower().replace(" ", "_")
             ds.indices = ds.indices.with_columns(pl.Series(result.index).alias(colname))
             ds.index_result[colname] = result.result

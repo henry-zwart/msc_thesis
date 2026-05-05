@@ -19,9 +19,11 @@ class IndexMethod(StrEnum):
     EFA = "efa"
     AVERAGE = "average"
 
-    def eval(self, X: npt.NDArray[np.float64]) -> IndexResult:
+    def eval(self, X: npt.NDArray[np.float64], centre: bool = True) -> IndexResult:
         # Standardise columns
-        X = (X - X.mean(axis=0)) / X.std(axis=0)
+        if centre:
+            X = X - X.mean(axis=0)
+        X = X / X.std(axis=0)
 
         match self:
             case IndexMethod.PCA:

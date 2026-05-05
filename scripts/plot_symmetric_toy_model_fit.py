@@ -25,7 +25,7 @@ def main():
     }
 
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
 
         refit_model = fit_round_trip(model, n=N, timepoints=T)
@@ -47,7 +47,7 @@ def main():
         plt.close()
 
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
 
         refit_model = fit_round_trip(
@@ -77,7 +77,7 @@ def main():
 
     # Fit cross-sectionally
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
 
         refit_model = fit_round_trip(
@@ -105,7 +105,7 @@ def main():
         plt.close()
 
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
 
         refit_model = fit_round_trip(
@@ -114,6 +114,7 @@ def main():
             fit_method=FitMethod.MAXIMUM_LIKELIHOOD,
             use_structure=False,
             glauber_kwargs=dict(take_every=True),
+            model_type=SymmetricIsing,
         )
 
         # Draw original model

@@ -36,6 +36,7 @@ class CreateDerivedDatasetCommand(BaseCommand):
     with_imputation: bool = False
     with_indices: bool = False
     index: IndexMethod
+    centre_columns: bool = True
     force: bool = False
     filter_null: bool = False
     waves: list[int] = [1, 2, 3, 4, 5]
@@ -80,7 +81,7 @@ class CreateDerivedDatasetCommand(BaseCommand):
             )
 
         if self.with_indices:
-            ds = ds.compute_indices(ds_spec.GROUPS, self.index)
+            ds = ds.compute_indices(ds_spec.GROUPS, self.index, self.centre_columns)
 
         # wtp_solve_model = WTPModel(ds.response.collect(), col="ccSolving", k=5)
         # wtp_solve_model.sample()
@@ -126,6 +127,7 @@ class InfoSubCommand(BaseModel):
 class PlotSubCommand(BaseModel):
     response_events: CliSubCommand[vis_cli.ResponseEventPlotCommand]
     interresponse_times: CliSubCommand[vis_cli.InterResponseTimePlotCommand]
+    stratified_model: CliSubCommand[vis_cli.StratifiedIsingPlotCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)

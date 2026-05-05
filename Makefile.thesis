@@ -7,13 +7,26 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf \
 		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf
 
+THESIS_FIGURES_MODEL_FIT_STRATIFICATION := \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_male.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_educ.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_income_percep.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_urban.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_male.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_educ.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_income_percep.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_urban.pdf
+
 THESIS_FIGURES := \
-		$(THESIS_FIGURES_DATASET)
+		$(THESIS_FIGURES_DATASET) \
+		$(THESIS_FIGURES_MODEL_FIT_STRATIFICATION)
 
 THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/main.typ \
 		$(THESIS_DIR)/sections/abstract.typ \
-		$(THESIS_DIR)/sections/dataset.typ
+		$(THESIS_DIR)/sections/dataset.typ \
+		$(THESIS_DIR)/sections/model.typ 
+
 
 THESIS_DEPS := \
 	       $(THESIS_TYPST_DEPS) \
@@ -52,10 +65,26 @@ $(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
 	uv run cadata plot response-events --output $@
 
 
+$(THESIS_DIR)/results/figures/model_fit/stratification_%.pdf: \
+			$(PKG_PATH)/cli/visualisation/stratified_ising.py \
+			$(PKG_PATH)/visualisation.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@$(eval STEM := $(basename $(notdir $@)))
+	@$(eval REST := $(patsubst stratification_%,%,$(STEM)))
+	@$(eval MODEL := $(if $(filter sym_ising_%,$(REST)),sym_ising,ising))
+	@$(eval STRATIFY := $(patsubst $(MODEL)_%,%,$(REST)))
+	@uv run cadata plot stratified-model --model-type $(MODEL) --stratify "dem_$(STRATIFY)" --output $@
+
+
+
 $(THESIS_DIR)/results/data: | $(THESIS_DIR)/results
 	@mkdir -p $@
 
 $(THESIS_DIR)/results/figures/dataset: | $(THESIS_DIR)/results/figures
+	@mkdir -p $@
+
+$(THESIS_DIR)/results/figures/model_fit: | $(THESIS_DIR)/results/figures
 	@mkdir -p $@
 
 $(THESIS_DIR)/results/figures: | $(THESIS_DIR)/results

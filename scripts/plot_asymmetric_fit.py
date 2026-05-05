@@ -22,7 +22,7 @@ def main():
     }
 
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(20, 10), constrained_layout=True)
 
         refit_model = fit_round_trip(model, n=N, timepoints=T)
@@ -44,7 +44,7 @@ def main():
         plt.close()
 
     for (size, name), model in models.items():
-        model.reset_rng(RANDOM_SEED)
+        model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(20, 10), constrained_layout=True)
 
         refit_model = fit_round_trip(model, n=N, timepoints=T, use_structure=False)

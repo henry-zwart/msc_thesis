@@ -93,6 +93,8 @@
 
 = Methods
 
+#include "sections/model.typ"
+
 
 
 #lorem(200)
