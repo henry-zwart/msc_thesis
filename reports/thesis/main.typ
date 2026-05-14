@@ -91,7 +91,11 @@
 
 #include "sections/dataset.typ"
 
-= Methods
+= Terminology and notation
+
+#include "sections/notation.typ"
+
+= The Ising model and its variants
 
 #include "sections/model.typ"
 
