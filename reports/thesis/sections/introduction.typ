@@ -9,15 +9,16 @@ Old RQs:
 Revised (potential) research foci:
 
 *Theoretical contributions:*
-- Deriving a non-equilibrium model of belief system dynamics, allowing for
-  independently-varying directional causal effects between beliefs and attitudes.
+- *RF1.1:* Extending existing the causal attitude network model of belief systems to support
+  asymmetric causal effects between beliefs and attitudes.
 
-- RQ: What is the representational capacity of a pairwise belief system model? What can
-  and cannot be captured? What is the potential impact of unmeasured factors on model
-  inference and behaviour? What is the potential impact of excluding true relations, or
-  including false ones?
+- *RQ1.1:* What is the representational capacity of a pairwise belief system model?
 
-- RQ: How do belief system dynamics differ between models assuming symmetric relations,
+- *RQ1.2:* How is the process of inferring belief systems from observational data
+  sensitive to unmeasured factors, or incorrect structural assumptions? What is the
+  impact of excluding true relations, or including false ones, on the inferred model?
+
+- *RQ1.3:* How do belief system dynamics differ between models assuming symmetric relations,
   and those assuming asymmetric relations? If the asymmetric model reaches a steady
   state, is this an equilibrium state? Should we expect the steady state to be similar
   to the ESS of the symmetric model? Under what conditions do we expect the asymmetric
@@ -25,20 +26,18 @@ Revised (potential) research foci:
   on the initial conditions of the belief system?
 
 *Inferring belief systems:*
-- RQ: How do (symmetric or asymmetric) belief systems relating to climate change vary
-  between individuals with different background contexts, as inferred from observational
-  data?
+- *RQ2.1:* How do (symmetric or asymmetric) belief systems relating to climate change
+  vary between individuals with different background contexts, as inferred from
+  observational data?
 
-- RQ: To what extent do we observe asymmetric relations in climate change belief systems
-  inferred from observational data?
+- *RQ2.2:* To what extent are causal relations between beliefs and attitudes in
+  observational data asymmetric?
 
 *Intervention dynamics:*
-- RQ: How do intervention strategy and effectiveness differ between symmetric and
-  asymmetric belief system models? Are there scenarios in which an ineffective
-  intervention in one model is effective in the other?
+- *RQ3.1:* How do intervention strategy and effectiveness differ between symmetric and
+  asymmetric belief system models for a given observational dataset? Are differences in
+  monotonic, such that one model consistently predicts higher effectiveness?
 
-- RQ: Do there exist scenarios in which the effect of a given intervention varies
-  between individuals, such that it is either more effective for some individuals
-  (impact on outcome varies in magnitude) or causes 'backlash' for some individuals
-  (impact on outcome varies in direction)?
+- *RQ3.2:* How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions, or with different backgrounds?
 
