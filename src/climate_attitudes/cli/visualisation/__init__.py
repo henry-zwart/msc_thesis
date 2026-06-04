@@ -1,3 +1,6 @@
+from .directional_differential import (
+    DirectionalDifferentialPlotCommand as DirectionalDifferentialPlotCommand,
+)
 from .interresponse_time import (
     InterResponseTimePlotCommand as InterResponseTimePlotCommand,
 )

@@ -68,6 +68,7 @@ def prepare_covariates(
 ) -> npt.NDArray[np.float64]:
     n_waves = full_dataset.select(pl.col("wave").unique()).shape[0]
     n_cols = len(ds_spec.DEMOGRAPHIC_COLS)
+    n_cols = 6
 
     # Optionally filter to rows matching a certain condition
     dataset = full_dataset
@@ -76,7 +77,14 @@ def prepare_covariates(
     dataset = dataset.sort(by=("participant_id", "wave"))
     n_participants = dataset.select(pl.col("participant_id").unique()).shape[0]
     X = (
-        dataset.select(*ds_spec.DEMOGRAPHIC_COLS)
+        dataset.select(
+            pl.col("dem_male"),
+            pl.col("dem_educ"),
+            pl.col("dem_income_percep"),
+            (pl.col("dem_urban") == 0).cast(int).alias("dem_urban: urban"),
+            (pl.col("dem_urban") == 1).cast(int).alias("dem_urban: suburban"),
+            (pl.col("dem_urban") == 2).cast(int).alias("dem_urban: rural"),
+        )
         .to_numpy()
         .ravel()
         .reshape((n_participants, n_waves, n_cols))
