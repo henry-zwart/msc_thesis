@@ -1,25 +1,28 @@
-import itertools
+import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from functools import partial
 from pathlib import Path
 
 import numpy as np
 import numpy.typing as npt
-from ising.model import FitMethod, ModelType
+from ising.model import FitMethod, ModelType, UpdateMethod
 from tqdm import tqdm
 
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
 from ising import Ising
 
+# def s_i(_model: Ising, y: npt.NDArray[np.int64], i: int) -> np.int64:
+#     return y[i]
 
-def s_i(_model: Ising, y: npt.NDArray[np.int64], i: int) -> np.int64:
-    return y[i]
+
+def state_configuration(
+    _model: Ising, y: npt.NDArray[np.int64]
+) -> npt.NDArray[np.int64]:
+    return y
 
 
 def run_one_measure(
     repeat_idx,
-    target_idx,
     intervene_idx,
     model,
     f,
@@ -32,7 +35,6 @@ def run_one_measure(
 ):
     return (
         repeat_idx,
-        target_idx,
         intervene_idx,
         model.measure(
             f,
@@ -40,7 +42,7 @@ def run_one_measure(
             X=X,
             t=t,
             warmup_steps=warmup_steps,
-            method=method,
+            step_method=method,
             take_every=take_every,
         ),
     )
@@ -50,6 +52,7 @@ def fit_model[T: Ising](
     cls: type[T],
     Y: npt.NDArray[np.int64],
     X: npt.NDArray[np.float64] | None,
+    λ: float | int | None,
     node_labels: npt.NDArray[np.str_],
     seed: np.random.Generator,
     adj: npt.NDArray[np.bool] | None,
@@ -58,11 +61,13 @@ def fit_model[T: Ising](
     model = cls.fit(
         Y,
         X=X,
-        method=FitMethod.TIME_SERIES,
+        optim_method=FitMethod.TIME_SERIES,
+        update_method=UpdateMethod.SYNCHRONOUS,
         node_labels=node_labels,
         rng=np.random.default_rng(seed),
         adj=adj,
         self_loops=True,
+        w=λ,
     )
     return (repeat_idx, model)
 
@@ -76,7 +81,9 @@ def run_intervention_experiment(
     model_type: type[Ising],
     use_covariates: bool,
     intervention_delta: float,
+    λ: float | int | None,
     rng: np.random.Generator,
+    scale: float,
     quiet: bool,
 ) -> tuple[
     npt.NDArray[np.float64],
@@ -85,7 +92,9 @@ def run_intervention_experiment(
     npt.NDArray[np.float64],
     npt.NDArray[np.float64],
 ]:
-    _, Y, X = dataset.indices_to_numpy(kind="time-series", binarise=True, seed=rng)
+    _, Y, X = dataset.indices_to_numpy(
+        kind="time-series", binarise=True, scale=scale, seed=rng
+    )
     X = X if use_covariates else None
     M = Y.shape[0]
     T = Y.shape[1]
@@ -93,9 +102,10 @@ def run_intervention_experiment(
     dummy_model = model_type.fit(
         Y,
         X,
-        method=FitMethod.TIME_SERIES,
+        optim_method=FitMethod.TIME_SERIES,
+        update_method=UpdateMethod.SYNCHRONOUS,
         adj=adj,
-        self_loops=True,
+        self_loops=False,
         rng=rng,
     )
     measurements = np.zeros(
@@ -103,7 +113,7 @@ def run_intervention_experiment(
         dtype=np.float64,
     )
     checks = np.zeros(
-        (M, repeats, N, N),
+        (M, repeats, N),
         dtype=np.float64,
     )
     params = np.zeros((repeats, dummy_model.n_params), dtype=np.float64)
@@ -122,14 +132,18 @@ def run_intervention_experiment(
                 binarise=True,
                 seed=rngs[r],
             )
-            datasets_Y[r] = Y
+            idxes = rngs[r].choice(np.arange(M), size=M, replace=True)
+            datasets_Y[r] = Y[idxes]
 
             futures.append(
                 executor.submit(
                     fit_model,
                     cls=model_type,
+                    # Y=Y[idxes],
+                    # X=X[idxes] if X is not None else X,
                     Y=Y,
                     X=X,
+                    λ=λ,
                     node_labels=node_labels,
                     seed=rngs[r],
                     adj=adj,
@@ -137,7 +151,15 @@ def run_intervention_experiment(
                 )
             )
 
-        for ft in as_completed(futures):
+        for ft in tqdm(
+            as_completed(futures),
+            total=repeats,
+            desc=(
+                f"Fitting models ({model_type.__name__}; "
+                f"δ={intervention_delta}; covariates={use_covariates})"
+            ),
+            disable=quiet,
+        ):
             r, model = ft.result()
             models[r] = model
             params[r] = model.param_vector()
@@ -149,8 +171,8 @@ def run_intervention_experiment(
             Y = datasets_Y[r]
             model = models[r]
 
-            for intervene_idx, target_idx in itertools.product(range(N), range(N)):
-                f = partial(s_i, i=target_idx)
+            for intervene_idx in range(N):
+                f = state_configuration
                 model.reset(rngs[r])
                 if X is None:
                     intervention_offset = np.array([intervention_delta])
@@ -167,7 +189,6 @@ def run_intervention_experiment(
                     executor.submit(
                         run_one_measure,
                         r,
-                        target_idx,
                         intervene_idx,
                         int_model,
                         f,
@@ -182,16 +203,16 @@ def run_intervention_experiment(
 
         for ft in tqdm(
             as_completed(futures),
-            total=(repeats * Y.shape[-1] ** 2),
+            total=(repeats * Y.shape[-1]),
             desc=(
                 f"Pairwise interventions ({model_type.__name__}; "
                 f"δ={intervention_delta}; covariates={use_covariates})"
             ),
             disable=quiet,
         ):
-            repeat_idx, target_idx, intervene_idx, res = ft.result()
-            measurements[:, repeat_idx, :, target_idx, intervene_idx] = res.y[:, 0]
-            checks[:, repeat_idx, target_idx, intervene_idx] = res.check[:, 0]
+            repeat_idx, intervene_idx, res = ft.result()
+            measurements[:, repeat_idx, :, :, intervene_idx] = res.y[:, 0]
+            checks[:, repeat_idx, intervene_idx] = res.check[:, 0]
 
     return seeds, datasets_Y, params, measurements, checks
 
@@ -206,6 +227,13 @@ class AllInterventionsRunCommand(BaseCommand):
     repeats: int = 30
     measure_time: int = 5
     intervention_delta: float = 0.5
+
+    sigma: float | None = None
+    sigma_path: Path | None = None
+
+    lam: float | None = None
+    lam_path: Path | None = None
+
     quiet: bool = False
 
     def cli_cmd(self) -> None:
@@ -240,6 +268,42 @@ class AllInterventionsRunCommand(BaseCommand):
                 f"or 'sym_ising'."
             )
 
+        lam = self.lam
+        if lam is None:
+            if self.lam_path is None:
+                print(
+                    "Warning: No regularisation strength or path to optimised "
+                    "resularisation results specified. "
+                )
+            else:
+                with self.lam_path.open("r") as f:
+                    try:
+                        lam: float = json.load(f)[str(self.model_type)]
+                    except KeyError as err:
+                        raise KeyError(
+                            f"Did not find optimised regularisation strength for "
+                            f"model type '{self.model_type}' in file "
+                            f"'{self.lam_path}'"
+                        ) from err
+                    except:
+                        raise
+
+        sigma = self.sigma
+        if sigma is None:
+            if self.sigma_path is None:
+                sigma = 0.1
+            else:
+                with self.sigma_path.open("r") as f:
+                    try:
+                        sigma: float = json.load(f)["sigma"]
+                    except KeyError as err:
+                        raise KeyError(
+                            f"Binarisation sigma results file '{self.sigma_path}' has "
+                            f"invalid format. Does not include key 'sigma'."
+                        ) from err
+                    except:
+                        raise
+
         rng = np.random.default_rng(self.seed)
         seeds, Ys, params, measurements, checks = run_intervention_experiment(
             dataset,
@@ -250,7 +314,9 @@ class AllInterventionsRunCommand(BaseCommand):
             model_cls,
             self.use_covariates,
             self.intervention_delta,
+            lam,
             rng,
+            sigma,
             self.quiet,
         )
 
@@ -273,6 +339,8 @@ class AllInterventionsRunCommand(BaseCommand):
                 labels=node_labels,
                 params=params,
                 checks=checks,
+                λ=lam if lam is not None else 0.0,
+                sigma=sigma,
                 measurements=measurements,
             )
         else:
@@ -284,6 +352,8 @@ class AllInterventionsRunCommand(BaseCommand):
                 labels=node_labels,
                 params=params,
                 checks=checks,
+                λ=lam if lam is not None else 0.0,
+                sigma=sigma,
                 measurements=measurements,
             )
 

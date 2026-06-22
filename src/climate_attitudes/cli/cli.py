@@ -284,16 +284,29 @@ class PlotSubCommand(BaseModel):
     interresponse_times: CliSubCommand[vis_cli.InterResponseTimePlotCommand]
     stratified_model: CliSubCommand[vis_cli.StratifiedIsingPlotCommand]
     directional_differentials: CliSubCommand[vis_cli.DirectionalDifferentialPlotCommand]
+    intervention_mean_effects: CliSubCommand[vis_cli.InterventionMeanEffectsPlotCommand]
+    intervention_effect_distribution: CliSubCommand[
+        vis_cli.InterventionEffectDisPlotCommand
+    ]
+    intervention_mean_collective_effect: CliSubCommand[
+        vis_cli.InterventionCollectiveEffectPlotCommand
+    ]
+    intervention_mean_collective_rank: CliSubCommand[
+        vis_cli.InterventionCollectiveRankPlotCommand
+    ]
+    interaction_heatmap: CliSubCommand[vis_cli.InteractionHeatmapPlotCommand]
+    regularisation_ebic: CliSubCommand[vis_cli.RegularisationEBICPlotCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
 
 
 class AnalysisSubCommand(BaseModel):
+    fit_bootstrapped: CliSubCommand[analysis_cli.FitBootstrappedModelsRunCommand]
+    fit_model: CliSubCommand[analysis_cli.FitModelRunCommand]
     all_interventions: CliSubCommand[analysis_cli.AllInterventionsRunCommand]
-    directional_differentials: CliSubCommand[
-        analysis_cli.DirectionalDifferentialRunCommand
-    ]
+    regularisation_ebic: CliSubCommand[analysis_cli.CompareRegularisationEBICRunCommand]
+    choose_regularisation: CliSubCommand[analysis_cli.ChooseRegularisationRunCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)

@@ -15,7 +15,7 @@ from matplotlib.axes import Axes
 from climate_attitudes.correlation import Correlation
 from climate_attitudes.feature_clustering import LinkageMethod, features_linkage
 
-DIVERGING_CMAP = sns.diverging_palette(20, 230, as_cmap=True)
+DIVERGING_CMAP = sns.diverging_palette(20, 230, s=85, as_cmap=True)
 
 # Colour-blind safe; from https://sronpersonalpages.nl/~pault/
 QUALITATIVE_SCHEME = mcolors.ListedColormap(
@@ -33,8 +33,11 @@ QUALITATIVE_SCHEME = mcolors.ListedColormap(
 
 def configure_mpl(fonts_path: Path = Path("fonts")):
     """Configure Matplotlib style."""
-    FONT_SIZE_SMALL = 8
-    FONT_SIZE_DEFAULT = 10
+    FONT_SIZES = {
+        "paper": (8, 10),
+        "thesis": (10, 12),
+    }
+    FONT_SIZE_SMALL, FONT_SIZE_DEFAULT = FONT_SIZES["thesis"]
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Semibold.otf")

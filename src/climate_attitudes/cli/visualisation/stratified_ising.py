@@ -194,9 +194,6 @@ class StratifiedIsingPlotCommand(BaseCommand):
         covariate_model.adj[abs(covariate_model.j) < 0.15] = False
         covariate_model.j[abs(covariate_model.j) < 0.15] = 0.0
         covariate_model.draw(ax=axes[0, 1], use_layout_from=full_model)
-        print(full_model.j)
-        print(covariate_model.j)
-        print()
         # print(covariate_model.beta)
         axes[0, 1].set_title(f"{cls.__name__} (with covariates)")
 

@@ -1,6 +1,8 @@
 import numpy as np
 import polars as pl
 
+from .common import Column, DatasetSchema, PolarsReplace
+
 SURVEY_COLS = [
     "participant_id",
     "wave",
@@ -218,3 +220,297 @@ CATEGORIES = np.asarray(
 GROUPS: dict[str, list[str | pl.Expr]] = {}
 
 RENAME: dict[str, str] = {}
+
+schema = DatasetSchema(
+    columns=[
+        Column(name="participant_id", display_name="Participant ID", kind="survey"),
+        Column(name="wave", display_name="Wave", kind="survey"),
+        Column(
+            name="current_pres",
+            display_name="Current president",
+            short_name="Current president",
+            kind="covariate",
+        ),
+        Column(name="dem_age", display_name="Age", short_name="Age", kind="covariate"),
+        Column(
+            name="dem_male", display_name="Is male", short_name="Male", kind="covariate"
+        ),
+        Column(
+            name="dem_educ",
+            display_name="Education level",
+            short_name="Education",
+            kind="covariate",
+        ),
+        Column(
+            name="dem_income_percep",
+            display_name="Self-perceived income level",
+            short_name="Income perception",
+            kind="covariate",
+        ),
+        Column(
+            name="dem_urban",
+            display_name="Urbanity",
+            short_name="Urbanity",
+            kind="covariate",
+            reverse_coding=True,
+        ),
+        Column(
+            name="cc1",
+            display_name="Belief in climate change",
+            short_name="Belief CC",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 2, 99: 1}),
+        ),
+        Column(
+            name="cc2",
+            display_name="Belief about causes of climate change",
+            short_name="CC anthropogenic",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cc4_world",
+            display_name="Belief about impacts of CC on world",
+            short_name="CC impacts (world)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc4_wealthUS",
+            display_name="Belief about impacts of CC on wealthy US communities",
+            short_name="CC impacts (wealth US)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc4_poorUS",
+            display_name="Belief about impacts of CC on poor US communities",
+            short_name="CC impacts (poor US)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc4_comm",
+            display_name="Belief about impacts of CC on own community",
+            short_name="CC impacts (own community)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc5_world",
+            display_name="Belief about future impacts of CC on world",
+            short_name="CC impacts (world)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc5_wealthUS",
+            display_name="Belief about future impacts of CC on wealthy US communities",
+            short_name="CC impacts (wealth US)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc5_poorUS",
+            display_name="Belief about future impacts of CC on poor US communities",
+            short_name="CC impacts (poor US)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc5_comm",
+            display_name="Belief about future impacts of CC on own community",
+            short_name="CC impacts (own community)",
+            category="Belief",
+            kind="measurement",
+            transform=PolarsReplace(mapping={1: 0, 2: 1, 99: 2}),
+        ),
+        Column(
+            name="cc10",
+            display_name="Knowledge of risks of CC by those exposed",
+            short_name="CC risk knowledge (others)",
+            category="Belief",
+            kind="measurement",
+            reverse_coding=True,
+        ),
+        Column(
+            name="cc11",
+            display_name="Self-efficacy on climate risks",
+            short_name="CC self-efficacy",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cc12",
+            display_name="Level of dread about CC (others)",
+            short_name="CC dread (others)",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc4_will",
+            display_name=(
+                "Most people will adopt enviornmentally-friendly behaviour "
+                "following pandemic"
+            ),
+            short_name="CC behaviour change (will; others)",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc4_should",
+            display_name=(
+                "Most people should adopt enviornmentally-friendly behaviour "
+                "following pandemic"
+            ),
+            short_name="CC behaviour change (should; others)",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc4_personal",
+            display_name=(
+                "I will adopt enviornmentally-friendly behaviour following pandemic"
+            ),
+            short_name="CC behaviour change (will; self)",
+            category="Behaviour",
+            kind="measurement",
+        ),
+        Column(
+            name="soc_trust",
+            display_name="People are generally trustworthy",
+            short_name="Trust in people",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="soc_help",
+            display_name="People are generally helpful",
+            short_name="People helpful",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="future",
+            display_name="Future outlook",
+            short_name="Future outlook",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc10_cc",
+            display_name="CC will be solved through technology",
+            short_name="Tech. CC solution optimism",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cc3",
+            display_name="CC threat level",
+            short_name="CC threat level",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="cc6",
+            display_name="Worry about current and future CC",
+            short_name="CC worry",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc_worryothers",
+            display_name="Belief about others' worry about current and future CC",
+            short_name="CC worry (others)",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="ew5",
+            display_name="Worry about future extreme weather",
+            short_name="Weather worry",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="ew6",
+            display_name="Level of preparation for extreme weather",
+            short_name="Extreme weather prep",
+            category="Behaviour",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc6",
+            display_name="Importance of individual action on CC",
+            short_name="CC individual action",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cvcc9_cc",
+            display_name="Scientists should guide CC response",
+            short_name="Scientists in CC response",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cc_ica",
+            display_name="Support for international carbon emission agreement",
+            short_name="International emission agreement",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cc_pol_tax",
+            display_name="Support for tax on carbon-based fuels",
+            short_name="Tax carbon fuels",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="cc_pol_car",
+            display_name=(
+                "Support for stronger emissions standard for auto manufacturers"
+            ),
+            short_name="Stronger emissions standards (auto)",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="pol7",
+            display_name="Strict environmental regulations are worth it",
+            short_name="Env. regulation worth it",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="pol7_pi",
+            display_name="Strict environmental regulations are worth it (others)",
+            short_name="Env. regulation worth it (others)",
+            category="Belief",
+            kind="measurement",
+        ),
+        Column(
+            name="pol_affiliation",
+            display_name="Political affiliation",
+            short_name="Political affiliation",
+            category="Attitude",
+            kind="measurement",
+        ),
+        Column(
+            name="pol_ideology",
+            display_name="Political ideology",
+            short_name="Political ideology",
+            category="Attitude",
+            kind="measurement",
+        ),
+    ],
+)
