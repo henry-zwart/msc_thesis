@@ -68,6 +68,7 @@ def prepare_covariates(
 ) -> npt.NDArray[np.float64]:
     n_waves = full_dataset.select(pl.col("wave").unique()).shape[0]
     n_cols = len(ds_spec.DEMOGRAPHIC_COLS)
+    n_cols = 6
 
     # Optionally filter to rows matching a certain condition
     dataset = full_dataset
@@ -76,7 +77,14 @@ def prepare_covariates(
     dataset = dataset.sort(by=("participant_id", "wave"))
     n_participants = dataset.select(pl.col("participant_id").unique()).shape[0]
     X = (
-        dataset.select(*ds_spec.DEMOGRAPHIC_COLS)
+        dataset.select(
+            pl.col("dem_male"),
+            pl.col("dem_educ"),
+            pl.col("dem_income_percep"),
+            (pl.col("dem_urban") == 0).cast(int).alias("dem_urban: urban"),
+            (pl.col("dem_urban") == 1).cast(int).alias("dem_urban: suburban"),
+            (pl.col("dem_urban") == 2).cast(int).alias("dem_urban: rural"),
+        )
         .to_numpy()
         .ravel()
         .reshape((n_participants, n_waves, n_cols))
@@ -186,9 +194,6 @@ class StratifiedIsingPlotCommand(BaseCommand):
         covariate_model.adj[abs(covariate_model.j) < 0.15] = False
         covariate_model.j[abs(covariate_model.j) < 0.15] = 0.0
         covariate_model.draw(ax=axes[0, 1], use_layout_from=full_model)
-        print(full_model.j)
-        print(covariate_model.j)
-        print()
         # print(covariate_model.beta)
         axes[0, 1].set_title(f"{cls.__name__} (with covariates)")
 

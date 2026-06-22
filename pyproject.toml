@@ -3,9 +3,11 @@ name = "msc-thesis"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "causal-learn>=0.1.4.7",
     "dcor>=0.7",
     "fastexcel>=0.18.0",
     "graphviz>=0.21",
+    "igraph>=1.0.0",
     "iplotx>=1.7.0",
     "ipywidgets>=8.1.8",
     "ising",
@@ -28,6 +30,7 @@ dependencies = [
     "scikit-learn>=1.8.0",
     "scipy>=1.17.0",
     "seaborn>=0.13.2",
+    "shap>=0.49.1",
     "sqlalchemy>=2.0.45",
     "statsmodels>=0.14.6",
 ]

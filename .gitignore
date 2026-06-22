@@ -255,3 +255,5 @@ outputs/**
 
 # Data files
 **/*.parquet
+
+reports/thesis/results*

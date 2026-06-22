@@ -4,19 +4,22 @@ import json
 import pickle
 from copy import copy
 from datetime import date
-from typing import Any
+from typing import Any, Literal
 
+import numpy as np
+import numpy.typing as npt
 import polars as pl
 import polars.selectors as cs
 from sklearn.decomposition import PCA
 from statsmodels.multivariate.factor import FactorResults
 
 from climate_attitudes.data_extract import DataExtract
+from climate_attitudes.datasets.common import DatasetSchema
 from climate_attitudes.exceptions import DatasetExistsException
 from climate_attitudes.imputation import impute_viterbi
 from climate_attitudes.indices import IndexMethod
 from climate_attitudes.schema import dataset as schema
-from climate_attitudes.schema.enums import PoliticalAffiliation, President
+from climate_attitudes.schema.enums import WAVES, PoliticalAffiliation, President
 from climate_attitudes.schema.extract import (
     EXPERIMENT_CONDITION_COLUMNS,
 )
@@ -38,15 +41,18 @@ class Dataset:
         | None
     ) = None
 
+    schema: DatasetSchema
+
     metadata: dict[str, Any]
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, schema: DatasetSchema):
         self.config = config
         self.metadata = dict(
             validated=False,
             has_indices=False,
             imputation=False,
         )
+        self.schema = schema
 
     def build(
         self,
@@ -123,6 +129,9 @@ class Dataset:
             with (dir / "index_result.pkl").open("wb") as f:
                 pickle.dump(self.index_result, f)
 
+        with (dir / "schema.json").open("w") as f:
+            json.dump(self.schema.model_dump(), f)
+
         with (dir / "metadata.json").open("w") as f:
             json.dump(self.metadata, f)
 
@@ -134,14 +143,17 @@ class Dataset:
         with_imputation: bool = True,
         verbose: bool = True,
     ) -> Dataset:
-        ds = cls(config)
-
         if with_imputation:
             name = f"{name}_imp"
 
         dir = config.built_assets / name
         if not (dir / "metadata.json").exists():
             raise DatasetExistsException(f"No dataset found at path '{dir}'.")
+
+        with (dir / "schema.json").open("r") as f:
+            schema = DatasetSchema.model_validate(json.load(f))
+
+        ds = cls(config, schema)
 
         with (dir / "metadata.json").open("r") as f:
             ds.metadata = json.load(f)
@@ -167,8 +179,103 @@ class Dataset:
 
         return ds
 
+    def indices_to_numpy(
+        self,
+        kind: Literal["cross-sectional", "time-series"],
+        binarise: bool = False,
+        ternarise: bool = False,
+        scale: float = 0.1,
+        epsilon: float = 0.25,
+        seed: int | np.random.Generator | None = None,
+    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+        if self.indices is None:
+            raise RuntimeError("`Dataset.indices` is None")
+        if binarise and ternarise:
+            raise RuntimeError("At most one of `binarise`, `ternarise` may be true.")
+        df_data = self.indices.collect().sort(by=("participant_id", "wave"))
+        match kind:
+            case "cross-sectional":
+                Y = df_data.select(*self.schema.get_cols("measurement")).to_numpy()
+                # NOTE: Hard-coded for now because I don't want to deal with the
+                # binarisation of dem_urban generically.
+                X = df_data.select(
+                    pl.col("dem_male"),
+                    pl.col("dem_educ"),
+                    pl.col("dem_income_percep"),
+                    (pl.col("dem_urban") == 0).cast(int).alias("dem_urban: urban"),
+                    (pl.col("dem_urban") == 1).cast(int).alias("dem_urban: suburban"),
+                    (pl.col("dem_urban") == 2).cast(int).alias("dem_urban: rural"),
+                ).to_numpy()
+                X = (X - X.mean(axis=0)) / X.std(axis=0, ddof=1)
+                pids = df_data.select("participant_id").to_numpy().flatten()
+            case "time-series":
+                n_waves = df_data.select(pl.col("wave").n_unique()).item()
+                Y = (
+                    df_data.select(*self.schema.get_cols("measurement"))
+                    .to_numpy()
+                    .ravel()
+                    .reshape(
+                        (
+                            -1,
+                            n_waves,
+                            len(self.schema.get_cols("measurement")),
+                        )
+                    )
+                )
+                # Y = Y / Y.std(axis=(0, 1))
+                Y = Y / abs(Y.max(axis=(0, 1)))
+                # NOTE: Hard-coded for now because I don't want to deal with the
+                # binarisation of dem_urban generically.
+                X = (
+                    df_data.select(
+                        pl.col("dem_male"),
+                        pl.col("dem_educ"),
+                        pl.col("dem_income_percep"),
+                        (pl.col("dem_urban") == 0).cast(int).alias("dem_urban: urban"),
+                        (pl.col("dem_urban") == 1)
+                        .cast(int)
+                        .alias("dem_urban: suburban"),
+                        (pl.col("dem_urban") == 2).cast(int).alias("dem_urban: rural"),
+                    )
+                    .to_numpy()
+                    .ravel()
+                    .reshape((-1, n_waves, 6))
+                )
+                X = (X - X.mean(axis=(0, 1))) / X.std(axis=(0, 1), ddof=1)
+                pids = (
+                    df_data.select("participant_id")
+                    .to_numpy()
+                    .ravel()
+                    .reshape((-1, n_waves))[:, 0]
+                )
+
+        X = X.astype(np.float64)
+
+        if binarise:
+            if isinstance(seed, np.random.Generator):
+                rng = seed
+            else:
+                rng = np.random.default_rng(seed)
+            ζ = rng.normal(scale=scale, size=Y.shape)
+            Y = np.where(Y + ζ > 0, 1, -1)
+            Y = Y.astype(np.int64)
+
+        elif ternarise:
+            if isinstance(seed, np.random.Generator):
+                rng = seed
+            else:
+                rng = np.random.default_rng(seed)
+            ζ = rng.normal(scale=scale, size=Y.shape)
+            Y_hat = Y + ζ
+            Y_hat[Y_hat < -epsilon] = -1
+            Y_hat[Y_hat > epsilon] = 1
+            Y_hat[abs(Y_hat) <= epsilon] = 0
+            Y = Y_hat.astype(np.int64)
+
+        return pids, Y, X
+
     def clone(self) -> Dataset:
-        ds = Dataset(self.config.model_copy())
+        ds = Dataset(self.config.model_copy(), self.schema.model_copy())
 
         ds.metadata = {k: copy(v) for k, v in self.metadata.items()}
 
@@ -197,7 +304,13 @@ class Dataset:
         ds.indices = ds.response.clone()
         ds.index_result = {}
         for group_name, columns in groups.items():
-            X = ds.response.select(*columns).collect().to_numpy()  # ty: ignore
+            X = (
+                ds.response.select(  # ty: ignore
+                    *columns
+                )
+                .collect()
+                .to_numpy()
+            )
             result = kind.eval(X, centre)
             colname = group_name.lower().replace(" ", "_")
             ds.indices = ds.indices.with_columns(pl.Series(result.index).alias(colname))
@@ -274,6 +387,38 @@ class Dataset:
         ds.response = self.response.filter(pl.col("wave").is_in(waves))
         return ds
 
+    def filter(self, expr: pl.Expr) -> Dataset:
+        ds = self.clone()
+        ds.response = ds.response.filter(expr)
+        if ds.indices is not None:
+            ds.indices = ds.response.select("participant_id", "wave").join(
+                ds.indices, how="left", on=("participant_id", "wave")
+            )
+
+        # Recreate participant table
+        participant = (
+            ds.response.select("participant_id", "wave")
+            .with_columns(
+                pl.col("wave").min().over("participant_id").alias("wave_joined")
+            )
+            .with_columns(
+                pl.col("wave").replace_strict({i: f"wave_{i}" for i in WAVES})
+            )
+            .with_columns(pl.lit(True).alias("participated"))
+            .pivot(
+                "wave",
+                on_columns=[f"wave_{i}" for i in WAVES],
+                index=["participant_id", "wave_joined"],
+                values="participated",
+                maintain_order=True,
+            )
+            .fill_null(False)
+            .select("participant_id", "wave_joined", *[f"wave_{i}" for i in WAVES])
+        )
+        ds.participant = participant
+
+        return ds
+
     def filter_no_nulls(
         self,
     ) -> Dataset:
@@ -297,6 +442,11 @@ class Dataset:
         ds.response = self.response.filter(
             pl.col("participant_id").is_in(keep_pids)
         ).clone()
+
+        if self.indices is not None:
+            ds.indices = self.indices.filter(
+                pl.col("participant_id").is_in(keep_pids)
+            ).clone()
 
         return ds
 
