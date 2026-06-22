@@ -67,7 +67,7 @@ def main(indices: pl.DataFrame):
     outcome = model.measure(f, y0=y[:, -1, :], t=T, repeats=30, warmup_steps=0)
     mean_outcome = outcome.mean(axis=(0, 1))
 
-    _, axes = plt.subplots(nrows=2, figsize=(3, 4), constrained_layout=True)
+    fig, axes = plt.subplots(nrows=2, figsize=(3, 4), constrained_layout=True)
     ts = np.arange(T)
     axes[0].plot(ts, mean_outcome, label="No intervention")
 
@@ -85,7 +85,11 @@ def main(indices: pl.DataFrame):
         mean_ioutcome = ioutcome.mean(axis=(0, 1))
 
         axes[0].plot(ts, mean_ioutcome, label=f"$h_{{\\text{{w.worry}}}} + {delta}$")
-        axes[1].plot(ts, (ioutcome - outcome).mean(axis=(0, 1)))
+        axes[1].plot(
+            ts,
+            (ioutcome - outcome).mean(axis=(0, 1)),
+            label=f"$h_{{\\text{{w.worry}}}} + {delta}$",
+        )
 
     axes[0].axhline(0, linestyle="dashed", linewidth=0.5)
     axes[0].set_xlim(0, T)
@@ -105,12 +109,15 @@ def main(indices: pl.DataFrame):
     axes[1].set_xlabel("Time")
     axes[1].set_ylabel(r"$\langle s^i_5 - s_5\rangle$")
 
-    plt.show()
+    axes[1].legend()
 
+    fig.savefig("intervention.pdf", bbox_inches="tight")
+
+    fig, ax = plt.subplots(figsize=(6, 6), constrained_layout=True)
     imodel.adj[abs(imodel.j) < 0.15] = False
     imodel.j[abs(imodel.j) < 0.15] = 0.0
-    imodel.draw()
-    plt.show()
+    imodel.draw(ax=ax)
+    fig.savefig("intervention_model.pdf", bbox_inches="tight")
 
 
 if __name__ == "__main__":

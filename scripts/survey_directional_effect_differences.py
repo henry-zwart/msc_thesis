@@ -1,9 +1,12 @@
+from dataclasses import dataclass
+
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import polars as pl
+import polars.selectors as cs
 from ising.model import FitMethod
 
-from climate_attitudes.dataset import Dataset
 from climate_attitudes.datasets import reduced_no_imputation as ds_spec
 from climate_attitudes.settings import Config
 from climate_attitudes.visualisation import configure_mpl
@@ -14,7 +17,51 @@ np.set_printoptions(linewidth=200)
 RANDOM_SEED = 202604272006
 
 
-def main(indices: pl.DataFrame):
+@dataclass
+class ModelData:
+    covariates: npt.NDArray[np.float64]
+    beliefs: npt.NDArray[np.int64]
+    covariate_names: list[str]
+    belief_names: list[str]
+
+
+def prepare_model_data(data: pl.DataFrame) -> ModelData:
+    n_waves = data.select(pl.col("survey_wave").unique()).shape[0]
+    covariate_names = [
+        col[len("covariate_") :]
+        for col in data.select(cs.starts_with("covariate_")).columns
+    ]
+    belief_names = [
+        col[len("belief_") :] for col in data.select(cs.starts_with("belief_")).columns
+    ]
+
+    covariates = (
+        data.select(cs.starts_with("covariate_"))
+        .to_numpy()
+        .ravel()  # Unwrap into 1D array
+        .reshape(
+            (-1, n_waves, len(covariate_names))
+        )  # Reshape into (participant, wave, covariate)
+    )
+
+    beliefs = (
+        data.select(cs.starts_with("belief_"))
+        .to_numpy()
+        .ravel()  # Unwrap into 1D array
+        .reshape(
+            (-1, n_waves, len(belief_names))
+        )  # Reshape into (participant, wave, covariate)
+    )
+
+    return ModelData(
+        covariates=covariates,
+        beliefs=beliefs,
+        covariate_names=covariate_names,
+        belief_names=belief_names,
+    )
+
+
+def main_old(indices: pl.DataFrame):
     BOOTSTRAP_REPEATS = 100
 
     n_participants = indices.select(pl.col("participant_id").unique()).shape[0]
@@ -126,11 +173,101 @@ def main(indices: pl.DataFrame):
     plt.show()
 
 
+def main(y: npt.NDArray[np.int64], node_labels: list[str]):
+    BOOTSTRAP_REPEATS = 100
+    node_labels = [ds_spec.RENAME.get(colname, colname) for colname in node_labels]
+
+    asymmetric_bootstraps = Ising.bootstrap(
+        r=BOOTSTRAP_REPEATS,
+        y=y,
+        method=FitMethod.TIME_SERIES,
+        rng=RANDOM_SEED,
+        self_loops=True,
+    )
+
+    # Estimate difference in directional effects
+    j_diffs = np.array(
+        [
+            np.triu(_model.j) - np.triu(_model.j.T)
+            for *_, _model in asymmetric_bootstraps
+        ]
+    )
+    mean_diff = j_diffs.mean(axis=0)
+    ci = 1.97 * np.std(j_diffs, axis=0) / np.sqrt(BOOTSTRAP_REPEATS)
+
+    fig, ax = plt.subplots(figsize=(5, 6), constrained_layout=True)
+
+    # Scatter means
+    n = y.shape[-1]
+    mean_diffs_flat = mean_diff[np.triu_indices_from(mean_diff, k=1)]
+    ci_flat = ci[np.triu_indices_from(ci, k=1)]
+    ax.scatter(
+        mean_diffs_flat,
+        np.arange(n * (n - 1) // 2),
+        color="k",
+        s=14,
+        zorder=5,
+        label="Mean effect difference",
+    )
+
+    # Show ci interval as red shaded region
+    marker, _, bar = ax.errorbar(
+        mean_diffs_flat,
+        np.arange(n * (n - 1) // 2),
+        xerr=np.array([ci_flat, ci_flat]),
+        ls="none",
+        zorder=3,
+        color="tab:red",
+        label="95% CI",
+    )
+    plt.setp(bar[0], capstyle="round")
+    marker.set_fillstyle("none")
+    bar[0].set_alpha(0.5)
+    bar[0].set_linewidth(5)
+
+    # Draw 0.0 as dashed
+    ax.axvline(x=0, linestyle="dashed", linewidth=0.75, color="gray", zorder=1)
+
+    ylabels = []
+    colnames = [ds_spec.RENAME.get(colname, colname) for colname in node_labels]
+    for i in range(n - 1):
+        for j in range(i + 1, n):
+            c1 = colnames[i]
+            c2 = colnames[j]
+            ylabels.append(f"{c1} -> {c2}")
+
+    ax.set_yticks(np.arange(len(ylabels)), ylabels)
+
+    ax.legend(
+        ncol=2,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.0),
+        # fontsize=8,
+        # handlelength=1,
+        # columnspacing=0.5,
+        # labelspacing=0.2,
+        frameon=False,
+    )
+
+    fig.savefig("directional_effect_diffs.pdf", bbox_inches="tight")
+    plt.show()
+
+
 if __name__ == "__main__":
     configure_mpl()
     config = Config(_env_file=".env")
-    dataset = Dataset.load(config, name="reduced_no_imputation", with_imputation=False)
-    indices = (
-        dataset.indices.collect()  # ty: ignore
+    model_df = pl.read_parquet(config.built_assets / "w3w4_dataset/model_data.parquet")
+    # Filter out individuals with intermediate values
+    to_remove = model_df.filter(
+        pl.any_horizontal(cs.starts_with("belief_") == -99)
+    ).select("survey_participant_id", "survey_wave")
+    model_df = (
+        model_df.join(
+            to_remove, on=("survey_participant_id", "survey_wave"), how="anti"
+        )
+        .with_columns(pl.len().over("survey_participant_id").alias("n_observations"))
+        .filter(n_observations=2)
+        .drop("n_observations")
     )
-    main(indices)  # ty: ignore
+    model_data = prepare_model_data(model_df)
+    main(model_data.beliefs, model_data.belief_names)
