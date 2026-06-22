@@ -42,6 +42,12 @@
   / UvA: #strong[U]niversiteit #strong[v]an #strong[A]msterdam
 ]
 
+#let frontmatter-pages = (
+  (title: [Use of AI], body: lorem(100)),
+)
+
+#let signature = image("signature.png", height: 2cm)
+
 #show: thesis.with(
   title: title,
   author: author,
@@ -55,29 +61,18 @@
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
   references: bibliography("references.bib", style: "apa"),
+  additional-frontmatter: frontmatter-pages,
+  signature: signature,
 )
+
+= Notes (things to remember, to-dos)
+
+#include "sections/notes.typ"
 
 = Introduction
 
-== Exploring subsections
+#include "sections/introduction.typ"
 
-#lorem(100)
-
-#lorem(40)
-
-=== And sub-subsections!
-
-#lorem(200)
-
-#lorem(150)
-
-#lorem(120)
-
-== Sub-section 2
-
-#lorem(150)
-
-#lorem(200)
 
 = Literature review
 
@@ -87,7 +82,7 @@
 
 #lorem(130)
 
-= Climate beliefs dataset
+= Climate beliefs dataset <sec:dataset>
 
 #include "sections/dataset.typ"
 
@@ -95,27 +90,17 @@
 
 #include "sections/notation.typ"
 
-= The Ising model and its variants
+= Methods
+#include "sections/methods.typ"
+
+= Asymmetric belief system model
 
 #include "sections/model.typ"
 
-
-
-#lorem(200)
-
-#lorem(300)
-
-#lorem(200)
-
 = Experiments and results
 
-#lorem(250)
+#include "sections/results.typ"
 
-#lorem(250)
-
-#lorem(50)
-
-#lorem(125)
 
 = Discussion
 

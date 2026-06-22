@@ -31,7 +31,7 @@ ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
 		--force \
 		--no-centre-columns \
 		--with-indices \
-		--index efa \
+		--index average \
 		--filter-null \
 		--waves [3,4]
 
