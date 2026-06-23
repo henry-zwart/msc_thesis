@@ -208,8 +208,8 @@ trade-off between model fit and complexity. We fit each of the symmetric and asy
 models for candidate regularisation strengths $lambda in RR subset [10^(-4), 10^(-1)]$,
 and select the values for which the resulting EBIC is minimal
 (@fig:methods-regularisation-ebic). This yields symmetric and asymmetric regularisation
-strengths of #calc.round(regularisation_strengths.sym_ising, digits: 3) and
-#calc.round(regularisation_strengths.ising, digits: 3) respectively.
+strengths of #calc.round(regularisation_strengths.sym_ising.full, digits: 3) and
+#calc.round(regularisation_strengths.ising.full, digits: 3) respectively.
 
 #figure(
   image(

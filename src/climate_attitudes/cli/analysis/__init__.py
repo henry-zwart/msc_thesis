@@ -6,6 +6,9 @@ from .fit_bootstrapped_models import (
     FitBootstrappedModelsRunCommand as FitBootstrappedModelsRunCommand,
 )
 from .fit_model import FitModelRunCommand as FitModelRunCommand
+from .fit_model_by_ideology import (
+    FitIdeologyModelRunCommand as FitIdeologyModelRunCommand,
+)
 from .regularisation import (
     CompareRegularisationEBICRunCommand as CompareRegularisationEBICRunCommand,
 )

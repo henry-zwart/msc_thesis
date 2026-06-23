@@ -85,8 +85,11 @@ def run_intervention_experiment(
     rng: np.random.Generator,
     scale: float,
     quiet: bool,
+    bootstrap: bool,
 ) -> tuple[
     npt.NDArray[np.float64],
+    npt.NDArray[np.int64],
+    npt.NDArray[np.float64] | None,
     npt.NDArray[np.int64],
     npt.NDArray[np.float64],
     npt.NDArray[np.float64],
@@ -118,6 +121,12 @@ def run_intervention_experiment(
     )
     params = np.zeros((repeats, dummy_model.n_params), dtype=np.float64)
     datasets_Y = np.zeros((repeats, M, T, N), dtype=np.int64)
+    datasets_X = (
+        np.zeros((repeats, M, T, X.shape[-1]), dtype=np.float64)
+        if X is not None
+        else None
+    )
+    dataset_idxes = np.empty((repeats, M), dtype=np.int64)
     rngs = rng.spawn(repeats)
     seeds = np.asarray([_rng.integers(0, 2**32).item() for _rng in rngs])
 
@@ -132,17 +141,24 @@ def run_intervention_experiment(
                 binarise=True,
                 seed=rngs[r],
             )
-            idxes = rngs[r].choice(np.arange(M), size=M, replace=True)
-            datasets_Y[r] = Y[idxes]
+            if bootstrap:
+                idxes = rngs[r].choice(np.arange(M), size=M, replace=True)
+                datasets_Y[r] = Y[idxes]
+                dataset_idxes[r] = idxes
+                if X is not None and datasets_X is not None:
+                    datasets_X[r] = X[idxes]
+            else:
+                datasets_Y[r] = Y
+                dataset_idxes[r] = np.arange(M)
+                if X is not None and datasets_X is not None:
+                    datasets_X[r] = X
 
             futures.append(
                 executor.submit(
                     fit_model,
                     cls=model_type,
-                    # Y=Y[idxes],
-                    # X=X[idxes] if X is not None else X,
-                    Y=Y,
-                    X=X,
+                    Y=datasets_Y[r],
+                    X=datasets_X[r] if datasets_X is not None else X,
                     λ=λ,
                     node_labels=node_labels,
                     seed=rngs[r],
@@ -169,6 +185,7 @@ def run_intervention_experiment(
         futures = []
         for r in range(repeats):
             Y = datasets_Y[r]
+            X = datasets_X[r] if datasets_X is not None else None
             model = models[r]
 
             for intervene_idx in range(N):
@@ -214,7 +231,7 @@ def run_intervention_experiment(
             measurements[:, repeat_idx, :, :, intervene_idx] = res.y[:, 0]
             checks[:, repeat_idx, intervene_idx] = res.check[:, 0]
 
-    return seeds, datasets_Y, params, measurements, checks
+    return seeds, datasets_Y, datasets_X, dataset_idxes, params, measurements, checks
 
 
 class AllInterventionsRunCommand(BaseCommand):
@@ -234,16 +251,11 @@ class AllInterventionsRunCommand(BaseCommand):
     lam: float | None = None
     lam_path: Path | None = None
 
+    bootstrap: bool = False
+
     quiet: bool = False
 
     def cli_cmd(self) -> None:
-        # output_path_seeds = self.output_dir / "seeds.npy"
-        # output_path_measure = self.output_dir / "measure.npy"
-        # output_path_check = self.output_dir / "check.npy"
-        # output_path_params = self.output_dir / "params.npy"
-        # output_path_datasets_Y = self.output_dir / "datasets_Y.npy"
-        # output_path_datasets_X = self.output_dir / "datasets_X.npy"
-
         dataset = Dataset.load(
             self.settings,
             name="reduced_no_imputation",
@@ -278,7 +290,7 @@ class AllInterventionsRunCommand(BaseCommand):
             else:
                 with self.lam_path.open("r") as f:
                     try:
-                        lam: float = json.load(f)[str(self.model_type)]
+                        lam: float = json.load(f)[str(self.model_type)]["full"]
                     except KeyError as err:
                         raise KeyError(
                             f"Did not find optimised regularisation strength for "
@@ -305,19 +317,22 @@ class AllInterventionsRunCommand(BaseCommand):
                         raise
 
         rng = np.random.default_rng(self.seed)
-        seeds, Ys, params, measurements, checks = run_intervention_experiment(
-            dataset,
-            self.measure_time,
-            self.repeats,
-            adj,
-            node_labels,
-            model_cls,
-            self.use_covariates,
-            self.intervention_delta,
-            lam,
-            rng,
-            sigma,
-            self.quiet,
+        seeds, Ys, Xs, idxes, params, measurements, checks = (
+            run_intervention_experiment(
+                dataset,
+                self.measure_time,
+                self.repeats,
+                adj,
+                node_labels,
+                model_cls,
+                self.use_covariates,
+                self.intervention_delta,
+                lam,
+                rng,
+                sigma,
+                self.quiet,
+                self.bootstrap,
+            )
         )
 
         # save_files = dict(
@@ -327,15 +342,19 @@ class AllInterventionsRunCommand(BaseCommand):
         #     checks=checks,
         #     measurements=measurements,
         # )
-        _, Y0, X = dataset.indices_to_numpy(kind="time-series")
+        _, Y0, X0 = dataset.indices_to_numpy(kind="time-series")
         if self.use_covariates:
+            if Xs is None:
+                raise RuntimeError("Xs should not be None for use_covariates=True")
             # save_files["X"] = X
             np.savez_compressed(
                 self.output,
                 seeds=seeds,
                 Y0=Y0,
+                X0=X0,
                 Y=Ys,
-                X=X,
+                X=Xs,
+                dataset_idxes=idxes,
                 labels=node_labels,
                 params=params,
                 checks=checks,
@@ -349,6 +368,7 @@ class AllInterventionsRunCommand(BaseCommand):
                 seeds=seeds,
                 Y0=Y0,
                 Y=Ys,
+                dataset_idxes=idxes,
                 labels=node_labels,
                 params=params,
                 checks=checks,
