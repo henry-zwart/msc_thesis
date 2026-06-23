@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -16,24 +17,20 @@ type Differentials = npt.NDArray[np.float64]
 type InteractionEffects = npt.NDArray[np.float64]
 
 
-class FitModelRunCommand(BaseCommand):
+class FitIdeologyModelRunCommand(BaseCommand):
     output: Path
     adjacency: Path | None = None
     model_type: ModelType
-    use_covariates: bool = False
 
-    filter_column: str | None = None
-    filter_value: int | None = None
-    filter_le: int | None = None
-    filter_ge: int | None = None
-
-    exclude_column: list[str] | None = None
+    ideology: Literal["conservative", "liberal"]
 
     lam: float | None = None
     lam_path: Path | None = None
 
     sigma: float | None = None
     sigma_path: Path | None = None
+
+    replicates: int = 1
 
     seed: int = 202606031023
 
@@ -47,40 +44,14 @@ class FitModelRunCommand(BaseCommand):
             with_imputation=False,
             verbose=False,
         )
-        if self.filter_column is not None:
-            if (
-                self.filter_value is None
-                and self.filter_le is None
-                and self.filter_ge is None
-            ):
-                raise ValueError(
-                    f"Found --filter-column '{self.filter_column}' with no value "
-                    f"specified. Provide a value with one of --filter-value, "
-                    f"--filter-le or --filter-ge."
-                )
-            if self.filter_value is not None:
-                dataset = dataset.filter(
-                    pl.col(self.filter_column) == self.filter_value
-                ).filter_no_nulls()
-            elif self.filter_le is not None:
-                dataset = dataset.filter(
-                    pl.col(self.filter_column) <= self.filter_le
-                ).filter_no_nulls()
-            else:
-                dataset = dataset.filter(
-                    pl.col(self.filter_column) >= self.filter_ge
-                ).filter_no_nulls()
 
-        exclude_idxes = []
-        colnames = dataset.schema.get_short_names("measurement")
-        if self.exclude_column:
-            for colname in self.exclude_column:
-                exclude_idxes.append(colnames.index(colname))
-        keep_idxes = [i for i in range(len(colnames)) if i not in exclude_idxes]
+        if self.ideology == "conservative":
+            filter_cond = pl.col("pol_ideology") <= -1
+        else:
+            filter_cond = pl.col("pol_ideology") >= 1
+        dataset = dataset.filter(filter_cond).filter_no_nulls()
 
         adj = np.load(self.adjacency) if self.adjacency is not None else None
-        if adj is not None:
-            adj = adj[keep_idxes][:, keep_idxes]
 
         model_cls = self.model_type.get_cls()
         if not issubclass(model_cls, Ising):
@@ -105,17 +76,24 @@ class FitModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        _, Y, X = dataset.indices_to_numpy(
+        _, Y_mock, _ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
             seed=rng,
         )
+        n = Y_mock.shape[0]
+        Y = np.empty((n * self.replicates, *Y_mock.shape[1:]), dtype=np.int64)
+        for i in range(self.replicates):
+            _, Yi, _ = dataset.indices_to_numpy(
+                kind="time-series",
+                binarise=True,
+                scale=sigma,
+                seed=rng,
+            )
+            Y[n * i : n * (i + 1)] = Yi
 
-        Y = Y[..., keep_idxes]
-
-        if not self.use_covariates:
-            X = None
+        Y = Y[..., [0, 1, 2, 3, 4, 6, 7]]
 
         lam = self.lam
         if lam is None:
@@ -127,7 +105,7 @@ class FitModelRunCommand(BaseCommand):
             else:
                 with self.lam_path.open("r") as f:
                     try:
-                        lam: float = json.load(f)[str(self.model_type)]["full"]
+                        lam: float = json.load(f)[str(self.model_type)][self.ideology]
                     except KeyError as err:
                         raise KeyError(
                             f"Did not find optimised regularisation strength for "
@@ -139,7 +117,6 @@ class FitModelRunCommand(BaseCommand):
 
         model = model_cls.fit(
             y=Y,
-            X=X,
             optim_method=FitMethod.TIME_SERIES,
             update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
@@ -150,24 +127,12 @@ class FitModelRunCommand(BaseCommand):
 
         params = model.param_vector()
 
-        if X is not None:
-            np.savez_compressed(
-                self.output,
-                seeds=self.seed,
-                Y=Y,
-                X=X,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                params=params,
-                col_idxes=keep_idxes,
-            )
-        else:
-            np.savez_compressed(
-                self.output,
-                seeds=self.seed,
-                Y=Y,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                params=params,
-                col_idxes=keep_idxes,
-            )
+        np.savez_compressed(
+            self.output,
+            seeds=self.seed,
+            Y=Y,
+            λ=lam if lam is not None else 0.0,
+            sigma=sigma,
+            params=params,
+            col_idxes=[0, 1, 2, 3, 4, 6, 7],
+        )

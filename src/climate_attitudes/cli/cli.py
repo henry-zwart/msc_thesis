@@ -296,6 +296,8 @@ class PlotSubCommand(BaseModel):
     ]
     interaction_heatmap: CliSubCommand[vis_cli.InteractionHeatmapPlotCommand]
     regularisation_ebic: CliSubCommand[vis_cli.RegularisationEBICPlotCommand]
+    ideology_networks: CliSubCommand[vis_cli.NetworkIdeologyPlotCommand]
+    network: CliSubCommand[vis_cli.NetworkPlotCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
@@ -304,6 +306,7 @@ class PlotSubCommand(BaseModel):
 class AnalysisSubCommand(BaseModel):
     fit_bootstrapped: CliSubCommand[analysis_cli.FitBootstrappedModelsRunCommand]
     fit_model: CliSubCommand[analysis_cli.FitModelRunCommand]
+    fit_ideology_model: CliSubCommand[analysis_cli.FitIdeologyModelRunCommand]
     all_interventions: CliSubCommand[analysis_cli.AllInterventionsRunCommand]
     regularisation_ebic: CliSubCommand[analysis_cli.CompareRegularisationEBICRunCommand]
     choose_regularisation: CliSubCommand[analysis_cli.ChooseRegularisationRunCommand]

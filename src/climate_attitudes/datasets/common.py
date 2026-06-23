@@ -27,6 +27,7 @@ class Column(BaseModel):
     name: str
     display_name: str | None = None
     short_name: str | None = None
+    abbrev: str | None = None
     category: str | None = None
     transform: PolarsTransform | None = None
     reverse_coding: bool = False
@@ -66,8 +67,21 @@ class DatasetSchema(BaseModel):
         for col in self.columns:
             if col.kind != kind:
                 continue
-            for candidate in (col.short_name, col.name):
+            for candidate in (col.short_name, col.abbrev, col.name):
                 if candidate is not None:
                     short_names.append(candidate)
                 break
         return short_names
+
+    def get_abbrevs(
+        self, kind: Literal["survey", "covariate", "measurement"]
+    ) -> list[str]:
+        abbrevs = []
+        for col in self.columns:
+            if col.kind != kind:
+                continue
+            for candidate in (col.abbrev, col.short_name, col.name):
+                if candidate is not None:
+                    abbrevs.append(candidate)
+                break
+        return abbrevs

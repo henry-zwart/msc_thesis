@@ -81,6 +81,18 @@ as symmetric, bidirectional, unidirectional.
 
 Consider network features, model features (correlation length, etc.)
 
+#figure(
+  image(
+    "../results/figures/model/ideology_fit/network.pdf",
+  ),
+  caption: [
+    Prefixes: A (attitude), B (belief); node labels: CC (climate change), CCA (climate
+    change anthropogenic), CCW (climate change worry), CCWO (climate change worry
+    others), CCI (climate change impacts), CCP (climate change policies), WW (weather
+    worry).
+  ],
+) <fig:results-rq22-ideology-networks>
+
 
 === RQ3.1: Intervention strategy and effectiveness under sym/asym assumptions
 

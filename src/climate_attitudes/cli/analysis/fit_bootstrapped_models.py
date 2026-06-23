@@ -229,7 +229,7 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
             else:
                 with self.lam_path.open("r") as f:
                     try:
-                        lam: float = json.load(f)[str(self.model_type)]
+                        lam: float = json.load(f)[str(self.model_type)]["full"]
                     except KeyError as err:
                         raise KeyError(
                             f"Did not find optimised regularisation strength for "

@@ -8,7 +8,7 @@ CHECK_DIR = Path("reports/thesis/results/data/model/all_interventions")
 def main():
     MODELS = {"Ising": "ising", "Symmetric Ising": "sym_ising"}
     DELTAS = [0.0, 0.5, 1.0]
-    COV_FLAGS = ["yes_use_covariates", "no_use_covariates"]
+    COV_FLAGS = ["no_use_covariates"]
     check = {
         model: {delta: {cf: None for cf in COV_FLAGS} for delta in DELTAS}
         for model in MODELS

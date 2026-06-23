@@ -23,11 +23,11 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_use_covariates_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_sym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/interaction_matrix/dem_male_0_asym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/interaction_matrix/dem_male_1_asym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/interaction_matrix/dem_urban_0_asym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/interaction_matrix/dem_urban_1_asym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/interaction_matrix/dem_urban_2_asym_ising_no_structure.pdf \
+		$(THESIS_DIR)/results/figures/model/ideology_fit/conservative_interaction_matrix.pdf \
+		$(THESIS_DIR)/results/figures/model/ideology_fit/liberal_interaction_matrix.pdf \
+		$(THESIS_DIR)/results/figures/model/ideology_fit/network.pdf \
+		$(THESIS_DIR)/results/figures/model/network/full_asym_ising_no_structure.pdf \
+		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf
 		# $(foreach d,05 10 15 25 80, $(foreach cf,yes_use_covariates no_use_covariates, \
 		# 	$(THESIS_DIR)/results/figures/model/intervention_effects/.$(d)_$(MEASURE_TIME)_$(cf))) \
@@ -129,8 +129,47 @@ $(THESIS_DIR)/results/figures/model/transition_probability_example.pdf: \
 			| $(THESIS_DIR)/results/figures/model
 	@uv run $<
 
+$(THESIS_DIR)/results/figures/model/ideology_fit/%_interaction_matrix.pdf: \
+			$(THESIS_DIR)/results/data/model/ideology_fit_%.npz \
+			${PKG_PATH}/cli/visualisation/interaction_heatmap.py \
+			| $(THESIS_DIR)/results/figures/model/ideology_fit
+	@uv run cadata plot interaction-heatmap \
+		--model $< \
+		--output $@ \
+		--model-type ising
+
+$(THESIS_DIR)/results/figures/model/ideology_fit/network.pdf: \
+			$(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
+			${PKG_PATH}/cli/visualisation/ideology_network.py \
+			| $(THESIS_DIR)/results/figures/model/ideology_fit
+	@uv run cadata plot ideology-networks \
+		--conservative-model $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+		--liberal-model $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
+		--output $@ \
+		--model-type ising \
+		--seed 20260623
+
+$(THESIS_DIR)/results/figures/model/network/%.pdf: \
+			$(THESIS_DIR)/results/data/model/fit_%.npz \
+			${PKG_PATH}/cli/visualisation/network.py \
+			| $(THESIS_DIR)/results/figures/model/network
+	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/plot_interaction_heatmap_parse_params.py $* model) && \
+	uv run cadata plot network \
+		--model $< \
+		--output $@ \
+		--model-type $$model \
+		--seed 20260623
+
+$(THESIS_DIR)/results/figures/model/network: | $(THESIS_DIR)/results/figures/model
+	@mkdir -p $@
+
+
+$(THESIS_DIR)/results/figures/model/ideology_fit: | $(THESIS_DIR)/results/figures/model
+	@mkdir -p $@
+
 $(THESIS_DIR)/results/figures/model/intervention_effects: | $(THESIS_DIR)/results/figures/model
-	mkdir -p $@
+	@mkdir -p $@
 
 # $(THESIS_DIR)/results/figures/model/intervention_effects/.%_$(MEASURE_TIME)_yes_use_covariates: \
 # 			$(PKG_PATH)/cli/visualisation/intervention_mean_int_effect.py \
@@ -447,8 +486,8 @@ $(THESIS_DIR)/results/data/model/all_interventions/%: \
 		--model-type "$$model" \
 		--seed 202605271053 \
 		$$cov_flag \
-		--repeats 30 \
-		--measure-time 6 \
+		--repeats 300 \
+		--measure-time 16 \
 		--intervention-delta $$delta \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
@@ -472,18 +511,54 @@ $(THESIS_DIR)/results/data/model/fit_%.npz: \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606181614
 
+$(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
+			${PKG_PATH}/cli/analysis/fit_model_by_ideology.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/data/model
+	@uv run cadata analysis fit-ideology-model \
+		--output $@ \
+		--model-type ising \
+		--ideology conservative \
+		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--replicates 100 \
+		--seed 202606222000
+
+$(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz: \
+			${PKG_PATH}/cli/analysis/fit_model_by_ideology.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/data/model
+	@uv run cadata analysis fit-ideology-model \
+		--output $@ \
+		--model-type ising \
+		--ideology liberal \
+		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--replicates 100 \
+		--seed 202606222000
+		
+			
+
 $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json: \
 			${PKG_PATH}/cli/analysis/choose_regularisation_strength.py \
-			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz \
+			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
+			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_conservative.npz \
+			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_liberal.npz \
 			| $(THESIS_DIR)/results/data/model_fit
 	uv run cadata analysis choose-regularisation \
 		--output $@ \
-		--asym-ebic-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-		--sym-ebic-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz
+		--full-asym-ebic-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+		--full-sym-ebic-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
+		--conservative-asym-ebic-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_conservative.npz \
+		--liberal-asym-ebic-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_liberal.npz
 			
 
-$(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic.npz: \
+$(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_full.npz: \
 			${PKG_PATH}/cli/analysis/regularisation.py \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
@@ -494,6 +569,44 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic.npz: \
 		--model-type $$model \
 		--min -4 \
 		--max -1.8 \
+		-n 30 \
+		--repeats 100 \
+		--non-zero-threshold 0.01 \
+		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--seed 202606191202 \
+		$(QUIET_FLAG)
+
+$(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_conservative.npz: \
+			${PKG_PATH}/cli/analysis/regularisation.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			| $(THESIS_DIR)/results/data/model_fit
+	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model-fit/regularisation_ebic_parse_params.py $*) && \
+	uv run cadata analysis regularisation-ebic \
+		--output $@ \
+		--model-type $$model \
+		--subset conservative \
+		--min -2.5 \
+		--max -1 \
+		-n 30 \
+		--repeats 100 \
+		--non-zero-threshold 0.01 \
+		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--seed 202606191202 \
+		$(QUIET_FLAG)
+
+$(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_liberal.npz: \
+			${PKG_PATH}/cli/analysis/regularisation.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			| $(THESIS_DIR)/results/data/model_fit
+	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model-fit/regularisation_ebic_parse_params.py $*) && \
+	uv run cadata analysis regularisation-ebic \
+		--output $@ \
+		--model-type $$model \
+		--subset liberal \
+		--min -2.5 \
+		--max -1 \
 		-n 30 \
 		--repeats 100 \
 		--non-zero-threshold 0.01 \

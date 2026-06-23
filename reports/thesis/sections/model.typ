@@ -1274,7 +1274,7 @@ states with minimum energy.
 *TODO:* Discuss what they say in original paper about differences in the sets of
 nodes included in different individuals' networks.
 
-The Causal Attitude Network (*CAN*) model @dalegeFormalisedAccountAttitudes2016b is an
+The Causal Attitude Network (*CAN*) model @dalegeFormalizedAccountAttitudes2016b is an
 Ising-style theory of endogenous belief system dynamics, which operates under the
 assumption that these dynamics are primarily driven by efforts --- conscious or
 otherwise --- to reduce cognitive dissonance. The model considers a collection of
@@ -1428,7 +1428,7 @@ In the symmetric formulation,
 
 #line(length: 100%)
 
-The CAN model, as outlined in @dalegeFormalisedAccountAttitudes2016b, is conceptualised
+The CAN model, as outlined in @dalegeFormalizedAccountAttitudes2016b, is conceptualised
 as a symmetric (network) Ising model, characterised by its behaviour at equilibrium. In
 the present study we are interested in questions regarding intervention, in which the
 goal is to shift an individual's configuration of beliefs and attitudes such that a

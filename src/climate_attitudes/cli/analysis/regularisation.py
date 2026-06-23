@@ -2,9 +2,11 @@ import itertools
 import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
+import polars as pl
 from ising.model import FitMethod, ModelType, UpdateMethod
 from tqdm import tqdm
 
@@ -63,6 +65,7 @@ def fit_model[M: Ising](
 def test_regularisation_model_fit[M: Ising](
     cls: type[M],
     dataset: Dataset,
+    keep_idxes: list[int],
     λ_min: float,
     λ_max: float,
     n: int,
@@ -78,6 +81,7 @@ def test_regularisation_model_fit[M: Ising](
     Args:
         cls: Model type.
         dataset: Climate beliefs dataset.
+        keep_idxes: List of spin indexes to keep from Y datasets.
         λ_min: Minimum regularisation strength.
         λ_max: Maximum regularisation strength.
         n: Number of regularisation strengths to test.
@@ -93,6 +97,7 @@ def test_regularisation_model_fit[M: Ising](
         binarise=True,
         seed=rng,
     )
+    Y_mock = Y_mock[..., keep_idxes]
 
     # sample_idxes = rng.choice(np.arange(m), size=(repeats, m), replace=True)
     # pids = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
@@ -107,7 +112,7 @@ def test_regularisation_model_fit[M: Ising](
             scale=sigma,
             seed=rng,
         )
-        Y[r] = Y_full
+        Y[r] = Y_full[..., keep_idxes]
 
     seeds = rng.integers(0, 2**32, size=repeats)
 
@@ -163,6 +168,8 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
     adjacency: Path | None = None
     model_type: ModelType
 
+    subset: Literal["full", "conservative", "liberal"] = "full"
+
     min: float = -4
     max: float = -1
     n: int = 30
@@ -185,6 +192,14 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
             verbose=False,
         )
         adj = np.load(self.adjacency) if self.adjacency is not None else None
+
+        keep_idxes = [0, 1, 2, 3, 4, 5, 6, 7]
+        if self.subset != "full":
+            if self.subset == "conservative":
+                dataset = dataset.filter(pl.col("pol_ideology") <= -1).filter_no_nulls()
+            elif self.subset == "liberal":
+                dataset = dataset.filter(pl.col("pol_ideology") >= 1).filter_no_nulls()
+            keep_idxes = [0, 1, 2, 3, 4, 6, 7]
 
         model_cls = self.model_type.get_cls()
         if not issubclass(model_cls, Ising):
@@ -212,6 +227,7 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
         λs, ebic, pids, Y, seeds = test_regularisation_model_fit(
             model_cls,
             dataset,
+            keep_idxes,
             self.min,
             self.max,
             self.n,

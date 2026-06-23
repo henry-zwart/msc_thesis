@@ -40,6 +40,10 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         labels = dataset.schema.get_short_names(kind="measurement")
         model_fit = np.load(self.model)
 
+        # Get column indices, in case only a subset of cols were fit
+        col_idxes = model_fit["col_idxes"]
+        labels = [label for i, label in enumerate(labels) if i in col_idxes]
+
         # Determine number of covariates used for baseline activations
         k = model_fit["X"].shape[-1] if "X" in model_fit else 0
 
@@ -63,7 +67,8 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         # Set vlim to max non-diag
         non_diag_J = J.copy()
         non_diag_J[np.diag_indices_from(non_diag_J)] = 0.0
-        vlim = np.abs(non_diag_J).max()
+        # vlim = np.abs(non_diag_J).max()
+        vlim = 0.35
         # vlim = np.percentile(abs(J_mean), 90)
         sns.heatmap(
             J,
@@ -75,6 +80,7 @@ class InteractionHeatmapPlotCommand(BaseCommand):
             vmin=-vlim,
             vmax=vlim,
             ax=ax,
+            cbar_kws=dict(fraction=0.05, pad=0.04),
         )
         ax.set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0)
         ax.set_xticks(

@@ -1,6 +1,7 @@
 from .directional_differential import (
     DirectionalDifferentialPlotCommand as DirectionalDifferentialPlotCommand,
 )
+from .ideology_network import NetworkIdeologyPlotCommand as NetworkIdeologyPlotCommand
 from .interaction_heatmap import (
     InteractionHeatmapPlotCommand as InteractionHeatmapPlotCommand,
 )
@@ -19,6 +20,7 @@ from .intervention_mean_collective_ranking import (
 from .intervention_mean_int_effect import (
     InterventionMeanEffectsPlotCommand as InterventionMeanEffectsPlotCommand,
 )
+from .network import NetworkPlotCommand as NetworkPlotCommand
 from .regularisation_ebic import (
     RegularisationEBICPlotCommand as RegularisationEBICPlotCommand,
 )
