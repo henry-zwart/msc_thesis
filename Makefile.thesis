@@ -341,13 +341,13 @@ $(THESIS_DIR)/results/figures/model/interaction_matrix: | $(THESIS_DIR)/results/
 	@mkdir -p $@
 
 $(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf: \
-			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz \
+			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
 			${PKG_PATH}/cli/visualisation/regularisation_ebic.py \
 			| $(THESIS_DIR)/results/figures/model_fit
 	uv run cadata plot regularisation-ebic \
-		--asym-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-		--sym-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz \
+		--asym-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+		--sym-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
 		-z 1.96 \
 		--output $@
 			
@@ -509,6 +509,7 @@ $(THESIS_DIR)/results/data/model/fit_%.npz: \
 		$$filter_cond \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--binarisation-kind gaussian \
 		--seed 202606181614
 
 $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
@@ -571,6 +572,8 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_full.npz: \
 		--max -1.8 \
 		-n 30 \
 		--repeats 100 \
+		--replicates 10 \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \
@@ -590,6 +593,8 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_conservative.npz: \
 		--max -1 \
 		-n 30 \
 		--repeats 100 \
+		--replicates 10 \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \
@@ -609,6 +614,8 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_liberal.npz: \
 		--max -1 \
 		-n 30 \
 		--repeats 100 \
+		--replicates 10 \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \
