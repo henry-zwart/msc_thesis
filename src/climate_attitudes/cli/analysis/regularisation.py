@@ -74,6 +74,8 @@ def test_regularisation_model_fit[M: Ising](
     rng: np.random.Generator,
     adj: npt.NDArray[np.bool] | None = None,
     sigma: float = 0.1,
+    replicates: int = 1,
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian",
     quiet: bool = False,
 ):
     """Fit models with varying regularisation strength. Return EBIC results.
@@ -89,7 +91,9 @@ def test_regularisation_model_fit[M: Ising](
         non_zero_threshold: Parameters with absolute value below threshold are
             considered zero.
         rng: Numpy RNG.
-        scale: Standard deviation on perturbation in binarisation.
+        sigma: Standard deviation on perturbation in binarisation.
+        replicates: Number of replicated binarisations to use for each data point.
+        binarisation_kind: Type of distribution to use for binarisation.
         adj: Optional adjacency matrix.
     """
     pids_full, Y_mock, _ = dataset.indices_to_numpy(
@@ -102,7 +106,9 @@ def test_regularisation_model_fit[M: Ising](
     # sample_idxes = rng.choice(np.arange(m), size=(repeats, m), replace=True)
     # pids = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
     # pids = pids_full[sample_idxes]
-    Y = np.empty((repeats, *Y_mock.shape), dtype=np.int64)
+    Y = np.empty(
+        (repeats, replicates * Y_mock.shape[0], *Y_mock.shape[1:]), dtype=np.int64
+    )
 
     # Draw bootstrap samples
     for r in range(repeats):
@@ -111,7 +117,10 @@ def test_regularisation_model_fit[M: Ising](
             binarise=True,
             scale=sigma,
             seed=rng,
+            binarisation_dist=binarisation_kind,
+            replicates=replicates,
         )
+
         Y[r] = Y_full[..., keep_idxes]
 
     seeds = rng.integers(0, 2**32, size=repeats)
@@ -150,6 +159,7 @@ def test_regularisation_model_fit[M: Ising](
 
             # Number of observations, number of timesteps (to rescale LL)
             _, N, T, _ = Y.shape
+            N /= replicates
             log_likelihood = (
                 -1
                 * N
@@ -174,10 +184,13 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
     max: float = -1
     n: int = 30
     repeats: int = 100
+    replicates: int = 1
     non_zero_threshold: float = 1e-2
 
     sigma: float | None = None
     sigma_path: Path | None = None
+
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606191106
 
@@ -236,6 +249,8 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
             rng,
             adj,
             sigma,
+            self.replicates,
+            self.binarisation_kind,
             self.quiet,
         )
 
@@ -247,5 +262,7 @@ class CompareRegularisationEBICRunCommand(BaseCommand):
             Y=Y,
             sigma=sigma,
             seeds=seeds,
+            replicates=self.replicates,
+            binarisation_kind=self.binarisation_kind,
             main_seed=self.seed,
         )

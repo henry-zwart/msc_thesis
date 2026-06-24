@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -34,6 +35,10 @@ class FitModelRunCommand(BaseCommand):
 
     sigma: float | None = None
     sigma_path: Path | None = None
+
+    replicates: int = 1
+
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606031023
 
@@ -110,6 +115,8 @@ class FitModelRunCommand(BaseCommand):
             binarise=True,
             scale=sigma,
             seed=rng,
+            binarisation_dist=self.binarisation_kind,
+            replicates=self.replicates,
         )
 
         Y = Y[..., keep_idxes]
@@ -159,6 +166,8 @@ class FitModelRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
+                replicates=self.replicates,
+                binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )
         else:
@@ -169,5 +178,7 @@ class FitModelRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
+                replicates=self.replicates,
+                binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )

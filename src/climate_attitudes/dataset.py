@@ -186,6 +186,8 @@ class Dataset:
         ternarise: bool = False,
         scale: float = 0.1,
         epsilon: float = 0.25,
+        binarisation_dist: Literal["gaussian", "triangular"] = "gaussian",
+        replicates: int = 1,
         seed: int | np.random.Generator | None = None,
     ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64], npt.NDArray[np.float64]]:
         if self.indices is None:
@@ -223,7 +225,7 @@ class Dataset:
                     )
                 )
                 # Y = Y / Y.std(axis=(0, 1))
-                Y = Y / abs(Y.max(axis=(0, 1)))
+                Y = Y / abs(Y).max(axis=(0, 1))
                 # NOTE: Hard-coded for now because I don't want to deal with the
                 # binarisation of dem_urban generically.
                 X = (
@@ -251,13 +253,23 @@ class Dataset:
 
         X = X.astype(np.float64)
 
+        X = np.tile(X, (replicates,) + (1,) * (X.ndim - 1))
+        Y = np.tile(Y, (replicates,) + (1,) * (Y.ndim - 1))
+        pids = np.tile(pids, replicates)
+
         if binarise:
             if isinstance(seed, np.random.Generator):
                 rng = seed
             else:
                 rng = np.random.default_rng(seed)
-            ζ = rng.normal(scale=scale, size=Y.shape)
-            Y = np.where(Y + ζ > 0, 1, -1)
+            if binarisation_dist == "gaussian":
+                ζ = rng.normal(scale=scale, size=Y.shape)
+                Y = np.where(Y + ζ > 0, 1, -1)
+            elif binarisation_dist == "triangular":
+                ζ = rng.binomial(1, (Y + 1) / 2, size=Y.shape).astype(np.int64)
+                Y = np.where(ζ == 1, 1, -1)
+            else:
+                raise ValueError(f"Unknown binarisation dist: {binarisation_dist}.")
             Y = Y.astype(np.int64)
 
         elif ternarise:
