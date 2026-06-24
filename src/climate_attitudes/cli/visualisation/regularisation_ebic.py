@@ -34,11 +34,12 @@ class RegularisationEBICPlotCommand(BaseCommand):
             λs = results["λs"]
             ebic = results["ebic"] - results["ebic"][:, 0][:, None]
             ebic_mean = ebic.mean(axis=0)
-            _ebic_ci = self.z * ebic.std(axis=0, ddof=1) / np.sqrt(ebic.shape[0])
+            ebic_ci = self.z * ebic.std(axis=0, ddof=1) / np.sqrt(ebic.shape[0])
 
             # Plot means: line and scatter markers
             ax.plot(λs, ebic_mean, linewidth=1.5, color=colour, label=label)
             ax.scatter(λs, ebic_mean, s=5, linewidths=1.5, clip_on=False)
+            ax.errorbar(λs, ebic_mean, yerr=[ebic_ci, ebic_ci], capsize=4)
 
         ax.set_xscale("log")
         ax.spines["top"].set_visible(False)
