@@ -55,12 +55,8 @@ TRANSFORMS = [
     pl.col(r"^cc4_(world|wealthUS|poorUS|comm)$").replace(
         {1: -2, 2: -1, 99: 0, 3: 1, 4: 2}
     ),  # (-2, -1, 0, 1, 2) = (not at all, a little, dont know, moderate, great deal)
-    pl.col("cc6", "cvcc_worryothers").replace(
-        {1: -2, 2: -1, 3: 1, 4: 2}
-    ),  # (-2, -1, 1, 2) = (not at all, not very, somewhat, very)
-    pl.col("ew5").replace(
-        {1: -2, 2: -1, 3: 1, 4: 2}
-    ),  # (-2, -1, 1, 2) = (not at all, a little, moderate, great deal)
+    pl.col("cc6", "cvcc_worryothers") - 2.5,
+    pl.col("ew5") - 2.5,
     (pl.col("cvcc6", "cvcc9_cc") - 3),  # -2..=2 is strongly disagree to strongly agree
     pl.col("cc_ica").replace(
         {0: -1, 1: 1, 2: 1}

@@ -31,6 +31,7 @@ class FitIdeologyModelRunCommand(BaseCommand):
     sigma_path: Path | None = None
 
     replicates: int = 1
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606031023
 
@@ -76,24 +77,19 @@ class FitIdeologyModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        _, Y_mock, _ = dataset.indices_to_numpy(
+        Y, *_ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
+            replicates=self.replicates,
+            binarisation_dist=self.binarisation_kind,
             seed=rng,
         )
-        n = Y_mock.shape[0]
-        Y = np.empty((n * self.replicates, *Y_mock.shape[1:]), dtype=np.int64)
-        for i in range(self.replicates):
-            _, Yi, _ = dataset.indices_to_numpy(
-                kind="time-series",
-                binarise=True,
-                scale=sigma,
-                seed=rng,
-            )
-            Y[n * i : n * (i + 1)] = Yi
 
         Y = Y[..., [0, 1, 2, 3, 4, 6, 7]]
+
+        if self.replicates > 1:
+            Y = Y.reshape((-1, *Y.shape[2:]))
 
         lam = self.lam
         if lam is None:

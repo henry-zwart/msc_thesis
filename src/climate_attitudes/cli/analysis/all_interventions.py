@@ -1,6 +1,8 @@
 import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -11,8 +13,19 @@ from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
 from ising import Ising
 
+type SpinStates = npt.NDArray[np.int64]
+type Indexes = npt.NDArray[np.int64]
+type Covariates = npt.NDArray[np.float64]
+
 # def s_i(_model: Ising, y: npt.NDArray[np.int64], i: int) -> np.int64:
 #     return y[i]
+
+
+@dataclass
+class ReplicatedDatasets:
+    Y: SpinStates
+    row_idxes: Indexes
+    X: Covariates | None = None
 
 
 def state_configuration(
@@ -23,6 +36,7 @@ def state_configuration(
 
 def run_one_measure(
     repeat_idx,
+    replicate_idx,
     intervene_idx,
     model,
     f,
@@ -35,6 +49,7 @@ def run_one_measure(
 ):
     return (
         repeat_idx,
+        replicate_idx,
         intervene_idx,
         model.measure(
             f,
@@ -48,7 +63,7 @@ def run_one_measure(
     )
 
 
-def fit_model[T: Ising](
+def _fit_model[T: Ising](
     cls: type[T],
     Y: npt.NDArray[np.int64],
     X: npt.NDArray[np.float64] | None,
@@ -72,93 +87,77 @@ def fit_model[T: Ising](
     return (repeat_idx, model)
 
 
-def run_intervention_experiment(
+def sample_replicated_binary_datasets(
     dataset: Dataset,
-    measure_time: int,
     repeats: int,
-    adj: npt.NDArray[np.bool] | None,
-    node_labels: npt.NDArray[np.str_],
-    model_type: type[Ising],
-    use_covariates: bool,
-    intervention_delta: float,
-    λ: float | int | None,
-    rng: np.random.Generator,
-    scale: float,
-    quiet: bool,
+    replicates: int,
     bootstrap: bool,
-) -> tuple[
-    npt.NDArray[np.float64],
-    npt.NDArray[np.int64],
-    npt.NDArray[np.float64] | None,
-    npt.NDArray[np.int64],
-    npt.NDArray[np.float64],
-    npt.NDArray[np.float64],
-    npt.NDArray[np.float64],
-]:
-    _, Y, X = dataset.indices_to_numpy(
-        kind="time-series", binarise=True, scale=scale, seed=rng
+    use_covariates: bool,
+    scale: float,
+    binarisation_kind: Literal["gaussian", "triangular"],
+    rngs: list[np.random.Generator],
+) -> ReplicatedDatasets:
+    Y, X, *_ = dataset.indices_to_numpy(
+        kind="time-series",
+        binarise=True,
+        scale=scale,
+        seed=0,
     )
     X = X if use_covariates else None
-    M = Y.shape[0]
-    T = Y.shape[1]
-    N = Y.shape[-1]
-    dummy_model = model_type.fit(
-        Y,
-        X,
-        optim_method=FitMethod.TIME_SERIES,
-        update_method=UpdateMethod.SYNCHRONOUS,
-        adj=adj,
-        self_loops=False,
-        rng=rng,
-    )
-    measurements = np.zeros(
-        (M, repeats, measure_time, N, N),
-        dtype=np.float64,
-    )
-    checks = np.zeros(
-        (M, repeats, N),
-        dtype=np.float64,
-    )
-    params = np.zeros((repeats, dummy_model.n_params), dtype=np.float64)
-    datasets_Y = np.zeros((repeats, M, T, N), dtype=np.int64)
-    datasets_X = (
-        np.zeros((repeats, M, T, X.shape[-1]), dtype=np.float64)
-        if X is not None
-        else None
-    )
-    dataset_idxes = np.empty((repeats, M), dtype=np.int64)
-    rngs = rng.spawn(repeats)
-    seeds = np.asarray([_rng.integers(0, 2**32).item() for _rng in rngs])
+
+    # Prepare arrays to store datasets in
+    datasets_idxes = np.empty((repeats, Y.shape[0]), dtype=np.int64)
+    datasets_Y = np.empty((repeats, replicates, *Y.shape), dtype=np.int64)
+    datasets_X = None
+    if X is not None:
+        datasets_X = np.empty((repeats, *X.shape), dtype=np.float64)
+
+    for r in range(repeats):
+        # Sample binarisations
+        Y, *_, row_idxes = dataset.indices_to_numpy(
+            kind="time-series",
+            binarise=True,
+            replicates=replicates,
+            scale=scale,
+            binarisation_dist=binarisation_kind,
+            seed=rngs[r],
+            bootstrap=bootstrap,
+        )
+
+        datasets_Y[r] = Y
+        datasets_idxes[r] = row_idxes
+
+        # In case bootstrapping is used, select the correct rows in X
+        if X is not None and datasets_X is not None:
+            datasets_X[r] = X[row_idxes]
+
+    return ReplicatedDatasets(Y=datasets_Y, X=datasets_X, row_idxes=datasets_idxes)
+
+
+def fit_models[T: Ising](
+    datasets: ReplicatedDatasets,
+    model_type: type[T],
+    adj: npt.NDArray[np.bool] | None,
+    λ: float | int | None,
+    node_labels: npt.NDArray[np.str_],
+    rngs: list[np.random.Generator],
+    intervention_delta: float,
+    quiet: bool,
+) -> list[T]:
+    repeats, *_ = datasets.Y.shape
 
     # Fit models
-    models = [dummy_model] * repeats
+    models_dict: dict[int, T] = {}
     with ProcessPoolExecutor() as executor:
         futures = []
 
         for r in range(repeats):
-            _, Y, _ = dataset.indices_to_numpy(
-                kind="time-series",
-                binarise=True,
-                seed=rngs[r],
-            )
-            if bootstrap:
-                idxes = rngs[r].choice(np.arange(M), size=M, replace=True)
-                datasets_Y[r] = Y[idxes]
-                dataset_idxes[r] = idxes
-                if X is not None and datasets_X is not None:
-                    datasets_X[r] = X[idxes]
-            else:
-                datasets_Y[r] = Y
-                dataset_idxes[r] = np.arange(M)
-                if X is not None and datasets_X is not None:
-                    datasets_X[r] = X
-
             futures.append(
                 executor.submit(
-                    fit_model,
+                    _fit_model,
                     cls=model_type,
-                    Y=datasets_Y[r],
-                    X=datasets_X[r] if datasets_X is not None else X,
+                    Y=datasets.Y[r].reshape((-1, *datasets.Y[r].shape[2:])),
+                    X=datasets.X[r] if datasets.X is not None else None,
                     λ=λ,
                     node_labels=node_labels,
                     seed=rngs[r],
@@ -172,66 +171,102 @@ def run_intervention_experiment(
             total=repeats,
             desc=(
                 f"Fitting models ({model_type.__name__}; "
-                f"δ={intervention_delta}; covariates={use_covariates})"
+                f"δ={intervention_delta}; covariates={datasets.X is not None})"
             ),
             disable=quiet,
         ):
             r, model = ft.result()
-            models[r] = model
-            params[r] = model.param_vector()
+            models_dict[r] = model
 
-    # Run intervention experiments
+    return [models_dict[i] for i in range(len(models_dict))]
+
+
+def run_interventions[T: Ising](
+    datasets: ReplicatedDatasets,
+    models: list[T],
+    measure_time: int,
+    intervention_delta: float,
+    rngs: list[np.random.Generator],
+    quiet: bool,
+) -> tuple[
+    npt.NDArray[np.int64],
+    npt.NDArray[np.int64],
+    npt.NDArray[np.float64],
+]:
+    repeats, replicates, M, *_, N = datasets.Y.shape
+
+    # Prepare results arrays
+    measurements = np.zeros(
+        (repeats, replicates, M, measure_time, N, N),
+        dtype=np.int64,
+    )
+    checks = np.zeros(
+        (repeats, replicates, M, N),
+        dtype=np.float64,
+    )
+
+    # Record initial RNG sample for each repeat (rng)
+    seeds = np.asarray([_rng.integers(0, 2**32).item() for _rng in rngs])
+
+    f = state_configuration
+    if datasets.X is None:
+        intervention_offset = np.array([intervention_delta])
+    else:
+        intervention_offset = np.array(
+            [[intervention_delta] + ([0.0] * datasets.X.shape[-1])]
+        )
+
     with ProcessPoolExecutor() as executor:
         futures = []
-        for r in range(repeats):
-            Y = datasets_Y[r]
-            X = datasets_X[r] if datasets_X is not None else None
-            model = models[r]
+        for repeat in range(repeats):
+            X = datasets.X[repeat] if datasets.X is not None else None
+            model = models[repeat]
 
             for intervene_idx in range(N):
-                f = state_configuration
-                model.reset(rngs[r])
-                if X is None:
-                    intervention_offset = np.array([intervention_delta])
-                else:
-                    intervention_offset = np.array(
-                        [[intervention_delta] + ([0.0] * X.shape[-1])]
-                    )
+                model.reset(seeds[repeat])
                 int_model = model.intervene(
                     spins=np.array([intervene_idx]),
                     field_offset=intervention_offset,
-                    seed=rngs[r],
+                    seed=np.random.default_rng(seeds[repeat]),
                 )
-                futures.append(
-                    executor.submit(
-                        run_one_measure,
-                        r,
-                        intervene_idx,
-                        int_model,
-                        f,
-                        y0=Y[:, -1, :],
-                        X=X[:, -1, :] if X is not None else None,
-                        t=measure_time,
-                        warmup_steps=0,
-                        method="parallel",
-                        take_every=1,
+
+                for replicate in range(replicates):
+                    Y = datasets.Y[repeat, replicate]
+                    int_model.reset(seeds[repeat])
+
+                    futures.append(
+                        executor.submit(
+                            run_one_measure,
+                            repeat,
+                            replicate,
+                            intervene_idx,
+                            int_model,
+                            f,
+                            y0=Y[:, -1, :],
+                            X=X[:, -1, :] if X is not None else None,
+                            t=measure_time,
+                            warmup_steps=0,
+                            method="parallel",
+                            take_every=1,
+                        )
                     )
-                )
 
         for ft in tqdm(
             as_completed(futures),
-            total=(repeats * Y.shape[-1]),
+            total=(repeats * replicates * datasets.Y.shape[-1]),
             desc=(
-                f"Pairwise interventions ({model_type.__name__}; "
-                f"δ={intervention_delta}; covariates={use_covariates})"
+                f"Pairwise interventions ({type(models[0]).__name__}; "
+                f"δ={intervention_delta}; covariates={datasets.X is not None})"
             ),
             disable=quiet,
         ):
-            repeat_idx, intervene_idx, res = ft.result()
-            measurements[:, repeat_idx, :, :, intervene_idx] = res.y[:, 0]
-            checks[:, repeat_idx, intervene_idx] = res.check[:, 0]
+            repeat_idx, replicate_idx, intervene_idx, res = ft.result()
+            # NOTE: I've swapped the intervene and target indexes now. Intervene is
+            # first.
+            measurements[repeat_idx, replicate_idx, :, :, intervene_idx] = res.y[:, 0]
+            checks[repeat_idx, replicate_idx, :, intervene_idx] = res.check[:, 0]
 
-    return seeds, datasets_Y, datasets_X, dataset_idxes, params, measurements, checks
+    return seeds, measurements, checks
 
 
 class AllInterventionsRunCommand(BaseCommand):
@@ -252,6 +287,8 @@ class AllInterventionsRunCommand(BaseCommand):
     lam_path: Path | None = None
 
     bootstrap: bool = False
+    replicates: int = 1
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     quiet: bool = False
 
@@ -316,45 +353,55 @@ class AllInterventionsRunCommand(BaseCommand):
                     except:
                         raise
 
-        rng = np.random.default_rng(self.seed)
-        seeds, Ys, Xs, idxes, params, measurements, checks = (
-            run_intervention_experiment(
-                dataset,
-                self.measure_time,
-                self.repeats,
-                adj,
-                node_labels,
-                model_cls,
-                self.use_covariates,
-                self.intervention_delta,
-                lam,
-                rng,
-                sigma,
-                self.quiet,
-                self.bootstrap,
-            )
+        main_rng = np.random.default_rng(self.seed)
+        rngs = main_rng.spawn(self.repeats)
+        binary_datasets = sample_replicated_binary_datasets(
+            dataset=dataset,
+            repeats=self.repeats,
+            replicates=self.replicates,
+            bootstrap=self.bootstrap,
+            use_covariates=self.use_covariates,
+            scale=sigma,
+            binarisation_kind=self.binarisation_kind,
+            rngs=rngs,
         )
 
-        # save_files = dict(
-        #     seeds=seeds,
-        #     Y=Ys,
-        #     params=params,
-        #     checks=checks,
-        #     measurements=measurements,
-        # )
-        _, Y0, X0 = dataset.indices_to_numpy(kind="time-series")
+        models = fit_models(
+            datasets=binary_datasets,
+            model_type=model_cls,
+            adj=adj,
+            λ=lam,
+            node_labels=node_labels,
+            rngs=rngs,
+            intervention_delta=self.intervention_delta,
+            quiet=self.quiet,
+        )
+        params = np.asarray([m.param_vector() for m in models], dtype=np.float64)
+
+        seeds, measurements, checks = run_interventions(
+            datasets=binary_datasets,
+            models=models,
+            measure_time=self.measure_time,
+            intervention_delta=self.intervention_delta,
+            rngs=rngs,
+            quiet=self.quiet,
+        )
+
+        Y0, X0, *_ = dataset.indices_to_numpy(kind="time-series")
         if self.use_covariates:
-            if Xs is None:
+            if binary_datasets.X is None:
                 raise RuntimeError("Xs should not be None for use_covariates=True")
-            # save_files["X"] = X
+
             np.savez_compressed(
                 self.output,
                 seeds=seeds,
                 Y0=Y0,
                 X0=X0,
-                Y=Ys,
-                X=Xs,
-                dataset_idxes=idxes,
+                Y=binary_datasets.Y,
+                X=binary_datasets.X,
+                dataset_idxes=binary_datasets.row_idxes,
+                replicates=self.replicates,
+                binarisation_kind=self.binarisation_kind,
                 labels=node_labels,
                 params=params,
                 checks=checks,
@@ -367,8 +414,10 @@ class AllInterventionsRunCommand(BaseCommand):
                 self.output,
                 seeds=seeds,
                 Y0=Y0,
-                Y=Ys,
-                dataset_idxes=idxes,
+                Y=binary_datasets.Y,
+                dataset_idxes=binary_datasets.row_idxes,
+                replicates=self.replicates,
+                binarisation_kind=self.binarisation_kind,
                 labels=node_labels,
                 params=params,
                 checks=checks,
@@ -376,26 +425,3 @@ class AllInterventionsRunCommand(BaseCommand):
                 sigma=sigma,
                 measurements=measurements,
             )
-
-        # np.savez_compressed(
-        #     self.output,
-        #     **save_files,
-        # )
-
-        # # Save random seeds used for each repeat
-        # np.save(output_path_seeds, seeds)
-        #
-        # # Save data used to fit models
-        # np.save(output_path_datasets_Y, Ys)
-        # *_, X = dataset.indices_to_numpy(kind="time-series")
-        # if X is not None:
-        #     np.save(output_path_datasets_X, X)
-        #
-        # # Save fit model parameters
-        # np.save(output_path_params, params)
-        #
-        # # Save RNG checks; check that each counterfactual uses same RNG
-        # np.save(output_path_check, checks)
-        #
-        # # Save measured system states
-        # np.save(output_path_measure, measurements)

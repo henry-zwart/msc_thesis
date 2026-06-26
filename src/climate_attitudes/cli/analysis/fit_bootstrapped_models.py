@@ -2,6 +2,7 @@ import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -77,6 +78,8 @@ def fit_bootstrap_models[M: Ising](
     λ: float | int | None = None,
     use_covariates: bool = True,
     scale: float = 0.1,
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian",
+    replicates: int = 1,
     quiet: bool = False,
 ) -> BootstrapFitResults[M]:
     """Fit models on bootstrapped datasets.
@@ -95,51 +98,38 @@ def fit_bootstrap_models[M: Ising](
         BootstrapFitResults object, containing random seeds used for each bootstrap
         repeat, the bootstrap dataset samples, and the fit models.
     """
-    # Binarise dataset, convert to numpy
-    _, Y_mock, X_mock = dataset.indices_to_numpy(
-        kind="time-series",
-        binarise=True,
-        scale=scale,
-        seed=rng,
+    Y_mock, X_mock, *_ = dataset.indices_to_numpy(kind="time-series")
+    Y = np.empty(
+        (repeats, replicates * Y_mock.shape[0], *Y_mock.shape[1:]), dtype=np.int64
     )
-    mock_model = fit_model(cls, 0, np.int64(0), Y_mock, X_mock)
+    row_idxes = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
+    X = None
+    if use_covariates:
+        X = np.empty((repeats, *X_mock.shape), dtype=np.float64)
 
-    m, *_ = Y_mock.shape
+    for repeat in range(repeats):
+        Y_r, X_r, _, row_idxes_r = dataset.indices_to_numpy(
+            kind="time-series",
+            binarise=True,
+            scale=scale,
+            binarisation_dist=binarisation_kind,
+            replicates=replicates,
+            bootstrap=True,
+            seed=rng,
+        )
 
-    SAMPLE_IDXES = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
-    # PIDs = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
-    # Y = np.empty((repeats, *Y_mock.shape), dtype=np.int64)
-    # X = np.empty((repeats, *X_mock.shape), dtype=np.float64)
+        row_idxes[repeat] = row_idxes_r
 
-    PIDs = np.empty((repeats, 1 * Y_mock.shape[0]), dtype=np.int64)
-    Y = np.empty((repeats, 1 * Y_mock.shape[0], *Y_mock.shape[1:]), dtype=np.int64)
-    X = np.empty((repeats, 1 * X_mock.shape[0], *X_mock.shape[1:]), dtype=np.float64)
+        if replicates > 1:
+            Y_r = Y_r.reshape((-1, *Y_r.shape[2:]))
+        Y[repeat] = Y_r
 
-    # Draw bootstrap samples
-    for r in range(repeats):
-        SAMPLE_IDXES[r] = rng.choice(np.arange(m), size=m, replace=True)
-        for i in range(1):
-            PIDs_full, Y_full, X_full = dataset.indices_to_numpy(
-                kind="time-series",
-                binarise=True,
-                seed=rng,
-            )
-            PIDs[r, Y_mock.shape[0] * i : Y_mock.shape[0] * (i + 1)] = PIDs_full[
-                SAMPLE_IDXES[r]
-            ]
-            Y[r, Y_mock.shape[0] * i : Y_mock.shape[0] * (i + 1)] = Y_full[
-                SAMPLE_IDXES[r]
-            ]
-            X[r, Y_mock.shape[0] * i : Y_mock.shape[0] * (i + 1)] = X_full[
-                SAMPLE_IDXES[r]
-            ]
-
-    if not use_covariates:
-        X = None
+        if X is not None:
+            X[repeat] = X_r
 
     seeds = rng.integers(0, 2**32, size=repeats)
 
-    models = [mock_model[1]] * repeats
+    models_dict: dict[int, M] = {}
     with ProcessPoolExecutor() as executor:
         futures = []
         for r in range(repeats):
@@ -163,23 +153,13 @@ def fit_bootstrap_models[M: Ising](
             disable=quiet,
         ):
             iden, model = ft.result()
-            models[iden] = model
+            models_dict[iden] = model
 
-    # for r in trange(repeats, desc="Fitting bootstrapped models"):
-    #     iden, model = fit_model(
-    #         cls,
-    #         r,
-    #         seeds[r],
-    #         Y[r],
-    #         X[r] if X is not None else None,
-    #         adj,
-    #         w=λ,
-    #     )
-    #     models[iden] = model
+    models = [models_dict[i] for i in range(repeats)]
 
     return BootstrapFitResults(
         seeds=seeds,
-        sample_idxes=SAMPLE_IDXES,
+        sample_idxes=row_idxes,
         Y=Y,
         X=X,
         models=models,
@@ -199,7 +179,10 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
     lam: float | None = None
     lam_path: Path | None = None
 
+    binarisation_kind: Literal["gaussian", "triangular"]
+
     repeats: int = 100
+    replicates: int = 1
     quiet: bool = False
 
     def cli_cmd(self) -> None:
@@ -264,6 +247,8 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
             lam,
             self.use_covariates,
             sigma,
+            self.binarisation_kind,
+            self.replicates,
             self.quiet,
         )
 
@@ -284,6 +269,8 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
                 X=bootstrap_results.X,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
+                binarisation_kind=self.binarisation_kind,
+                replicates=self.replicates,
                 params=params,
             )
         else:
@@ -294,5 +281,7 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
                 Y=bootstrap_results.Y,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
+                binarisation_kind=self.binarisation_kind,
+                replicates=self.replicates,
                 params=params,
             )

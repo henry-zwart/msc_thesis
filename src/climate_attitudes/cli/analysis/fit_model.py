@@ -5,7 +5,7 @@ from typing import Literal
 import numpy as np
 import numpy.typing as npt
 import polars as pl
-from ising.model import FitMethod, ModelType, UpdateMethod
+from ising.model import FitMethod, ModelType
 
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
@@ -110,13 +110,13 @@ class FitModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        _, Y, X = dataset.indices_to_numpy(
+        Y, X, P, *_ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
             seed=rng,
             binarisation_dist=self.binarisation_kind,
-            replicates=self.replicates,
+            # replicates=self.replicates,
         )
 
         Y = Y[..., keep_idxes]
@@ -145,10 +145,10 @@ class FitModelRunCommand(BaseCommand):
                         raise
 
         model = model_cls.fit(
-            y=Y,
-            X=X,
-            optim_method=FitMethod.TIME_SERIES,
-            update_method=UpdateMethod.SYNCHRONOUS,
+            y=P,
+            # X=X,
+            optim_method=FitMethod.MARGINALISED,
+            # update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
             adj=adj,
             self_loops=True,

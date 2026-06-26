@@ -44,13 +44,15 @@ class InterventionEffectDisPlotCommand(BaseCommand):
             self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
         )
 
-        int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
-        no_int_asym_measurements = no_int_asym_data["measurements"][
-            :, :, self.measure_time
+        int_asym_measurements = int_asym_data["measurements"][
+            :, :, :, self.measure_time
         ]
-        int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        no_int_asym_measurements = no_int_asym_data["measurements"][
+            :, :, :, self.measure_time
+        ]
+        int_sym_measurements = int_sym_data["measurements"][:, :, :, self.measure_time]
         no_int_sym_measurements = no_int_sym_data["measurements"][
-            :, :, self.measure_time
+            :, :, :, self.measure_time
         ]
         int_effect_asym = int_asym_measurements - no_int_asym_measurements
         int_effect_sym = int_sym_measurements - no_int_sym_measurements
@@ -72,16 +74,16 @@ class InterventionEffectDisPlotCommand(BaseCommand):
         ):
             # Set xlim to be equally-sized around 0, just including all datapoints
             max_effect_size = np.percentile(
-                abs(effects.mean(axis=1)), q=99.9, axis=(0, 1)
+                abs(effects.mean(axis=(0, 1))), q=99.9, axis=0
             ).max()
             candidates = np.linspace(0, 2, 41)
             xmax = candidates[np.argmax(candidates >= max_effect_size)]
 
             for i in range(N):
-                intervention_col = labels[i]
+                target_col = labels[i]
                 fig = intervention_effect_distribution_plot(
-                    effects[:, :, i],
-                    intervention_col,
+                    effects[..., i],
+                    target_col,
                     i,
                     labels,
                     xmax,
@@ -122,7 +124,7 @@ def intervention_effect_distribution_plot(
     )
 
     # Take mean effect, for each individual, as measured across repeats
-    mean_effect = int_effects.mean(axis=1)
+    mean_effect = int_effects.mean(axis=(0, 1))
     flat_axes = axes.flatten()
     for i, intervention in enumerate(intervention_labels):
         if i == target_idx or i == 7:

@@ -10,6 +10,7 @@ import numpy as np
 import numpy.typing as npt
 import polars as pl
 import polars.selectors as cs
+import scipy as sp
 from sklearn.decomposition import PCA
 from statsmodels.multivariate.factor import FactorResults
 
@@ -24,6 +25,12 @@ from climate_attitudes.schema.extract import (
     EXPERIMENT_CONDITION_COLUMNS,
 )
 from climate_attitudes.settings import Config
+
+type SpinStates = npt.NDArray[np.int64]
+type Probability = npt.NDArray[np.float64]
+type PIDsArray = npt.NDArray[np.int64]
+type Covariates = npt.NDArray[np.float64]
+type Indexes = npt.NDArray[np.int64]
 
 
 class Dataset:
@@ -188,12 +195,19 @@ class Dataset:
         epsilon: float = 0.25,
         binarisation_dist: Literal["gaussian", "triangular"] = "gaussian",
         replicates: int = 1,
+        bootstrap: bool = False,
         seed: int | np.random.Generator | None = None,
-    ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64], npt.NDArray[np.float64]]:
+    ) -> tuple[SpinStates, Covariates, Probability, PIDsArray, Indexes]:
         if self.indices is None:
             raise RuntimeError("`Dataset.indices` is None")
         if binarise and ternarise:
             raise RuntimeError("At most one of `binarise`, `ternarise` may be true.")
+
+        if isinstance(seed, np.random.Generator):
+            rng = seed
+        else:
+            rng = np.random.default_rng(seed)
+
         df_data = self.indices.collect().sort(by=("participant_id", "wave"))
         match kind:
             case "cross-sectional":
@@ -253,19 +267,29 @@ class Dataset:
 
         X = X.astype(np.float64)
 
-        X = np.tile(X, (replicates,) + (1,) * (X.ndim - 1))
-        Y = np.tile(Y, (replicates,) + (1,) * (Y.ndim - 1))
-        pids = np.tile(pids, replicates)
+        # If bootstrap is True, sample row indices
+        M = Y.shape[0]
+        row_idxes = np.arange(M)
+        if bootstrap:
+            row_idxes = rng.choice(row_idxes, M, replace=True)
+        X = X[row_idxes]
+        Y = Y[row_idxes]
+        pids = pids[row_idxes]
 
+        # Prepend new zeroth axis to Y, tile to create one row per replicate
+        #   Output shape for time-series: (replicate, individual, observation, spin)
+        #   Output shape for cross-sectional: (replicate, individual, spin)
+        if replicates > 1:
+            Y = np.tile(Y[None, ...], (replicates,) + (1,) * (Y.ndim))
+
+        P = np.zeros_like(Y, dtype=np.float64)
         if binarise:
-            if isinstance(seed, np.random.Generator):
-                rng = seed
-            else:
-                rng = np.random.default_rng(seed)
             if binarisation_dist == "gaussian":
+                P = sp.stats.norm.cdf(Y / scale)
                 ζ = rng.normal(scale=scale, size=Y.shape)
                 Y = np.where(Y + ζ > 0, 1, -1)
             elif binarisation_dist == "triangular":
+                P = np.where(Y < 0, (1 - Y) / 2, (Y - 1) / 2)
                 ζ = rng.binomial(1, (Y + 1) / 2, size=Y.shape).astype(np.int64)
                 Y = np.where(ζ == 1, 1, -1)
             else:
@@ -273,10 +297,6 @@ class Dataset:
             Y = Y.astype(np.int64)
 
         elif ternarise:
-            if isinstance(seed, np.random.Generator):
-                rng = seed
-            else:
-                rng = np.random.default_rng(seed)
             ζ = rng.normal(scale=scale, size=Y.shape)
             Y_hat = Y + ζ
             Y_hat[Y_hat < -epsilon] = -1
@@ -284,7 +304,7 @@ class Dataset:
             Y_hat[abs(Y_hat) <= epsilon] = 0
             Y = Y_hat.astype(np.int64)
 
-        return pids, Y, X
+        return Y, X, P, pids, row_idxes
 
     def clone(self) -> Dataset:
         ds = Dataset(self.config.model_copy(), self.schema.model_copy())

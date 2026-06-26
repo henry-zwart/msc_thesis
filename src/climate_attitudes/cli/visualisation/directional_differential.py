@@ -275,17 +275,20 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
         diffs = bootstrap_interactions - np.swapaxes(bootstrap_interactions, 1, 2)
 
         # mean_diff = diffs.mean(axis=0)
-        med_diff = np.median(diffs, axis=0)
+        mean_diff = np.mean(diffs, axis=0)
         ci_diff = self.z * np.std(diffs, axis=0, ddof=1)  # / np.sqrt(diffs.shape[0])
 
         match self.kind:
             case PlotKind.RANK:
-                ci_diff_lower, ci_diff_upper = np.percentile(diffs, (5, 95), axis=0)
+                # ci_diff_lower, ci_diff_upper = np.percentile(diffs, (5, 95), axis=0)
                 fig = plot_ranked_differentials(
-                    med_diff, ci_diff_lower, ci_diff_upper, labels
+                    mean_diff, mean_diff - ci_diff, mean_diff + ci_diff, labels
                 )
+                # fig = plot_ranked_differentials(
+                #     mean_diff, ci_diff_lower, ci_diff_upper, labels
+                # )
             case PlotKind.PAIRWISE:
-                fig = plot_pairwise_differentials(med_diff, ci_diff, labels)
+                fig = plot_pairwise_differentials(mean_diff, ci_diff, labels)
 
         if self.output:
             fig.savefig(self.output, bbox_inches="tight")

@@ -15,38 +15,15 @@ from climate_attitudes.visualisation import configure_mpl
 np.set_printoptions(linewidth=200)
 
 
-def bootstrap_mean_ranks(measurements, rng, n_boot=100, z: float = 1.97):
-    # measurements: shape (n_individuals, repeats, n_interventions)
-    M, _, N = measurements.shape
-    boot_means = np.empty((n_boot, N))
+def bootstrap_mean_ranks(measurements, z: float = 1.97):
+    # measurements: shape (repeats, replicates, n_individuals, n_interventions)
+    expected_effect_per_individual = measurements.mean(axis=1)
+    expected_effect_collective = expected_effect_per_individual.mean(axis=1)
+    rankings_per_repeat = rankdata(expected_effect_collective, method="min", axis=-1)
+    mean = rankings_per_repeat.mean(axis=0)
+    ci = z * rankings_per_repeat.std(axis=0, ddof=1)
 
-    for b in range(n_boot):
-        sample_rows = rng.integers(0, M, M)
-        samples = measurements[sample_rows]
-
-        # Collective effect as proportion of individuals with desired state
-        collective_effect = ((samples + 1) // 2).mean(axis=0)
-
-        # Rank interventions per-repeat
-        ranks = rankdata(collective_effect, method="min", axis=-1)
-
-        # Final estimate is the average rank per intervention spin
-        boot_means[b] = ranks.mean(axis=0)
-
-    mean = boot_means.mean(axis=0)
-    mean = np.median(boot_means, axis=0)
-    # ci = z * boot_means.std(axis=0, ddof=1) / np.sqrt(n_boot)
-    # lower = mean - ci
-    # upper = mean + ci
-    lower, upper = np.percentile(boot_means, (5, 95), axis=0)
-
-    # # Revised method
-    # collective_effect = ((measurements + 1) // 2).mean(axis=0)
-    # ranks = rankdata(collective_effect, method="min", axis=-1)
-    # mean = np.median(ranks, axis=0)
-    # lower, upper = np.percentile(ranks, (5, 95), axis=0)
-
-    return mean, lower, upper
+    return mean, mean - ci, mean + ci
 
 
 class InterventionCollectiveRankPlotCommand(BaseCommand):
@@ -58,7 +35,7 @@ class InterventionCollectiveRankPlotCommand(BaseCommand):
 
     measure_time: int
 
-    seed: int
+    z: float = 1.96
 
     def cli_cmd(self) -> None:
         configure_mpl()
@@ -77,22 +54,23 @@ class InterventionCollectiveRankPlotCommand(BaseCommand):
         )
 
         # Calculate effects of intervention
-        int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
-        int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        int_asym_measurements = int_asym_data["measurements"][
+            :, :, :, self.measure_time
+        ]
+        int_sym_measurements = int_sym_data["measurements"][:, :, :, self.measure_time]
 
         # Create plot for each choice of intervention column
         N = int_asym_measurements.shape[-1]
-        rng = np.random.default_rng(self.seed)
         labels = int_asym_data["labels"]
         figures = []
         for i in range(N):
             intervention_col = labels[i]
             fig = intervention_ranking_plot(
-                np.delete(int_asym_measurements[:, :, i], i, axis=-1),
-                np.delete(int_sym_measurements[:, :, i], i, axis=-1),
+                np.delete(int_asym_measurements[..., i], i, axis=-1),
+                np.delete(int_sym_measurements[..., i], i, axis=-1),
                 intervention_col,
                 np.delete(labels, i),
-                rng,
+                self.z,
             )
             figures.append(fig)
 
@@ -113,12 +91,12 @@ def intervention_ranking_plot(
     int_sym_measurements: npt.NDArray[np.int64],
     intervention_label: np.str_,
     intervention_labels: npt.NDArray[np.str_],
-    rng: np.random.Generator,
+    z: float,
 ) -> plt.Figure:
     fig, ax = plt.subplots(figsize=(5, 3), constrained_layout=True)
 
-    asym_mean, asym_lo, asym_hi = bootstrap_mean_ranks(int_asym_measurements, rng)
-    sym_mean, sym_lo, sym_hi = bootstrap_mean_ranks(int_sym_measurements, rng)
+    asym_mean, asym_lo, asym_hi = bootstrap_mean_ranks(int_asym_measurements, z)
+    sym_mean, sym_lo, sym_hi = bootstrap_mean_ranks(int_sym_measurements, z)
 
     sort_idxes = np.argsort(sym_mean)[::-1]
     intervention_labels = intervention_labels[sort_idxes]
