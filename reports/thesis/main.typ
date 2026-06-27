@@ -67,53 +67,38 @@
 )
 
 = Notes (things to remember, to-dos)
-
 #include "sections/notes.typ"
 
-= Introduction
-
-#include "sections/introduction.typ"
-
-
-= Literature review
-
-#include "sections/literature_review.typ"
-
-= Climate beliefs dataset <sec:dataset>
-
-#include "sections/dataset.typ"
-
-= Terminology and notation
-
+= Terminology and notation <sec:notation>
 #include "sections/notation.typ"
 
-= Methods
+= Introduction <sec:introduction>
+#include "sections/introduction.typ"
+
+= Asymmetric belief systems <sec:asymmetric-belief-systems>
+#include "sections/asymmetric_belief_system.typ"
+
+= Methods <sec:methods>
 #include "sections/methods.typ"
 
-// = Asymmetric belief system model
-//
-// #include "sections/model.typ"
+= Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
+#include "sections/asymmetry_in_belief_systems.typ"
 
-= Experiments and results
+= Heterogeneous belief systems and intervention effects <sec:heterogeneity-in-belief-systems-and-intervention-effects>
+#include "sections/heterogeneity_results.typ"
 
-#include "sections/results.typ"
+= Discussion <sec:discussion>
+#include "sections/discussion.typ"
+
+= Climate beliefs dataset <sec:dataset>
+#include "sections/dataset.typ"
+
+= Related work <sec:related-work>
+#include "sections/literature_review.typ"
 
 
-= Discussion
-
-#lorem(300)
-
-#lorem(120)
-
-#lorem(200)
-
-= Conclusion and future work
-
-#lorem(100)
-
-#lorem(150)
-
-#lorem(100)
+= Conclusions and future work <sec:conclusions>
+#include "sections/conclusion.typ"
 
 = Ethics and Data Management
 A new requirement for the thesis is that there must be a short section in which you

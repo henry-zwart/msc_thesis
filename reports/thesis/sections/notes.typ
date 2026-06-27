@@ -27,6 +27,8 @@ reconstruction.
 Existence and uniqueness of the solution to the MLE problem. Uniqueness depends on the
 specific binarisation --- motivates marginalisation over binarisation process.
 
+Conditional probabilities --- how does the specific state of $X$ affect the distribution of $Y$?
+
 == Discussion points
 
 - *RQ1.1:* What is the representational capacity of a pairwise belief system model?
