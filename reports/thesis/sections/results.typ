@@ -1,3 +1,6 @@
+#import "@local/drifting-cls-thesis:0.1.0": caption
+
+
 == Experiments:
 
 === Other
@@ -44,7 +47,7 @@ $ <eqn:results-regularisation-strength>
 
 #figure(
   image("../results/figures/model_fit/regularisation_ebic.pdf"),
-  caption: [TODO],
+  caption: caption(short: [Regularisation strength EBIC (duplicate)], long: [TODO]),
 ) <fig:results-regularisation-ebic>
 
 #let regularisation-lambda = json("../results/data/model_fit/optimised_regularisation.json")
@@ -85,12 +88,15 @@ Consider network features, model features (correlation length, etc.)
   image(
     "../results/figures/model/ideology_fit/network.pdf",
   ),
-  caption: [
-    Prefixes: A (attitude), B (belief); node labels: CC (climate change), CCA (climate
-    change anthropogenic), CCW (climate change worry), CCWO (climate change worry
-    others), CCI (climate change impacts), CCP (climate change policies), WW (weather
-    worry).
-  ],
+  caption: caption(
+    short: [_Conservative_ and _Liberal_ belief networks],
+    long: [
+      Prefixes: A (attitude), B (belief); node labels: CC (climate change), CCA (climate
+      change anthropogenic), CCW (climate change worry), CCWO (climate change worry
+      others), CCI (climate change impacts), CCP (climate change policies), WW (weather
+      worry).
+    ],
+  ),
 ) <fig:results-rq22-ideology-networks>
 
 

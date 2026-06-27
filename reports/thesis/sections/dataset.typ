@@ -1,9 +1,14 @@
+#import "@local/drifting-cls-thesis:0.1.0": caption
 
-- Longitudinal survey overview
-- Question selection
-- Cleaning and transformation
-- Validation
-- Imputation
+Also considering moving this section to later in the thesis.
+
+
+== Plan
+
+- Longitudinal survey overview: Dataset context, contents, survey collection.
+- Variable selection
+- Validation, cleaning, and transformations
+- EDA
 
 == Longitudinal climate attitudes survey
 
@@ -40,8 +45,7 @@ beliefs, attitudes, and experiences relating to concurrently-salient topics such
 COVID-19, climate change, or the 2020 US presidential election, and support for
 hypothetical policies.
 
-- Significance of longitudinal data --- most studies use cross-sectional data which
-  has limited interpretability at individual level.
+- Significance of longitudinal data --- most studies use cross-sectional data.
 
 *Survey content; nature of the questions asked*
 - Context
@@ -66,13 +70,13 @@ removed.
 #figure(
   image("../results/figures/dataset/response_eventplot.pdf"),
   placement: top,
-  caption: [Longitudinal survey response dates per-wave.],
+  caption: [Longitudinal survey response dates per-wave],
 ) <fig:dataset-longitudinal-response-eventplot>
 
 #figure(
   image("../results/figures/dataset/interresponse_times.pdf"),
   placement: top,
-  caption: [Distribution of inter-response times across individuals.],
+  caption: [Between-response time distribution],
 ) <fig:dataset-longitudinal-interresponse-times>
 
 
@@ -127,19 +131,19 @@ removed.
   - Merge `pol_party` and `pol_lean` to create five-point `pol_affiliation` scale. Note that this does not capture individuals who 'lean _right_ toward Democrat' for example.
 
 
-== Missing-wave imputation
-- Survey responses as Markov processes
-- Viterbi imputation:
-  - Maximum likelihood estimation based on transition matrix
-  - Independence assumption (assumes variables are independent in missing waves), can only reduce measured dependence between variables.
-    - Maybe I can give an info theory proof of this?
-  - Allows us to consider questions which are not always asked in same waves.
-- Evaluation:
-  - Look at imputation impacts on manually degraded dataset, perhaps from COVID questions (which I'm not using, but which are analogous to
-    some of our key questions).
-  - How is the direct performance on individual variables? How does it degrade with the number of imputed waves, or with the locations of the
-    non-null waves?
-  - How does dependence/correlation between related variables degrade as we increase the number of imputation waves?
+// == Missing-wave imputation
+// - Survey responses as Markov processes
+// - Viterbi imputation:
+//   - Maximum likelihood estimation based on transition matrix
+//   - Independence assumption (assumes variables are independent in missing waves), can only reduce measured dependence between variables.
+//     - Maybe I can give an info theory proof of this?
+//   - Allows us to consider questions which are not always asked in same waves.
+// - Evaluation:
+//   - Look at imputation impacts on manually degraded dataset, perhaps from COVID questions (which I'm not using, but which are analogous to
+//     some of our key questions).
+//   - How is the direct performance on individual variables? How does it degrade with the number of imputed waves, or with the locations of the
+//     non-null waves?
+//   - How does dependence/correlation between related variables degrade as we increase the number of imputation waves?
 
 == Data Validation
 The complexity of the climate attitudes survey (*reference section discussing this*)
@@ -175,7 +179,10 @@ flexible and capable of handling complex data types.
     [Numeric], [```python float```], [```python float | int```],
   ),
   placement: bottom,
-  caption: [*TODO*],
+  caption: caption(
+    short: [Dataset type coercion mapping],
+    long: [*TODO*],
+  ),
 ) <tab:dataset-types>
 
 

@@ -28,6 +28,7 @@
 
 #let degree = "Master of Science in Computational Science"
 
+//#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
 #let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
 
 #let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
@@ -43,7 +44,7 @@
 ]
 
 #let frontmatter-pages = (
-  (title: [Use of AI], body: lorem(100)),
+  (title: [Use of AI], body: include "sections/use_of_ai.typ"),
 )
 
 #let signature = image("signature.png", height: 2cm)
@@ -56,7 +57,7 @@
   group: group,
   dept: dept,
   faculty: faculty,
-  quotation: quotation,
+  //quotation: quotation, # TODO: Decide if I want to include a quotation
   abstract: abstract,
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
@@ -76,11 +77,7 @@
 
 = Literature review
 
-#lorem(100)
-
-#lorem(150)
-
-#lorem(130)
+#include "sections/literature_review.typ"
 
 = Climate beliefs dataset <sec:dataset>
 
@@ -93,9 +90,9 @@
 = Methods
 #include "sections/methods.typ"
 
-= Asymmetric belief system model
-
-#include "sections/model.typ"
+// = Asymmetric belief system model
+//
+// #include "sections/model.typ"
 
 = Experiments and results
 

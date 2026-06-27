@@ -4,9 +4,21 @@
 #show: show-theorion
 #show: equate.with(breakable: true, sub-numbering: true)
 
-$
-  bold(s)^(t+1) ~ P(bold(S)^(t+1)|bold(S)^t)
-$
+Potentially useful things:
+- Defining beliefs and attitudes @subsubsec:model-cognitive-axes
+- Trade-off, using polarity instead of binary variables @subsubsec:model-cognitive-axes
+- Explaining why cross-sectional correlations can be zero for the time-series model @subsec:model-belief-system-interactions
+- Motivating directed relations as conditional non-independence relations @subsec:model-belief-system-interactions
+- Trade-off between synchronous and asynchronous updates @subsubsubsec:system-transitions
+- Mention inferring $bold(A)$ as an additional task in model reconstruction
+- Motivating the notion of beliefs and attitudes influencing one another, and of
+  direct influences using example, start of @subsec:belief-system-interactions
+- "Under an equilibrium assumption, there is no representational power to be gained by
+  allowing interaction weights to be directionally independent."
+- Existence and uniqueness of the solution to the MLE problem.
+  - Uniqueness depends on specific binarisation -- motivates expectation approach.
+- Model simulation via Glauber dynamics
+
 == Summary
 
 In the following pages I summarise the current state of the project and our intentions
@@ -14,742 +26,6 @@ going forward. I begin by outlining the (revised) research questions, followed b
 tentative experimental plan for answering these questions. Finally I provide theoretical
 details regarding the asymmetric belief system model, including simulation and
 intervention dynamics, and methods for inferring belief systems from observational data.
-
-=== Research questions
-
-*Theoretical contributions:*
-- *RF1.1:* Extending the causal attitude network model of belief systems to support
-  asymmetric causal effects between beliefs and attitudes.
-
-#text(fill: luma(130))[
-  - *RQ1.1:* What is the representational capacity of a pairwise belief system model?
-
-  - *RQ1.2:* How do belief system dynamics differ between models assuming symmetric relations,
-    and those assuming asymmetric relations? If the asymmetric model reaches a steady
-    state, is this an equilibrium state? Should we expect the steady state to be similar
-    to the ESS of the symmetric model? Under what conditions do we expect the asymmetric
-    model to converge to a steady state monotonically? How does the steady state depend
-    on the initial conditions of the belief system?
-
-  - *RQ1.3:* How is the process of inferring belief systems from observational data
-    sensitive to unmeasured factors, or incorrect structural assumptions? What is the
-    impact of excluding true relations --- or including false ones --- on an inferred
-    model?
-]
-
-*Inferring belief systems:*
-- *RQ2.1:* How do (symmetric or asymmetric) belief systems relating to climate change
-  vary between individuals with different background contexts, as inferred from
-  observational data?
-
-- *RQ2.2:* To what extent are causal relations _symmetric_ or _asymmetric_ in models of
-  climate change belief systems inferred from observational data?
-
-*Intervention dynamics:*
-- *RQ3.1:* How do intervention strategy and effectiveness differ between symmetric and
-  asymmetric belief system models for a given observational dataset?
-// Are differences in
-//   monotonic, such that one model consistently predicts higher effectiveness?
-
-- *RQ3.2:* How do intervention outcome and effectiveness vary between individuals with
-  different initial conditions, or with different backgrounds?
-
-=== Experiment plan
-
-_IN PROGRESS_
-
-// *RF1.1* is a theoretical contribution and is addressed in the following section on model
-// details.
-//
-// ==== *RQ2.1*
-// // *RQ2.1* concerns the variation in belief systems on climate change between individuals.
-// // Belief system models fit using cross-sectional data have limited applicability to
-// // understanding the belief systems of individuals (cf.
-// // @brandtBetweenpersonMethodsProvide2022). While we do not use cross-sectional data, it
-// // is nonetheless important to investigate the degree to which our inferred models capture
-// // potential variation between individuals. To this end, I propose two experiments:
-// //
-// Investigate differences between models fit on different subsets of
-// the population; e.g., age groups; democrat vs. republican; male vs. female; urban vs.
-// rural:
-//
-// - Qualitative differences in model structure
-// - Stability of individuals' measured configurations compared to: model fit on
-//   whole dataset; model fit on whole dataset with varying spin thresholds
-//
-// Compare these results under symmetric/asymmetric model assumptions.
-//
-// ==== *RQ2.2*
-//
-// Fit asymmetric model to data. For each pair of items, $S_i, S_j in S$, calculate the
-// directional differential:
-//
-// $
-//   delta_(i j) = J_(i j) - J_(j i)
-// $
-//
-// If $delta_(i j) > 0$, this indicates that the influence of $S_i$ on $S_j$ is stronger
-// than in the opposite direction.
-//
-// Use bootstrapping to quantify uncertainty around the estimate for each $delta_(i j)$.
-// Repeatedly resample the dataset with replacement. For each resampled dataset, fit the
-// asymmetric model and calculate the directional differential. Use the estimates to
-// calculate confidence bounds around each $delta_(i j)$.
-//
-// ==== *RQ3.1*
-//
-// Fit asymmetric and symmetric models to the observed data. For each pair of spins,
-// $S_i, S_j in S$, designate $S_i$ the *intervention* spin and $S_j$ the *target spin*.
-// Simulate an intervention on $S_i$ in the asymmetric model, and measure $S_j$ after
-// $t in NN$ timesteps. Repeat this simulation on the same model with _no_ intervention,
-// using the same random seed.
-//
-// We define the *effect of intervention* as the difference between the measured states
-// of $S_j$ under the intervention and no-intervention scenarios, reflecting the change
-// in behaviour resulting from intervening on $S_i$.
-//
-// Repeat this process for the symmetric model, again using the same random seed, to
-// obtain the effect of intervention under a symmetric relation assumption. We now
-// define the *effect of asymmetry* as the difference between the effects of intervention
-// in the asymmetric and symmetric models respectively. A positive effect of asymmetry
-// indicates that in the asymmetric model, intervening on $S_i$ results in a greater
-// shift in the behaviour on $S_j$ toward $+1$ than in the symmetric model.
-//
-// Note that if 'backlash' dynamics are observed, such that intervening on $S_i$ can result
-// in a reduction in the desired behaviour on $S_j$, then a positive effect of asymmetry
-// _does not_ necessarily imply that the intervention is effective. Indeed, it may simply
-// result in a lower level of backlash, such that not intervening is still a more rational
-// strategy.
-//
-// With this in mind, we propose the following experiments:
-//
-// - *Goal:* Understand the degree to which intervention dynamics differ, at a general
-//   level, between the symmetric and asymmetric models.
-//
-//   Estimate the effect of asymmetry for each pair of spins $S_i, S_j in S$, quantifying
-//   uncertainty around the estimates by repeating the estimation process for $r in NN$ repeats.
-//
-// - *Goal:* Investigate how intervention strategy differs between models fit under
-//   asymmetric and symmetric asummptions.
-//
-//   For each possible target spin $S_j$, determine the intervention spin $S_i$ for which,
-//   after $t in NN$ timesteps, the average target state (across individuals) is maximal,
-//   for both the asymmetric and symmetric models. This tells us which interventions
-//   result in the highest rate of adoption of the desired behaviour at the target spin.
-//   Compare the most effective strategies between symmetric and asymmetric models.
-//
-// - *Goal:* Investigate differences in intervention effectiveness between models fit
-//   under asymmetric and symmetric assumptions.
-//
-//   For each 'most effective strategy', compare the effect of intervention with that
-//   observed in the alternative assumption (e.g., if 'belief in climate change' is most
-//   effective for targeting 'climate policy' in the asymmetric model, how does the
-//   effect of intervention for this pair compare with that of the symmetric model?).
-//
-//
-//
-// ==== *RQ3.2*
-//
-// Investigating the varied impacts of intervention among different individuals, with
-// different initial conditions and contextual factors.
-//
-// For each individual, and each pair of intervention and target spins $S_i, S_j in S$,
-// estimate the expected effect of intervention in the asymmetric model by taking the
-// average state of $S_j$ across repeats at time $t in NN$.
-//
-// Examine the distributions of expected effects of intervention across individuals for
-// each pair of intervention and target spins. If we observe cases of backlash, or where
-// intervention effectiveness is highly variable, investigate why this is the case.
-//
-// _Note:_ Should we consider all participants for these experiments, or only those who do
-// not previously hold the desired belief/attitude state? For instance, interventions on
-// 'belief in climate change' often show low effectiveness because most individuals are
-// already marked as believing in climate change. However, how does this change for
-// individuals who do not believe in climate change?
-//
-// Conversely, 'climate policy' is often found to be an effective intervention because
-// it is a good predictor of other pro-environmental attitudes at later timesteps. However,
-// the causal directionality on this relationship is incorrect (support for climate policies
-// can reinforce other spins, but is fundamentally a result of these).
-
-
-
-
-
-
-
-
-
-
-
-// OLD STUFF
-// + Investigating the differences between models fit on different subsets of the
-//   population (e.g., democrat vs. republican; male vs. female; urban vs. rural)
-//
-// + Investigating the impact (structural differences; BIC) on recovered models of
-//   allowing spin thresholds to vary with contextual covariates.
-//
-// *RQ2.3* concerns the degree to which the inferred causal relations are symmetric
-// or asymmetric. This is straightforward to test; after fitting the asymmetric model,
-// we calculate the directional difference $delta_(i j)$ for each pair of spins
-// $i,j$:
-//
-// $
-//   delta_(i j) = J_(i j) - J_(j i)
-// $
-//
-// If $delta_(i j) > 0$, this indicates that the causal influence of $i$ on $j$ is larger
-// than in the opposite direction. We can estimate the error around each estimate for
-// $delta_(i j)$ by using bootstrapping to repeatedly fit models on subsets of the full
-// dataset.
-//
-// Before discussing the intervention-related research questions, we first clarify some
-// terminology relating to interventions. In a given intervention we can speak of three
-// sets of spins which are of interest. The first is the set of 'intervention' spins on
-// which we intervene; the second is the set of 'target' spins for which we hope to change
-// individuals' behaviour; the third comprises the remaining spins. The intervention and
-// target sets may be identical, but are not necessarily so. For instance, the
-// target spins may be difficult to intervene on directly if doing so requires discussion
-// of sensitive topics.
-//
-// *RQ3.1* concerns the difference in intervention dynamics between symmetric and
-// asymmetric models fit on the same observational dataset. We are interested in two
-// aspects here: _effectiveness_ and _outcome_.
-//
-// Effectiveness refers to the degree to
-// which an intervention induces the desired shift in behaviour on the target spins.
-// If, post-intervention, the behaviour on the target spins is unchanged, or has shifted
-// counter to the desired effect, this is regarded as an effectiveness of $0$.
-// The effectiveness increases with the probability that the post-intervention behaviour
-// on the target spins is the desired behaviour, with a maximum value of 1.
-//
-// Outcome refers to the direction of behaviour change on all spins, but in particular
-// the target spins. This captures the case in which an intervention leads to backlash
-// on a target spin (a reduction in the probability that certain individuals adopt the
-// desired behaviour). It also captures unintended side effects on other spins. For
-// instance, where a given intervention leads to the desired behaviour on the target
-// spins, but undesired behaviour on one of the non-target spins.
-//
-// We define the two following quantities:
-//
-// - *Effect of intervention:* The difference in target spin state between an intervention
-//   model and the equivalent counterfactual model with no intervention, run with the same
-//   random seed.
-//
-// - *Effect of asymmetry:* The difference in the _effect of intervention_ between an
-//   asymmetric model and symmetric model fit to the same observational dataset, and run
-//   with the same random seed.
-//
-// To measure the difference in effectiveness or outcome between the asymmetric and
-// symmetric models, we intend to calculate the effect of asymmetry for each pair of
-// possible (single) intervention and target spins, for models fit on the same
-// observational dataset.
-//
-// Finally, *RQ3.2* concerns the differences in intervention dynamics between individuals.
-// Still thinking about this.
-
-
-
-
-
-
-
-==== Binarisation of survey data
-
-We have constructed a reduced version of the climate attitudes dataset, comprising a
-restricted set of columns relating to climate change beliefs and attitudes, as well as
-a small number of index variables.
-Each column in the dataset is centred such that the survey-midpoint for the associated
-question (e.g., "maybe", "don't know", or "neither support nor oppose") is mapped to
-zero. Index columns are centred prior to index calculation.
-
-As the belief system model described in
-@subsubsec:model-asymmetric-belief-systems assumes belief configurations in ${0,1}^N$,
-binarisation is required before these models can be fit to the survey data. We binarise
-the data with noise to smooth the transition around the ambiguous zero-state.
-
-Let $D = RR^(M times t times N)$ be a dataset comprising observations from $M in NN$
-individuals at $t in NN$ timepoints, for a belief system with $N in NN$ items. The
-binarisation process can be viewed as sampling a binary dataset $D_b$ with:
-
-$
-     (D_b)_(i,j) & = cases(+1 quad tilde(D)_(i,j) >= 0, -1 quad tilde(D)_(i,j) < 0) \
-  tilde(D)_(i,j) & ~ op("Normal")(D_(i,j), sigma)
-$
-
-where $sigma in RR_(>= 0)$ controls the level of stochasticity, and the resulting
-sharpness in the step from $-1$ to $+1$. Whenever multiple repeats are performed for a
-given experiment, we re-binarise the dataset for each repeat.
-
-
-=== Asymmetric belief systems <subsubsec:model-asymmetric-belief-systems>
-
-Let $S$ be a set containing $N in NN$ cognitive axes (beliefs or attitudes). Adopting
-Ising-model terminology, we refer to the elements of $S$ as *spins*. We define the
-*observed states* of a spin $S_i in S$ as a Markov process
-
-$ {s_i^t}_(t=0)^infinity quad "where" quad s_i^t in {-1, +1} $
-
-and the *observed configurations* of $S$ as
-
-$ {bold(s)^t}_(t=0)^infinity quad "where" quad bold(s)^t = [s_1^t, ..., s_N^t ]^T in {-1, +1}^n $
-
-For $n in NN_(> 0)$ we denote the distribution over observed states for a spin
-$S_i in S$ by $P_(S_i^n|S_i^(n - 1))$ and the distribution over observed
-configurations as $P_(bold(S)^n|bold(S)^(n-1))$.
-
-We define a *pairwise-interaction belief network* over the elements in $S$ as a
-directed network $G = chevron S, bold(A) chevron.r$, such that $S$ forms to set of
-nodes in $G$, and $bold(A) in {0,1}^(N times N)$ is a directed adjacency matrix.
-For $s_i, s_j in S$, we have $A_(i j) = 1$ if, and only if,
-the distribution of observed states for $S_j^n$ depends on the previous observed state
-of $S_i^(n-1)$:
-
-
-$ P_(S_j^n|bold(S)^(n-1)) != P_(S_j^n|bold(S)_(-i)^(n-1)) "for some" n in NN_(> 0) $
-
-In such cases we say that $S_i$ _directly influences_ $S_j$, and write $S_i -> S_j$.
-
-Before proceeding, it is important to clarify the use of the term 'belief system' in
-this thesis, particularly in the context of populations of individuals. The notion of
-a belief system is an inherently individual one. Indeed, the behaviour of, and
-interactions between, any individual's beliefs and attitudes is necessarily shaped by
-their distinct context in the world. In spite of this, we will often speak of belief
-systems as if belonging to a population. It is important to stress that in this context,
-the term 'belief system' rather refers to the family of individual belief systems
-observed within a population. We now define such a family of belief systems, and
-subsequently present the individual-level belief systems as particular members of this
-family.
-
-A *population-level asymmetric belief system* over $S$ comprises a pairwise-interaction
-belief network, in conjunction with a set of directed edge weights $J in RR^(N times N)$, spin
-thresholds $bold(h)_0 in RR^N$, and threshold adjustment coefficients
-$bold(B) in RR^(N times K)$. Formally, we describe a belief system over the elements of
-$S$ as any tuple
-
-$ cal(M) = chevron S, bold(A), bold(J), bold(h)_0, bold(B) chevron.r $
-
-with elements satisfying their above definitions.
-
-The elements of $bold(J)$ are such that $J_(i j) != 0 <==> A_(i j) = 1$. For a direct
-influence relation $S_i -> S_j$ between $S_i, S_j in S$, the sign and magnitude of
-$J_(i j)$ determine the nature and degree of influence from $S_i$ on the behaviour of
-$S_j$. If $J_(i j) > 0$, this induces a tendency for $S_j$ to adopt the previous
-observed state of $S_i$. Alternatively, if $J_(i j) < 0$, $S_j$ tends to adopt the
-opposite state.
-
-The probability that $S_j^(n)$ adopts ($J_(i j) > 0$) or opposes
-($J_(i j) < 0$) $S_i^(n-1)$ increases with the magnitude of $J_(i j)$.
-If $S_j$ is also influenced by other spins, then the degree to which $S_i$
-influences the behaviour of $S_j$ is also determined in-part by the relative magnitude
-of $J_(i j)$ compared to the other interaction effects.
-
-The threshold terms in $bold(h)_0$ describe each spin's tendency toward a particular
-observed state, irrespective of incoming influences from other spins.
-In reality, individuals have different experiences, interact with different social
-crowds, and have different states on unmeasured (but conceivably relevant) cognitive
-axes. As such, we expect a high degree of heterogeneity between individuals'
-thresholds for any given cognitive axis, as well as commonalities among individuals
-with similar contexts. The adjustment coefficient matrix $bold(B)$ allows for variation
-in the spin thresholds, defining a set of multiplicative coefficients for each spin,
-which are used to update an individual's thresholds with respect to a corresponding
-set of relevant covariates (e.g., age, education).
-
-For an individual with covariate vector $bold(x) in RR^K$, we define the updated
-threshold vector as
-
-$
-  bold(h)(bold(x)) := bold(h)_0 + bold(B)bold(x)
-$
-
-The population-level asymmetric belief system is such an example of a family of belief
-systems parameterised by the adjustment coefficients $B$. The individual *asymmetric
-belief system* for an individual with covariate vector $bold(x) in RR^K$ is the tuple:
-
-$
-  cal(M)(bold(x)) := chevron S, bold(A), bold(J), bold(h)(bold(x)) chevron.r
-$
-
-For brevity, we will generally leave the individual parameterisation implicit, denoting
-a belief system as $cal(M)$, and thresholds as $bold(h) in RR^N$. However, we stress
-that these should nonetheless be considered as constructs belonging to and varying
-between individuals.
-
-// In general, when discussing
-// In general we will simply refer to the updated threshold vector as the _thresholds_
-// and denote this vector as $bold(h) in RR^N$, leaving the individual variation implicit
-// except when this distinction is important.
-
-=== Model dynamics
-
-Let $cal(M) = chevron S, bold(A), bold(J), bold(h) chevron.r$ be a belief system with
-$|S| = N$ for $N in NN$. Suppose that at time #box[$t in NN$], $bold(S)^(t) = bold(s)$ for some
-$bold(s) in {-1, +1}^N$. We consider the dynamics of a spin #box[$S_i in S$] at time
-$t + 1$.
-
-The behaviour of $S_i^(t+1)$ is influenced by two driving forces: the threshold $h_i$,
-and incoming interaction effects $J_(j i)$ for $j != i$. Suppose that the net effect
-of incoming interaction effects is zero, and that $h_i = 0$. In this case $S_i^(t+1)$
-is unaffected by other spins and has no inherent tendency toward $-1$ or $+1$.
-Naturally, we expect to observe either state with equal probability:
-
-$
-  1/2 = P_(S_i^(t+1)|bold(S)^t=bold(s))(-1) = P_(S_i^(t+1)|bold(S)^t=bold(s))(+1)
-$
-
-Suppose instead that $h_i != 0$. Now $S_i^(t+1)$ has an increased tendency toward the
-state sharing the same sign as $h_i$:
-
-$
-  P_(S_i^(t+1)|bold(S)^t=bold(s))(op("sgn")(h_i)) > P_(S_i^(t+1)|bold(S)^t=bold(s))(-op("sgn")(h_i))
-$
-
-For instance, if $h_i > 0$ then $S_i^(t+1) = 1$ with probability greater than $1/2$.
-
-Now suppose that $h_i = 0$, and that the net effect of incoming interaction effects
-toward $S_i$ is non-zero. Recall that for a given interaction effect $J_(j i)$, $S_i^(t+1)$
-will tend to adopt the previous observed state of $S_j^t$ if $J_(j i) > 0$, and the
-opposite state otherwise. Thus $S_i^(t + 1)$ is influenced to adopt a state with the
-same sign as $J_(j i) dot s_j^t$.
-
-Moreover, recall that the degree to which $S_j^t$ influences $S_i^(t+1)$ increases with
-$|J_(j i)|$. We can then consider the linear combination of incoming influences with
-the prior observed state as a net 'effective' influence on $S_i^(t+1)$:
-
-$
-  J_i^"eff" (bold(s)) := sum_(j=1)^N A_(j i) J_(j i) s_j
-$
-
-As before, $S_i^(t+1)$ experiences a tendency to adopt the state which shares the same
-sign as this term:
-
-$
-  P_(S_i^(t+1)|bold(S)^t=bold(s))(op("sgn")(J_i^"eff" (bold(s)))) > P_(S_i^(t+1)|bold(S)^t=bold(s))(-op("sgn")(J_i^"eff" (bold(s))))
-$
-
-Finally, if $h_i$ is also non-zero, we can straightforwardly include its effect as an
-additional term. We define the effective threshold on $S_i^(t+1)$ as:
-
-$
-  h_i^"eff" (bold(s)) := h_i + sum_(j=1)^N A_(j i) J_(j i) s_j
-$
-
-and have
-
-$
-  P_(S_i^(t+1)|bold(S)^t=bold(s))(op("sgn")(h_i^"eff" (bold(s)))) > P_(S_i^(t+1)|bold(S)^t=bold(s))(-op("sgn")(h_i^"eff" (bold(s))))
-$
-
-Until this point we have left $P_(S_i^(t+1)|bold(S)^t = bold(s))$ unspecified.
-As in the typical Ising model formulation, we take the
-probability as given by the Boltzmann distribution. However, unlike in the standard
-formulation, we parameterise this distribution with the energy of $S_i^(t+1)$ given the
-previous configuration, which may be interpreted as the *energy required to transition*.
-For $s^(t+1) in {-1, +1}$, we define this term as:
-
-$
-  H_i (s^(t+1)|bold(s)) : & = - h_i dot s^(t+1) - sum_(j=1)^N A_(j i) J_(j i) s_j dot s^(t+1) \
-                          & = -s^(t+1) dot h_i^"eff"(bold(s))
-$ <eqn:model-transition-energy>
-
-The probability that $S_i^(t+1) = s^(t+1)$ is then given by:
-
-$
-  P_(S_i^(t+1)|bold(S)^t = bold(s)) (s^(t+1)) := exp[-1/T dot H_i (s^(t+1)|bold(s))]/(exp[-1/T dot H_i (-1|bold(s))] + exp[-1/T dot H_i (+1|bold(s))])
-$ <eqn:model-boltzmann-single-spin>
-
-Where the temperature parameter $T in RR_(>0)$ controls the degree of stochasticity. At
-high temperatures @eqn:model-boltzmann-single-spin converges to a
-uniform distribution over ${-1, +1}$ (i.e., maximum stochasticity), whereas as
-$T -> 0^+$ it converges in probability (*TODO: double-check this statement*) to a
-distribution over the restricted set of states with minimum energy.
-
-Applying @eqn:model-transition-energy and substituting $s^(t+1) = 1$,
-@eqn:model-boltzmann-single-spin reduces to a logistic distribution:
-
-$
-  P_(S_i^(t+1)|bold(S)^t = bold(s)) (+1) &= exp[h_i^"eff" (bold(s))\/T]/(exp[-h_i^"eff" (bold(s))\/T] + exp[h_i^"eff" (bold(s))\/T]) \
-  &= op("logistic")(h_i^"eff" (bold(s))\/T)
-$ <eqn:model-logistic-single-spin>
-
-We illustrate the relationship between $h_i^"eff" (bold(s))$ and the the probability
-that $S_i^(t+1)$ adopts the state $+1$ in @fig:model-transition-probability-example.
-The observed behaviour matches our expectations per our above discussion. When
-$h_i^"eff" (bold(s)) = 0$ (corresponding, for instance, to a scenario $h_i = 0$ and
-net-zero incoming influences) the probability of either state is $1\/2$. As the
-effective threshold increases along the positive axis or decreases along the negative
-axis, the probability that $S_i^(t+1) = +1$ increases or decreases respectively. Notice
-also that at higher temperatures a larger-magnitude effective threshold is required to
-achieve the same probability observed at lower temperatures.
-
-#figure(
-  image("../results/figures/model/transition_probability_example.pdf"),
-  caption: [
-    The probability that a spin $S_i$ adopts the state $+1$ at time $t+1$ for $t in NN$
-    increases with the effective threshold on $S_i^(t+1)$ according to a logistic
-    distribution per @eqn:model-logistic-single-spin, with greater stochasticity
-    observed at higher temperatures.
-  ],
-) <fig:model-transition-probability-example>
-
-
-The instantaneous observed states for any pair of spins $S_i, S_j in S$ at time
-$t + 1 in NN_(> 0)$ are conditionally independent random variables given the previous
-state $bold(s)^t$. Thus the full distribution over configurations at time $t+1$ is
-given by:
-
-$
-  P_(bold(S)^(t+1)|bold(S)^t = bold(s)^t) (bold(s)^(t+1)) := product_(i=1)^N quad exp[s_i^(t+1) dot h_i^"eff" (bold(s)^t)\/T]/(exp[-h_i^"eff" (bold(s)^t)\/T] + exp[h_i^"eff" (bold(s)^t)\/T])
-$ <eqn:model-boltzmann-all-spins>
-
-This further simplifies as follows @nguyenInverseStatisticalProblems2017:
-
-$
-  P_(bold(S)^(t+1)|bold(S)^t = bold(s)^t) (bold(s)^(t+1)) = exp[sum_(i=1)^N s_i^(t+1) dot h_i^"eff" (bold(s)^t)\/T]/(product_(i=1)^N 2 cosh[h_i^"eff" (bold(s)^t)\/T])
-$ <eqn:model-boltzmann-all-spins-simplified>
-
-
-=== Inverse problem
-
-Consider a population of $M in NN$ individuals, with population-level belief system
-$cal(M) = chevron S, bold(A), bold(J), bold(h)_0, bold(B) chevron.r$ for a known set
-of cognitive axes $S$ with $|S| = N$ for $N in NN$, but for which the remaining
-parameters are unknown.
-
-Suppose that we have observed, for each individual
-$m in [1,M]$, a sequence of evenly-spaced configurations,
-${bold(s)^tau_((m))}_(tau=1)^t$, from the individual belief system $cal(M)(bold(x)_m)$,
-where the vector $bold(x)_m in RR^K$ parameterises $cal(M)$ in accordance with
-contextual factors specific to $m$.
-
-If the existence of pairwise relations $bold(A)$ is known, we can use maximum
-likelihood estimation to recover a model
-$tilde(cal(M)) = chevron S, bold(A), tilde(bold(J)), tilde(bold(h))_0, tilde(bold(B)) chevron.r$
-which approximates $cal(M)$. Specifically, we choose $tilde(cal(M))$ such that the
-probability of the observed data given $tilde(cal(M))$ is maximised:
-
-$
-  chevron tilde(bold(J)), tilde(bold(h))_0, tilde(bold(B)) chevron.r = op("argmax", limits: #true)_(bold(J)', bold(h)'_0, bold(B)') P_(cal(M)') ({bold(s)^tau_((1))}_tau ... {bold(s)^tau_((m))}_tau | cal(M)' = chevron S, bold(A), bold(J)', bold(h)'_0, bold(B)' chevron.r)
-$ <eqn:maximum-likelihood-problem>
-
-Consider a given individual indexed by $m in [1,M]$. From
-@eqn:model-boltzmann-all-spins-simplified we have that the probability of observing
-a configuration $bold(s)^(t+1)_((m))$ at time $t + 1 in NN_(> 1)$ depends only on the previous
-configuration $bold(s)^t_((m))$. Therefore the probability of observing a sequence of
-configurations ${bold(s)^tau_((m))}_(tau=1)^t$ under a candidate model $cal(M)'$ is
-simply the product of conditional probabilities between each pair of consecutive
-timepoints:
-
-$
-  P ({bold(S)^tau_((m))}_(tau=1)^t = {bold(s)^tau_((m))}_(tau=1)^t) &= P_(bold(S)^1_((m)) ... bold(S)^t_((m))) (bold(s)^1_((m)) ... bold(s)^t_((m))) \
-  &= product_(tau=1)^(t - 1) P_(bold(S)^(tau + 1)_((m)) | bold(S)^1_((m)) = bold(s)^1_((m)) ... bold(S)^(tau)_((m)) = bold(s)^(tau)_((m))) (bold(s)^(tau + 1)_((m))) \
-  &= product_(tau=1)^(t - 1) P_(bold(S)^(tau + 1)_((m)) | bold(S)^(tau)_((m)) = bold(s)^(tau)_((m))) (bold(s)^(tau + 1)_((m)))
-$ <eqn:model-likelihood-of-individual-sequence>
-
-If individuals are assumed independent, such that the state of any individual does not
-influence the future states of other individuals, then @eqn:maximum-likelihood-problem
-reduces to a product over the likelihoods for each separate individual:
-
-$
-  L_D (cal(M)') = P_(cal(D)) (D; cal(M)') = product_(m=1)^M product_(tau=1)^(t - 1) P_(bold(S)^(tau + 1)_((m)) | bold(S)^(tau)_((m)) = bold(s)^(tau)_((m))) (bold(s)^(tau + 1)_((m)))
-$ <eqn:model-full-likelihood-generic>
-
-In practice, evaluation of @eqn:model-full-likelihood-generic is often subject to
-numerical precision errors due to the multiplication of small floating point numbers,
-thus we instead maximise the _log-likelihood_:
-
-$
-  cal(L)_D (cal(M)') = ln(P_(cal(D)) (D; cal(M)')) = sum_(m=1)^M sum_(tau=1)^(t - 1) ln P_(bold(S)^(tau + 1)_((m)) | bold(S)^(tau)_((m)) = bold(s)^(tau)_((m))) (bold(s)^(tau + 1)_((m)))
-$
-
-Substituting the conditional probability as defined in
-@eqn:model-boltzmann-all-spins-simplified, we arrive at a concrete definition for
-the likelihood:
-
-$
-  cal(L)_D (cal(M)') = sum_(m=1)^M sum_(tau=1)^(t - 1) sum_(i=1)^N lr([s_(m,i)^(tau+1) dot h_(m,i)^"eff" (bold(s)_((m))^tau)\/T - ln 2 cosh (h_i^"eff" (bold(s)_((m))^tau)\/T)])
-$
-
-We now derive the partial derivatives of $cal(L)_D$ with respect to each parameter
-considered in the optimisation. Recall that for an individual $m in [1, M]$ with
-covariate vector $bold(x) in RR^K$, the effective threshold on a spin $i in [1, N]$ is
-defined as:
-$
-  h_(m,i)^"eff" (bold(s), bold(x)) = (bold(h)_0)_i + sum_(k=1)^K B_(i k) x_k + sum_(j = 1)^N A_(j i) J_(j i) s_j
-$
-
-The partial derivates of the effective threshold with respect to each parameter
-considered in the optimisation are as follows:
-
-$
-  (partial h_i^"eff")/(partial (bold(h)_0)_alpha) & = delta_(alpha, i), quad
-  (partial h_i^"eff")/(partial B_(alpha beta)) & = delta_(alpha, i)(x_beta), quad
-  "and" quad (partial h_i^"eff")/(partial J_(alpha beta)) & = delta_(beta, i)(A_(alpha i) s_alpha)
-$ <eqn:model-eff-threshold-partial-derivatives>
-
-where $delta_(i,j)$ denotes the kronecker delta.
-
-Let $p$ be an arbitrary parameter in $bold(J)'$, $bold(h)'_0$, or $bold(B)'$, then
-the partial derivative of $cal(L)_D$ with respect to $p$ takes the form:
-
-// $
-//   (partial cal(L)_D)/(partial p) &= sum_(k,t,i) (s_(k,i)^(t+1))/T dot (partial)/(partial p) h_(k,i)^"eff"(bold(s)_k^t) - (2 sinh(h_(k,i)^"eff" (s_k^t)\/T))/(2 cosh(h_(k,i)^"eff" (s_k^t)\/T)) dot 1/T dot (partial)/(partial p) h_(k,i)^"eff" (bold(s)_k^t) \
-//   &= 1/T sum_(k,t,i) (s_(k,i)^(t+1) - tanh(h_(k,i)^"eff" (bold(s)_k^t)\/T)) dot (partial)/(partial p) h_(k,i)^"eff" (bold(s)_k^t)
-// $
-$
-  (partial cal(L)_D)/(partial p) = 1/T stretch(sum)_(m,tau,i)^(M,t - 1,N) (s_(m,i)^(tau+1) - tanh(h_(m,i)^"eff" (bold(s)_m^tau)\/T)) dot (partial)/(partial p) h_(m,i)^"eff" (bold(s)_m^tau)
-$
-
-Substituting the corresponding partial derivatives from
-@eqn:model-eff-threshold-partial-derivatives, we find that the partial derivatives
-of the likelihood with respect to each parameter type are as follows:
-
-$
-  (partial cal(L)_D)/(partial (bold(h)_0)_i) &= 1/T sum_(m,tau) s_(m,i)^(tau+1) - tanh(h_(m,i)^"eff" (bold(s)_m^(tau))\/T) \
-  (partial cal(L)_D)/(partial B_(i k)) &= 1/T sum_(m,tau) (s_(m,i)^(tau+1) - tanh(h_(m,i)^"eff" (bold(s)_m^(tau))\/T)) dot x_k^((m)) \
-  (partial cal(L)_D)/(partial J_(i j)) &= 1/T sum_(m,tau) (s_(m,j)^(tau+1) - tanh(h_(m,j)^"eff" (bold(s)_m^tau)\/T)) dot A_(i j) s_(m,i)^tau
-$ <eqn:model-likelihood-partial-derivatives>
-
-The likelihood is maximised when $(partial cal(L)_D)/(partial (bold(h)_0)_i) = (partial cal(L)_D)/(partial J_(i,j))= (partial cal(L)_D)/(partial B_(i,k)) = 0$ for all $i, j in [1, N]$ and $k in [1, K]$.
-
-If the relational structure $bold(A)$ is unknown, we can either assume a
-fully-connected structure, such that for each pair of cognitive axes $S_i,S_j in S$
-we have $S_i -> S_j$, or infer the relational structure, for instance using causal
-discovery methods.
-
-// Moreover, since the
-// per  the
-// probability of
-// of covariate
-// inverse problem
-// $S$ is known, but the remaining
-// Let $cal(M) = chevron S, bold(A), bold(J), bold(h)_0, bold(B) chevron.r$ be a
-// population-level belief system comprising $n in NN$ cognitive items, for which
-// $bold(A)$, $bold(J)$, $bold(h)_0$, and $bold(B)$ are unknown, and let
-// $D = [{bold(s)_1^t}_(t=0)^(t'), ..., {bold(s)_m^t}_(t=0)^(t')]$ be a dataset of
-// observed sequences of $t' in NN$ configurations from the belief systems of
-// #box[$m in NN$] individuals. The inverse problem consists in using $D$ to identify
-// a population-level belief system $tilde(cal(M))$ such that
-// $tilde(cal(M)) approx cal(M)$.
-//
-// If $bold(A)$ is known, we can straightforwardly solve for the remaining parameters
-// by identifying the model $tilde(cal(M))$ for which the data likelihood is maximised:
-//
-// $
-//   tilde(cal(M)) = op("argmax")_(bold(J), bold(h)_0, bold(B)) P(cal(D) = D | bold(J), bold(h)_0, bold(B))
-// $
-//
-// Where the likelihood function
-// $L_D (bold(J), bold(h)_0, bold(B)) = P(cal(D) = D | bold(J), bold(h)_0, bold(B))$ is
-// derived from the conditional state transition probability in
-// @eqn:model-boltzmann-all-spins-simplified:
-//
-// $
-//   L_D (bold(J), bold(h)_0, bold(B)) &= product_(k=1)^m product_(t=0)^(t' - 1) P_(bold(S)_k^(t+1)|bold(S)_k^t) (bold(s)_k^(t+1) | bold(s)_k^t; #h(0.5em) bold(J), bold(h)_0, bold(B))
-// $
-//
-// In practice, to avoid numerical instabilities resulting from the multiplication of
-// small floating-point numbers, we actually maximise the log-likelihood:
-//
-// $
-//   cal(L)_D (bold(J), bold(h)_0, bold(B)) &= sum_(k=1)^m sum_(t=0)^(t' - 1) ln P_(bold(S)_k^(t+1)|bold(S)_k^t) (bold(s)_k^(t+1) | bold(s)_k^t; #h(0.5em) bold(J), bold(h)_0, bold(B))
-// $
-//
-// Substituting @eqn:model-boltzmann-all-spins-simplified, this takes the form:
-// $
-//   cal(L)_D (bold(J), bold(h)_0, bold(B)) = sum_(k=1)^m sum_(t=0)^(t' - 1) sum_(i=1)^N s_(k,i)^(t+1) dot h_(k,i)^"eff" (bold(s)_k^t)\/T - ln 2 cosh (h_(k, i)^"eff" (bold(s)_k^t)\/T)
-// $
-//
-// Which achieves its maximum when $(partial cal(L)_D)/(partial h_0^i) = (partial cal(L)_D)/(partial J_(i,j))= (partial cal(L)_D)/(partial B_(i,j)) = 0$ for all $i, j in [1, N]$.
-// To derive these partial derivatives, we first consider the partial derivatives
-// of $h_i^"eff"$ with respect to each parameter. Recall that $h_i^"eff"$ as a function of
-// an individual's contextual-covariate vector $bold(x)$ is as follows:
-//
-// $
-//   h_i^"eff" (bold(s), bold(x)) = h_0^(i) + sum_(c=1)^K B_(i c) x_c + sum_(j=1)^N A_(j i) J_(j i) s_j
-// $
-//
-// Then we have
-//
-//
-// Where $delta_(i,j)$ denotes a kronecker delta. Letting $p$ denote an arbitrary
-// parameter in $bold(J)$, $bold(h)_0$, or $bold(B)$, and simplifying the summation
-// limits for clarity, the partial derivatives of $cal(L)_D$ take the form:
-//
-//
-// Finally, substituting the partial derivatives from
-// @eqn:model-eff-threshold-partial-derivatives, we recover the following partial
-// derivatives of $cal(L)_D$ with respect to each parameter:
-//
-//
-// If $bold(A)$ is also unknown, then this must also be estimated, for instance using
-// causal discovery methods.
-//
-=== Simulating interventions
-
-Interventions on a belief system $cal(M) = chevron S, bold(A), bold(J), bold(h) chevron.r$
-can manifest as either influence toward a particular state for a given belief
-or attitude, or as a 'rewiring' of the causal interactions between cognitive axes.
-
-The first category of intervention, which we refer to as a *threshold intervention*, is
-modelled as an adjustment to the threshold vector $bold(h)$. For a spin $S_i in S$,
-we model a threshold intervention toward the state $+1$ as the adjusted model
-$cal(M)' = chevron S, bold(A), bold(J), bold(h)' chevron.r$, where for $j in [1, N]$
-and an intervention level $delta_i$:
-
-$
-  h'_j = cases(h_j + delta_i quad &"if" j = i, h_j quad &"otherwise")
-$
-
-The second category, which we refer to as a *structural intervention*, is modelled
-as an adjustment to the relational structure or causal influences between spins.
-For a pair of spins $S_i, S_j in S$ and an intervention level $delta_(i j)$, a
-structural intervention is modelled as the adjusted model
-$cal(M)' = chevron S, bold(A), bold(J)', bold(h) chevron.r$ where
-
-$
-  J'_(k ell) = cases(J_(i j) + delta_(i j) quad &"if" (k, ell) = (i, j), J_(k ell) quad &"otherwise")
-$
-
-// We refer to the first kind of intervention as a *threshold intervention*, as model
-// this as an adjustment to the thresholds $bold(h)$. Suppose, for instance, that a
-// local municipality initiates a media campaign to shift public attitudes on recycling
-// toward a more sustainable state, drawing attention to the ecological impacts of
-// plastic in landfill waste. If the belief system $cal(M)$ reflects a range of cognitive
-// axes relating to environmental sustainability and recycling, and $S_i in S$ refers to
-// an individual's belief regarding the ecological impacts of plastic, we would model this
-// intervention as the adjusted belief system
-// $cal(M) = chevron S, bold(A), bold(J), bold(h)' chevron.r$, where
-//
-// $
-//   h'_j = cases(h_j + delta_i quad &"if" j = i, h_j quad &"otherwise")
-// $
-//
-// We refer to the second kind of intervention as a *belief system structural
-// intervention*, and model this as an adjustment to the causal effects $bold(J)$.
-// This second kind of intervention changes the degree to which beliefs and attitudes
-// reinforce or oppose one another, with the intention of achieving some desired state,
-// rather than directly targeting that cognitive axis.
-//
-//
-//
-
-
-#pagebreak()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 == Asymmetric belief system model
@@ -762,7 +38,7 @@ maximum-likelihood parameter reconstruction method using time-series data to ide
 a maximum-entropy model which matches the (pairwise) time-lagged correlations observed
 in the data.
 
-=== Cognitive axes
+=== Cognitive axes <subsubsec:model-cognitive-axes>
 
 Cognitive axes are either:
 
@@ -828,7 +104,7 @@ of $b$ on the previous value of $a$.
   relation* $s_i -> s_j$ if, and only if, given a configuration
   $bold(s)^t$, for some possible value $s$ of $s_j$,
   $ PP[s_j^(t+dif t) = s | bold(s)^t] != PP[s_j^(t+dif t) = s | bold(s)_(-i)^t] $
-] <def:model-direct-influence>
+]
 
 Consider an $a -> b$ between cognitive axes $a$ and $b$, with weight $w_(a -> b)$. The
 sign of $w_(a->b)$ describes the tendency for $b$ to adopt the same ($+$) or opposite
@@ -845,13 +121,13 @@ large magnitude relation $s_A -> s_B$ ensures the behaviour of $s_B$ is almost e
 set by $s_A$. In particular, at each timestep, $s_B$ adopts the previous state of $s_A$
 with high probability.
 
-#figure(
-  image("../diagrams/draft/model_no_cs_correlation.png", width: 40%),
-  caption: [
-    A two-spin asymmetric belief system in which the instantaneous correlation
-    between spins is zero, but the time-delayed correlation is non-zero.
-  ],
-) <fig:model-no-cs-correlation>
+// #figure(
+//   image("../diagrams/draft/model_no_cs_correlation.png", width: 40%),
+//   caption: [
+//     A two-spin asymmetric belief system in which the instantaneous correlation
+//     between spins is zero, but the time-delayed correlation is non-zero.
+//   ],
+// ) <fig:model-no-cs-correlation>
 
 Let ${bold(s)}_(t=1)^m$ be a sequence of samples drawn from this model, with $m$
 sufficiently large, and define ${s_A}_(t=1)^m$ and ${s_B}_(t=1)^m$ as the sequences of
@@ -888,7 +164,7 @@ conditional non-independence relations.
   any pair of cognitive axes $s_i, s_j in S$, there exists a directed causal relation
   $s_i -> s_j$ if, and only if, $s_j^(t + dif t)$ and $s_i^t$ are conditionally
   non-independent.
-] <conjecture:model-relations-conditional-non-independence>
+]
 
 #proof[
   #set math.equation(numbering: none)
@@ -985,7 +261,7 @@ referring directly to $bold(h)$ as a vector of thresholds.
 // $
 
 
-==== System transitions
+==== System transitions <subsubsubsec:system-transitions>
 The probability of a spin $S_i in S$ adopting a particular state $s in {-1, +1}$ is set
 by the energy differential with the alternative state, where lower-energy states are
 preferred. We define the local energy experienced by $S_i$ when adopting
@@ -1094,13 +370,6 @@ maximising) the conditional likelihood requires repeated observations from each
 individual. Thus to solve the inverse Ising problem for the asymmetric belief system
 model, we require time-series observational data.
 
-*Note:* There are a couple of other things to discuss here, which I am still working on.
-Notably:
-+ That time-series observations are required to infer self-interaction effects, and
-+ That attempting to do non-conditional maximum likelihood estimation also fails with
-  cross-sectional data, because the problem is underdetermined (we have more unknowns
-  than observables).
-
 
 #pagebreak()
 
@@ -1150,7 +419,7 @@ Notably:
 //     Instead we can use time-delayed correlation terms, which are non-1 on the diagonal,
 //     and not necessarily symmetric.
 
-== Belief system interactions
+== Belief system interactions <subsec:belief-system-interactions>
 
 We now formalise the notion of a pairwise-interaction belief system. Consider a finite
 set of cognitive items, $S$, which may include a mixture of belief and attitude axes,
@@ -1246,80 +515,12 @@ belief system model in @def:model-belief-system-model.
 
 == Reviewing belief system models
 
-- Early work, triadic consistency
-- Bayesian networks
-- Causal attitude network, Ising-style models
-- Beliefs as edges vs. beliefs as nodes
-- Social influence: hierarchical Ising models, network of belief model
-- Within-person vs between-person correlations; inverse problem problems
-
-=== Symmetric (equillibrium) Ising model
-
-$
-  P(bold(S) = bold(s)) = exp(-1/T H(bold(s)))/(sum_(bold(s)') exp(-1/T H(bold(s)')))
-$ <eq:model-symmetric-ising-boltzmann>
-
-Where the temperature parameter $T in RR_(>0)$ controls the degree of stochasticity. At
-high temperatures $P(bold(S) = bold(s))$ converges to a uniform distribution over
-states (i.e., maximum stochasticity), whereas as $T -> 0^+$ it converges in probability
-(*TODO: double-check this statement*) to a distribution over the restricted set of
-states with minimum energy.
-
-- Introduce maximum likelihood parameter estimation using:
-  - Cross-sectional methods
-  - Time-series methods
-
-=== Causal Attitude Networks <subsec:model-causal-attitude-network>
-
-*TODO:* Discuss what they say in original paper about differences in the sets of
-nodes included in different individuals' networks.
-
-The Causal Attitude Network (*CAN*) model @dalegeFormalizedAccountAttitudes2016b is an
-Ising-style theory of endogenous belief system dynamics, which operates under the
-assumption that these dynamics are primarily driven by efforts --- conscious or
-otherwise --- to reduce cognitive dissonance. The model considers a collection of
-evaluative axes for cognitive items, such as attitudes, beliefs, feelings, or
-behaviours, which are arranged as vertices on an undirected, signed, weighted network.
-
-Edges in the network describe causal influences between items, such that a pair of
-cognitive items related via a positive edge are likely to exhibit evaluations of the
-same _valence_ (positive or negative), while items related via a negative edge are
-likely to exhibit evaluations with different valences. The degree to which a pair of
-related items are expected to covary increases with both the absolute magnitude of
-the weight of their relation, and the relative magnitude compared to other relations
-involving either of the items. Observations from a pair of items may have low mutual
-information despite a high absolute magnitude relation, if, for instance, the
-associated cognitive items have much higher-weight relations with other,
-non-overlapping sets of cognitive items.
-
-Each cognitive item has an associated *threshold*, $tau_i in RR$, describing its
-tendency to assume either positive ($tau_i > 0$) or negative ($tau_i < 0$) evaluations
-in the absence of influencing interactions with other items, or in the case that the
-net effect of these interactions is zero.
-
-The CAN model defines the dynamics of a belief system using an equilibrium Ising model
-framework, with the Hamiltonian of a particular configuration of evaluations defined in
-@eq:model-can-hamiltonian, where $omega_(i j) in RR$ is the signed weight of a relation
-between nodes $i$ and $j$ in the network and $N in NN$ is the number of cognitive items
-in the model.
-
-
-$
-  H(bold(s)) = - sum_(i=1)^N tau_i s_i - sum_(chevron i j chevron.r) omega_(i j) s_i s_j
-$ <eq:model-can-hamiltonian>
-
-At equilibrium, the probability is described by the Boltzmann distribution
-(@eq:model-symmetric-ising-boltzmann) with @eq:model-can-hamiltonian as its Hamiltonian.
-Since the CAN model is equivalent to a symmetric network Ising model, all standard
-methods for solving the inverse Ising problem for this class of models also apply here
-to recovering parameter values $tau_i, omega_(i j) in RR$ for a CAN model assumed to
-generate the observations in a binary dataset.
 
 
 == Asymmetric belief systems
 
 We now introduce our belief system model as an extension on the Causal Attitude Network
-model (@subsec:model-causal-attitude-network). Our model diverges from this theory in
+model (*REFERENCE*). Our model diverges from this theory in
 two key aspects: we consider (i) belief systems that are not at equilibrium, and in
 which (ii) the pairwise interactions between cognitive items may be non-reciprocal, or
 have different degrees of influence.
@@ -1373,7 +574,7 @@ $
   PP[S_i^(t + dif t) = s | bold(S)^t = bold(s)] = exp[-1/T dot s dot h_i^"eff" (bold(s))]/(exp[-1/T dot h_i^"eff" (bold(s))] + exp[1/T dot h_i^"eff" (bold(s))])
 $
 where $T in RR_(>0)$ is a temperature parameter as in
-@eq:model-symmetric-ising-boltzmann. The symmetry of possible values for $s in {-1, +1}$
+(Equation: symmetric ising boltzmann). The symmetry of possible values for $s in {-1, +1}$
 allows us to further simplify this expression as follows:
 
 $
@@ -1382,7 +583,7 @@ $ <eq:model-asymmetric-transition-probability>
 
 We illustrate the behaviour of this probability distribution for a cognitive item $i$,
 for varying effective local field strengths and temperature parameters in
-@fig:model-transition-probability-example. Observe that for high-magnitude
+(Figure: transition probability example). Observe that for high-magnitude
 negative effective local fields --- corresponding to a large positive threshold $h_i$,
 and/or strong influences toward positive values from other spins ($J_(j i) s_j > 0$)
 --- the probability that $i$ transitions to $S_i^(t + dif t) = 1$ converges to $1$.
@@ -1445,7 +646,7 @@ influnece of $i$ on $j$'s behaviour is equal to that of $j$ on $i$'s behaviour. 
 why this is the case, suppose that for cognitive items $i,j$, we have
 $omega_(i j) != omega_(j i)$. If the system is at equilibrium, then the probability
 distribution over states is described by the Boltzmann distribution with
-@eq:model-can-hamiltonian as its Hamiltonian. Consider the contribution to the
+(Equation: CAN hamiltonian) as its Hamiltonian. Consider the contribution to the
 Hamiltonian from the interactions between $i$ and $j$:
 
 $

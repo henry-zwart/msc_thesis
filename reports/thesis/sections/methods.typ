@@ -1,3 +1,6 @@
+#import "@local/drifting-cls-thesis:0.1.0": caption
+
+
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 - Interdependent beliefs and attitudes; state of one affects the state of another:
@@ -180,12 +183,154 @@ $ <eqn:methods-model-conditional-prob-definition>
 *NOTE:* The initial distribution must be specified, since the model only captures
 transition probabilities.
 
+=== Simulation via Glauber dynamics
 
+=== Modelling interventions
+
+// Interventions on a belief system $cal(M) = chevron S, bold(A), bold(J), bold(h) chevron.r$
+// can manifest as either influence toward a particular state for a given belief
+// or attitude, or as a 'rewiring' of the causal interactions between cognitive axes.
+//
+// The first category of intervention, which we refer to as a *threshold intervention*, is
+// modelled as an adjustment to the threshold vector $bold(h)$. For a spin $S_i in S$,
+// we model a threshold intervention toward the state $+1$ as the adjusted model
+// $cal(M)' = chevron S, bold(A), bold(J), bold(h)' chevron.r$, where for $j in [1, N]$
+// and an intervention level $delta_i$:
+//
+// $
+//   h'_j = cases(h_j + delta_i quad &"if" j = i, h_j quad &"otherwise")
+// $
+//
+// The second category, which we refer to as a *structural intervention*, is modelled
+// as an adjustment to the relational structure or causal influences between spins.
+// For a pair of spins $S_i, S_j in S$ and an intervention level $delta_(i j)$, a
+// structural intervention is modelled as the adjusted model
+// $cal(M)' = chevron S, bold(A), bold(J)', bold(h) chevron.r$ where
+//
+// $
+//   J'_(k ell) = cases(J_(i j) + delta_(i j) quad &"if" (k, ell) = (i, j), J_(k ell) quad &"otherwise")
+// $
+//
 
 
 
 
 == Experimental plan
+
+
+// *RF1.1* is a theoretical contribution and is addressed in the following section on model
+// details.
+//
+// ==== *RQ2.1*
+// // *RQ2.1* concerns the variation in belief systems on climate change between individuals.
+// // Belief system models fit using cross-sectional data have limited applicability to
+// // understanding the belief systems of individuals (cf.
+// // @brandtBetweenpersonMethodsProvide2022). While we do not use cross-sectional data, it
+// // is nonetheless important to investigate the degree to which our inferred models capture
+// // potential variation between individuals. To this end, I propose two experiments:
+// //
+// Investigate differences between models fit on different subsets of
+// the population; e.g., age groups; democrat vs. republican; male vs. female; urban vs.
+// rural:
+//
+// - Qualitative differences in model structure
+// - Stability of individuals' measured configurations compared to: model fit on
+//   whole dataset; model fit on whole dataset with varying spin thresholds
+//
+// Compare these results under symmetric/asymmetric model assumptions.
+//
+// ==== *RQ2.2*
+//
+// Fit asymmetric model to data. For each pair of items, $S_i, S_j in S$, calculate the
+// directional differential:
+//
+// $
+//   delta_(i j) = J_(i j) - J_(j i)
+// $
+//
+// If $delta_(i j) > 0$, this indicates that the influence of $S_i$ on $S_j$ is stronger
+// than in the opposite direction.
+//
+// Use bootstrapping to quantify uncertainty around the estimate for each $delta_(i j)$.
+// Repeatedly resample the dataset with replacement. For each resampled dataset, fit the
+// asymmetric model and calculate the directional differential. Use the estimates to
+// calculate confidence bounds around each $delta_(i j)$.
+//
+// ==== *RQ3.1*
+//
+// Fit asymmetric and symmetric models to the observed data. For each pair of spins,
+// $S_i, S_j in S$, designate $S_i$ the *intervention* spin and $S_j$ the *target spin*.
+// Simulate an intervention on $S_i$ in the asymmetric model, and measure $S_j$ after
+// $t in NN$ timesteps. Repeat this simulation on the same model with _no_ intervention,
+// using the same random seed.
+//
+// We define the *effect of intervention* as the difference between the measured states
+// of $S_j$ under the intervention and no-intervention scenarios, reflecting the change
+// in behaviour resulting from intervening on $S_i$.
+//
+// Repeat this process for the symmetric model, again using the same random seed, to
+// obtain the effect of intervention under a symmetric relation assumption. We now
+// define the *effect of asymmetry* as the difference between the effects of intervention
+// in the asymmetric and symmetric models respectively. A positive effect of asymmetry
+// indicates that in the asymmetric model, intervening on $S_i$ results in a greater
+// shift in the behaviour on $S_j$ toward $+1$ than in the symmetric model.
+//
+// Note that if 'backlash' dynamics are observed, such that intervening on $S_i$ can result
+// in a reduction in the desired behaviour on $S_j$, then a positive effect of asymmetry
+// _does not_ necessarily imply that the intervention is effective. Indeed, it may simply
+// result in a lower level of backlash, such that not intervening is still a more rational
+// strategy.
+//
+// With this in mind, we propose the following experiments:
+//
+// - *Goal:* Understand the degree to which intervention dynamics differ, at a general
+//   level, between the symmetric and asymmetric models.
+//
+//   Estimate the effect of asymmetry for each pair of spins $S_i, S_j in S$, quantifying
+//   uncertainty around the estimates by repeating the estimation process for $r in NN$ repeats.
+//
+// - *Goal:* Investigate how intervention strategy differs between models fit under
+//   asymmetric and symmetric asummptions.
+//
+//   For each possible target spin $S_j$, determine the intervention spin $S_i$ for which,
+//   after $t in NN$ timesteps, the average target state (across individuals) is maximal,
+//   for both the asymmetric and symmetric models. This tells us which interventions
+//   result in the highest rate of adoption of the desired behaviour at the target spin.
+//   Compare the most effective strategies between symmetric and asymmetric models.
+//
+// - *Goal:* Investigate differences in intervention effectiveness between models fit
+//   under asymmetric and symmetric assumptions.
+//
+//   For each 'most effective strategy', compare the effect of intervention with that
+//   observed in the alternative assumption (e.g., if 'belief in climate change' is most
+//   effective for targeting 'climate policy' in the asymmetric model, how does the
+//   effect of intervention for this pair compare with that of the symmetric model?).
+//
+//
+//
+// ==== *RQ3.2*
+//
+// Investigating the varied impacts of intervention among different individuals, with
+// different initial conditions and contextual factors.
+//
+// For each individual, and each pair of intervention and target spins $S_i, S_j in S$,
+// estimate the expected effect of intervention in the asymmetric model by taking the
+// average state of $S_j$ across repeats at time $t in NN$.
+//
+// Examine the distributions of expected effects of intervention across individuals for
+// each pair of intervention and target spins. If we observe cases of backlash, or where
+// intervention effectiveness is highly variable, investigate why this is the case.
+//
+// _Note:_ Should we consider all participants for these experiments, or only those who do
+// not previously hold the desired belief/attitude state? For instance, interventions on
+// 'belief in climate change' often show low effectiveness because most individuals are
+// already marked as believing in climate change. However, how does this change for
+// individuals who do not believe in climate change?
+//
+// Conversely, 'climate policy' is often found to be an effective intervention because
+// it is a good predictor of other pro-environmental attitudes at later timesteps. However,
+// the causal directionality on this relationship is incorrect (support for climate policies
+// can reinforce other spins, but is fundamentally a result of these).
 
 == Dataset
 
@@ -210,12 +355,15 @@ illustrates this process for a negative value of $x$ and given choice of $sigma$
   image(
     "../results/figures/methods/binarisation/distribution.pdf",
   ),
-  caption: [
-    $x in RR$ is smoothly binarised to ${-1, +1}$ by
-    thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
-    are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
-    increases with $sigma$ and $|x|^(-1)$.
-  ],
+  caption: caption(
+    short: [Binarisation using gaussian noise with thresholding],
+    long: [
+      $x in RR$ is smoothly binarised to ${-1, +1}$ by
+      thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
+      are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
+      increases with $sigma$ and $|x|^(-1)$.
+    ],
+  ),
 ) <fig:methods-binarisation>
 
 Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
@@ -240,6 +388,13 @@ a 'weakly oppose' response to a 7-point Likert scale
 - Define the inverse problem
 - Introduce MLE as method for solving
 - Derive the likelihood and derivatives
+
+// *TODO:* There are a couple of other things to discuss here, which I am still working on.
+// Notably:
+// + That time-series observations are required to infer self-interaction effects, and
+// + That attempting to do non-conditional maximum likelihood estimation also fails with
+//   cross-sectional data, because the problem is underdetermined (we have more unknowns
+//   than observables).
 
 For a collection of observations $D$ drawn from a system assumed to be described
 by a model $cal(M)$ with $p in NN$ parameters, but for which the true parameter
@@ -391,11 +546,14 @@ values smaller than $10^(-2)$.
   image(
     "../results/figures/methods/regularisation_sparsity.pdf",
   ),
-  caption: [
-    Model sparsity increases with regularisation strength ($lambda$). Error bars display
-    95% confidence intervals around expected number of non-zero parameters, measured
-    across different stochastic binarisations of observed data.
-  ],
+  caption: caption(
+    short: [Effect of regularisation on model sparsity],
+    long: [
+      Model sparsity increases with regularisation strength ($lambda$). Error bars display
+      95% confidence intervals around expected number of non-zero parameters, measured
+      across different stochastic binarisations of observed data.
+    ],
+  ),
 ) <fig:methods-regularisation-sparsity-plot>
 
 We use the Extended Bayesian Information Criterion (EBIC, @eqn:methods-ebic)
@@ -430,7 +588,10 @@ strengths of #calc.round(regularisation_strengths.sym_ising.full, digits: 3) and
   image(
     "../results/figures/model_fit/regularisation_ebic.pdf",
   ),
-  caption: [*TODO*],
+  caption: caption(
+    short: [Regularisation strength EBIC],
+    long: [*TODO*],
+  ),
 ) <fig:methods-regularisation-ebic>
 
 === Replicated binarisation <subsubsec:marginalising-binarisation>
