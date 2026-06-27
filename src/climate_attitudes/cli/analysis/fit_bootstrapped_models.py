@@ -14,6 +14,7 @@ from climate_attitudes.dataset import Dataset
 from ising import Ising
 
 type SpinData = npt.NDArray[np.int64]
+type Probability = npt.NDArray[np.float64]
 type CovariateData = npt.NDArray[np.float64]
 type Differentials = npt.NDArray[np.float64]
 type InteractionEffects = npt.NDArray[np.float64]
@@ -24,6 +25,7 @@ class BootstrapFitResults[M: Ising]:
     seeds: npt.NDArray[np.int64]
     sample_idxes: npt.NDArray[np.int64]
     Y: SpinData
+    P: Probability
     X: CovariateData | None
     models: list[M]
 
@@ -36,6 +38,7 @@ def fit_model[M: Ising](
     X: CovariateData | None = None,
     adj: npt.NDArray[np.bool] | None = None,
     w: float | None = None,
+    marginalise: bool = False,
 ) -> tuple[int, M]:
     """Sample a bootstrap dataset, and fit an Ising model on it.
 
@@ -59,7 +62,7 @@ def fit_model[M: Ising](
     model = cls.fit(
         y=Y,
         X=X,
-        optim_method=FitMethod.TIME_SERIES,
+        optim_method=FitMethod.MARGINALISED if marginalise else FitMethod.TIME_SERIES,
         update_method=UpdateMethod.SYNCHRONOUS,
         rng=rng,
         adj=adj,
@@ -79,7 +82,7 @@ def fit_bootstrap_models[M: Ising](
     use_covariates: bool = True,
     scale: float = 0.1,
     binarisation_kind: Literal["gaussian", "triangular"] = "gaussian",
-    replicates: int = 1,
+    marginalise: bool = False,
     quiet: bool = False,
 ) -> BootstrapFitResults[M]:
     """Fit models on bootstrapped datasets.
@@ -99,30 +102,27 @@ def fit_bootstrap_models[M: Ising](
         repeat, the bootstrap dataset samples, and the fit models.
     """
     Y_mock, X_mock, *_ = dataset.indices_to_numpy(kind="time-series")
-    Y = np.empty(
-        (repeats, replicates * Y_mock.shape[0], *Y_mock.shape[1:]), dtype=np.int64
-    )
+    Y = np.empty((repeats, *Y_mock.shape), dtype=np.int64)
+    P = np.empty((repeats, *Y_mock.shape), dtype=np.float64)
     row_idxes = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
     X = None
     if use_covariates:
         X = np.empty((repeats, *X_mock.shape), dtype=np.float64)
 
     for repeat in range(repeats):
-        Y_r, X_r, _, row_idxes_r = dataset.indices_to_numpy(
+        Y_r, X_r, P_r, _, row_idxes_r = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=scale,
             binarisation_dist=binarisation_kind,
-            replicates=replicates,
             bootstrap=True,
             seed=rng,
         )
 
         row_idxes[repeat] = row_idxes_r
 
-        if replicates > 1:
-            Y_r = Y_r.reshape((-1, *Y_r.shape[2:]))
         Y[repeat] = Y_r
+        P[repeat] = P_r
 
         if X is not None:
             X[repeat] = X_r
@@ -139,10 +139,11 @@ def fit_bootstrap_models[M: Ising](
                     cls,
                     r,
                     seeds[r],
-                    Y[r],
+                    P[r] if marginalise else Y[r],
                     X[r] if X is not None else None,
                     adj,
                     w=λ,
+                    marginalise=marginalise,
                 )
             )
 
@@ -161,6 +162,7 @@ def fit_bootstrap_models[M: Ising](
         seeds=seeds,
         sample_idxes=row_idxes,
         Y=Y,
+        P=P,
         X=X,
         models=models,
     )
@@ -182,7 +184,7 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
     binarisation_kind: Literal["gaussian", "triangular"]
 
     repeats: int = 100
-    replicates: int = 1
+    marginalise: bool = False
     quiet: bool = False
 
     def cli_cmd(self) -> None:
@@ -248,7 +250,7 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
             self.use_covariates,
             sigma,
             self.binarisation_kind,
-            self.replicates,
+            self.marginalise,
             self.quiet,
         )
 
@@ -270,7 +272,7 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 binarisation_kind=self.binarisation_kind,
-                replicates=self.replicates,
+                marginalise=self.marginalise,
                 params=params,
             )
         else:
@@ -282,6 +284,6 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 binarisation_kind=self.binarisation_kind,
-                replicates=self.replicates,
+                marginalise=self.marginalise,
                 params=params,
             )

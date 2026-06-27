@@ -14,6 +14,7 @@ from climate_attitudes.dataset import Dataset
 from ising import Ising
 
 type SpinStates = npt.NDArray[np.int64]
+type Probability = npt.NDArray[np.float64]
 type Indexes = npt.NDArray[np.int64]
 type Covariates = npt.NDArray[np.float64]
 
@@ -24,6 +25,7 @@ type Covariates = npt.NDArray[np.float64]
 @dataclass
 class ReplicatedDatasets:
     Y: SpinStates
+    P: Probability
     row_idxes: Indexes
     X: Covariates | None = None
 
@@ -36,7 +38,6 @@ def state_configuration(
 
 def run_one_measure(
     repeat_idx,
-    replicate_idx,
     intervene_idx,
     model,
     f,
@@ -49,7 +50,6 @@ def run_one_measure(
 ):
     return (
         repeat_idx,
-        replicate_idx,
         intervene_idx,
         model.measure(
             f,
@@ -65,7 +65,7 @@ def run_one_measure(
 
 def _fit_model[T: Ising](
     cls: type[T],
-    Y: npt.NDArray[np.int64],
+    Y: npt.NDArray[np.int64] | npt.NDArray[np.float64],
     X: npt.NDArray[np.float64] | None,
     λ: float | int | None,
     node_labels: npt.NDArray[np.str_],
@@ -87,10 +87,9 @@ def _fit_model[T: Ising](
     return (repeat_idx, model)
 
 
-def sample_replicated_binary_datasets(
+def sample_binary_datasets(
     dataset: Dataset,
     repeats: int,
-    replicates: int,
     bootstrap: bool,
     use_covariates: bool,
     scale: float,
@@ -107,17 +106,17 @@ def sample_replicated_binary_datasets(
 
     # Prepare arrays to store datasets in
     datasets_idxes = np.empty((repeats, Y.shape[0]), dtype=np.int64)
-    datasets_Y = np.empty((repeats, replicates, *Y.shape), dtype=np.int64)
+    datasets_Y = np.empty((repeats, *Y.shape), dtype=np.int64)
+    datasets_P = np.empty((repeats, *Y.shape), dtype=np.float64)
     datasets_X = None
     if X is not None:
         datasets_X = np.empty((repeats, *X.shape), dtype=np.float64)
 
     for r in range(repeats):
         # Sample binarisations
-        Y, *_, row_idxes = dataset.indices_to_numpy(
+        Y, _, P, *_, row_idxes = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
-            replicates=replicates,
             scale=scale,
             binarisation_dist=binarisation_kind,
             seed=rngs[r],
@@ -125,13 +124,16 @@ def sample_replicated_binary_datasets(
         )
 
         datasets_Y[r] = Y
+        datasets_P[r] = P
         datasets_idxes[r] = row_idxes
 
         # In case bootstrapping is used, select the correct rows in X
         if X is not None and datasets_X is not None:
             datasets_X[r] = X[row_idxes]
 
-    return ReplicatedDatasets(Y=datasets_Y, X=datasets_X, row_idxes=datasets_idxes)
+    return ReplicatedDatasets(
+        Y=datasets_Y, P=datasets_P, X=datasets_X, row_idxes=datasets_idxes
+    )
 
 
 def fit_models[T: Ising](
@@ -156,7 +158,7 @@ def fit_models[T: Ising](
                 executor.submit(
                     _fit_model,
                     cls=model_type,
-                    Y=datasets.Y[r].reshape((-1, *datasets.Y[r].shape[2:])),
+                    Y=datasets.Y[r],
                     X=datasets.X[r] if datasets.X is not None else None,
                     λ=λ,
                     node_labels=node_labels,
@@ -193,15 +195,15 @@ def run_interventions[T: Ising](
     npt.NDArray[np.int64],
     npt.NDArray[np.float64],
 ]:
-    repeats, replicates, M, *_, N = datasets.Y.shape
+    repeats, M, *_, N = datasets.Y.shape
 
     # Prepare results arrays
     measurements = np.zeros(
-        (repeats, replicates, M, measure_time, N, N),
+        (repeats, M, measure_time, N, N),
         dtype=np.int64,
     )
     checks = np.zeros(
-        (repeats, replicates, M, N),
+        (repeats, M, N),
         dtype=np.float64,
     )
 
@@ -229,42 +231,40 @@ def run_interventions[T: Ising](
                     field_offset=intervention_offset,
                     seed=np.random.default_rng(seeds[repeat]),
                 )
+                int_model.reset(seeds[repeat])
 
-                for replicate in range(replicates):
-                    Y = datasets.Y[repeat, replicate]
-                    int_model.reset(seeds[repeat])
+                Y = datasets.Y[repeat]
 
-                    futures.append(
-                        executor.submit(
-                            run_one_measure,
-                            repeat,
-                            replicate,
-                            intervene_idx,
-                            int_model,
-                            f,
-                            y0=Y[:, -1, :],
-                            X=X[:, -1, :] if X is not None else None,
-                            t=measure_time,
-                            warmup_steps=0,
-                            method="parallel",
-                            take_every=1,
-                        )
+                futures.append(
+                    executor.submit(
+                        run_one_measure,
+                        repeat,
+                        intervene_idx,
+                        int_model,
+                        f,
+                        y0=Y[:, -1, :],
+                        X=X[:, -1, :] if X is not None else None,
+                        t=measure_time,
+                        warmup_steps=0,
+                        method="parallel",
+                        take_every=1,
                     )
+                )
 
         for ft in tqdm(
             as_completed(futures),
-            total=(repeats * replicates * datasets.Y.shape[-1]),
+            total=(repeats * datasets.Y.shape[-1]),
             desc=(
                 f"Pairwise interventions ({type(models[0]).__name__}; "
                 f"δ={intervention_delta}; covariates={datasets.X is not None})"
             ),
             disable=quiet,
         ):
-            repeat_idx, replicate_idx, intervene_idx, res = ft.result()
+            repeat_idx, intervene_idx, res = ft.result()
             # NOTE: I've swapped the intervene and target indexes now. Intervene is
             # first.
-            measurements[repeat_idx, replicate_idx, :, :, intervene_idx] = res.y[:, 0]
-            checks[repeat_idx, replicate_idx, :, intervene_idx] = res.check[:, 0]
+            measurements[repeat_idx, :, :, intervene_idx] = res.y[:, 0]
+            checks[repeat_idx, :, intervene_idx] = res.check[:, 0]
 
     return seeds, measurements, checks
 
@@ -287,7 +287,7 @@ class AllInterventionsRunCommand(BaseCommand):
     lam_path: Path | None = None
 
     bootstrap: bool = False
-    replicates: int = 1
+    marginalise: bool = False
     binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     quiet: bool = False
@@ -355,10 +355,9 @@ class AllInterventionsRunCommand(BaseCommand):
 
         main_rng = np.random.default_rng(self.seed)
         rngs = main_rng.spawn(self.repeats)
-        binary_datasets = sample_replicated_binary_datasets(
+        binary_datasets = sample_binary_datasets(
             dataset=dataset,
             repeats=self.repeats,
-            replicates=self.replicates,
             bootstrap=self.bootstrap,
             use_covariates=self.use_covariates,
             scale=sigma,
@@ -366,16 +365,30 @@ class AllInterventionsRunCommand(BaseCommand):
             rngs=rngs,
         )
 
-        models = fit_models(
-            datasets=binary_datasets,
-            model_type=model_cls,
-            adj=adj,
-            λ=lam,
-            node_labels=node_labels,
-            rngs=rngs,
-            intervention_delta=self.intervention_delta,
-            quiet=self.quiet,
-        )
+        # If marginalise = True and bootstrap = False, only need to fit one model
+        if self.marginalise and not self.bootstrap:
+            model = model_cls.fit(
+                y=binary_datasets.P[0],
+                optim_method=FitMethod.MARGINALISED,
+                update_method=UpdateMethod.SYNCHRONOUS,
+                adj=adj,
+                self_loops=True,
+                w=lam,
+                rng=0,
+            )
+            models = [model.clone(_rng) for _rng in rngs]
+        else:
+            models = fit_models(
+                datasets=binary_datasets,
+                model_type=model_cls,
+                adj=adj,
+                λ=lam,
+                node_labels=node_labels,
+                rngs=rngs,
+                intervention_delta=self.intervention_delta,
+                quiet=self.quiet,
+            )
+
         params = np.asarray([m.param_vector() for m in models], dtype=np.float64)
 
         seeds, measurements, checks = run_interventions(
@@ -400,7 +413,6 @@ class AllInterventionsRunCommand(BaseCommand):
                 Y=binary_datasets.Y,
                 X=binary_datasets.X,
                 dataset_idxes=binary_datasets.row_idxes,
-                replicates=self.replicates,
                 binarisation_kind=self.binarisation_kind,
                 labels=node_labels,
                 params=params,
@@ -408,6 +420,7 @@ class AllInterventionsRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 measurements=measurements,
+                marginalise=self.marginalise,
             )
         else:
             np.savez_compressed(
@@ -416,7 +429,6 @@ class AllInterventionsRunCommand(BaseCommand):
                 Y0=Y0,
                 Y=binary_datasets.Y,
                 dataset_idxes=binary_datasets.row_idxes,
-                replicates=self.replicates,
                 binarisation_kind=self.binarisation_kind,
                 labels=node_labels,
                 params=params,
@@ -424,4 +436,5 @@ class AllInterventionsRunCommand(BaseCommand):
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 measurements=measurements,
+                marginalise=self.marginalise,
             )

@@ -30,7 +30,8 @@ class FitIdeologyModelRunCommand(BaseCommand):
     sigma: float | None = None
     sigma_path: Path | None = None
 
-    replicates: int = 1
+    marginalise: bool = True
+
     binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606031023
@@ -77,19 +78,15 @@ class FitIdeologyModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        Y, *_ = dataset.indices_to_numpy(
+        Y, _, P, *_ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
-            replicates=self.replicates,
-            binarisation_dist=self.binarisation_kind,
             seed=rng,
+            binarisation_dist=self.binarisation_kind,
         )
 
         Y = Y[..., [0, 1, 2, 3, 4, 6, 7]]
-
-        if self.replicates > 1:
-            Y = Y.reshape((-1, *Y.shape[2:]))
 
         lam = self.lam
         if lam is None:
@@ -111,9 +108,12 @@ class FitIdeologyModelRunCommand(BaseCommand):
                     except:
                         raise
 
+        fit_method = (
+            FitMethod.MARGINALISED if self.marginalise else FitMethod.TIME_SERIES
+        )
         model = model_cls.fit(
             y=Y,
-            optim_method=FitMethod.TIME_SERIES,
+            optim_method=fit_method,
             update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
             adj=adj,
@@ -127,8 +127,10 @@ class FitIdeologyModelRunCommand(BaseCommand):
             self.output,
             seeds=self.seed,
             Y=Y,
+            P=P,
             λ=lam if lam is not None else 0.0,
             sigma=sigma,
             params=params,
+            marginalise=self.marginalise,
             col_idxes=[0, 1, 2, 3, 4, 6, 7],
         )

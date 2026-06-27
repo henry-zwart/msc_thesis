@@ -5,7 +5,7 @@ from typing import Literal
 import numpy as np
 import numpy.typing as npt
 import polars as pl
-from ising.model import FitMethod, ModelType
+from ising.model import FitMethod, ModelType, UpdateMethod
 
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
@@ -36,7 +36,7 @@ class FitModelRunCommand(BaseCommand):
     sigma: float | None = None
     sigma_path: Path | None = None
 
-    replicates: int = 1
+    marginalise: bool = True
 
     binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
@@ -116,7 +116,6 @@ class FitModelRunCommand(BaseCommand):
             scale=sigma,
             seed=rng,
             binarisation_dist=self.binarisation_kind,
-            # replicates=self.replicates,
         )
 
         Y = Y[..., keep_idxes]
@@ -144,11 +143,13 @@ class FitModelRunCommand(BaseCommand):
                     except:
                         raise
 
+        fit_method = (
+            FitMethod.MARGINALISED if self.marginalise else FitMethod.TIME_SERIES
+        )
         model = model_cls.fit(
-            y=P,
-            # X=X,
-            optim_method=FitMethod.MARGINALISED,
-            # update_method=UpdateMethod.SYNCHRONOUS,
+            y=P if self.marginalise else Y,
+            optim_method=fit_method,
+            update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
             adj=adj,
             self_loops=True,
@@ -162,11 +163,12 @@ class FitModelRunCommand(BaseCommand):
                 self.output,
                 seeds=self.seed,
                 Y=Y,
+                P=P,
                 X=X,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
-                replicates=self.replicates,
+                marginalise=self.marginalise,
                 binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )
@@ -175,10 +177,11 @@ class FitModelRunCommand(BaseCommand):
                 self.output,
                 seeds=self.seed,
                 Y=Y,
+                P=P,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
-                replicates=self.replicates,
+                marginalise=self.marginalise,
                 binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )

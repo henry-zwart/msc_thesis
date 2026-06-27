@@ -31,6 +31,7 @@ def main():
     }
 
     found_error = False
+
     for config, cks in checks.items():
         for other_config, other_cks in checks.items():
             if not np.isclose(cks, other_cks).all():  # ty: ignore

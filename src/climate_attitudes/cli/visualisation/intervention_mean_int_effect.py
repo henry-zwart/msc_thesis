@@ -16,8 +16,7 @@ np.set_printoptions(linewidth=200)
 
 def bootstrap_mean_effects(measurements, z: float):
     # measurements: shape (repeats, replicates, n_individuals, n_interventions)
-    expected_effect_per_individual = measurements.mean(axis=1)
-    expected_effect_collective = expected_effect_per_individual.mean(axis=1)
+    expected_effect_collective = measurements.mean(axis=1)
     mean = expected_effect_collective.mean(axis=0)
     ci = z * expected_effect_collective.std(axis=0, ddof=1)
 
@@ -58,15 +57,13 @@ class InterventionMeanEffectsPlotCommand(BaseCommand):
         )
 
         # Calculate effects of intervention
-        int_asym_measurements = int_asym_data["measurements"][
-            :, :, :, self.measure_time
-        ]
+        int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
         no_int_asym_measurements = no_int_asym_data["measurements"][
-            :, :, :, self.measure_time
+            :, :, self.measure_time
         ]
-        int_sym_measurements = int_sym_data["measurements"][:, :, :, self.measure_time]
+        int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
         no_int_sym_measurements = no_int_sym_data["measurements"][
-            :, :, :, self.measure_time
+            :, :, self.measure_time
         ]
         int_effect_asym = int_asym_measurements - no_int_asym_measurements
         int_effect_sym = int_sym_measurements - no_int_sym_measurements

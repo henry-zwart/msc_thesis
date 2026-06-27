@@ -280,13 +280,13 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
 
         match self.kind:
             case PlotKind.RANK:
-                # ci_diff_lower, ci_diff_upper = np.percentile(diffs, (5, 95), axis=0)
-                fig = plot_ranked_differentials(
-                    mean_diff, mean_diff - ci_diff, mean_diff + ci_diff, labels
-                )
+                ci_diff_lower, ci_diff_upper = np.percentile(diffs, (5, 95), axis=0)
                 # fig = plot_ranked_differentials(
-                #     mean_diff, ci_diff_lower, ci_diff_upper, labels
+                #     mean_diff, mean_diff - ci_diff, mean_diff + ci_diff, labels
                 # )
+                fig = plot_ranked_differentials(
+                    np.median(diffs, axis=0), ci_diff_lower, ci_diff_upper, labels
+                )
             case PlotKind.PAIRWISE:
                 fig = plot_pairwise_differentials(mean_diff, ci_diff, labels)
 
