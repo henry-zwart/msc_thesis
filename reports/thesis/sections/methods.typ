@@ -65,7 +65,7 @@ describing how the instantaneous configuration of belief states affects the prob
 distribution over possible future states.
 
 
-== Non-equilibrium belief system model
+== Non-equilibrium belief system model <subsec:methods-nonequilibrium-belief-system-model>
 
 // - Why we can't use the boltzmann distribution and Hamiltonian, like in the symmetric
 //   Ising model:
@@ -157,16 +157,16 @@ effective baseline activation experienced by $S_i$ at time $t$. We then define t
 probability that $S_i$ adopts the state $s$ at time $t$ as:
 
 $
-  P(S_i^t = s | bold(S)^(t-1) = bold(s)) &= e^(-1/T H_i (s | bold(s)))/(sum_(s' in {0,1}) e^(-1/T H_i (s' | bold(s)))) \
-  &= e^(-1/T H_i (s | bold(s)))/(e^(-1/T H_i (s | bold(s))) + e^(-1/T H_i (-s | bold(s)))) \
-  &= e^(-1/T s dot h_i^"eff" (bold(s)))/(e^(-1/T s dot h_i^"eff" (bold(s))) + e^(1/T s dot h_i^"eff" (bold(s))))
+  P(S_i^t = s | bold(S)^(t-1) = bold(s)) &= e^(1/T H_i (s | bold(s)))/(sum_(s' in {0,1}) e^(1/T H_i (s' | bold(s)))) \
+  &= e^(1/T H_i (s | bold(s)))/(e^(1/T H_i (s | bold(s))) + e^(-1/T H_i (-s | bold(s)))) \
+  &= e^(1/T s dot h_i^"eff" (bold(s)))/(e^(1/T s dot h_i^"eff" (bold(s))) + e^(-1/T s dot h_i^"eff" (bold(s))))
 $
 
-For $s = +1$, this reduces to the logistic distribution:
+For $s = +1$, this reduces to the logistic function:
 
 $
-  p_i^bold(s) := P(S_i^t = +1 | bold(S)^(t-1) = bold(s)) &= e^(-1/T dot h_i^"eff" (bold(s)))/(e^(-1/T dot h_i^"eff" (bold(s))) + e^(1/T dot h_i^"eff" (bold(s)))) \
-  &= 1/(1 + e^(2 dot 1/T dot h_i^"eff" (bold(s)))) \
+  p_i^bold(s) := P(S_i^t = +1 | bold(S)^(t-1) = bold(s)) &= e^(1/T dot h_i^"eff" (bold(s)))/(e^(1/T dot h_i^"eff" (bold(s))) + e^(-1/T dot h_i^"eff" (bold(s)))) \
+  &= 1/(1 + e^(-2 dot 1/T dot h_i^"eff" (bold(s)))) \
   &= op("logistic")(2 h_i^"eff" (bold(s))\/T )
 $
 
@@ -176,6 +176,9 @@ $
   P(bold(S)^t = bold(s)^t | bold(S)^(t-1) = bold(s)^(t-1)) &= product_(i=1)^n P(S_i^t = s_i | bold(S)^(t-1) = bold(s)^(t-1)) \
   &= product_(i=1)^n [((1 + s_i)/2) p_i^bold(s)^(t-1) + ((1 - s_i)/2) (1 - p_i^bold(s)^(t-1))]
 $ <eqn:methods-model-conditional-prob-definition>
+
+*NOTE:* The initial distribution must be specified, since the model only captures
+transition probabilities.
 
 
 
@@ -238,37 +241,99 @@ a 'weakly oppose' response to a 7-point Likert scale
 - Introduce MLE as method for solving
 - Derive the likelihood and derivatives
 
-Given a collection of observations $D$ from a system assumed to be described by a
-model $cal(M)$, but for which the true parameters are unknown, the _inverse problem_,
-or _parameter recovery_, is the task of inferring the parameterisation responsible for
-generating $D$. Maximum likelihood estimation is a commonly-used technique for parameter
-recovery, which identifies the parameterisation $bold(theta) in Theta$ which maximises
-the likelihood of the observed data:
+For a collection of observations $D$ drawn from a system assumed to be described
+by a model $cal(M)$ with $p in NN$ parameters, but for which the true parameter
+values are unknown, parameter estimation is the task of inferring the
+parameterisation responsible for generating $D$. For the purposes of this study
+we use maximum likelihood estimation to identify the belief system model
+parameterisation which maximises the likelihood of the observed data.
+
+First, let us formally outline the setting. We consider a population of $M in NN$
+individuals, assumed to share a common belief system $cal(M)$ comprising $N in NN$
+spins (beliefs and attitudes). Suppose that for each individual we have observed the
+(possibly continuous) states of their beliefs and attitudes at each of $Q in NN$
+uniformly-spaced points in time:
 
 $
-  bold(hat(theta)) = op("argmax", limits: #true)_(bold(theta) in Theta) P(D | bold(theta))
-$ <eqn:methods-parameter-recovery-mle-problem>
+  D = [{bold(x)_(1)^t}_(t=1)^Q, ..., {bold(x)_(M)^t}_(t=1)^Q]
+$ <eqn:methods-parameter-estimation-dataset>
 
--
-- Define variables for our specific MLE problem
-Given a collection of observations $D$ from a belief system $cal(M)$ comprising
-$m in NN$ spins, for which the true parameters are unknown, the inverse problem is the
-task of inferring the parameterisation that generated $D$. Maximum likelihood estimation
-is commonly-used, which identifies the parameters
-$bold(theta)$seeksFor the purposes of the
-experiments described in the following sections, we use maximum likelihood estimation
+from which we have sampled a binarised dataset:
 
-Given a belief system $cal(M)$ comprising $m in NN$ spins, for which the model
-parameters are unknown, and a set of observations $D$ produced by $cal(M)$, the
-_inverse problem_ is the task of inferring the model parameters which
+$
+  D_B = [{bold(s)_(1)^t}_(t=1)^Q, ..., {bold(s)_(M)^t}_(t=1)^Q] ~ op("Binarise")(D)
+$ <eqn:methods-parameter-estimation-dataset>
 
-Let $cal(M)$ be a belief system comprising $m in NN$ spins, for which the model
-parameters $bold(h)$, $bold(J)$ are unknown, and let
-$D = [{bold(s)^t}_(1, t=1)^(t'), ..., {bold(s)^t}_(m, t=1)^(t')]$ be a
-dataset of observed configurations of $cal(M)$, collected from each of $n in NN$
-individuals at $t' in NN$ uniformly-spaced timepoints.
+For the time being will consider the task of parameter estimation with respect to the
+particular binarisation $D_B$, but will return to the more general problem of
+estimating parameters with respect to $D$ itself in @subsubsec:marginalising-binarisation.
 
-The inverse problem is the task of finding parameters
+Given a parameterisation $bold(hat(theta)) in RR^p$ for $p in NN$ model parameters, the
+_likelihood_ of $D_B$ given $bold(hat(theta))$ is:
+
+$
+  L_(D_B)(bold(hat(theta))) &= P(cal(D) = D_B | bold(Theta) = bold(hat(theta))) \
+  &= product_(m=1)^M P_({bold(S)_(m)^t}|bold(Theta)) ({bold(s)_(m)^t}_(t=1)^Q | bold(hat(theta))) \
+  &= product_(m=1)^M P_(bold(S)_m^1 ... bold(S)_m^Q|bold(Theta)) (bold(s)_m^1, ..., bold(s)_m^Q | bold(hat(theta))) \
+  &= product_(m=1)^M product_(t=1)^Q P_(bold(S)_m^t|bold(S)_m^1 ... bold(S)_m^(t-1) bold(Theta))(bold(s)_m^t | bold(s)_m^1, ..., bold(s)_m^(t-1), bold(hat(theta))) \
+  &= product_(m=1)^M P_(bold(S)_m^1 | bold(Theta)) (bold(s)_m^1 | bold(hat(theta)))product_(t=1)^Q P_(bold(S)_m^t|bold(S)_m^(t-1) bold(Theta))(bold(s)_m^t | bold(s)_m^(t-1), bold(hat(theta))) #h(2em) (*) \
+  &= P_0(D_B) product_(m=1)^M product_(t=1)^Q P_(bold(S)_m^t|bold(S)_m^(t-1) bold(Theta))(bold(s)_m^t | bold(s)_m^(t-1), bold(hat(theta))) \
+$
+
+where $P_0(D_B) = product_(m=1)^M P(bold(S)_m^1 = bold(s)_m^1)$ is a pre-specified
+initial condition which is independent of the parameterisation, and $(*)$ follows
+from the Markov assumption in our belief system model.
+
+Maximum likelihood estimation identifies the parameterisation
+$bold(theta)^* in RR^p$ which maximises the likelihood. In practice, however,
+to avoid potential numerical instability in evaluating $L_(D_B)(bold(hat(theta)))$,
+arising from the multiplication of many small conditional probabilities, we instead
+maximise the _log-likelihood_:
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) cal(L)_(D_B)(bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-mle-problem>
+
+Where $cal(L)_(D_B)(bold(hat(theta))) &= log L_(D_B)(bold(hat(theta)))$ is given by
+
+$
+  cal(L)_(D_B)(bold(hat(theta))) &= sum_(m=1)^M sum_(t=1)^Q log P(bold(S)_m^t = bold(s)_m^t | bold(S)_m^(t-1) = bold(s)_m^(t-1), bold(Theta) = bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-log-likelihood-abstract>
+
+We omit $P_0(D_B)$ from
+@eqn:methods-parameter-estimation-log-likelihood-abstract since it is independent
+of $bold(hat(theta))$ and therefore does not affect the value of $bold(theta)^*$.
+
+Substituting the conditional transition probability from
+@eqn:methods-model-conditional-prob-definition, we obtain a concrete form for the
+log-likelihood:
+
+$
+  cal(L)_(D_B)(bold(hat(theta))) &= sum_(m=1)^M sum_(t=1)^Q log(product_(i=1)^N P_(bold(Theta) = bold(hat(theta)))(S_(i, (m))^t = s_(i, (m))^t | S_(i, (m))^t = s_(i, (m))^t)) \
+  &= sum_(m=1)^M sum_(t=1)^Q sum_(i=1)^N log P_(bold(Theta) = bold(hat(theta)))(S_(i, (m))^t = s_(i, (m))^t | S_(i, (m))^t = s_(i, (m))^t) \
+  &= sum_(m=1)^M sum_(t=1)^Q sum_(i=1)^N log[exp(s_(i, (m))^t dot h_i^"eff" (bold(s)_(m)^(t-1)))/(exp(h_i^"eff" (bold(s)_(m)^(t-1))) + exp(-h_i^"eff" (bold(s)_(m)^(t-1))))] \
+  &= sum_(m=1)^M sum_(t=1)^Q sum_(i=1)^N log[exp(s_(i, (m))^t dot h_i^"eff" (bold(s)_(m)^(t-1)))/(2 cosh(h_i^"eff" (bold(s)_m^(t-1))))] \
+  &= sum_(m=1)^M sum_(t=1)^Q sum_(i=1)^N s_(i, (m))^t dot h_i^"eff" (bold(s)_(m)^(t-1)) - log(2 cosh h_i^"eff" (bold(s)_m^(t-1))) \
+$ <eqn:methods-parameter-estimation-log-likelihood-exact>
+
+where $h_i^"eff" (bold(s))$ is the effective baseline activation
+(@eqn:methods-model-local-energy-eff-field), and the reduction of the denominator
+follows from the identity $cosh(x) = (e^(x) + e^(-x))/2$, as also used in
+@nguyenInverseStatisticalProblems2017.
+
+@eqn:methods-parameter-estimation-mle-problem is maximised when
+$(partial cal(L)_(D_B))/(partial hat(theta)_i)(bold(hat(theta))) = 0$ for each parameter
+$theta_i$. Recall that the model defined in
+@subsec:methods-nonequilibrium-belief-system-model includes two kinds of parameters:
+baseline activations $h_i$ and influence effects $J_(j i)$, such that
+$bold(hat(theta)) = chevron bold(h), bold(J) chevron.r$. The partial derivative
+of the log-likelihood with respect to an arbitrary parameter $theta$ in $bold(h)$ or
+$bold(J)$ is:
+
+$
+  (partial cal(L)_(D_B) (bold(hat(theta))))/(partial theta) = sum_(m=1, t=1, n=1)^(M,Q,N) ...
+$
+
 
 === Regularisation
 
@@ -289,7 +354,7 @@ objective function. Rather than maximising the log-likelihood directly, we choos
 parameters $bold(hat(theta)) in RR^p$ such that
 
 $
-  bold(hat(theta)) = op("argmax", limits: #true)_(bold(theta)' in RR^p) {cal(L)_D (bold(theta)') - lambda sum_(i=1)^p |theta'_i|}
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) {cal(L)_D (bold(hat(theta))) - lambda sum_(i=1)^p |hat(theta)_i|}
 $ <eqn:methods-regularisation-mle-problem>
 
 This has the effect of penalising non-zero parameters with negligible contribution to
@@ -297,11 +362,11 @@ the log-likelihood. The parameter $lambda in RR^+$ controls regularisation stren
 with larger values resulting in sparser models.
 
 This formulation of LASSO regularisation has a discontinuous first-derivative at
-#box[$theta'_i = 0$] due to the absolute value function. Instead, we use the following
+#box[$hat(theta)_i = 0$] due to the absolute value function. Instead, we use the following
 smooth variation, where $epsilon in RR^+$:
 
 $
-  bold(hat(theta)) = op("argmax", limits: #true)_(bold(theta)' in RR^p) lr({cal(L)_D (bold(theta)') - lambda sum_(i=1)^p sqrt(theta'_i^2 + epsilon)})
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) lr({cal(L)_D (bold(hat(theta))) - lambda sum_(i=1)^p sqrt(hat(theta)_i^2 + epsilon)})
 $ <eqn:methods-smooth-regularisation-mle-problem>
 
 @eqn:methods-smooth-regularisation-mle-problem converges to
@@ -309,7 +374,7 @@ $ <eqn:methods-smooth-regularisation-mle-problem>
 first-derivative for $epsilon > 0$, namely:
 
 $
-  dif/(dif theta'_i) (- lambda sum_(j=1)^p sqrt(theta'_j^2 + epsilon)) = (lambda theta'_i)/(sqrt(theta'_i^2 + epsilon))
+  dif/(dif hat(theta)_i) (- lambda sum_(j=1)^p sqrt(hat(theta)_j^2 + epsilon)) = (lambda hat(theta)_i)/(sqrt(hat(theta)_i^2 + epsilon))
 $
 
 For the purposes of this study, we will consider parameters as 'effectively non-zero'
@@ -320,7 +385,7 @@ reasonable approximation to @eqn:methods-regularisation-mle-problem for paramete
 values smaller than $10^(-2)$.
 
 
-- Effects: How does regularisation affect sparsity?
+- Effects: How does regularisation affect sparsity? (In progress; planning a different figure)
 
 #figure(
   image(
@@ -346,7 +411,7 @@ For a model with $p$ parameters, $k$ of which
 are non-zero, fit using a dataset with $n$ observations, the EBIC is defined as:
 
 $
-  op("EBIC")(bold(theta)) = k dot [ln(n) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta))
+  op("EBIC")(bold(theta)^*) = k dot [ln(n) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
 $ <eqn:methods-ebic>
 
 We take $gamma = 0.25$, which has been shown to work well for network inference in the
@@ -368,7 +433,8 @@ strengths of #calc.round(regularisation_strengths.sym_ising.full, digits: 3) and
   caption: [*TODO*],
 ) <fig:methods-regularisation-ebic>
 
-=== Replicated binarisation
+=== Replicated binarisation <subsubsec:marginalising-binarisation>
+
 
 - Two sources of uncertainty in parameter estimates: sample size and binarisation
 - Given fixed dataset, distribution over binarised datasets is fixed --> can marginalise
