@@ -16,9 +16,10 @@ np.set_printoptions(linewidth=200)
 
 def bootstrap_collective_effect(measurements, z: float):
     # measurements: shape (repeats, replicates, n_individuals, n_interventions)
-    expected_outcome_collective = ((measurements + 1) // 2).mean(axis=1)
-    mean = expected_outcome_collective.mean(axis=0)
-    ci = z * expected_outcome_collective.std(axis=0, ddof=1)
+    # expected_outcome_collective = ((measurements + 1) // 2).mean(axis=1)
+    expected_effect_collective = measurements.mean(axis=1)
+    mean = expected_effect_collective.mean(axis=0)
+    ci = z * expected_effect_collective.std(axis=0, ddof=1)
 
     return mean, mean - ci, mean + ci
 
@@ -43,8 +44,24 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
         else:
             covariate_flag = "no_use_covariates"
 
+        # int_asym_data = np.load(
+        #     self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
+        # )
+        # int_sym_data = np.load(
+        #     self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
+        # )
+
+        # Calculate effects of intervention
+        # int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
+        # int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        no_int_asym_data = np.load(
+            self.data_dir / f"ising_00_{covariate_flag}.npz",
+        )
         int_asym_data = np.load(
             self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
+        )
+        no_int_sym_data = np.load(
+            self.data_dir / f"sym_ising_00_{covariate_flag}.npz",
         )
         int_sym_data = np.load(
             self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
@@ -52,18 +69,26 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
 
         # Calculate effects of intervention
         int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
+        no_int_asym_measurements = no_int_asym_data["measurements"][
+            :, :, self.measure_time
+        ]
         int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        no_int_sym_measurements = no_int_sym_data["measurements"][
+            :, :, self.measure_time
+        ]
+        int_effect_asym = int_asym_measurements - no_int_asym_measurements
+        int_effect_sym = int_sym_measurements - no_int_sym_measurements
 
         # Create plot for each choice of intervention column
         N = int_asym_measurements.shape[-1]
         labels = int_asym_data["labels"]
         figures = []
         for i in range(N):
-            intervention_col = labels[i]
             fig = intervention_collective_effect_plot(
-                np.delete(int_asym_measurements[..., i, :], i, axis=-1),
-                np.delete(int_sym_measurements[..., i, :], i, axis=-1),
-                intervention_col,
+                # np.delete(int_asym_measurements[..., i, :], i, axis=-1),
+                # np.delete(int_sym_measurements[..., i, :], i, axis=-1),
+                np.delete(int_effect_asym[..., i], i, axis=-1),
+                np.delete(int_effect_sym[..., i], i, axis=-1),
                 np.delete(labels, i),
                 self.z,
             )
@@ -83,11 +108,10 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
 def intervention_collective_effect_plot(
     int_asym_measurements: npt.NDArray[np.int64],
     int_sym_measurements: npt.NDArray[np.int64],
-    intervention_label: np.str_,
     intervention_labels: npt.NDArray[np.str_],
     z: float,
 ) -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(5, 3), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(5, 2.5), constrained_layout=True)
 
     asym_mean, asym_lo, asym_hi = bootstrap_collective_effect(int_asym_measurements, z)
     sym_mean, sym_lo, sym_hi = bootstrap_collective_effect(int_sym_measurements, z)
@@ -185,9 +209,9 @@ def intervention_collective_effect_plot(
     ax.spines["right"].set_visible(False)
 
     # Set title
-    ax.set_title(
-        f"Collective effect of interventions targeting '{intervention_label}'",
-        pad=30,
-    )
+    # ax.set_title(
+    #     f"Collective effect of interventions targeting '{intervention_label}'",
+    #     pad=30,
+    # )
 
     return fig

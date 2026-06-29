@@ -62,11 +62,9 @@ class InterventionCollectiveRankPlotCommand(BaseCommand):
         labels = int_asym_data["labels"]
         figures = []
         for i in range(N):
-            intervention_col = labels[i]
             fig = intervention_ranking_plot(
                 np.delete(int_asym_measurements[..., i], i, axis=-1),
                 np.delete(int_sym_measurements[..., i], i, axis=-1),
-                intervention_col,
                 np.delete(labels, i),
                 self.z,
             )
@@ -87,11 +85,10 @@ class InterventionCollectiveRankPlotCommand(BaseCommand):
 def intervention_ranking_plot(
     int_asym_measurements: npt.NDArray[np.int64],
     int_sym_measurements: npt.NDArray[np.int64],
-    intervention_label: np.str_,
     intervention_labels: npt.NDArray[np.str_],
     z: float,
 ) -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(5, 3), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(5, 2.5), constrained_layout=True)
 
     asym_mean, asym_lo, asym_hi = bootstrap_mean_ranks(int_asym_measurements, z)
     sym_mean, sym_lo, sym_hi = bootstrap_mean_ranks(int_sym_measurements, z)
@@ -173,9 +170,9 @@ def intervention_ranking_plot(
     ax.spines["right"].set_visible(False)
 
     # Set title
-    ax.set_title(
-        f"Mean ranks for interventions targeting '{intervention_label}'",
-        pad=30,
-    )
+    # ax.set_title(
+    #     f"Mean ranks for interventions targeting '{intervention_label}'",
+    #     pad=30,
+    # )
 
     return fig
