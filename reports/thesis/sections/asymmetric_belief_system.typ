@@ -1,18 +1,19 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
-- Interdependent beliefs and attitudes; state of one affects the state of another:
-  - Cognitive dissonance
-  - Causal effects(?)
-- Individual belief systems:
-  - Degree of influence depends on individual experience, perception, meta-level
-    beliefs.
-- Formalising dynamics:
-  - Discrete beliefs, attitudes which take on values in some domain
-  - State of each one depends on previous in a Markov process
-  - Broader Markov process describes the state of the belief system as a whole
-
+// - Interdependent beliefs and attitudes; state of one affects the state of another:
+//   - Cognitive dissonance
+//   - Causal effects(?)
+// - Individual belief systems:
+//   - Degree of influence depends on individual experience, perception, meta-level
+//     beliefs.
+// - Formalising dynamics:
+//   - Discrete beliefs, attitudes which take on values in some domain
+//   - State of each one depends on previous in a Markov process
+//   - Broader Markov process describes the state of the belief system as a whole
+//
 
 We will now formalise the dynamics of an individual belief system, under the following
 assumptions:
@@ -67,7 +68,7 @@ describing how the instantaneous configuration of belief states affects the prob
 distribution over possible future states.
 
 
-== Non-equilibrium belief system model <subsec:methods-nonequilibrium-belief-system-model>
+== Non-equilibrium belief system model <subsec:theory-nonequilibrium-belief-system-model>
 
 // - Why we can't use the boltzmann distribution and Hamiltonian, like in the symmetric
 //   Ising model:
@@ -182,9 +183,84 @@ $ <eqn:methods-model-conditional-prob-definition>
 *NOTE:* The initial distribution must be specified, since the model only captures
 transition probabilities.
 
-=== Simulation via Glauber dynamics
+== Simulation via Glauber dynamics
 
-=== Modelling interventions
+It is straightforward to draw samples from a belief system model using Glauber
+dynamics, given the conditional probability distribution defined in
+@eqn:methods-model-conditional-prob-definition.
+
+Given an initial state $bold(s)^0 in {-1, +1}^N$, we sample a sequence of $T in NN$
+subsequent configurations:
+
+$
+  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^t ~ P(bold(S)^t | bold(S)^(t-1))
+$ <eqn:asymmetric-belief-system-glauber-dynamics>
+
+Each belief or attitude has the opportunity to update during every time interval. This
+update routine is referred to as _synchronous_ Glauber dynamics, contrasting
+_asynchronous_ Glauber dynamics, in which only one spin can update during a given
+interval.
+
+== Modelling interventions <subsec:asymmetric-belief-system-modelling-interventions>
+
+We now outline our approach to modelling interventions in the asymmetric belief
+system model. In this study we consider interventions which affect the _state_ of a
+belief system. Notably, this excludes interventions intended to influence the structure
+of a belief system, for instance, by changing the existence of effect size of influence
+relations between beliefs and attitudes.
+
+Let $cal(M)$ be a belief system model with parameters
+$chevron bold(A), bold(J), bold(h) chevron.r$:
+
+#figure(
+  image("../diagrams/modelling_interventions/belief_system.svg", width: 30%),
+)
+
+
+We can consider an intervention as an
+auxiliary node, $I$, in the belief system network, with state fixed at a particular
+value and outgoing edges toward a subset of beliefs and attitudes:
+
+#figure(
+  image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
+)
+
+The intervention node $I$ exerts influence on the belief system nodes $A$ and $B$. Let
+us consider the effective baseline activation at node $A$ and time $t+1$, as defined in
+@eqn:methods-model-local-energy, given a previous configuration $bold(s)^t$:
+
+$
+  h_A^"eff" (bold(s)^t) = h_A + sum_("node" j) A_(j A) J_(j A) s^t_j
+$ <eqn:asymmetric-belief-system-int-example-eff-baseline>
+
+Since the state of $I$ is fixed (in this case, at $+1$), the contribution of the
+intervention node to $A$'s effective activation baseline is constant. We can then
+re-write @eqn:asymmetric-belief-system-int-example-eff-baseline, interpreting the
+intervention effect as an adjustment to the baseline activation $h_A$:
+
+$
+  h_A^"eff" (bold(s)^t) = (h_A + J_(I A)) + sum_("node" j != I) A_(j A) J_(j A) s^t_j
+$
+
+It follows then that we can model interventions more simply as an adjustment to the
+baseline activation of certain beliefs and attitudes:
+
+#figure(
+  image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
+)
+
+Let us define this more formally. For a belief system model $cal(M)$ with $N in NN$
+nodes, and parameters $chevron bold(A), bold(J), bold(h) chevron.r$, an _intervention_,
+is the function $phi_cal(M): delta_h mapsto cal(M)'$, where $delta_h in RR^N$ is a vector
+of offsets to the baseline activations, and the model $cal(M)'$ has parameters
+$chevron bold(A), bold(J), bold(h)' chevron.r$, where
+
+$
+  bold(h)' = bold(h) + delta_h
+$
+
+
+
 
 // Interventions on a belief system $cal(M) = chevron S, bold(A), bold(J), bold(h) chevron.r$
 // can manifest as either influence toward a particular state for a given belief

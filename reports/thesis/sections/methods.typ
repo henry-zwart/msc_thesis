@@ -1,5 +1,13 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+== Plan
+
+
+- Counterfactual intervention experiments --- comparing against the no-intervention
+  scenario, measuring differences in effects.
+- Parameter estimation via MLE:
+  - Marginalising over binarisation process
+  - Regularisation
 
 
 
@@ -120,62 +128,203 @@
 // the causal directionality on this relationship is incorrect (support for climate policies
 // can reinforce other spins, but is fundamentally a result of these).
 
-== Dataset
-
-=== Variable selection
-
-=== Binarisation
-
-Prior to model fitting, we binarise all variables, mapping data values to the
-domain ${-1, +1}$. Before binarising, we shift each variable such that the _survey
-midpoint_ (e.g., '3' on a 5-point Likert scale) aligns with 0, and rescale each
-variable such that the minimum and maximum possible values map to $-1$ and $+1$
-respectively. For variables with no well-defined midpoint, such as those with an even
-number of possible responses, we shift such that the minimal and maximal values are at
-equal distance from 0.
-
-We use a smooth binarisation process to robustly handle data points which are zero, or
-close to zero. This involves perturbing each data value $x in RR$ by an independent
-noise term $epsilon ~ cal(N)(0, sigma)$ before thresholding. @fig:methods-binarisation
-illustrates this process for a negative value of $x$ and given choice of $sigma$.
-
-#figure(
-  image(
-    "../results/figures/methods/binarisation/distribution.pdf",
-  ),
-  caption: caption(
-    short: [Binarisation using gaussian noise with thresholding],
-    long: [
-      $x in RR$ is smoothly binarised to ${-1, +1}$ by
-      thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
-      are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
-      increases with $sigma$ and $|x|^(-1)$.
-    ],
-  ),
-) <fig:methods-binarisation>
-
-Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
-such that $x + epsilon > 0$ (region A), or equivalently when $epsilon < x$ (region B).
-The probability that $x$ is mapped to $+1$ is then
-
-$
-  P(x mapsto +1) = Phi(x/sigma)
-$ <eqn:methods-dataset-binarisation-probability-map-to-1>
-
-#let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
-where $Phi$ is the standardised normal cumulative distribution function. This
-probability is small when $x$ has large magnitude, or when $sigma$ is small.
-For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
-a 'weakly oppose' response to a 7-point Likert scale
-#footnote[The oppose/support 7-point Likert scale has possible responses: strongly oppose, oppose, weakly oppose, neutral, weakly support, support, strongly support.]
-(value $1\/3$) is mapped to $+1$ with probability 0.05.
-
 
 == Parameter estimation <subsec:methods-parameter-estimation>
 
-- Define the inverse problem
-- Introduce MLE as method for solving
-- Derive the likelihood and derivatives
+
+For the purposes of the experiments described in the following sections, we
+calibrate the parameters of the belief system model described in
+@subsec:theory-nonequilibrium-belief-system-model to the climate attitudes dataset
+(@sec:dataset). Here we will formally define the parameter estimation problem, and
+outline how we solve this using maximum likelihood estimation. We will also discuss
+the problem of fitting to probabilistically-binarised data, and how we handle sample
+size uncertainty in parameter estimation.
+
+First, let us describe the parameter estimation context. Consider a population of
+$M in NN$ individuals, with a shared belief system $cal(M)$ comprising $N in NN$
+beliefs or attitudes, but for which the parameters (i.e., the baseline activations
+and interaction effects) are unknown. Suppose that for each individual $m in [1,M]$ we
+have observed a series of measurements, reflecting $m$'s belief system state at each
+of $t in [1, T]$ uniformly spaced timesteps:
+
+$
+  {bold(x)_((m))^t}_(t=1)^T, quad "where each" bold(x)_((m))^t in RR^N
+$
+
+The collection of such measurements across all individuals forms a dataset $D$. The
+parameter estimation problem consists in using $D$ to identify a parameterisation
+$bold(theta)^* in RR^p$ for the model $cal(M)^*$, where $p in NN$ is the number of
+parameters in $cal(M)$, such that $cal(M)^*$ is (at least approximately) equal
+to $cal(M)$.
+
+Let $D_B ~ op("Bin")(D)$ be a binarisation of the dataset, with values mapped to
+${-1, +1}$. Maximum likelihood estimation (MLE) chooses $bold(theta)^*$ such
+that $D_B$ is most probable given the resulting model, i.e., the parameterisation
+which maximises the log-likelihood:
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) L_(D_B) (bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-naive-mle>
+
+When fitting the asymmetric belief system model to the climate attitudes dataset,
+the parameters inferred using @eqn:methods-parameter-estimation-naive-mle are subject
+to two sources of uncertainty: (i) due to the (possibly-stochastic) binarisation
+process, and (ii) due to sampling error. We will treat these issues in turn.
+
+Under the stochastic binarisation process described in @subsec:dataset-binarisation
+data values are mapped to the ${-1, +1}$ prior to parameter estimation by first
+applying gaussian noise to the original value and then thresholding the result. This
+induces a probability distribution over possible binarisations. Performing MLE on
+any specific binarisation $D_B ~ op("Bin")(D)$ yields a parameterisation which best
+explains $D_B$, but which may not optimally explain $D$.
+
+When the sampling distribution $op("Bin")(D)$ is known (as is the case in
+@subsec:dataset-binarisation), we can avoid this issue entirely by marginalising
+over the binarisation process when evaluating the log-likelihood, choosing
+$bold(theta)^*$ which maximises the _expected_ log-likelihood:
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) cal(L)_D (bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-expected-ll-mle>
+
+where the conditional expectation is defined in the usual way, as
+
+$
+  cal(L)_D (bold(hat(theta))) = EE[L_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(D_B | cal(D) = D) dot L_(D_B) (bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-conditional-expectation>
+
+Secondly, while the number of beliefs and attitudes considered in the following
+sections is relatively small ($N in {7,8}$), the number of model parameters
+grows as $p in O(N^2)$ for both the symmetric and asymmetric belief system models.
+This is roughly of the same order of magnitude as the size of the climate attitudes
+dataset ($M = 1693$ individuals, $T=2$ timesteps). Therefore we expect moderate
+uncertainty in $bold(theta)^*$ due to sampling error and overfitting.
+
+To mitigate this issue, we regularise the optimisation objective function, penalising
+nonzero parameters which do not meaningfully contribute to the log-likelihood. Such
+parameters are thus deemed unimportant for explaining the observed data, and are pushed
+to zero. We  define the $epsilon$-LASSO penalty function as
+$op("lasso")_epsilon: RR^N -> RR^+$ where:
+
+$
+  op("lasso")_epsilon (bold(hat(theta))) = -lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon)
+$ <eqn:methods-parameter-estimation-smooth-lasso>
+
+where the hyperparameter $lambda in RR^+$ moderates regularisation strength.
+@eqn:methods-parameter-estimation-smooth-lasso has a well-defined first
+derivative for $epsilon > 0$, and as $epsilon -> 0^+$ converges to the
+standard LASSO penalty.
+
+We include the $epsilon$-LASSO penalty as an extra summand in the objective function.
+This counteracts overfitting by requiring parameters to be sufficiently
+supported only are nonzero, but which apply a variation of LASSO regularisation during
+parameter estimation, which penalises non-zero parameters which do not meaningfully
+contribute to the likelihood.
+
+In combination, these solutions _remove_ the uncertainty in parameter estimates which
+arises from stochastic binarisation, and _reduce_ the uncertainty due to sampling error.
+We obtain our parameter estimation solution as $bold(theta)^*$ such that
+
+$
+  bold(theta)^* = op("argmax", limits: #true) { cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad : quad bold(hat(theta)) in RR^p}
+$
+
+The exact forms of the expected log-likelihood and its derivatives with respect
+to each parameter type for the asymmetric belief system model are states here
+without derivation. Derivation details are (*TODO*) included in the appendix. For
+$bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
+is the pairwise interaction matrix and $bold(h) in RR^N$ is the vector of baseline
+activations:
+
+$
+  cal(L)_D (bold(theta)) = sum_(m=1)^M sum_(t=1)^T sum_(bold(s) in plus.minus 1^N) P(D_((m))^t = bold(s) | cal(D) = D) sum_(i=1)^N EE[D_((m),i)^(t+1)] h_i^"eff" (bold(s)) - log 2 cosh (h_i^"eff" (bold(s)))
+$
+
+=== Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
+
+For the purposes of this study we will consider parameters with
+magnitude less than $10^(-2)$ as 'effectively zero'. We choose $epsilon = 10^(-8)$ such
+that $sqrt(epsilon)$ is significantly smaller than this threshold, and thus
+@eqn:methods-parameter-estimation-smooth-lasso remains a good approximation to the
+standard formulation.
+
+We use the Extended Bayesian Information Criterion (EBIC, @eqn:methods-ebic)
+@chenExtendedBayesianInformation2008 to select $lambda$,
+as recommended in #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose").
+The EBIC is an evaluative criterion for model selection, which balances maximisation of
+the log-likelihood with model complexity, as measured by the number of parameters.
+Compared to the original Bayesian Information Criterion, EBIC tends to be more
+conservative when the number of parameters and observatons are comparable
+@foygelExtendedBayesianInformation2010. We select $lambda$ which minimises the
+EBIC for the symmetric and asymmetric models (independently), the results of which
+are displayed in @fig:methods-regularisation-ebic.
+
+#figure(
+  image(
+    "../results/figures/model_fit/regularisation_ebic.pdf",
+  ),
+  caption: caption(
+    short: [Regularisation strength EBIC],
+    long: [*TODO*],
+  ),
+) <fig:methods-regularisation-ebic>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*Rough plan:*
+
+1. We estimate parameters using maximum likelihood estimation.
+
+2. Naïve maximum likelihood estimation identifies parameterisaion $bold(theta)^*$ such that
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) cal(L)_(D_B) (bold(hat(theta)))
+$
+
+for a binarisation $D_B ~ op("Bin")(D)$, where
+$cal(L)_(D_B) (bold(hat(theta))) = log P(D_B | bold(hat(theta)))$. This is subject
+to two sources of uncertainty: (i) due to sample size, and (ii) due to fitting to the
+particular binarisation $D_B$.
+
+3. We introduce measures to counteract each of these forms of uncertainty. First, we
+  apply regularisation to counteract sample size uncertainty. Second, we marginalise
+  over all possible binarisations of the dataset.
+
+4. We instead choose $bold(theta)^*$ such that
+
+$
+  bold(theta)^* = op("argmax", limits: #true) { bb(E)_(D_B)[cal(L)_(D_B) (bold(hat(theta))) | cal(D) = D] - sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad : quad bold(hat(theta)) in RR^p}
+$
+
+The first term is the expected log-likelihood of a binarised dataset given the candidate
+parameterisation $bold(hat(theta))$:
+
+$
+  bb(E)_(D_B)[cal(L)_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(op("Bin")(D) = D_B | cal(D) = D) dot cal(L)_(D_B) (bold(hat(theta)))
+$
+
+and the second term is a variation on L1 regularisation, for which the first derivative
+is continuous, and thus amenible to gradient-based optimisation. We choose $epsilon$
+small, such that this remains a good approximation to the standard formulation of L1
+regularisation.
+
+#line(length: 100%)
+
+#rect()[
+  *Note:* this section was written prior to the above plan. I think it spends too much
+  time on the non-marginalised log-likelihood derivation, so I'm considering moving this
+  to the appendix, and keeping this section short.
+]
 
 // *TODO:* There are a couple of other things to discuss here, which I am still working on.
 // Notably:
@@ -209,7 +358,8 @@ $ <eqn:methods-parameter-estimation-dataset>
 
 For the time being will consider the task of parameter estimation with respect to the
 particular binarisation $D_B$, but will return to the more general problem of
-estimating parameters with respect to $D$ itself in @subsubsec:marginalising-binarisation.
+estimating parameters with respect to $D$ itself in (reference section on marginalised
+MLE optimisation).
 
 Given a parameterisation $bold(hat(theta)) in RR^p$ for $p in NN$ model parameters, the
 _likelihood_ of $D_B$ given $bold(hat(theta))$ is:
@@ -267,7 +417,7 @@ follows from the identity $cosh(x) = (e^(x) + e^(-x))/2$, as also used in
 @eqn:methods-parameter-estimation-mle-problem is maximised when
 $(partial cal(L)_(D_B))/(partial hat(theta)_i)(bold(hat(theta))) = 0$ for each parameter
 $theta_i$. Recall that the model defined in
-@subsec:methods-nonequilibrium-belief-system-model includes two kinds of parameters:
+@subsec:theory-nonequilibrium-belief-system-model includes two kinds of parameters:
 baseline activations $h_i$ and influence effects $J_(j i)$, such that
 $bold(hat(theta)) = chevron bold(h), bold(J) chevron.r$. The partial derivative
 of the log-likelihood with respect to an arbitrary parameter $theta$ in $bold(h)$ or
@@ -380,22 +530,22 @@ strengths of #calc.round(regularisation_strengths.sym_ising.full, digits: 3) and
     short: [Regularisation strength EBIC],
     long: [*TODO*],
   ),
-) <fig:methods-regularisation-ebic>
+)
 
-=== Replicated binarisation <subsubsec:marginalising-binarisation>
-
-
-- Two sources of uncertainty in parameter estimates: sample size and binarisation
-- Given fixed dataset, distribution over binarised datasets is fixed --> can marginalise
-  over binarisation to get expected _maximum_ likelihood given dataset. Removes the
-  uncertainty due to binarisation. Variance decreases as $S/sqrt(n)$.
-- Re-frame log-likelihood using the conditional probability of spin $s$ given
-  binarisation of the original value $x$.
-- Can improve on the estimated log-likelihood by doing monte carlo samples of the
-  LL.
-- Show improvement to variance. MLE recovers parameters which maximise the expected
-  LL given binarisation of the original dataset.
-
-== Toy models (?)
+// === Replicated binarisation <subsubsec:marginalising-binarisation>
+//
+//
+// - Two sources of uncertainty in parameter estimates: sample size and binarisation
+// - Given fixed dataset, distribution over binarised datasets is fixed --> can marginalise
+//   over binarisation to get expected _maximum_ likelihood given dataset. Removes the
+//   uncertainty due to binarisation. Variance decreases as $S/sqrt(n)$.
+// - Re-frame log-likelihood using the conditional probability of spin $s$ given
+//   binarisation of the original value $x$.
+// - Can improve on the estimated log-likelihood by doing monte carlo samples of the
+//   LL.
+// - Show improvement to variance. MLE recovers parameters which maximise the expected
+//   LL given binarisation of the original dataset.
+//
+// == Toy models (?)
 
 

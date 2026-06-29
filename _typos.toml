@@ -3,7 +3,8 @@ extend-exclude = [
     "reports/references.bib", 
     "**/**.html",
     "src/climate_attitudes/schema/**/**",
-    "notebooks/**/**.ipynb"
+    "notebooks/**/**.ipynb",
+    "*.excalidraw"
 ]
 
 [default]

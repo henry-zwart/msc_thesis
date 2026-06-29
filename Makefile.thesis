@@ -1,5 +1,5 @@
 # Timepoint at which to measure effect for all-intervention experiments 
-MEASURE_TIME ?= 4
+MEASURE_TIME ?= 5
 
 THESIS_DIR := reports/thesis
 PKG_PATH := src/climate_attitudes
@@ -13,6 +13,8 @@ THESIS_FIGURES_MODEL := \
 			$(THESIS_DIR)/results/figures/model/intervention_effects/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
+		$(foreach d,05 10 15 25 80, \
+			$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
 		$(foreach d,05 10 15 25 80, \
@@ -182,6 +184,25 @@ $(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.%_$(MEASURE
 		--delta-str $* \
 		--no-use-covariates \
 		-z 1.96 \
+		--measure-time $(MEASURE_TIME) && \
+	touch $@
+
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking: | $(THESIS_DIR)/results/figures/model
+	mkdir -p $@
+
+
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.%_$(MEASURE_TIME)_no_use_covariates: \
+			$(PKG_PATH)/cli/visualisation/intervention_mean_individual_ranking.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_no_use_covariates.npz \
+			| $(THESIS_DIR)/results/figures/model/intervention_individual_ranking
+	uv run cadata plot intervention-mean-individual-rank \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--delta-str $* \
+		--no-use-covariates \
+		-z 1.0 \
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
 

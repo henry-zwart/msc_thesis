@@ -29,9 +29,10 @@
 #let degree = "Master of Science in Computational Science"
 
 //#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
-#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
+#let quotation = none
 
 #let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
+#let title = [Interventions in Asymmetric#linebreak() Belief Systems]
 
 #let abstract = include "sections/abstract.typ"
 
@@ -57,7 +58,7 @@
   group: group,
   dept: dept,
   faculty: faculty,
-  //quotation: quotation, # TODO: Decide if I want to include a quotation
+  quotation: quotation, //# TODO: Decide if I want to include a quotation
   abstract: abstract,
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
@@ -66,8 +67,8 @@
   signature: signature,
 )
 
-= Notes (things to remember, to-dos)
-#include "sections/notes.typ"
+// = Notes (things to remember, to-dos)
+// #include "sections/notes.typ"
 
 = Terminology and notation <sec:notation>
 #include "sections/notation.typ"
