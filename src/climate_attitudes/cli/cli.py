@@ -294,6 +294,9 @@ class PlotSubCommand(BaseModel):
     intervention_mean_collective_rank: CliSubCommand[
         vis_cli.InterventionCollectiveRankPlotCommand
     ]
+    intervention_mean_individual_rank: CliSubCommand[
+        vis_cli.InterventionIndividualRankPlotCommand
+    ]
     interaction_heatmap: CliSubCommand[vis_cli.InteractionHeatmapPlotCommand]
     regularisation_ebic: CliSubCommand[vis_cli.RegularisationEBICPlotCommand]
     ideology_networks: CliSubCommand[vis_cli.NetworkIdeologyPlotCommand]
