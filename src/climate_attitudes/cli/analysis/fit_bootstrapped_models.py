@@ -26,7 +26,6 @@ class BootstrapFitResults[M: Ising]:
     sample_idxes: npt.NDArray[np.int64]
     Y: SpinData
     P: Probability
-    X: CovariateData | None
     models: list[M]
 
 
@@ -35,7 +34,6 @@ def fit_model[M: Ising](
     iden: int,
     seed: np.int64,
     Y: SpinData,
-    X: CovariateData | None = None,
     adj: npt.NDArray[np.bool] | None = None,
     w: float | None = None,
     marginalise: bool = False,
@@ -49,9 +47,6 @@ def fit_model[M: Ising](
         seed: Random seed used to sample bootstrap dataset. `seed` + 1 is used for
             the fit model.
         Y: Observed spin states. 3D Numpy array with shape (individual, time, spin).
-        X: Optional covariate data. 3D Numpy array with shape (individual, time, spin).
-            If provided, baseline activations are fit as linear functions of
-            individual-level covariates.
         adj: Optional adjacency matrix.
         w: Optional regularisation parameter.
 
@@ -61,7 +56,6 @@ def fit_model[M: Ising](
     rng = np.random.default_rng(seed)
     model = cls.fit(
         y=Y,
-        X=X,
         optim_method=FitMethod.MARGINALISED if marginalise else FitMethod.TIME_SERIES,
         update_method=UpdateMethod.SYNCHRONOUS,
         rng=rng,
@@ -79,7 +73,6 @@ def fit_bootstrap_models[M: Ising](
     rng: np.random.Generator,
     adj: npt.NDArray[np.bool] | None = None,
     λ: float | int | None = None,
-    use_covariates: bool = True,
     scale: float = 0.1,
     binarisation_kind: Literal["gaussian", "triangular"] = "gaussian",
     marginalise: bool = False,
@@ -94,23 +87,19 @@ def fit_bootstrap_models[M: Ising](
         rng: Numpy RNG.
         adj: Optional adjacency matrix.
         λ: Regularisation strength.
-        use_covariates: Fit model with covariate-dependent spin thresholds.
         quiet: Disable progress bars.
 
     Returns:
         BootstrapFitResults object, containing random seeds used for each bootstrap
         repeat, the bootstrap dataset samples, and the fit models.
     """
-    Y_mock, X_mock, *_ = dataset.indices_to_numpy(kind="time-series")
+    Y_mock, *_ = dataset.indices_to_numpy(kind="time-series")
     Y = np.empty((repeats, *Y_mock.shape), dtype=np.int64)
     P = np.empty((repeats, *Y_mock.shape), dtype=np.float64)
     row_idxes = np.empty((repeats, Y_mock.shape[0]), dtype=np.int64)
-    X = None
-    if use_covariates:
-        X = np.empty((repeats, *X_mock.shape), dtype=np.float64)
 
     for repeat in range(repeats):
-        Y_r, X_r, P_r, _, row_idxes_r = dataset.indices_to_numpy(
+        Y_r, _, P_r, _, row_idxes_r = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=scale,
@@ -123,9 +112,6 @@ def fit_bootstrap_models[M: Ising](
 
         Y[repeat] = Y_r
         P[repeat] = P_r
-
-        if X is not None:
-            X[repeat] = X_r
 
     seeds = rng.integers(0, 2**32, size=repeats)
 
@@ -140,7 +126,6 @@ def fit_bootstrap_models[M: Ising](
                     r,
                     seeds[r],
                     P[r] if marginalise else Y[r],
-                    X[r] if X is not None else None,
                     adj,
                     w=λ,
                     marginalise=marginalise,
@@ -163,7 +148,6 @@ def fit_bootstrap_models[M: Ising](
         sample_idxes=row_idxes,
         Y=Y,
         P=P,
-        X=X,
         models=models,
     )
 
@@ -173,7 +157,6 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
     adjacency: Path | None = None
     model_type: ModelType
     seed: int = 202606031023
-    use_covariates: bool = False
 
     sigma: float | None = None
     sigma_path: Path | None = None
@@ -247,7 +230,6 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
             rng,
             adj,
             lam,
-            self.use_covariates,
             sigma,
             self.binarisation_kind,
             self.marginalise,
@@ -262,28 +244,14 @@ class FitBootstrappedModelsRunCommand(BaseCommand):
         for r in range(self.repeats):
             params[r] = bootstrap_results.models[r].param_vector()
 
-        if bootstrap_results.X is not None:
-            np.savez_compressed(
-                self.output,
-                seeds=bootstrap_results.seeds,
-                sample_idxes=bootstrap_results.sample_idxes,
-                Y=bootstrap_results.Y,
-                X=bootstrap_results.X,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                binarisation_kind=self.binarisation_kind,
-                marginalise=self.marginalise,
-                params=params,
-            )
-        else:
-            np.savez_compressed(
-                self.output,
-                seeds=bootstrap_results.seeds,
-                sample_idxes=bootstrap_results.sample_idxes,
-                Y=bootstrap_results.Y,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                binarisation_kind=self.binarisation_kind,
-                marginalise=self.marginalise,
-                params=params,
-            )
+        np.savez_compressed(
+            self.output,
+            seeds=bootstrap_results.seeds,
+            sample_idxes=bootstrap_results.sample_idxes,
+            Y=bootstrap_results.Y,
+            λ=lam if lam is not None else 0.0,
+            sigma=sigma,
+            binarisation_kind=self.binarisation_kind,
+            marginalise=self.marginalise,
+            params=params,
+        )

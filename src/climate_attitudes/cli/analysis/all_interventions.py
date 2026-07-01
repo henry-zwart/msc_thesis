@@ -18,16 +18,12 @@ type Probability = npt.NDArray[np.float64]
 type Indexes = npt.NDArray[np.int64]
 type Covariates = npt.NDArray[np.float64]
 
-# def s_i(_model: Ising, y: npt.NDArray[np.int64], i: int) -> np.int64:
-#     return y[i]
-
 
 @dataclass
-class ReplicatedDatasets:
+class EstimationDataset:
     Y: SpinStates
     P: Probability
     row_idxes: Indexes
-    X: Covariates | None = None
 
 
 def state_configuration(
@@ -42,7 +38,6 @@ def run_one_measure(
     model,
     f,
     y0,
-    X,
     t,
     warmup_steps,
     method,
@@ -54,7 +49,6 @@ def run_one_measure(
         model.measure(
             f,
             y0=y0,
-            X=X,
             t=t,
             warmup_steps=warmup_steps,
             step_method=method,
@@ -66,7 +60,6 @@ def run_one_measure(
 def _fit_model[T: Ising](
     cls: type[T],
     Y: npt.NDArray[np.int64] | npt.NDArray[np.float64],
-    X: npt.NDArray[np.float64] | None,
     λ: float | int | None,
     node_labels: npt.NDArray[np.str_],
     seed: np.random.Generator,
@@ -75,7 +68,6 @@ def _fit_model[T: Ising](
 ) -> tuple[int, T]:
     model = cls.fit(
         Y,
-        X=X,
         optim_method=FitMethod.TIME_SERIES,
         update_method=UpdateMethod.SYNCHRONOUS,
         node_labels=node_labels,
@@ -91,26 +83,21 @@ def sample_binary_datasets(
     dataset: Dataset,
     repeats: int,
     bootstrap: bool,
-    use_covariates: bool,
     scale: float,
     binarisation_kind: Literal["gaussian", "triangular"],
     rngs: list[np.random.Generator],
-) -> ReplicatedDatasets:
-    Y, X, *_ = dataset.indices_to_numpy(
+) -> EstimationDataset:
+    Y, *_ = dataset.indices_to_numpy(
         kind="time-series",
         binarise=True,
         scale=scale,
         seed=0,
     )
-    X = X if use_covariates else None
 
     # Prepare arrays to store datasets in
     datasets_idxes = np.empty((repeats, Y.shape[0]), dtype=np.int64)
     datasets_Y = np.empty((repeats, *Y.shape), dtype=np.int64)
     datasets_P = np.empty((repeats, *Y.shape), dtype=np.float64)
-    datasets_X = None
-    if X is not None:
-        datasets_X = np.empty((repeats, *X.shape), dtype=np.float64)
 
     for r in range(repeats):
         # Sample binarisations
@@ -127,17 +114,11 @@ def sample_binary_datasets(
         datasets_P[r] = P
         datasets_idxes[r] = row_idxes
 
-        # In case bootstrapping is used, select the correct rows in X
-        if X is not None and datasets_X is not None:
-            datasets_X[r] = X[row_idxes]
-
-    return ReplicatedDatasets(
-        Y=datasets_Y, P=datasets_P, X=datasets_X, row_idxes=datasets_idxes
-    )
+    return EstimationDataset(Y=datasets_Y, P=datasets_P, row_idxes=datasets_idxes)
 
 
 def fit_models[T: Ising](
-    datasets: ReplicatedDatasets,
+    datasets: EstimationDataset,
     model_type: type[T],
     adj: npt.NDArray[np.bool] | None,
     λ: float | int | None,
@@ -159,7 +140,6 @@ def fit_models[T: Ising](
                     _fit_model,
                     cls=model_type,
                     Y=datasets.Y[r],
-                    X=datasets.X[r] if datasets.X is not None else None,
                     λ=λ,
                     node_labels=node_labels,
                     seed=rngs[r],
@@ -171,10 +151,7 @@ def fit_models[T: Ising](
         for ft in tqdm(
             as_completed(futures),
             total=repeats,
-            desc=(
-                f"Fitting models ({model_type.__name__}; "
-                f"δ={intervention_delta}; covariates={datasets.X is not None})"
-            ),
+            desc=(f"Fitting models ({model_type.__name__}; δ={intervention_delta})"),
             disable=quiet,
         ):
             r, model = ft.result()
@@ -184,7 +161,7 @@ def fit_models[T: Ising](
 
 
 def run_interventions[T: Ising](
-    datasets: ReplicatedDatasets,
+    datasets: EstimationDataset,
     models: list[T],
     measure_time: int,
     intervention_delta: float,
@@ -211,17 +188,11 @@ def run_interventions[T: Ising](
     seeds = np.asarray([_rng.integers(0, 2**32).item() for _rng in rngs])
 
     f = state_configuration
-    if datasets.X is None:
-        intervention_offset = np.array([intervention_delta])
-    else:
-        intervention_offset = np.array(
-            [[intervention_delta] + ([0.0] * datasets.X.shape[-1])]
-        )
+    intervention_offset = np.array([intervention_delta])
 
     with ProcessPoolExecutor() as executor:
         futures = []
         for repeat in range(repeats):
-            X = datasets.X[repeat] if datasets.X is not None else None
             model = models[repeat]
 
             for intervene_idx in range(N):
@@ -243,7 +214,6 @@ def run_interventions[T: Ising](
                         int_model,
                         f,
                         y0=Y[:, -1, :],
-                        X=X[:, -1, :] if X is not None else None,
                         t=measure_time,
                         warmup_steps=0,
                         method="parallel",
@@ -256,7 +226,7 @@ def run_interventions[T: Ising](
             total=(repeats * datasets.Y.shape[-1]),
             desc=(
                 f"Pairwise interventions ({type(models[0]).__name__}; "
-                f"δ={intervention_delta}; covariates={datasets.X is not None})"
+                f"δ={intervention_delta})"
             ),
             disable=quiet,
         ):
@@ -274,7 +244,6 @@ class AllInterventionsRunCommand(BaseCommand):
     adjacency: Path | None = None
     model_type: ModelType
     seed: int = 202605261452
-    use_covariates: bool = False
 
     repeats: int = 30
     measure_time: int = 5
@@ -359,7 +328,6 @@ class AllInterventionsRunCommand(BaseCommand):
             dataset=dataset,
             repeats=self.repeats,
             bootstrap=self.bootstrap,
-            use_covariates=self.use_covariates,
             scale=sigma,
             binarisation_kind=self.binarisation_kind,
             rngs=rngs,
@@ -400,41 +368,19 @@ class AllInterventionsRunCommand(BaseCommand):
             quiet=self.quiet,
         )
 
-        Y0, X0, *_ = dataset.indices_to_numpy(kind="time-series")
-        if self.use_covariates:
-            if binary_datasets.X is None:
-                raise RuntimeError("Xs should not be None for use_covariates=True")
-
-            np.savez_compressed(
-                self.output,
-                seeds=seeds,
-                Y0=Y0,
-                X0=X0,
-                Y=binary_datasets.Y,
-                X=binary_datasets.X,
-                dataset_idxes=binary_datasets.row_idxes,
-                binarisation_kind=self.binarisation_kind,
-                labels=node_labels,
-                params=params,
-                checks=checks,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                measurements=measurements,
-                marginalise=self.marginalise,
-            )
-        else:
-            np.savez_compressed(
-                self.output,
-                seeds=seeds,
-                Y0=Y0,
-                Y=binary_datasets.Y,
-                dataset_idxes=binary_datasets.row_idxes,
-                binarisation_kind=self.binarisation_kind,
-                labels=node_labels,
-                params=params,
-                checks=checks,
-                λ=lam if lam is not None else 0.0,
-                sigma=sigma,
-                measurements=measurements,
-                marginalise=self.marginalise,
-            )
+        Y0, *_ = dataset.indices_to_numpy(kind="time-series")
+        np.savez_compressed(
+            self.output,
+            seeds=seeds,
+            Y0=Y0,
+            Y=binary_datasets.Y,
+            dataset_idxes=binary_datasets.row_idxes,
+            binarisation_kind=self.binarisation_kind,
+            labels=node_labels,
+            params=params,
+            checks=checks,
+            λ=lam if lam is not None else 0.0,
+            sigma=sigma,
+            measurements=measurements,
+            marginalise=self.marginalise,
+        )

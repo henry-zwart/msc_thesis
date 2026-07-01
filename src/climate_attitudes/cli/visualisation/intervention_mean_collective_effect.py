@@ -29,7 +29,6 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
     data_dir: Path
 
     delta_str: str
-    use_covariates: bool = True
 
     measure_time: int
 
@@ -39,11 +38,6 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
         configure_mpl()
 
         # Load data
-        if self.use_covariates:
-            covariate_flag = "yes_use_covariates"
-        else:
-            covariate_flag = "no_use_covariates"
-
         # int_asym_data = np.load(
         #     self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
         # )
@@ -55,16 +49,16 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
         # int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
         # int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
         no_int_asym_data = np.load(
-            self.data_dir / f"ising_00_{covariate_flag}.npz",
+            self.data_dir / "ising_00.npz",
         )
         int_asym_data = np.load(
-            self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
+            self.data_dir / f"ising_{self.delta_str}.npz",
         )
         no_int_sym_data = np.load(
-            self.data_dir / f"sym_ising_00_{covariate_flag}.npz",
+            self.data_dir / "sym_ising_00.npz",
         )
         int_sym_data = np.load(
-            self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
+            self.data_dir / f"sym_ising_{self.delta_str}.npz",
         )
 
         # Calculate effects of intervention
@@ -101,7 +95,7 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
                 .lower()
                 .replace(" ", "_")
             )
-            filename = f"{self.delta_str}_{covariate_flag}_{colname}.pdf"
+            filename = f"{self.delta_str}_{colname}.pdf"
             fig.savefig(self.output_dir / filename, bbox_inches="tight")
 
 
@@ -146,19 +140,19 @@ def intervention_collective_effect_plot(
     )
 
     # Set ylim bounds to closest 0.05 below/above min and max
-    data_ymin = plot_df.select(pl.col("Collective effect").min()).item()
-    data_ymax = plot_df.select(pl.col("Collective effect").max()).item()
-    candidates = np.linspace(0.0, 1.0, 21)
-    ymin = candidates[max(0, np.argmax(candidates > data_ymin) - 1)]
-    ymax = candidates[np.argmax(candidates >= data_ymax)]
-    if ymin == ymax:
-        if ymin < 0.05:
-            ymax = 0.05
-        elif ymin > 0.95:
-            ymin = 0.95
-        else:
-            ymin -= 0.025
-            ymax += 0.025
+    # data_ymin = plot_df.select(pl.col("Collective effect").min()).item()
+    # data_ymax = plot_df.select(pl.col("Collective effect").max()).item()
+    # candidates = np.linspace(0.0, 1.0, 21)
+    # ymin = candidates[max(0, np.argmax(candidates > data_ymin) - 1)]
+    # ymax = candidates[np.argmax(candidates >= data_ymax)]
+    # if ymin == ymax:
+    #     if ymin < 0.05:
+    #         ymax = 0.05
+    #     elif ymin > 0.95:
+    #         ymin = 0.95
+    #     else:
+    #         ymin -= 0.025
+    #         ymax += 0.025
     # ax.set_ylim(ymin, ymax)
 
     # Show CIs as whiskers
