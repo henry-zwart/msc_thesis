@@ -29,6 +29,13 @@ specific binarisation --- motivates marginalisation over binarisation process.
 
 Conditional probabilities --- how does the specific state of $X$ affect the distribution of $Y$?
 
+Discuss problem of fitting individual models. Two issues:
++ Requires sufficient data. We have only a handful of measurements per individual.
++ Disregards shared aspects of belief systems. Even with sufficient data, we may not
+  observe all transitions required to understand the _potential_ dynamics of the system
+  in states which we don't observe. If we assume that individuals share some aspects,
+  then we can pool information.
+
 == Discussion points
 
 - *RQ1.1:* What is the representational capacity of a pairwise belief system model?

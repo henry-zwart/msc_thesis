@@ -37,10 +37,10 @@
 
 - *Asymmetric belief system:*
   - Define and illustrate the model
+  - Model simulation with Glauber dynamics
   - How do we model interventions?
 
 - *Methods:*
-  - Model simulation with Glauber dynamics
   - Counterfactual intervention experiments --- comparing against the no-intervention
     scenario, measuring differences in effects.
   - Parameter estimation:

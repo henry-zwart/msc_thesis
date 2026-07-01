@@ -1,5 +1,9 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+== TODO
+
+- Define the symmetric variant
+
 
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
@@ -259,6 +263,8 @@ $
   bold(h)' = bold(h) + delta_h
 $
 
+*TODO:* Include discussion on the choice of $delta_h$, with reference to a figure
+showing how the activation probability depends on $h_i^"eff"$.
 
 
 

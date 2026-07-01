@@ -50,6 +50,8 @@
 
 #let signature = image("signature.png", height: 2cm)
 
+#let appendix = include "sections/appendix_derivations.typ"
+
 #show: thesis.with(
   title: title,
   author: author,
@@ -65,6 +67,7 @@
   references: bibliography("references.bib", style: "apa"),
   additional-frontmatter: frontmatter-pages,
   signature: signature,
+  appendices: (appendix,),
 )
 
 // = Notes (things to remember, to-dos)
