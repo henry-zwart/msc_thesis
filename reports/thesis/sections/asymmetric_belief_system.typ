@@ -1,10 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
-== TODO
-
-- Define the symmetric variant
-
-
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
@@ -143,6 +138,7 @@ irrespective of other beliefs and attitudes. Negative self-influence effects are
 clearly interpretable. The inclusion of self-influence effects allows us to capture
 the timescales of different beliefs or attitudes independently.
 
+
 The energy experienced by $S_i$ for a particular spin state $s in {0,1}$ is then the
 result of $s$ in combination with the baseline activation and influence effects from
 all spins with edges to $S_i$:
@@ -186,6 +182,26 @@ $ <eqn:methods-model-conditional-prob-definition>
 
 *NOTE:* The initial distribution must be specified, since the model only captures
 transition probabilities.
+
+== Symmetric and asymmetric belief systems
+
+Let $cal(M)$ be a belief system model defined as in the preceding section, comprising
+$N in NN$ beliefs or attitudes, with adjacency matrix $bold(A) in {0,1}^(N times N)$,
+interaction effect matrix $bold(J) in RR^(N times N)$, and baseline activations
+$bold(h) in RR^N$.
+
+When each entry in $bold(J)$ is independent of all others, we say
+that $cal(M)$ is an *asymmetric belief system*. The term _asymmetric_ here refers to the
+directed relations between a pair of nodes. In an asymmetric belief system, for any pair
+of distinct nodes $S_i != S_j$, it may be the case that an influence relation exists
+only in one direction, or that the directed relations differ in magnitude.
+
+In the special case where we constrain $A_(i j) = A_(j i)$ and $J_(i j) = J_(j i)$ for
+all $i, j in [1, N]$, we instead say that $cal(M)$ is a *symmetric belief system*. In
+a symmetric belief system all interactions are directionally-equivalent. This can be
+considered a simple extension of the symmetric Ising model with (i) self-interaction
+terms and (ii) temporal dynamics, thus the symmetric belief system model tends toward
+an equilibrium steady state.
 
 == Simulation via Glauber dynamics
 

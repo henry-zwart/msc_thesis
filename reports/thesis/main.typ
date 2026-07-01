@@ -79,7 +79,7 @@
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
 
-= Asymmetric belief systems <sec:asymmetric-belief-systems>
+= Non-equilibrium belief systems <sec:asymmetric-belief-systems>
 #include "sections/asymmetric_belief_system.typ"
 
 = Methods <sec:methods>
