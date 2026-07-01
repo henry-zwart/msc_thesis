@@ -1,10 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
-== TODO
-
-- Define the symmetric variant
-
-
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
@@ -188,7 +183,7 @@ $ <eqn:methods-model-conditional-prob-definition>
 *NOTE:* The initial distribution must be specified, since the model only captures
 transition probabilities.
 
-=== Symmetric and asymmetric belief systems
+== Symmetric and asymmetric belief systems
 
 Let $cal(M)$ be a belief system model defined as in the preceding section, comprising
 $N in NN$ beliefs or attitudes, with adjacency matrix $bold(A) in {0,1}^(N times N)$,

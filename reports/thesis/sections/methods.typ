@@ -1,9 +1,6 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "@preview/zero:0.6.1": num
 
-== TODO
-
-- Describe how the derivatives of the objective function change in the symmetric
-  model.
 
 // == Plan
 //
@@ -19,9 +16,9 @@
 
 Individuals have different belief systems. Influence relations between beliefs and
 attitudes reflect heterogeneity in individual experiences and perception. Often these
-relations can themselves be considered beliefs --- whether or not an individual who
-supports climate change mitigation also supports a specific policy depends in-part on
-their belief regarding the climate impacts of the policy target. An individual's
+relations can themselves be considered beliefs --- whether or not support for climate
+change mitigation leads to support for any specific policy depends in-part on an
+individual's belief regarding the policy's relevance. An individual's
 baseline activations, in turn, reflect a culmination of factors which determine their
 tendency toward certain beliefs or attitudes.
 
@@ -211,15 +208,22 @@ parameters for similar models @nguyenInverseStatisticalProblems2017
 @leeStatisticalMechanicsUS2015, we should be cautious, for two reasons, of applying this method naïvely
 in the present study.
 
-Firstly, the model defined in
-@eqn:methods-model-conditional-prob-definition of
-@subsec:theory-nonequilibrium-belief-system-model assumes binary spin states
-$s in {-1, +1}$. The climate attitudes dataset does not satisfy this
+Firstly, the model defined in @eqn:methods-model-conditional-prob-definition assumes
+binary spin states $s in {-1, +1}$. The climate attitudes dataset does not satisfy this
 assumption and must be binarised for MLE to be applicable. However, we have no
 guarantee that the parameterisation inferred for any specific binarisation is a
 reasonable explanation for the non-binarised dataset, nor for any other possible
 binarisation in the case where a probabilistic binarisation scheme is used (such as
 the one described in @subsec:dataset-binarisation).
+
+- Formally, can say that any specific binarisation $D_B ~ op("Bin")(D)$ and
+  model $cal(M)$ estimated from $D_B$:
+
+$
+  I(D; cal(M)) <= I(D_B; cal(M))
+$
+
+- And this inequality is strict when $op("Bin")(D)$ is not constant.
 
 Secondly, maximum likelihood estimation is prone to overfitting when the number of
 model parameters is similar to the number of observations
@@ -237,7 +241,7 @@ $bold(theta)^* in RR^p$ which satisfies the optimisation problem:
 
 $
   bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
-  f(D; bold(hat(theta))) := 1/(M(T-1)) cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
+  f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
 $ <eqn:methods-parameter-estimation-optimisation-problem>
 
 The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
@@ -249,9 +253,7 @@ $ <eqn:methods-parameter-estimation-conditional-expectation>
 
 where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisation
 $D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
-return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood. We
-rescale $cal(L)_D (bold(hat(theta)))$ by the total number of observations to ensure
-numerical stability for varying dataset sizes.
+return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood.
 
 *TODO:* Intuition for the effect of using the expectation.
 - Inferred model reflects ambiguity in states close to zero.
@@ -281,9 +283,10 @@ values for $lambda$ and $epsilon$ in
 @subsubsec:methods-parameter-estimation-hyperparameters.
 
 Let $D_B ~ op("Bin")(D)$ be a possible binarisation of $D$, and $bold(theta)$ a
-parameterisation for the belief system model, which is decomposable into the model
-parameters $bold(theta) = chevron bold(J), bold(h) chevron.r$. The log-likelihood
-of $D_B$ given $bold(theta)$ is:
+parameterisation for the (asymmetric or symmetric) belief system model, which is
+decomposable into the model parameters
+$bold(theta) = chevron bold(J), bold(h) chevron.r$. The log-likelihood of $D_B$ given
+$bold(theta)$ is:
 
 $
   L_(D_B) (bold(theta)) &= log P(D_B | bold(theta)) \
@@ -291,10 +294,9 @@ $
   &= sum_(m=1)^M sum_(t=1)^(T - 1) log s_(i, (m))^(t+1) dot h_i^"eff" (bold(s)_((m))^t) - log(2 cosh h_i^"eff" (bold(s)_((m))^t))
 $ <eqn:methods-parameter-estimation-log-likelihood>
 
-The derivation of @eqn:methods-parameter-estimation-log-likelihood is analogous to the
-derivation for the non-equilibrium Ising model log-likelihood
-@nguyenInverseStatisticalProblems2017. Combining
-@eqn:methods-parameter-estimation-log-likelihood and
+The derivation of @eqn:methods-parameter-estimation-log-likelihood is analogous to that
+of the non-equilibrium Ising model log-likelihood @nguyenInverseStatisticalProblems2017.
+Combining @eqn:methods-parameter-estimation-log-likelihood and
 @eqn:methods-parameter-estimation-conditional-expectation, we obtain an explicit
 expression for the expected likelihood:
 
@@ -309,7 +311,7 @@ $ <eqn:methods-parameter-estimation-expected-ll-explicit>
 where $EE[bold(S)_((m))^(t+1) | D]$ is the expected binary configuration for the
 observation $bold(x)_((m))^(t+1)$, the vector $h^"eff" (bold(s))$ contains the
 effective baseline activation for each spin given the previous state $bold(s)$, and $Z$
-is the expected log partition function:
+is the expected log partition function, summed across observations:
 
 $
   Z(D; bold(theta)) = sum_(bold(s)) sum_(m <= M \ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
@@ -323,33 +325,83 @@ The partial derivative with respect to a given baseline activation parameter $h_
 $i in [1,N]$, is given by:
 
 $
-  partial/(partial h_i) f(D; bold(theta)) = &1/(M(T-1))sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda h_i)/sqrt(h_i^2 + epsilon)
+  partial/(partial h_i) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda h_i)/sqrt(h_i^2 + epsilon)
 $ <eqn:methods-parameter-estimation-derivative-baseline-activation>
 
-Analogously, for $i, j in [1, N]$, the partial derivative with respect to the
-interaction effect $J_(j i)$ is given by:
+
+Note that the expressions for $cal(L)_D (bold(theta))$ and
+$partial/(partial h_i) f(D; bold(theta))$ are applicable to both the asymmetric and
+symmetric belief system models. This property does not hold for the partial derivatives
+with respect to interaction effects. In the asymmetric model, for $i, j in [1, N]$,
+this is derived analogously to
+@eqn:methods-parameter-estimation-derivative-baseline-activation as:
 
 $
-  partial/(partial J_(j i)) f(D; bold(theta)) = &1/(M(T-1))sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) A_(j i) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
-$ <eqn:methods-parameter-estimation-derivative-interaction-effect>
+  partial/(partial J_(j i)) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) A_(j i) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
+$ <eqn:methods-parameter-estimation-derivative-interaction-effect-asym>
+
+In the symmetric belief system model, since we require that $bold(J) = bold(J)^T$, we
+estimate a single interaction parameter $J_(j i) = J_(i j) = beta_({i,j})$ for each
+pair of spins $S_i, S_j$. Each pair thus contributes twice to the partial derivative,
+once for each direction:
+
+$
+  partial/(partial beta_({i,j})) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_((i',j') in {i, j}) A_(j' i') s_(j') lr([EE[S_(i', (m))^(t+1) | D] - tanh(h_(i')^"eff" (bold(s)))]) \ &- (lambda beta_({i,j}))/sqrt(beta_({i, j})^2 + epsilon)
+$ <eqn:methods-parameter-estimation-derivative-interaction-effect-sym>
 
 === Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
 
 The optimisation problem in @eqn:methods-parameter-estimation-optimisation-problem
 has two hyperparameters which must be specified prior to parameter estimation: the
 regularisation strength $lambda in RR^+$, and the smoothing parameter $epsilon in RR^+$.
+The values for both are summarised in @tab:methods-hyperparameter-values.
 
-We use the Extended Bayesian Information Criterion (EBIC, @eqn:methods-ebic)
+#let regularisation_strengths = json("../results/data/model_fit/optimised_regularisation.json")
+
+#figure(
+  table(
+    columns: 4,
+    stroke: none,
+    table.header[Parameter][Model type][Dataset][Value],
+    table.hline(stroke: 0.5pt),
+    [$lambda$],
+    [Symmetric],
+    [Full],
+    [#num(exponent: "sci")[#calc.round(regularisation_strengths.sym_ising.full, digits: 3)]],
+    [], [Asymmetric], [Full], [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.full, digits: 3)]],
+    [],
+    [],
+    [Conservative],
+    [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.conservative, digits: 3)]],
+    [], [], [Liberal], [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.liberal, digits: 3)]],
+    [$epsilon$], [All], [All], [$10^(-8)$],
+  ),
+  caption: caption(
+    short: [Hyperparameter values],
+    long: [
+      Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
+      hyperparameters. Regularisation strength model- and dataset-specific;
+      _Conservative_ and _Liberal_ refer to subsets of the climate attitudes dataset
+      (*TODO*: reference) comprising individuals with the specified ideology.
+    ],
+  ),
+  placement: auto,
+) <tab:methods-hyperparameter-values>
+
+
+We use the Extended Bayesian Information Criterion (EBIC)
 @chenExtendedBayesianInformation2008 to select $lambda$,
-as recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose").
+as recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"):
+
+$
+  op("EBIC")(bold(theta)^*) = k dot [ln(M(T-1)) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
+$ <eqn:methods-ebic>
+
 The variable $k$ denotes the number of nonzero parameters in the optimised model, where
 a parameter $theta$ is considered nonzero if $|theta| > 10^(-2)$. We take
 $gamma = 0.25$, which has been shown to work well in general for network
 inference in the inverse Ising problem @barberHighdimensionalIsingModel2015.
 
-$
-  op("EBIC")(bold(theta)^*) = k dot [ln(M(T-1)) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
-$ <eqn:methods-ebic>
 
 
 The EBIC is an evaluative criterion for model selection, which balances maximisation of
@@ -376,20 +428,27 @@ are displayed in @fig:methods-regularisation-ebic.
   ),
 ) <fig:methods-regularisation-ebic>
 
-For the purposes of this study we consider parameters with magnitude less than
-$10^(-2)$ as 'effectively zero'. We choose $epsilon = 10^(-8)$ such that
-$sqrt(epsilon)$ is significantly smaller than this threshold, and
-$sqrt(theta^2 + epsilon)$ remains a good approximation to the standard formulation.
+We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and
+take $epsilon = 10^(-8)$ such that $sqrt(epsilon)$ is significantly smaller than this
+threshold. This choice of $epsilon$ ensures that the smooth regularisation remains a
+good approximation to L1 regularisation, i.e.,
+
+$
+  sqrt(theta^2 + epsilon) approx |theta|
+$ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
+
 
 === Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
 
-We use the Scipy 1.17.1 implementation @virtanenSciPy10Fundamental2020 of the
-quasi-Newton BFGS optimisation algorithm @nocedal2006numerical[p.~136]
-to solve the parameter estimation problem using the jacobian as defined
-by the parameter-specific partial derivatives in
-@eqn:methods-parameter-estimation-derivative-baseline-activation and
-@eqn:methods-parameter-estimation-derivative-interaction-effect. We take take
-$bold(theta) = bold(0)$ as the initial guess.
+We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+@nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
+derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
+
+To ensure numerical stability irrespective of dataset size, we rescale the expected
+log-likelihood contribution to the objective function and partial derivatives, dividing
+by the number of observed observations (time intervals) in the dataset. For $M in NN$
+individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
 
 
 
