@@ -28,9 +28,11 @@
 
 #let degree = "Master of Science in Computational Science"
 
-#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
+//#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
+#let quotation = none
 
 #let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
+#let title = [Interventions in Asymmetric#linebreak() Belief Systems]
 
 #let abstract = include "sections/abstract.typ"
 
@@ -43,10 +45,12 @@
 ]
 
 #let frontmatter-pages = (
-  (title: [Use of AI], body: lorem(100)),
+  (title: [Use of AI], body: include "sections/use_of_ai.typ"),
 )
 
 #let signature = image("signature.png", height: 2cm)
+
+#let appendix = include "sections/appendix_derivations.typ"
 
 #show: thesis.with(
   title: title,
@@ -56,67 +60,49 @@
   group: group,
   dept: dept,
   faculty: faculty,
-  quotation: quotation,
+  quotation: quotation, //# TODO: Decide if I want to include a quotation
   abstract: abstract,
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
   references: bibliography("references.bib", style: "apa"),
   additional-frontmatter: frontmatter-pages,
   signature: signature,
+  appendices: (appendix,),
 )
 
-= Notes (things to remember, to-dos)
+// = Notes (things to remember, to-dos)
+// #include "sections/notes.typ"
 
-#include "sections/notes.typ"
-
-= Introduction
-
-#include "sections/introduction.typ"
-
-
-= Literature review
-
-#lorem(100)
-
-#lorem(150)
-
-#lorem(130)
-
-= Climate beliefs dataset <sec:dataset>
-
-#include "sections/dataset.typ"
-
-= Terminology and notation
-
+= Terminology and notation <sec:notation>
 #include "sections/notation.typ"
 
-= Methods
+= Introduction <sec:introduction>
+#include "sections/introduction.typ"
+
+= Asymmetric belief systems <sec:asymmetric-belief-systems>
+#include "sections/asymmetric_belief_system.typ"
+
+= Methods <sec:methods>
 #include "sections/methods.typ"
 
-= Asymmetric belief system model
+= Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
+#include "sections/asymmetry_in_belief_systems.typ"
 
-#include "sections/model.typ"
+= Heterogeneous belief systems and intervention effects <sec:heterogeneity-in-belief-systems-and-intervention-effects>
+#include "sections/heterogeneity_results.typ"
 
-= Experiments and results
+= Discussion <sec:discussion>
+#include "sections/discussion.typ"
 
-#include "sections/results.typ"
+= Climate beliefs dataset <sec:dataset>
+#include "sections/dataset.typ"
+
+= Related work <sec:related-work>
+#include "sections/literature_review.typ"
 
 
-= Discussion
-
-#lorem(300)
-
-#lorem(120)
-
-#lorem(200)
-
-= Conclusion and future work
-
-#lorem(100)
-
-#lorem(150)
-
-#lorem(100)
+= Conclusions and future work <sec:conclusions>
+#include "sections/conclusion.typ"
 
 = Ethics and Data Management
 A new requirement for the thesis is that there must be a short section in which you

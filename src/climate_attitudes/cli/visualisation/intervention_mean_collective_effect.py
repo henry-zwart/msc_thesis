@@ -14,32 +14,14 @@ from climate_attitudes.visualisation import configure_mpl
 np.set_printoptions(linewidth=200)
 
 
-def bootstrap_collective_effect(measurements, rng, n_boot=100):
-    # measurements: shape (n_individuals, repeats, n_interventions)
-    M, _, N = measurements.shape
-    boot_means = np.empty((n_boot, N))
+def bootstrap_collective_effect(measurements, z: float):
+    # measurements: shape (repeats, replicates, n_individuals, n_interventions)
+    # expected_outcome_collective = ((measurements + 1) // 2).mean(axis=1)
+    expected_effect_collective = measurements.mean(axis=1)
+    mean = expected_effect_collective.mean(axis=0)
+    ci = z * expected_effect_collective.std(axis=0, ddof=1)
 
-    for b in range(n_boot):
-        sample_rows = rng.integers(0, M, M)
-        samples = measurements[sample_rows]
-
-        # Collective effect as proportion of individuals with desired state
-        collective_effect = ((samples + 1) // 2).mean(axis=0)
-
-        # Final estimate is average proportion of adoption
-        boot_means[b] = collective_effect.mean(axis=0)
-
-    mean = boot_means.mean(axis=0)
-    # ci = z * boot_means.std(axis=0, ddof=1) / np.sqrt(n_boot)
-    # lower = mean - ci
-    # upper = mean + ci
-
-    lower, upper = np.percentile(boot_means, (5, 95), axis=0)
-    avg_effect = ((measurements + 1) // 2).mean(axis=0)
-    mean = np.mean(avg_effect, axis=0)
-    lower, upper = np.percentile(avg_effect, (5, 95), axis=0)
-
-    return mean, lower, upper
+    return mean, mean - ci, mean + ci
 
 
 class InterventionCollectiveEffectPlotCommand(BaseCommand):
@@ -47,45 +29,62 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
     data_dir: Path
 
     delta_str: str
-    use_covariates: bool = True
 
     measure_time: int
 
-    seed: int
+    z: float = 1.96
 
     def cli_cmd(self) -> None:
         configure_mpl()
 
         # Load data
-        if self.use_covariates:
-            covariate_flag = "yes_use_covariates"
-        else:
-            covariate_flag = "no_use_covariates"
+        # int_asym_data = np.load(
+        #     self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
+        # )
+        # int_sym_data = np.load(
+        #     self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
+        # )
 
+        # Calculate effects of intervention
+        # int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
+        # int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        no_int_asym_data = np.load(
+            self.data_dir / "ising_00.npz",
+        )
         int_asym_data = np.load(
-            self.data_dir / f"ising_{self.delta_str}_{covariate_flag}.npz",
+            self.data_dir / f"ising_{self.delta_str}.npz",
+        )
+        no_int_sym_data = np.load(
+            self.data_dir / "sym_ising_00.npz",
         )
         int_sym_data = np.load(
-            self.data_dir / f"sym_ising_{self.delta_str}_{covariate_flag}.npz",
+            self.data_dir / f"sym_ising_{self.delta_str}.npz",
         )
 
         # Calculate effects of intervention
         int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
+        no_int_asym_measurements = no_int_asym_data["measurements"][
+            :, :, self.measure_time
+        ]
         int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        no_int_sym_measurements = no_int_sym_data["measurements"][
+            :, :, self.measure_time
+        ]
+        int_effect_asym = int_asym_measurements - no_int_asym_measurements
+        int_effect_sym = int_sym_measurements - no_int_sym_measurements
 
         # Create plot for each choice of intervention column
         N = int_asym_measurements.shape[-1]
-        rng = np.random.default_rng(self.seed)
         labels = int_asym_data["labels"]
         figures = []
         for i in range(N):
-            intervention_col = labels[i]
             fig = intervention_collective_effect_plot(
-                np.delete(int_asym_measurements[:, :, i], i, axis=-1),
-                np.delete(int_sym_measurements[:, :, i], i, axis=-1),
-                intervention_col,
+                # np.delete(int_asym_measurements[..., i, :], i, axis=-1),
+                # np.delete(int_sym_measurements[..., i, :], i, axis=-1),
+                np.delete(int_effect_asym[..., i], i, axis=-1),
+                np.delete(int_effect_sym[..., i], i, axis=-1),
                 np.delete(labels, i),
-                rng,
+                self.z,
             )
             figures.append(fig)
 
@@ -96,23 +95,20 @@ class InterventionCollectiveEffectPlotCommand(BaseCommand):
                 .lower()
                 .replace(" ", "_")
             )
-            filename = f"{self.delta_str}_{covariate_flag}_{colname}.pdf"
+            filename = f"{self.delta_str}_{colname}.pdf"
             fig.savefig(self.output_dir / filename, bbox_inches="tight")
 
 
 def intervention_collective_effect_plot(
     int_asym_measurements: npt.NDArray[np.int64],
     int_sym_measurements: npt.NDArray[np.int64],
-    intervention_label: np.str_,
     intervention_labels: npt.NDArray[np.str_],
-    rng: np.random.Generator,
+    z: float,
 ) -> plt.Figure:
-    fig, ax = plt.subplots(figsize=(5, 3), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(5, 2.5), constrained_layout=True)
 
-    asym_mean, asym_lo, asym_hi = bootstrap_collective_effect(
-        int_asym_measurements, rng
-    )
-    sym_mean, sym_lo, sym_hi = bootstrap_collective_effect(int_sym_measurements, rng)
+    asym_mean, asym_lo, asym_hi = bootstrap_collective_effect(int_asym_measurements, z)
+    sym_mean, sym_lo, sym_hi = bootstrap_collective_effect(int_sym_measurements, z)
 
     sort_idxes = np.argsort(sym_mean)[::-1]
     intervention_labels = intervention_labels[sort_idxes]
@@ -144,19 +140,19 @@ def intervention_collective_effect_plot(
     )
 
     # Set ylim bounds to closest 0.05 below/above min and max
-    data_ymin = plot_df.select(pl.col("Collective effect").min()).item()
-    data_ymax = plot_df.select(pl.col("Collective effect").max()).item()
-    candidates = np.linspace(0.0, 1.0, 21)
-    ymin = candidates[max(0, np.argmax(candidates > data_ymin) - 1)]
-    ymax = candidates[np.argmax(candidates >= data_ymax)]
-    if ymin == ymax:
-        if ymin < 0.05:
-            ymax = 0.05
-        elif ymin > 0.95:
-            ymin = 0.95
-        else:
-            ymin -= 0.025
-            ymax += 0.025
+    # data_ymin = plot_df.select(pl.col("Collective effect").min()).item()
+    # data_ymax = plot_df.select(pl.col("Collective effect").max()).item()
+    # candidates = np.linspace(0.0, 1.0, 21)
+    # ymin = candidates[max(0, np.argmax(candidates > data_ymin) - 1)]
+    # ymax = candidates[np.argmax(candidates >= data_ymax)]
+    # if ymin == ymax:
+    #     if ymin < 0.05:
+    #         ymax = 0.05
+    #     elif ymin > 0.95:
+    #         ymin = 0.95
+    #     else:
+    #         ymin -= 0.025
+    #         ymax += 0.025
     # ax.set_ylim(ymin, ymax)
 
     # Show CIs as whiskers
@@ -207,9 +203,9 @@ def intervention_collective_effect_plot(
     ax.spines["right"].set_visible(False)
 
     # Set title
-    ax.set_title(
-        f"Collective effect of interventions targeting '{intervention_label}'",
-        pad=30,
-    )
+    # ax.set_title(
+    #     f"Collective effect of interventions targeting '{intervention_label}'",
+    #     pad=30,
+    # )
 
     return fig

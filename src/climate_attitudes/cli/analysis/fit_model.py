@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import numpy.typing as npt
@@ -34,6 +35,10 @@ class FitModelRunCommand(BaseCommand):
 
     sigma: float | None = None
     sigma_path: Path | None = None
+
+    marginalise: bool = True
+
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606031023
 
@@ -105,11 +110,12 @@ class FitModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        _, Y, X = dataset.indices_to_numpy(
+        Y, X, P, *_ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
             seed=rng,
+            binarisation_dist=self.binarisation_kind,
         )
 
         Y = Y[..., keep_idxes]
@@ -137,10 +143,12 @@ class FitModelRunCommand(BaseCommand):
                     except:
                         raise
 
+        fit_method = (
+            FitMethod.MARGINALISED if self.marginalise else FitMethod.TIME_SERIES
+        )
         model = model_cls.fit(
-            y=Y,
-            X=X,
-            optim_method=FitMethod.TIME_SERIES,
+            y=P if self.marginalise else Y,
+            optim_method=fit_method,
             update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
             adj=adj,
@@ -155,10 +163,13 @@ class FitModelRunCommand(BaseCommand):
                 self.output,
                 seeds=self.seed,
                 Y=Y,
+                P=P,
                 X=X,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
+                marginalise=self.marginalise,
+                binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )
         else:
@@ -166,8 +177,11 @@ class FitModelRunCommand(BaseCommand):
                 self.output,
                 seeds=self.seed,
                 Y=Y,
+                P=P,
                 λ=lam if lam is not None else 0.0,
                 sigma=sigma,
                 params=params,
+                marginalise=self.marginalise,
+                binarisation_kind=self.binarisation_kind,
                 col_idxes=keep_idxes,
             )

@@ -16,17 +16,20 @@ np.set_printoptions(linewidth=200)
 
 
 def bootstrap_mean_ranks(measurements, z: float = 1.97):
-    # measurements: shape (repeats, replicates, n_individuals, n_interventions)
-    # expected_effect_per_individual = measurements.mean(axis=1)
-    expected_effect_collective = measurements.mean(axis=1)
-    rankings_per_repeat = rankdata(expected_effect_collective, method="min", axis=-1)
-    mean = rankings_per_repeat.mean(axis=0)
-    ci = z * rankings_per_repeat.std(axis=0, ddof=1)
+    mean_ranks_per_individual = rankdata(
+        measurements.mean(axis=0), method="min", axis=-1
+    )
+    mean = mean_ranks_per_individual.mean(axis=0)
+    ci = z * mean_ranks_per_individual.std(axis=0, ddof=1)
 
-    return mean, mean - ci, mean + ci
+    return (
+        mean,
+        np.clip(mean - ci, a_min=0, a_max=measurements.shape[-1]),
+        np.clip(mean + ci, a_min=0, a_max=measurements.shape[-1]),
+    )
 
 
-class InterventionCollectiveRankPlotCommand(BaseCommand):
+class InterventionIndividualRankPlotCommand(BaseCommand):
     output_dir: Path
     data_dir: Path
 

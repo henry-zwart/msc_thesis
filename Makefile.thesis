@@ -1,7 +1,5 @@
-#.SECONDARY:
-
 # Timepoint at which to measure effect for all-intervention experiments 
-MEASURE_TIME ?= 4
+MEASURE_TIME ?= 5
 
 THESIS_DIR := reports/thesis
 PKG_PATH := src/climate_attitudes
@@ -12,15 +10,17 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/methods/binarisation/distribution.pdf \
 		$(THESIS_DIR)/results/figures/model/transition_probability_example.pdf \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_effects/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
+			$(THESIS_DIR)/results/figures/model/intervention_effects/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
+			$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
+			$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)_no_use_covariates) \
-		$(THESIS_DIR)/results/figures/model/directional_differentials/rank_no_use_covariates_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_use_covariates_no_structure.pdf \
+			$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)) \
+		$(foreach d,05 10 15 25 80, \
+			$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)) \
+		$(THESIS_DIR)/results/figures/model/directional_differentials/rank_no_structure.pdf \
+		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_sym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/ideology_fit/conservative_interaction_matrix.pdf \
@@ -29,33 +29,12 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/network/full_asym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf
-		# $(foreach d,05 10 15 25 80, $(foreach cf,yes_use_covariates no_use_covariates, \
-		# 	$(THESIS_DIR)/results/figures/model/intervention_effects/.$(d)_$(MEASURE_TIME)_$(cf))) \
-		# $(foreach d,05 10 15 25 80, $(foreach cf,yes_use_covariates no_use_covariates, \
-		# 	$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)_$(cf))) \
-		# $(foreach d,05 10 15 25 80, $(foreach cf,yes_use_covariates no_use_covariates, \
-		# 	$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)_$(cf))) \
-		# $(foreach d,05 10 15 25 80, $(foreach cf,yes_use_covariates no_use_covariates, \
-		# 	$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)_$(cf))) \
-		#$(THESIS_DIR)/results/figures/model/directional_differentials/rank_yes_use_covariates_no_structure.pdf \
-		#$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_yes_use_covariates_no_structure.pdf \
-		#$(THESIS_DIR)/results/figures/model/interaction_matrix/ising_yes_use_covariates_no_structure.pdf \
-		#$(THESIS_DIR)/results/figures/model/interaction_matrix/sym_ising_yes_use_covariates_no_structure.pdf \
 		
 
 THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf \
 		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf
 
-# THESIS_FIGURES_MODEL_FIT_STRATIFICATION := \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_male.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_educ.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_income_percep.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_sym_ising_urban.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_male.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_educ.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_income_percep.pdf \
-# 		$(THESIS_DIR)/results/figures/model_fit/stratification_ising_urban.pdf
 
 THESIS_FIGURES := \
 		$(THESIS_FIGURES_MODEL) \
@@ -171,138 +150,93 @@ $(THESIS_DIR)/results/figures/model/ideology_fit: | $(THESIS_DIR)/results/figure
 $(THESIS_DIR)/results/figures/model/intervention_effects: | $(THESIS_DIR)/results/figures/model
 	@mkdir -p $@
 
-# $(THESIS_DIR)/results/figures/model/intervention_effects/.%_$(MEASURE_TIME)_yes_use_covariates: \
-# 			$(PKG_PATH)/cli/visualisation/intervention_mean_int_effect.py \
-# 			$(PKG_PATH)/visualisation.py \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_00_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_yes_use_covariates.npz \
-# 			| $(THESIS_DIR)/results/figures/model/intervention_effects
-# 	uv run cadata plot intervention-mean-effects \
-# 		--output-dir $(@D) \
-# 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-# 		--delta-str $* \
-# 		--use-covariates \
-# 		--measure-time $(MEASURE_TIME) \
-# 		--seed 202606051229 && \
-# 	touch $@
 
-$(THESIS_DIR)/results/figures/model/intervention_effects/.%_$(MEASURE_TIME)_no_use_covariates: \
+$(THESIS_DIR)/results/figures/model/intervention_effects/.%_$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_mean_int_effect.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_effects
 	uv run cadata plot intervention-mean-effects \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
 		--delta-str $* \
-		--no-use-covariates \
-		--measure-time $(MEASURE_TIME) \
-		--seed 202606051229 && \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
 $(THESIS_DIR)/results/figures/model/intervention_collective_ranking: | $(THESIS_DIR)/results/figures/model
 	mkdir -p $@
 
-# $(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.%_$(MEASURE_TIME)_yes_use_covariates: \
-# 			$(PKG_PATH)/cli/visualisation/intervention_mean_collective_ranking.py \
-# 			$(PKG_PATH)/visualisation.py \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_yes_use_covariates.npz \
-# 			| $(THESIS_DIR)/results/figures/model/intervention_collective_ranking
-# 	uv run cadata plot intervention-mean-collective-rank \
-# 		--output-dir $(@D) \
-# 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-# 		--delta-str $* \
-# 		--use-covariates \
-# 		--measure-time $(MEASURE_TIME) \
-# 		--seed 202606051245 && \
-# 	touch $@
 
-$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.%_$(MEASURE_TIME)_no_use_covariates: \
+$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.%_$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_mean_collective_ranking.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_collective_ranking
 	uv run cadata plot intervention-mean-collective-rank \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
 		--delta-str $* \
-		--no-use-covariates \
-		--measure-time $(MEASURE_TIME) \
-		--seed 202606051245 && \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME) && \
+	touch $@
+
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking: | $(THESIS_DIR)/results/figures/model
+	mkdir -p $@
+
+
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.%_$(MEASURE_TIME): \
+			$(PKG_PATH)/cli/visualisation/intervention_mean_individual_ranking.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
+			| $(THESIS_DIR)/results/figures/model/intervention_individual_ranking
+	uv run cadata plot intervention-mean-individual-rank \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--delta-str $* \
+		-z 1.0 \
+		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
 $(THESIS_DIR)/results/figures/model/intervention_collective_effect: | $(THESIS_DIR)/results/figures/model
 	mkdir -p $@
 
-# $(THESIS_DIR)/results/figures/model/intervention_collective_effect/.%_$(MEASURE_TIME)_yes_use_covariates: \
-# 			$(PKG_PATH)/cli/visualisation/intervention_mean_collective_effect.py \
-# 			$(PKG_PATH)/visualisation.py \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_yes_use_covariates.npz \
-# 			| $(THESIS_DIR)/results/figures/model/intervention_collective_effect
-# 	uv run cadata plot intervention-mean-collective-effect \
-# 		--output-dir $(@D) \
-# 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-# 		--delta-str $* \
-# 		--use-covariates \
-# 		--measure-time $(MEASURE_TIME) \
-# 		--seed 202606051258 && \
-# 	touch $@
 
-$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.%_$(MEASURE_TIME)_no_use_covariates: \
+$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.%_$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_mean_collective_effect.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_collective_effect
 	uv run cadata plot intervention-mean-collective-effect \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
 		--delta-str $* \
-		--no-use-covariates \
-		--measure-time $(MEASURE_TIME) \
-		--seed 202606051258 && \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
 $(THESIS_DIR)/results/figures/model/intervention_effect_distribution: | $(THESIS_DIR)/results/figures/model
 	mkdir -p $@
 
-# $(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.%_$(MEASURE_TIME)_yes_use_covariates: \
-# 			$(PKG_PATH)/cli/visualisation/intervention_effect_distribution.py \
-# 			$(PKG_PATH)/visualisation.py \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_00_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_yes_use_covariates.npz \
-# 			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_yes_use_covariates.npz \
-# 			| $(THESIS_DIR)/results/figures/model/intervention_effect_distribution
-# 	uv run cadata plot intervention-effect-distribution \
-# 		--output-dir $(@D) \
-# 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-# 		--delta-str $* \
-# 		--use-covariates \
-# 		--measure-time $(MEASURE_TIME) && \
-# 	touch $@
 
-$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.%_$(MEASURE_TIME)_no_use_covariates: \
+$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.%_$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_effect_distribution.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_effect_distribution
 	uv run cadata plot intervention-effect-distribution \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
 		--delta-str $* \
-		--no-use-covariates \
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
@@ -313,6 +247,7 @@ $(THESIS_DIR)/results/figures/model/directional_differentials/rank_%.pdf: \
 	uv run cadata plot directional-differentials \
 		--bootstrap-models $< \
 		--output $@ \
+		-z 1.645 \
 		--kind rank
 
 $(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_%.pdf: \
@@ -341,13 +276,13 @@ $(THESIS_DIR)/results/figures/model/interaction_matrix: | $(THESIS_DIR)/results/
 	@mkdir -p $@
 
 $(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf: \
-			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz \
+			$(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+			$(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
 			${PKG_PATH}/cli/visualisation/regularisation_ebic.py \
 			| $(THESIS_DIR)/results/figures/model_fit
 	uv run cadata plot regularisation-ebic \
-		--asym-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic.npz \
-		--sym-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic.npz \
+		--asym-results $(THESIS_DIR)/results/data/model_fit/asym_ising_regularisation_ebic_full.npz \
+		--sym-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
 		-z 1.96 \
 		--output $@
 			
@@ -371,35 +306,17 @@ $(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
 	@uv run cadata plot response-events --output $@
 
 
-# $(THESIS_DIR)/results/figures/model_fit/stratification_%.pdf: \
-# 			$(PKG_PATH)/cli/visualisation/stratified_ising.py \
-# 			$(PKG_PATH)/visualisation.py \
-# 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
-# 			| $(THESIS_DIR)/results/figures/model_fit
-# 	@$(eval STEM := $(basename $(notdir $@)))
-# 	@$(eval REST := $(patsubst stratification_%,%,$(STEM)))
-# 	@$(eval MODEL := $(if $(filter sym_ising_%,$(REST)),sym_ising,ising))
-# 	@$(eval STRATIFY := $(patsubst $(MODEL)_%,%,$(REST)))
-# 	@uv run cadata plot stratified-model --model-type $(MODEL) --stratify "dem_$(STRATIFY)" --output $@
-
-#
 # === Verification
 # +++ Section: Model
 # Pairwise interventions: intervene on s_i, measure state at s_j at time t.
 $(THESIS_DIR)/results/verification/model/all_interventions.txt: \
 			$(THESIS_DIR)/scripts/verification/model/all_interventions.py \
-			# $(THESIS_DIR)/results/data/model/all_interventions/ising_00_yes_use_covariates.npz \
-			# $(THESIS_DIR)/results/data/model/all_interventions/ising_05_yes_use_covariates.npz \
-			# $(THESIS_DIR)/results/data/model/all_interventions/ising_10_yes_use_covariates.npz \
-			# $(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_yes_use_covariates.npz \
-			# $(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05_yes_use_covariates.npz \
-			# $(THESIS_DIR)/results/data/model/all_interventions/sym_ising_10_yes_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_05_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_10_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05_no_use_covariates.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_10_no_use_covariates.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_10.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_10.npz \
 			| $(THESIS_DIR)/results/verification/model
 	@uv run $<
 
@@ -433,14 +350,14 @@ $(THESIS_DIR)/results/data/model/bootstrapped_fit/%.npz: \
 			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			| $(THESIS_DIR)/results/data/model/bootstrapped_fit
-	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/fit_bootstrapped_parse_params.py $* model); \
-	cov_flag=$$(uv run $(THESIS_DIR)/scripts/sec-model/fit_bootstrapped_parse_params.py $* cov_flag) && \
+	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/fit_bootstrapped_parse_params.py $* model) && \
 	uv run cadata analysis fit-bootstrapped \
 		--output $@ \
 		--model-type $$model \
 		--seed 202606111547 \
-		$$cov_flag \
-		--repeats 1000 \
+		--repeats 500 \
+		--binarisation-kind gaussian \
+		--marginalise \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		$(QUIET_FLAG)
@@ -454,23 +371,6 @@ $(THESIS_DIR)/results/data/model/bootstrapped_fit: | $(THESIS_DIR)/results/data/
 $(THESIS_DIR)/results/data/model/all_interventions: | $(THESIS_DIR)/results/data/model
 	@mkdir -p $@
 
-# $(THESIS_DIR)/results/data/model/all_interventions/%/: | $(THESIS_DIR)/results/data/model/all_interventions
-# 	@mkdir -p $@
-
-# $(THESIS_DIR)/results/data/model/all_interventions/%/seeds.npy: \
-# 	$(THESIS_DIR)/results/data/model/all_interventions/%/measure.npy
-#
-# $(THESIS_DIR)/results/data/model/all_interventions/%/datasets_Y.npy: \
-# 	$(THESIS_DIR)/results/data/model/all_interventions/%/measure.npy
-#
-# $(THESIS_DIR)/results/data/model/all_interventions/%/datasets_X.npy: \
-# 	$(THESIS_DIR)/results/data/model/all_interventions/%/measure.npy
-#
-# $(THESIS_DIR)/results/data/model/all_interventions/%/params.npy: \
-# 	$(THESIS_DIR)/results/data/model/all_interventions/%/measure.npy
-#
-# $(THESIS_DIR)/results/data/model/all_interventions/%/check.npy: \
-# 	$(THESIS_DIR)/results/data/model/all_interventions/%/measure.npy
 
 $(THESIS_DIR)/results/data/model/all_interventions/%: \
 			${PKG_PATH}/cli/analysis/all_interventions.py \
@@ -479,20 +379,19 @@ $(THESIS_DIR)/results/data/model/all_interventions/%: \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			| $(THESIS_DIR)/results/data/model/all_interventions
 	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/all_interventions_parse_params.py $* model); \
-	delta=$$(uv run $(THESIS_DIR)/scripts/sec-model/all_interventions_parse_params.py $* delta); \
-	cov_flag=$$(uv run $(THESIS_DIR)/scripts/sec-model/all_interventions_parse_params.py $* cov_flag) && \
+	delta=$$(uv run $(THESIS_DIR)/scripts/sec-model/all_interventions_parse_params.py $* delta) && \
 	uv run cadata analysis all-interventions \
 		--output $@ \
 		--model-type "$$model" \
 		--seed 202605271053 \
-		$$cov_flag \
 		--repeats 300 \
-		--measure-time 16 \
+		--marginalise \
+		--binarisation-kind "gaussian" \
+		--measure-time 15 \
 		--intervention-delta $$delta \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		$(QUIET_FLAG)
-		#--adjacency adj_policies_as_sink.npy \
 
 
 $(THESIS_DIR)/results/data/model/fit_%.npz: \
@@ -509,7 +408,9 @@ $(THESIS_DIR)/results/data/model/fit_%.npz: \
 		$$filter_cond \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		--binarisation-kind gaussian \
 		--seed 202606181614
+
 
 $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
 			${PKG_PATH}/cli/analysis/fit_model_by_ideology.py \
@@ -523,7 +424,7 @@ $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
 		--ideology conservative \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
-		--replicates 100 \
+		--marginalise \
 		--seed 202606222000
 
 $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz: \
@@ -538,10 +439,9 @@ $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz: \
 		--ideology liberal \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
-		--replicates 100 \
+		--marginalise \
 		--seed 202606222000
 		
-			
 
 $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json: \
 			${PKG_PATH}/cli/analysis/choose_regularisation_strength.py \
@@ -568,9 +468,11 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_full.npz: \
 		--output $@ \
 		--model-type $$model \
 		--min -4 \
-		--max -1.8 \
+		--max -1.5 \
 		-n 30 \
-		--repeats 100 \
+		--repeats 1 \
+		--marginalise \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \
@@ -589,7 +491,9 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_conservative.npz: \
 		--min -2.5 \
 		--max -1 \
 		-n 30 \
-		--repeats 100 \
+		--repeats 1 \
+		--marginalise \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \
@@ -608,7 +512,9 @@ $(THESIS_DIR)/results/data/model_fit/%_regularisation_ebic_liberal.npz: \
 		--min -2.5 \
 		--max -1 \
 		-n 30 \
-		--repeats 100 \
+		--repeats 1 \
+		--marginalise \
+		--binarisation-kind gaussian \
 		--non-zero-threshold 0.01 \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--seed 202606191202 \

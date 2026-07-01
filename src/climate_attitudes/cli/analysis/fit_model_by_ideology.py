@@ -30,7 +30,9 @@ class FitIdeologyModelRunCommand(BaseCommand):
     sigma: float | None = None
     sigma_path: Path | None = None
 
-    replicates: int = 1
+    marginalise: bool = True
+
+    binarisation_kind: Literal["gaussian", "triangular"] = "gaussian"
 
     seed: int = 202606031023
 
@@ -76,22 +78,13 @@ class FitIdeologyModelRunCommand(BaseCommand):
                     except:
                         raise
 
-        _, Y_mock, _ = dataset.indices_to_numpy(
+        Y, _, P, *_ = dataset.indices_to_numpy(
             kind="time-series",
             binarise=True,
             scale=sigma,
             seed=rng,
+            binarisation_dist=self.binarisation_kind,
         )
-        n = Y_mock.shape[0]
-        Y = np.empty((n * self.replicates, *Y_mock.shape[1:]), dtype=np.int64)
-        for i in range(self.replicates):
-            _, Yi, _ = dataset.indices_to_numpy(
-                kind="time-series",
-                binarise=True,
-                scale=sigma,
-                seed=rng,
-            )
-            Y[n * i : n * (i + 1)] = Yi
 
         Y = Y[..., [0, 1, 2, 3, 4, 6, 7]]
 
@@ -115,9 +108,12 @@ class FitIdeologyModelRunCommand(BaseCommand):
                     except:
                         raise
 
+        fit_method = (
+            FitMethod.MARGINALISED if self.marginalise else FitMethod.TIME_SERIES
+        )
         model = model_cls.fit(
             y=Y,
-            optim_method=FitMethod.TIME_SERIES,
+            optim_method=fit_method,
             update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
             adj=adj,
@@ -131,8 +127,10 @@ class FitIdeologyModelRunCommand(BaseCommand):
             self.output,
             seeds=self.seed,
             Y=Y,
+            P=P,
             λ=lam if lam is not None else 0.0,
             sigma=sigma,
             params=params,
+            marginalise=self.marginalise,
             col_idxes=[0, 1, 2, 3, 4, 6, 7],
         )
