@@ -1,4 +1,7 @@
 from .all_interventions import AllInterventionsRunCommand as AllInterventionsRunCommand
+from .calculate_activation_probability import (
+    CalculateActivationProbabilityCommand as CalculateActivationProbabilityCommand,
+)
 from .choose_regularisation_strength import (
     ChooseRegularisationRunCommand as ChooseRegularisationRunCommand,
 )

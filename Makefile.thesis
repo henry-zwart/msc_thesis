@@ -28,7 +28,8 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/ideology_fit/network.pdf \
 		$(THESIS_DIR)/results/figures/model/network/full_asym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf
+		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf \
+		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf
 		
 
 THESIS_FIGURES_DATASET := \
@@ -285,6 +286,29 @@ $(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf: \
 		--sym-results $(THESIS_DIR)/results/data/model_fit/sym_ising_regularisation_ebic_full.npz \
 		-z 1.96 \
 		--output $@
+
+
+$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf: \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_25_5.npz \
+			${PKG_PATH}/cli/visualisation/heterogeneous_intervention_effects.py \
+			| $(THESIS_DIR)/results/figures/model/heterogeneous_effects
+	uv run cadata plot identify-effective-personas \
+		--simulation-results $(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+		--activation-probability-null $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
+		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
+		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_25_5.npz \
+		--intervention weak \
+		--intervention strong \
+		--target-spin-idx 7 \
+		--max-tree-depth 4 \
+		--output $@
+
+$(THESIS_DIR)/results/figures/model/heterogeneous_effects: | $(THESIS_DIR)/results/figures/model
+	@mkdir -p $@
+
 			
 
 # +++ Section: Dataset
@@ -392,6 +416,20 @@ $(THESIS_DIR)/results/data/model/all_interventions/%: \
 		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
 		$(QUIET_FLAG)
+
+$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/%_5.npz: \
+			$(THESIS_DIR)/results/data/model/all_interventions/%.npz \
+			${PKG_PATH}/cli/analysis/calculate_activation_probability.py \
+			| $(THESIS_DIR)/results/data/model/all_interventions_activation_probability
+	delta=$$(uv run $(THESIS_DIR)/scripts/sec-model/all_interventions_parse_params.py $*.npz delta) && \
+	uv run cadata analysis calculate-activation-probability \
+		--simulation-results $< \
+		--intervention-delta $$delta \
+		--measure-time 5 \
+		--output $@
+
+$(THESIS_DIR)/results/data/model/all_interventions_activation_probability: $(THESIS_DIR)/results/data/model
+	@mkdir -p $@
 
 
 $(THESIS_DIR)/results/data/model/fit_%.npz: \

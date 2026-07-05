@@ -383,4 +383,5 @@ class AllInterventionsRunCommand(BaseCommand):
             sigma=sigma,
             measurements=measurements,
             marginalise=self.marginalise,
+            model_type=self.model_type,
         )
