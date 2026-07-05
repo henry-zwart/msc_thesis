@@ -84,3 +84,13 @@ intervention.
     long: [Ranked intervention effects per-individual, perfect, targeting climate policy],
   ),
 )
+
+=== Who is intervention effective for?
+
+#figure(
+  image("../results/figures/model/heterogeneous_effects/climate_policy.pdf"),
+  caption: caption(
+    short: [Characterisation of responsiveness to intervention],
+    long: [*TODO*],
+  ),
+)

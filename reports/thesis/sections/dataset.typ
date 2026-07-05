@@ -339,3 +339,22 @@ For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ suc
 a 'weakly oppose' response to a 7-point Likert scale
 #footnote[The oppose/support 7-point Likert scale has possible responses: strongly oppose, oppose, weakly oppose, neutral, weakly support, support, strongly support.]
 (value $1\/3$) is mapped to $+1$ with probability 0.05.
+
+#figure(
+  image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+  caption: caption(
+    short: [Likert-7 binarisation distribution],
+    long: [
+      The probability of binarisation to $+1$ for each possible response to a Likert-7
+      scale survey question, given $sigma= #binarisation_sigma$. Ordered responses are:
+      _strongly oppose_ (SO), _oppose_ (O), _weakly oppose_ (WO), _neutral_ (N),
+      _weakly support_ (WS), _support_ (S), _strongly support_ (SS).
+
+      *TODO: This figure assumes WO $mapsto +1$ with probability 0.1, while sigma
+      is calculated assuming $p = 0.05$*.
+
+      *TODO: Consider specifying Likert-7 scale options in a table, and referencing
+      that.*
+    ],
+  ),
+)

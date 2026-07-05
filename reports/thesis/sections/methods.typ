@@ -1,7 +1,6 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 #import "@preview/zero:0.6.1": num
 
-
 // == Plan
 //
 //
