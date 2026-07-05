@@ -1,6 +1,9 @@
 from .directional_differential import (
     DirectionalDifferentialPlotCommand as DirectionalDifferentialPlotCommand,
 )
+from .heterogeneous_intervention_effects import (
+    InterventionPersonasPlotCommand as InterventionPersonasPlotCommand,
+)
 from .ideology_network import NetworkIdeologyPlotCommand as NetworkIdeologyPlotCommand
 from .interaction_heatmap import (
     InteractionHeatmapPlotCommand as InteractionHeatmapPlotCommand,

@@ -184,14 +184,14 @@ GROUPS: dict[str, list[str | pl.Expr]] = {
 }
 
 RENAME: dict[str, str] = {
-    "cc1": "Climate change",
-    "cc2": "CC anthropogenic",
-    "cc6": "CC worry",
-    "cvcc_worryothers": "CC worry (others)",
+    "cc1": "CC Real",
+    "cc2": "CC Human",
+    "cc6": "CC Worry",
+    "cvcc_worryothers": "CC Others Worry",
     "ew5": "Weather worry",
     "politics": "Politics",
-    "climate_policy": "Climate policy",
-    "climate_impacts": "Climate impacts",
+    "climate_policy": "Climate Policy",
+    "climate_impacts": "Climate Impacts",
     # "ew6": "Weather preparation",
 }
 
@@ -223,7 +223,7 @@ schema = DatasetSchema(
         Column(
             name="cc1",
             display_name="Belief in climate change",
-            short_name="Belief CC",
+            short_name="CC Real",
             abbrev="B(CC)",
             category="Belief",
             kind="measurement",
@@ -232,7 +232,7 @@ schema = DatasetSchema(
         Column(
             name="cc2",
             display_name="Belief about causes of climate change",
-            short_name="CC anthropogenic",
+            short_name="CC Human",
             abbrev="B(CCA)",
             category="Belief",
             kind="measurement",
@@ -273,7 +273,7 @@ schema = DatasetSchema(
         Column(
             name="cc6",
             display_name="Worry about current and future CC",
-            short_name="CC worry",
+            short_name="CC Worry",
             abbrev="A(CCW)",
             category="Attitude",
             kind="measurement",
@@ -282,7 +282,7 @@ schema = DatasetSchema(
         Column(
             name="cvcc_worryothers",
             display_name="Belief about others' worry about current and future CC",
-            short_name="CC worry (others)",
+            short_name="CC Others Worry",
             abbrev="B(CCWO)",
             category="Belief",
             kind="measurement",
@@ -308,7 +308,7 @@ schema = DatasetSchema(
         Column(
             name="cvcc9_cc",
             display_name="Scientists should guide CC response",
-            short_name="Scientists in CC response",
+            short_name="CC Scientists",
             category="Attitude",
             kind="measurement",
             transform=PolarsSubtract(amt=3),
@@ -375,7 +375,7 @@ schema = DatasetSchema(
         IndexColumn(
             name="climate_impacts",
             display_name="Climate Impacts",
-            short_name="Climate Impacts",
+            short_name="CC Impact",
             abbrev="B(CCI)",
             category="Belief",
             kind="measurement",
@@ -384,7 +384,7 @@ schema = DatasetSchema(
         IndexColumn(
             name="climate_policy",
             display_name="Climate Policy",
-            short_name="Climate Policy",
+            short_name="CC Policy",
             abbrev="A(CCP)",
             category="Attitude",
             kind="measurement",

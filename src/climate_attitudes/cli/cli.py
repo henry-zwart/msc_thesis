@@ -301,6 +301,7 @@ class PlotSubCommand(BaseModel):
     regularisation_ebic: CliSubCommand[vis_cli.RegularisationEBICPlotCommand]
     ideology_networks: CliSubCommand[vis_cli.NetworkIdeologyPlotCommand]
     network: CliSubCommand[vis_cli.NetworkPlotCommand]
+    identify_effective_personas: CliSubCommand[vis_cli.InterventionPersonasPlotCommand]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
@@ -313,6 +314,9 @@ class AnalysisSubCommand(BaseModel):
     all_interventions: CliSubCommand[analysis_cli.AllInterventionsRunCommand]
     regularisation_ebic: CliSubCommand[analysis_cli.CompareRegularisationEBICRunCommand]
     choose_regularisation: CliSubCommand[analysis_cli.ChooseRegularisationRunCommand]
+    calculate_activation_probability: CliSubCommand[
+        analysis_cli.CalculateActivationProbabilityCommand
+    ]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
