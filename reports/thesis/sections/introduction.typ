@@ -27,6 +27,36 @@
   different initial conditions, or between conservative and liberal individuals?
 
 
+== Contributions
+We
++ We
++ We present a mathematical model for belief system dynamics that does not assume
+  equilibrium and does not assume symmetric influence between cognitive aspects
+  (@sec:asymmetric-belief-systems)
++ We describe a novel parameter estimation method for fitting binary models to
+  continuous data (@sec:methods).
++ We calibrate said model to data from a recent longitudinal survey including items on
+  beliefs and attitudes regarding climate change
+  (@sec:results-asymmetry-in-belief-systems).
++ We demonstrate, by way of the calibrated model, the existence of asymmetric influence
+  relations between beliefs and attitudes. Furthermore we show that influence relations
+  are not _necessarily_ asymmetric, may vary in the degree of asymmetry, and can be
+  unidirectional (@sec:results-asymmetry-in-belief-systems).
++ We demonstrate that the decision to represent asymmetric relations in belief system
+  models can change intervention dynamics, and therefore conclusions one draws
+  regarding intervention effect and effectiveness
+  (@sec:results-asymmetry-in-belief-systems).
++ We then show that belief systems may vary significantly between individuals, by
+  fitting the proposed model to subsets of the climate attitudes dataset comprising
+  conservative and liberal individuals
+  (@sec:heterogeneity-in-belief-systems-and-intervention-effects).
++ Finally, we show that reasoning about the effects of interventions on _individuals_
+  is, in general, non-trivial. How an individual responds to an intervention typically
+  depends on their prior belief system state, including beliefs and attitudes other
+  than the target and goal of intervention
+  (@sec:heterogeneity-in-belief-systems-and-intervention-effects).
+
+
 == Proposed thesis structure
 
 - *Terminology and notation*

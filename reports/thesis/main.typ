@@ -26,6 +26,7 @@
   site: "http://www.uva.nl/en/about-the-uva/organisation/organisational-structure/content/faculties/faculty-of-science-fnwi/faculty-of-science-fnwi.html",
 )
 
+
 #let degree = "Master of Science in Computational Science"
 
 //#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])

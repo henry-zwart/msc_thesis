@@ -107,7 +107,7 @@ interventions, then take mean across individuals.
 === Ranking interventions
 
 #figure(
-  image("../results/figures/model/intervention_collective_ranking/05_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_ranking/05_cc_policy.pdf"),
   caption: caption(
     short: [Intervention ranking targeting climate policy support (weak intervention)],
     long: [
@@ -120,7 +120,7 @@ interventions, then take mean across individuals.
 )
 
 #figure(
-  image("../results/figures/model/intervention_collective_ranking/10_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_ranking/10_cc_policy.pdf"),
   caption: caption(
     short: [
       Intervention ranking targeting climate policy support (medium intervention)
@@ -135,7 +135,7 @@ interventions, then take mean across individuals.
 )
 
 #figure(
-  image("../results/figures/model/intervention_collective_ranking/80_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_ranking/80_cc_policy.pdf"),
   caption: caption(
     short: [
       Intervention ranking targeting climate policy support (perfect intervention)
@@ -154,7 +154,7 @@ interventions, then take mean across individuals.
 Measures the average difference in state between intervention and no-intervention scenarios
 
 #figure(
-  image("../results/figures/model/intervention_collective_effect/05_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_effect/05_cc_policy.pdf"),
   caption: caption(
     short: [Effect of weak interventions targeting climate policy support],
     long: [
@@ -167,7 +167,7 @@ Measures the average difference in state between intervention and no-interventio
 )
 
 #figure(
-  image("../results/figures/model/intervention_collective_effect/10_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_effect/10_cc_policy.pdf"),
   caption: caption(
     short: [
       Effect of medium interventions targeting climate policy support
@@ -182,7 +182,7 @@ Measures the average difference in state between intervention and no-interventio
 )
 
 #figure(
-  image("../results/figures/model/intervention_collective_effect/80_climate_policy.pdf"),
+  image("../results/figures/model/intervention_collective_effect/80_cc_policy.pdf"),
   caption: caption(
     short: [
       Effect of perfect interventions targeting climate policy support

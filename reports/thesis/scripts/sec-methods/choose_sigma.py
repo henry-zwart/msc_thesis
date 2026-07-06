@@ -13,7 +13,7 @@ def main():
     norm = sp.stats.Normal(mu=0, sigma=1)
 
     # Calculate reqd. standard deviation size
-    std = np.round(X / norm.icdf(P_MAP_WEAK_OPPOSE_TO_SUPPORT), decimals=1)
+    std = np.round(X / norm.icdf(P_MAP_WEAK_OPPOSE_TO_SUPPORT), decimals=3)
 
     with Path("reports/thesis/results/data/methods/binarisation_sigma.json").open(
         "w"

@@ -34,7 +34,8 @@ THESIS_FIGURES_MODEL := \
 
 THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf \
-		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf
+		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf \
+		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf
 
 
 THESIS_FIGURES := \
@@ -312,6 +313,13 @@ $(THESIS_DIR)/results/figures/model/heterogeneous_effects: | $(THESIS_DIR)/resul
 			
 
 # +++ Section: Dataset
+$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/likert_binarisation_probabilities.py \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+
 $(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf: \
 			$(PKG_PATH)/cli/visualisation/interresponse_time.py \
 			$(PKG_PATH)/visualisation.py \

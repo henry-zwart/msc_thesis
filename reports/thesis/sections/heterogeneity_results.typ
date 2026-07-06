@@ -70,7 +70,7 @@ For each individual, compute ranking over the expected effects of each possible
 intervention.
 
 #figure(
-  image("../results/figures/model/intervention_individual_ranking/05_climate_policy.pdf"),
+  image("../results/figures/model/intervention_individual_ranking/05_cc_policy.pdf"),
   caption: caption(
     short: [Ranked intervention effects per-individual, weak, targeting climate policy],
     long: [Ranked intervention effects per-individual, weak, targeting climate policy],
@@ -78,7 +78,7 @@ intervention.
 )
 
 #figure(
-  image("../results/figures/model/intervention_individual_ranking/80_climate_policy.pdf"),
+  image("../results/figures/model/intervention_individual_ranking/80_cc_policy.pdf"),
   caption: caption(
     short: [Ranked intervention effects per-individual, perfect, targeting climate policy],
     long: [Ranked intervention effects per-individual, perfect, targeting climate policy],

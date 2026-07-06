@@ -9,22 +9,13 @@ from climate_attitudes.visualisation import configure_mpl
 
 
 def main():
-    P_MAP_WEAK_OPPOSE_TO_SUPPORT = 0.1
-    X = -1 / 3
-
-    # Initialise standard normal distribution
-    norm = sp.stats.Normal(mu=0, sigma=1)
-
-    # Calculate reqd. standard deviation size
-    std = np.round(X / norm.icdf(P_MAP_WEAK_OPPOSE_TO_SUPPORT), decimals=1)
-
     # Load binarisation sigma
     sigma_path = Path("reports/thesis/results/data/methods/binarisation_sigma.json")
     with sigma_path.open("r") as f:
-        _sigma: float = json.load(f)["sigma"]
+        sigma: float = json.load(f)["sigma"]
 
     likert_7 = np.linspace(-1.0, 1.0, 7)
-    p_map_to_1 = sp.stats.norm.cdf(likert_7 / std)
+    p_map_to_1 = sp.stats.norm.cdf(likert_7 / sigma)
     labels = ["SO", "O", "WO", "N", "WS", "S", "SS"]
 
     fig, ax = plt.subplots(figsize=(4.5, 2), constrained_layout=True)
