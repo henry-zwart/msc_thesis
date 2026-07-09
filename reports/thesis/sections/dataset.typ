@@ -842,7 +842,7 @@ To reduce the set of candidate variables to the target range of 7--10, we procee
 identify groups of similar or redundant variables which may be removed or combined into
 interpretable index variables. We use two primary measures to investigate similarity:
 pairwise partial correlation, and vector autoregression
-@epskampPersonalisedNetworkModelling2018 @epskampGaussianGraphicalModel2018.
+@epskampPersonalizedNetworkModeling2018   @epskampGaussianGraphicalModel2018.
 
 Partial correlation measures the correlation between a pair of variables $X$ and $Y$
 after conditioning on all remaining variables $Z$:

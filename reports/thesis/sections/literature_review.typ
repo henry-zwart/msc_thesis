@@ -2,7 +2,7 @@
 
 + Psychological/philosophical theories of beliefs and attitudes
   - Cognitive consistency:
-    - Heider (balance theory) @heiderAttitudesCognitiveOrganisation1946, Insko &
+    - Heider (balance theory) @heiderAttitudesCognitiveOrganization1946, Insko &
       Schopler (triadic consistency) @inskoTriadicConsistency1967
     - Festinger (cognitive dissonance) @festingerCognitiveDissonance1962
   - Fishbein @fishbein1966relationships
@@ -13,17 +13,17 @@
     - Triadic consistency @rodriguezCollectiveDynamicsBelief2016
     - Parallel constraint satisfaction @monroeGeneralConnectionistModel2008
     - Bayesian networks @powellModelingLeveragingIntuitive2023
-      @cookRationalIrrationalityModelling2016
+      @cookRationalIrrationalityModeling2016
     - Structural equation modelling?
     - Regularised partial correlation networks
     - Ising
-      - CAN @dalegeFormalisedAccountAttitudes2016
+      - CAN @dalegeFormalizedAccountAttitudes2016
       - Social influence: Network of belief @dalegeNetworksBeliefsIntegrative2025,
-        hierarchical Ising model @vandermaasPolarisationIndividualsHierarchical2020
+        hierarchical Ising model @vandermaasPolarizationIndividualsHierarchical2020
 
   - What theory/assumptions does each model draw on?
   - Difference between Latent variable and empirical network models
-    @dalegeFormalisedAccountAttitudes2016
+    @dalegeFormalizedAccountAttitudes2016
   - Case studies --- how have the models been applied?
     - Theoretical explanations for known phenomenon
     - Analysis of survey data

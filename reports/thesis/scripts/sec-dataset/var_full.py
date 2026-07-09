@@ -54,9 +54,8 @@ def main(df: pl.DataFrame, labels: list[str]):
             ]
         ),
     )
-    # cbar_axe_contemp = axes[0].inset_axes([0.75, 0.9, 0.2, 0.02])
-    cbar_axe_contemp = axes[0].inset_axes([0.75, 1.05, 0.25, 0.03])
-    cbar_axe_contemp.tick_params(labelsize=7, length=2)
+    cbar_ax_contemp = axes[0].inset_axes([0.75, 1.05, 0.25, 0.03])
+    cbar_ax_contemp.tick_params(labelsize=7, length=2)
     sns.heatmap(
         var_contemporaneous[:, :-1],
         mask=mask_contemporaneous[:, :-1],
@@ -64,7 +63,7 @@ def main(df: pl.DataFrame, labels: list[str]):
         cmap=DIVERGING_CMAP,
         vmin=-0.4,
         vmax=0.4,
-        cbar_axe=cbar_axe_contemp,
+        cbar_ax=cbar_ax_contemp,
         cbar_kws=dict(
             use_gridspec=False,
             location="top",
@@ -78,10 +77,9 @@ def main(df: pl.DataFrame, labels: list[str]):
         # annot=True,
         ax=axes[0],
     )
-    cbar_axe_contemp.set_xticks([-0.4, 0, 0.4])
-    # cbar_axe_temporal = axes[1].inset_axes([0.75, 0.9, 0.2, 0.02])
-    cbar_axe_temporal = axes[1].inset_axes([0.75, 1.05, 0.25, 0.03])
-    cbar_axe_temporal.tick_params(labelsize=7, length=2)
+    cbar_ax_contemp.set_xticks([-0.4, 0, 0.4])
+    cbar_ax_temporal = axes[1].inset_axes([0.75, 1.05, 0.25, 0.03])
+    cbar_ax_temporal.tick_params(labelsize=7, length=2)
     mask_temporal = np.zeros_like(var_temporal, dtype=np.bool)
     sns.heatmap(
         var_temporal,
@@ -92,7 +90,7 @@ def main(df: pl.DataFrame, labels: list[str]):
         vmax=0.4,
         cbar=True,
         # cbar_kws=dict(aspect=30),
-        cbar_axe=cbar_axe_temporal,
+        cbar_ax=cbar_ax_temporal,
         cbar_kws=dict(
             use_gridspec=False,
             location="top",
@@ -106,7 +104,7 @@ def main(df: pl.DataFrame, labels: list[str]):
         # annot=True,
         ax=axes[1],
     )
-    cbar_axe_temporal.set_xticks([-0.4, 0.0, 0.4])
+    cbar_ax_temporal.set_xticks([-0.4, 0.0, 0.4])
 
     for ax in axes:
         ax.tick_params(axis="both", labelsize=7, length=0)
