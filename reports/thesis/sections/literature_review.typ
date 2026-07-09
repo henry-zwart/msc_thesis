@@ -1,14 +1,41 @@
-Considering moving this section to later in the thesis.
+== Plan
 
-- Early work on modelling belief systems, triadic consistency
-- Approaches:
-  - partial correlation networks,
-  - Bayesian networks,
-  - Causal attitude network, Ising-style models
-- Beliefs as edges vs. beliefs as nodes
-- Social influence: hierarchical Ising models, network of belief model
-- Within-person vs between-person correlations; complications around inferring
-  individual belief systems.
++ Psychological/philosophical theories of beliefs and attitudes
+  - Cognitive consistency:
+    - Heider (balance theory) @heiderAttitudesCognitiveOrganisation1946, Insko &
+      Schopler (triadic consistency) @inskoTriadicConsistency1967
+    - Festinger (cognitive dissonance) @festingerCognitiveDissonance1962
+  - Fishbein @fishbein1966relationships
+  - Quine @zotero-item-17041
+
++ Belief system modelling:
+  - Schools of thought:
+    - Triadic consistency @rodriguezCollectiveDynamicsBelief2016
+    - Parallel constraint satisfaction @monroeGeneralConnectionistModel2008
+    - Bayesian networks @powellModelingLeveragingIntuitive2023
+      @cookRationalIrrationalityModelling2016
+    - Structural equation modelling?
+    - Regularised partial correlation networks
+    - Ising
+      - CAN @dalegeFormalisedAccountAttitudes2016
+      - Social influence: Network of belief @dalegeNetworksBeliefsIntegrative2025,
+        hierarchical Ising model @vandermaasPolarisationIndividualsHierarchical2020
+
+  - What theory/assumptions does each model draw on?
+  - Difference between Latent variable and empirical network models
+    @dalegeFormalisedAccountAttitudes2016
+  - Case studies --- how have the models been applied?
+    - Theoretical explanations for known phenomenon
+    - Analysis of survey data
+
++ Interventions
+  - Modelling, testing effects @powellModelingLeveragingIntuitive2023
+  - Theoretical @dalegeNetworksBeliefsIntegrative2025
+  - In-practice @theworkshopHowTalkCommunity2024
+
++ Inference
+  - Between-individual limitations @brandtBetweenpersonMethodsProvide2022
+
 
 
 // === Symmetric (equillibrium) Ising model

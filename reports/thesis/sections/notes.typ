@@ -52,6 +52,12 @@ Discuss problem of fitting individual models. Two issues:
   impact of excluding true relations --- or including false ones --- on an inferred
   model?
 
+== Future work
+
+- Intentionally-derived indices: theoretically-motivated variables, as opposed to
+  averaged indices. e.g., psychological distance as difference in beliefs about climate
+  impacts elsewhere and local.
+
 == Scratch notes
 Potentially-useful sections I've pulled from old drafts
 

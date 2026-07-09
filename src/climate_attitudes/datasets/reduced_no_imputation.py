@@ -173,7 +173,7 @@ GROUPS: dict[str, list[str | pl.Expr]] = {
         "cc4_wealthUS",
         "cc4_comm",
     ],
-    "Climate Policy": [
+    "Climate Action": [
         "cc_pol_car",
         "cc_pol_tax",
         "cc_ica",
@@ -190,7 +190,7 @@ RENAME: dict[str, str] = {
     "cvcc_worryothers": "CC Others Worry",
     "ew5": "Weather worry",
     "politics": "Politics",
-    "climate_policy": "Climate Policy",
+    "climate_action": "Climate Action",
     "climate_impacts": "Climate Impacts",
     # "ew6": "Weather preparation",
 }
@@ -241,7 +241,7 @@ schema = DatasetSchema(
         Column(
             name="cc4_world",
             display_name="Belief about impacts of CC on world",
-            short_name="CC impacts (world)",
+            short_name="CC Impact (world)",
             category="Belief",
             kind="measurement",
             transform=PolarsReplace(mapping={1: -2, 2: -1, 99: 0, 3: 1, 4: 2}),
@@ -249,7 +249,7 @@ schema = DatasetSchema(
         Column(
             name="cc4_wealthUS",
             display_name="Belief about impacts of CC on wealthy US communities",
-            short_name="CC impacts (wealth US)",
+            short_name="CC Impact (wealthy)",
             category="Belief",
             kind="measurement",
             transform=PolarsReplace(mapping={1: -2, 2: -1, 99: 0, 3: 1, 4: 2}),
@@ -257,7 +257,7 @@ schema = DatasetSchema(
         Column(
             name="cc4_poorUS",
             display_name="Belief about impacts of CC on poor US communities",
-            short_name="CC impacts (poor US)",
+            short_name="CC Impact (poor)",
             category="Belief",
             kind="measurement",
             transform=PolarsReplace(mapping={1: -2, 2: -1, 99: 0, 3: 1, 4: 2}),
@@ -265,7 +265,7 @@ schema = DatasetSchema(
         Column(
             name="cc4_comm",
             display_name="Belief about impacts of CC on own community",
-            short_name="CC impacts (own community)",
+            short_name="CC Impact (comm)",
             category="Belief",
             kind="measurement",
             transform=PolarsReplace(mapping={1: -2, 2: -1, 99: 0, 3: 1, 4: 2}),
@@ -300,7 +300,7 @@ schema = DatasetSchema(
         Column(
             name="cvcc6",
             display_name="Importance of individual action on CC",
-            short_name="CC individual action",
+            short_name="CC Responsibility",
             category="Attitude",
             kind="measurement",
             transform=PolarsSubtract(amt=3),
@@ -316,7 +316,7 @@ schema = DatasetSchema(
         Column(
             name="cc_ica",
             display_name="Support for international carbon emission agreement",
-            short_name="International emission agreement",
+            short_name="Policy: ICA",
             category="Attitude",
             kind="measurement",
             transform=PolarsReplace(mapping={0: -1, 1: 1, 2: 1}),
@@ -324,7 +324,7 @@ schema = DatasetSchema(
         Column(
             name="cc_pol_tax",
             display_name="Support for tax on carbon-based fuels",
-            short_name="Tax carbon fuels",
+            short_name="Policy: Tax fuel",
             category="Attitude",
             kind="measurement",
             transform=PolarsSubtract(amt=3),
@@ -334,7 +334,7 @@ schema = DatasetSchema(
             display_name=(
                 "Support for stronger emissions standard for auto manufacturers"
             ),
-            short_name="Stronger emissions standards (auto)",
+            short_name="Policy: Auto",
             category="Attitude",
             kind="measurement",
             transform=PolarsSubtract(amt=3),
@@ -342,7 +342,7 @@ schema = DatasetSchema(
         Column(
             name="pol7",
             display_name="Strict environmental regulations are worth it",
-            short_name="Env. regulation worth it",
+            short_name="Policy: Env. Reg.",
             category="Attitude",
             kind="measurement",
             transform=PolarsReplace(mapping={1: -1, 2: 1}),
@@ -382,10 +382,10 @@ schema = DatasetSchema(
             parts=["cc4_world", "cc4_poorUS", "cc4_wealthUS", "cc4_comm"],
         ),
         IndexColumn(
-            name="climate_policy",
-            display_name="Climate Policy",
-            short_name="CC Policy",
-            abbrev="A(CCP)",
+            name="climate_action",
+            display_name="Climate Action",
+            short_name="CC Action",
+            abbrev="A(CCA)",
             category="Attitude",
             kind="measurement",
             parts=["cc_pol_car", "cc_pol_tax", "cc_ica", "pol7", "cvcc6", "cvcc9_cc"],

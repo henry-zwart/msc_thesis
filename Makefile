@@ -55,7 +55,7 @@ DATASETS := \
 
 .PHONY: clean serve data-assets quarto-reports all-reports
 
-all: site/site/index.html outputs/project_timeline.png all-reports quarto-reports
+all: outputs/reports/thesis.pdf
 
 all-reports: $(REPORTS)
 

@@ -188,10 +188,11 @@ def fit_var(
     # Values in a column are the regression coefficients for that column's question
     if not regularised:
         B, *_ = np.linalg.lstsq(X, Y)
+        B = B.T
     else:
         lasso = MultiTaskLassoCV()
         lasso.fit(X, Y)
-        B = lasso.coef_.T
+        B = lasso.coef_
 
     # Calculate contemporaneous network (K)
     # 1. Variance-covariance matrix of residuals

@@ -39,6 +39,7 @@
 
 #let acknowledgements = [Thank the people that have helped: supervisors, family, etc.]
 
+
 #let abbreviations = [
   / CSL: #strong[C]omputational #strong[S]cience #strong[L]ab
 
