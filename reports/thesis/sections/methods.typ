@@ -1,6 +1,12 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 #import "@preview/zero:0.6.1": num
 
+== To-do
+- Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
+  even when excluding self-loops.
+  - If we could, this would simplify dataset. Wouldn't need to rely on repeating
+    participants.
+
 // == Plan
 //
 //
@@ -167,6 +173,7 @@ difference between the observed outcomes.
 
 
 == Parameter estimation <subsec:methods-parameter-estimation>
+
 
 // - Introduce section; derivations can be found in the appendix
 // - Describe parameter estimation problem

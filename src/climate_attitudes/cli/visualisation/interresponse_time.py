@@ -28,7 +28,7 @@ class InterResponseTimePlotCommand(BaseCommand):
             RawDataFile.Wave6Responses.scan(self.settings)
         ).collect()
 
-        intervals = pl.Enum([f"{i - 1}—{i}" for i in range(2, 7)])
+        intervals = pl.Enum([f"W{i - 1}—W{i}" for i in range(2, 7)])
         df = pl.concat(
             [
                 w1_to_5.select("participant_id", "wave", "start_date"),  # ty: ignore
@@ -49,24 +49,41 @@ class InterResponseTimePlotCommand(BaseCommand):
             .with_columns((pl.col("Interval") - 2).cast(intervals).cast(pl.String))
         )
 
-        fig, ax = plt.subplots(figsize=(3.5, 1.75), constrained_layout=True)
+        fig, ax = plt.subplots(figsize=(5.5, 1.5), constrained_layout=True)
 
         sns.kdeplot(
             time_deltas,
             x="time_delta",
             hue="Interval",
             fill=True,
+            common_norm=False,
             ax=ax,
+            bw_adjust=2.0,
             palette=QUALITATIVE_SCHEME.colors[  # ty: ignore
                 : time_deltas.select(pl.col("Interval").n_unique()).item()
             ],
         )
 
+        handles = ax.legend_.legend_handles  # ty: ignore
+        leg_labels = [t.get_text() for t in ax.legend_.get_texts()]  # ty: ignore
+        ax.legend_.remove()  # ty: ignore
+
         ax.set_xlim(0, None)
 
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-        ax.set_xlabel(r"$\Delta t$ (days)")
+        ax.set_xlabel("Inter-response time (days)")
+
+        ax.legend(
+            handles,  # ty: ignore
+            leg_labels,
+            ncol=len(leg_labels),
+            loc="lower center",
+            handlelength=1,
+            bbox_to_anchor=(0.5, 1.0),
+            frameon=False,
+        )
+
         if self.output:
             fig.savefig(self.output, bbox_inches="tight")
         else:

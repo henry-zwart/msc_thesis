@@ -33,8 +33,14 @@ THESIS_FIGURES_MODEL := \
 		
 
 THESIS_FIGURES_DATASET := \
+		$(THESIS_DIR)/results/figures/dataset/participation.pdf \
 		$(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf \
 		$(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf \
+		$(THESIS_DIR)/results/figures/dataset/validation_switchpoints.pdf \
+		$(THESIS_DIR)/results/figures/dataset/full_subset_partial_corr.pdf \
+		$(THESIS_DIR)/results/figures/dataset/full_subset_var.pdf \
+		$(THESIS_DIR)/results/figures/dataset/full_subset_dendrogram.pdf \
+		$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf \
 		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf
 
 
@@ -319,6 +325,38 @@ $(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf: \
 			| $(THESIS_DIR)/results/figures/dataset
 	@uv run $<
 
+$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/partial_correlation_reduced.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/full_subset_dendrogram.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/hclust_full.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/full_subset_var.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/var_full.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/full_subset_partial_corr.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/partial_correlation_full.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+
+$(THESIS_DIR)/results/figures/dataset/validation_switchpoints.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/validation_switchpoints.py \
+			$(PKG_PATH)/visualisation.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+			
 
 $(THESIS_DIR)/results/figures/dataset/interresponse_times.pdf: \
 			$(PKG_PATH)/cli/visualisation/interresponse_time.py \
@@ -336,6 +374,14 @@ $(THESIS_DIR)/results/figures/dataset/response_eventplot.pdf: \
 			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
 			| $(THESIS_DIR)/results/figures/dataset
 	@uv run cadata plot response-events --output $@
+
+$(THESIS_DIR)/results/figures/dataset/participation.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/participation_plot.py \
+			$(PKG_PATH)/visualisation.py \
+			${CA_RAW_ASSETS}/w1w2w3w4w5_indices_weights_jul12_2022.parquet \
+			${CA_RAW_ASSETS}/w6_cleaned_weights_june12_2023.parquet \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
 
 
 # === Verification

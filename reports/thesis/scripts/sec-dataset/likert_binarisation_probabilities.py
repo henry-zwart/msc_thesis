@@ -19,7 +19,7 @@ def main():
     labels = ["SO", "O", "WO", "N", "WS", "S", "SS"]
 
     fig, ax = plt.subplots(figsize=(4.5, 2), constrained_layout=True)
-    ax.plot(likert_7, p_map_to_1, "-", color="k", linewidth=1)
+    ax.plot(likert_7, p_map_to_1, "-", color="k", linewidth=1, clip_on=False)
     ax.plot(
         likert_7,
         p_map_to_1,

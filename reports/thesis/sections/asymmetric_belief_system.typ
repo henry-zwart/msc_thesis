@@ -139,7 +139,7 @@ clearly interpretable. The inclusion of self-influence effects allows us to capt
 the timescales of different beliefs or attitudes independently.
 
 
-The energy experienced by $S_i$ for a particular spin state $s in {0,1}$ is then the
+The energy experienced by $S_i$ for a particular spin state $s in {-1,+1}$ is then the
 result of $s$ in combination with the baseline activation and influence effects from
 all spins with edges to $S_i$:
 
@@ -230,18 +230,19 @@ of a belief system, for instance, by changing the existence of effect size of in
 relations between beliefs and attitudes.
 
 Let $cal(M)$ be a belief system model with parameters
-$chevron bold(A), bold(J), bold(h) chevron.r$:
-
-#figure(
-  image("../diagrams/modelling_interventions/belief_system.svg", width: 30%),
-)
-
-
+$chevron bold(A), bold(J), bold(h) chevron.r$.
 We can consider an intervention as an
 auxiliary node, $I$, in the belief system network, with state fixed at a particular
 value and outgoing edges toward a subset of beliefs and attitudes:
 
+// #figure(
+//   image("../diagrams/modelling_interventions/belief_system.svg", width: 30%),
+// )
+
+
+
 #figure(
+  outlined: false,
   image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
 )
 
@@ -266,6 +267,7 @@ It follows then that we can model interventions more simply as an adjustment to 
 baseline activation of certain beliefs and attitudes:
 
 #figure(
+  outlined: false,
   image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
 )
 
