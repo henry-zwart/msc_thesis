@@ -88,7 +88,7 @@
 #include "sections/methods.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
-#include "sections/asymmetry_in_belief_systems.typ"
+#include "sections/asymmetry_results.typ"
 
 = Heterogeneous belief systems and intervention effects <sec:heterogeneity-in-belief-systems-and-intervention-effects>
 #include "sections/heterogeneity_results.typ"
