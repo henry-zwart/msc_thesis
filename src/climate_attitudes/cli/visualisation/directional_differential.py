@@ -56,7 +56,7 @@ def plot_ranked_differentials(
     ci_upper: npt.NDArray[np.float64],
     labels: list[str],
 ) -> Figure:
-    fig, ax = plt.subplots(figsize=(5, 6), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(5, 4), constrained_layout=True)
     n = mean_diff.shape[-1]
 
     # Categorise relations:
@@ -85,9 +85,9 @@ def plot_ranked_differentials(
         mean_diffs_flat,
         np.arange(n * (n - 1) // 2),
         color="k",
-        s=14,
+        s=10,
         zorder=5,
-        label="Mean effect difference",
+        label="Median difference",
     )
 
     # Show ci interval as shaded region
@@ -109,7 +109,7 @@ def plot_ranked_differentials(
         ls="none",
         zorder=3,
         ecolor=bar_color.tolist(),
-        label="95% CI",
+        label="90% CI",
     )
     plt.setp(bar[0], capstyle="round")
     marker.set_fillstyle("none")
@@ -119,16 +119,38 @@ def plot_ranked_differentials(
     # Draw 0.0 as dashed
     ax.axvline(x=0, linestyle="dashed", linewidth=0.75, color="gray", zorder=1)
 
-    ylabels = [[] for _ in range(n)]
+    # Determine max label length for X and Y in X --> Y, to center-justify
     colnames = [ds_spec.RENAME.get(colname, colname) for colname in labels]
+    max_left_len = 0
+    max_right_len = 0
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            if mean_diff[i, j] > 0:
+                max_left_len = max(max_left_len, len(colnames[i]))
+            else:
+                max_right_len = max(max_right_len, len(colnames[j]))
+
+    ylabels = [[] for _ in range(n)]
     for i in range(n):
         for j in range(n):
             c1 = colnames[i]
             c2 = colnames[j]
-            ylabels[i].append(f"$\\text{{{c1} }} \\to \\text{{ {c2}}}$")
+            ylabels[i].append(f"{c1:>{max_left_len}} → {c2:<{max_right_len}}")
+
     ylabels = np.asarray(ylabels)[positive_mean_idxes][sort_idxes]
 
-    ax.set_yticks(np.arange(len(ylabels)), ylabels)
+    ax.set_yticks(
+        np.arange(len(ylabels)), ylabels, fontfamily="Libertinus Mono", fontsize=8
+    )
+
+    ax.set_ylim(-0.5, len(ylabels) - 0.5)
+    for i in range(len(ylabels)):
+        ax.axhline(y=i, linewidth=0.1, color="k", linestyle="solid")
+
+    ax.spines.top.set_visible(False)
+    ax.spines.right.set_visible(False)
 
     ax.legend(
         ncol=2,
@@ -148,7 +170,7 @@ def plot_pairwise_differentials(
     ci: npt.NDArray[np.float64],
     labels: list[str],
 ) -> Figure:
-    fig, ax = plt.subplots(figsize=(5.5, 5), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(4.5, 4), constrained_layout=True)
     ax.set_aspect("equal")
 
     n = mean.shape[0]
@@ -174,15 +196,20 @@ def plot_pairwise_differentials(
     sizes = min_ci / sizes
 
     # Re-scale so min-size CI is 300 points
-    sizes *= 500
+    scale_factor = 300
+    sizes *= scale_factor
 
     ax.scatter(
-        X.flatten(), Y.flatten(), s=sizes.flatten(), c=colours.ravel().reshape((-1, 4))
+        X.flatten(),
+        Y.flatten(),
+        s=sizes.flatten(),
+        c=colours.ravel().reshape((-1, 4)),
+        clip_on=False,
     )
 
     # Set tick labels
     ax.set_xticks(
-        np.arange(8), labels, rotation=30, horizontalalignment="right", fontsize=9
+        np.arange(8), labels, rotation=40, horizontalalignment="right", fontsize=9
     )
     ax.set_yticks(
         np.arange(8), labels, rotation=0, horizontalalignment="right", fontsize=9
@@ -203,13 +230,13 @@ def plot_pairwise_differentials(
         cm.ScalarMappable(
             norm=mcolors.Normalize(vmin=-0.2, vmax=0.2), cmap=DIVERGING_CMAP
         ),
-        shrink=0.74,
+        shrink=0.8,
         aspect=25,
         ax=ax,
         pad=0.1,
     )
     cbar.set_ticks([float(x) for x in np.linspace(-0.2, 0.2, 5)])
-    cbar.ax.set_title(r"$\delta_J$", pad=18)
+    cbar.ax.set_title(r"$\Delta_J$", pad=18)
     # cbar.ax.set_ylabel(r"Mean directional differential", labelpad=10)
 
     # Size chart for CI
@@ -218,7 +245,7 @@ def plot_pairwise_differentials(
     # ci_legend_vals = np.array([0.03, 0.06, 0.12])
     ci_legend_vals = np.array([min_ci, max_ci])
     # ci_legend_labels = [r"$2.5\times 10^{-3}$", r"$5\times 10^{-3}$", r"$10^{-3}$"]
-    ci_legend_sizes = (min_ci / ci_legend_vals) * 500
+    ci_legend_sizes = (min_ci / ci_legend_vals) * scale_factor
     ci_legend_handles = [
         Line2D(
             [0],
@@ -237,7 +264,7 @@ def plot_pairwise_differentials(
         loc="lower center",
         bbox_to_anchor=(0.5, 1.02),
         handles=ci_legend_handles,
-        title="95% CI",
+        title="90% CI",
         frameon=False,
         labelspacing=1.0,
     )

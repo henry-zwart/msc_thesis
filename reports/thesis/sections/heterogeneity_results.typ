@@ -31,6 +31,13 @@ intervention dynamics.
 
       Measure $h_k s_k + sum_(j) J_(j k) s_j s_k$, where $k$ is the target attitude.
 
+#line(length: 100%)
+
+- Intro section blah blah blah
+
+- Differences in effects of intervention
+
+- Differences in belief systems: conservative vs. liberal
 
 == RQ2.2: differences between belief systems for different (types of) individuals
 
@@ -70,7 +77,7 @@ For each individual, compute ranking over the expected effects of each possible
 intervention.
 
 #figure(
-  image("../results/figures/model/intervention_individual_ranking/05_cc_policy.pdf"),
+  image("../results/figures/model/intervention_individual_ranking/05_cc_action.pdf"),
   caption: caption(
     short: [Ranked intervention effects per-individual, weak, targeting climate policy],
     long: [Ranked intervention effects per-individual, weak, targeting climate policy],
@@ -78,7 +85,7 @@ intervention.
 )
 
 #figure(
-  image("../results/figures/model/intervention_individual_ranking/80_cc_policy.pdf"),
+  image("../results/figures/model/intervention_individual_ranking/80_cc_action.pdf"),
   caption: caption(
     short: [Ranked intervention effects per-individual, perfect, targeting climate policy],
     long: [Ranked intervention effects per-individual, perfect, targeting climate policy],

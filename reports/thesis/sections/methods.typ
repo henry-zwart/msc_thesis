@@ -1,6 +1,10 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 #import "@preview/zero:0.6.1": num
 
+#import "@preview/algorithmic:1.0.7"
+#import algorithmic: algorithm-figure, style-algorithm
+#show: style-algorithm
+
 == To-do
 - Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
   even when excluding self-loops.
@@ -51,7 +55,55 @@ intervention we run both intervention and null ($delta_h = 0$) scenarios with id
 random number generation settings, and define the _intervention effect_ as the
 difference between the observed outcomes.
 
-
+// #algorithm-figure(
+//   [Measure spin state],
+//   vstroke: .5pt + luma(200),
+//   {
+//     import algorithmic: *
+//     let glauber = Call.with("SampleGlauber")
+//     Function(
+//       "Measure-Spin-State",
+//       ([$bold(s)_0$], [$j$], [$cal(M)$], [$Q$], [rng]),
+//       {
+//         Assign[$bold(s)$][$bold(s)_0$]
+//         For($1 <= t <= Q$, {
+//           Assign([$bold(s)$], glauber($cal(M), bold(s), "rng"$))
+//         })
+//
+//         Return[$bold(s)[j]$]
+//       },
+//     )
+//   },
+// )
+//
+// #algorithm-figure(
+//   [Effect of Intervention ($S_i -> S_j$)],
+//   vstroke: .5pt + luma(200),
+//   {
+//     import algorithmic: *
+//     Procedure(
+//       "Effect-of-Intervention",
+//       ([$cal(M)$], [$i$], [$j$], [$delta_h$], [$Q$], [$bold(x)_0$], [$"rng"$]),
+//       {
+//         Assign([$cal(M)_"int"$], FnInline[Intervene][$cal(M), delta_h, i$])
+//         Assign([$bold(s)_0$], FnInline[Binarise][$bold(x)_0, "rng"$])
+//         LineBreak
+//
+//         Comment[Clone RNG for identical intervention & null contexts]
+//         Assign([$"rng"_"null"$], FnInline[Clone][rng])
+//         Assign([$"rng"_"int"$], FnInline[Clone][rng])
+//         LineBreak
+//
+//         Assign([$s_"null"$], CallInline[Measure-Spin-State][$bold(s)_0, j, cal(M), Q, "rng"_"null"$])
+//         Assign([$s_"int"$], CallInline[Measure-Spin-State][$bold(s)_0, j, cal(M)_"int", Q, "rng"_"int"$])
+//         LineBreak
+//
+//         Return[$s_"int" - s_"null"$]
+//       },
+//     )
+//   },
+// ) <algo:methods-effect-of-intervention>
+//
 
 
 
@@ -222,14 +274,14 @@ reasonable explanation for the non-binarised dataset, nor for any other possible
 binarisation in the case where a probabilistic binarisation scheme is used (such as
 the one described in @subsec:dataset-binarisation).
 
-- Formally, can say that any specific binarisation $D_B ~ op("Bin")(D)$ and
-  model $cal(M)$ estimated from $D_B$:
-
-$
-  I(D; cal(M)) <= I(D_B; cal(M))
-$
-
-- And this inequality is strict when $op("Bin")(D)$ is not constant.
+// - Formally, can say that any specific binarisation $D_B ~ op("Bin")(D)$ and
+//   model $cal(M)$ estimated from $D_B$:
+//
+// $
+//   I(D; cal(M)) <= I(D_B; cal(M))
+// $
+//
+// - And this inequality is strict when $op("Bin")(D)$ is not constant.
 
 Secondly, maximum likelihood estimation is prone to overfitting when the number of
 model parameters is similar to the number of observations
@@ -432,6 +484,7 @@ are displayed in @fig:methods-regularisation-ebic.
       the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
     ],
   ),
+  placement: auto,
 ) <fig:methods-regularisation-ebic>
 
 We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and

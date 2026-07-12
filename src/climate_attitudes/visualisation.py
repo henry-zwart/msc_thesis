@@ -39,6 +39,7 @@ def configure_mpl(fonts_path: Path = Path("fonts")):
     }
     FONT_SIZE_SMALL, FONT_SIZE_DEFAULT = FONT_SIZES["thesis"]
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
+    font_manager.fontManager.addfont(fonts_path / "LibertinusMono-Regular.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Semibold.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-BoldItalic.otf")

@@ -4,7 +4,11 @@ MEASURE_TIME ?= 5
 THESIS_DIR := reports/thesis
 PKG_PATH := src/climate_attitudes
 
-THESIS_DATA_DEPS := $(THESIS_DIR)/results/data/dataset_metadata.json
+THESIS_DATA_DEPS := \
+		$(THESIS_DIR)/results/data/dataset_metadata.json \
+		$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_no_structure.npz \
+		$(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
+		$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz
 
 THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/methods/binarisation/distribution.pdf \
@@ -30,6 +34,13 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf \
 		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf
+
+THESIS_FIGURES_METHODS := \
+		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
+
+THESIS_FIGURES_ASYMMETRY_RESULTS := \
+		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf 
 		
 
 THESIS_FIGURES_DATASET := \
@@ -41,12 +52,15 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/full_subset_var.pdf \
 		$(THESIS_DIR)/results/figures/dataset/full_subset_dendrogram.pdf \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf \
+		$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf \
 		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf
 
 
 THESIS_FIGURES := \
 		$(THESIS_FIGURES_MODEL) \
-		$(THESIS_FIGURES_DATASET)
+		$(THESIS_FIGURES_METHODS) \
+		$(THESIS_FIGURES_DATASET) \
+		$(THESIS_FIGURES_ASYMMETRY_RESULTS)
 		#$(THESIS_FIGURES_MODEL_FIT_STRATIFICATION)
 
 THESIS_VERIFICATION_FILES := \
@@ -56,8 +70,17 @@ THESIS_VERIFICATION_FILES := \
 THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/main.typ \
 		$(THESIS_DIR)/sections/abstract.typ \
+		$(THESIS_DIR)/sections/notation.typ \
+		$(THESIS_DIR)/sections/introduction.typ \
+		$(THESIS_DIR)/sections/asymmetric_belief_system.typ \
+		$(THESIS_DIR)/sections/methods.typ \
+		$(THESIS_DIR)/sections/asymmetry_results.typ \
+		$(THESIS_DIR)/sections/heterogeneity_results.typ \
+		$(THESIS_DIR)/sections/discussion.typ \
 		$(THESIS_DIR)/sections/dataset.typ \
-		$(THESIS_DIR)/sections/model.typ
+		$(THESIS_DIR)/sections/literature_review.typ \
+		$(THESIS_DIR)/sections/conclusion.typ \
+		$(THESIS_DIR)/references.bib
 
 
 THESIS_DEPS := \
@@ -108,6 +131,44 @@ $(THESIS_DIR)/results/figures/methods/binarisation: | $(THESIS_DIR)/results/figu
 $(THESIS_DIR)/results/figures/methods: | $(THESIS_DIR)/results/figures
 	@mkdir -p $@
 
+# +++ Section: Methods
+$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf: \
+			$(THESIS_DIR)/scripts/sec-methods/intervention_strengths_diagram.py \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/methods
+	@uv run $<
+
+# +++ Section: Asymmetry results
+$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/effect_of_asymmetry_politics.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_10.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_10.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/effect_of_asymmetry_cc_worry.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_10.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_10.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results: | $(THESIS_DIR)/results/figures
+	@mkdir -p $@
 
 # +++ Section: Model
 $(THESIS_DIR)/results/figures/model/transition_probability_example.pdf: \
@@ -325,6 +386,12 @@ $(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf: \
 			| $(THESIS_DIR)/results/figures/dataset
 	@uv run $<
 
+$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/marginal_distributions_reduced.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
 $(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf: \
 			$(THESIS_DIR)/scripts/sec-dataset/partial_correlation_reduced.py \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
@@ -462,7 +529,7 @@ $(THESIS_DIR)/results/data/model/all_interventions/%: \
 		--output $@ \
 		--model-type "$$model" \
 		--seed 202605271053 \
-		--repeats 300 \
+		--repeats 500 \
 		--marginalise \
 		--binarisation-kind "gaussian" \
 		--measure-time 15 \
