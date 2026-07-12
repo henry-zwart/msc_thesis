@@ -1,3 +1,5 @@
+"""Measure effect on other spins when intervening on X."""
+
 from __future__ import annotations
 
 from pathlib import Path

@@ -50,7 +50,9 @@ def main(X: npt.NDArray[np.float64], labels: list[str]):
 if __name__ == "__main__":
     configure_mpl()
     config = Config(_env_file=".env")
-    dataset = Dataset.load(config, name="reduced_no_imputation", with_imputation=False)
+    dataset = Dataset.load(
+        config, name="reduced_no_imputation", with_imputation=False, verbose=False
+    )
     schema = schema.post_index()
     survey_cols = schema.get_cols("survey")
     labels = schema.get_short_names("measurement")

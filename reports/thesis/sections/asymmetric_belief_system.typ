@@ -85,7 +85,7 @@ distribution over possible future states.
 
 When studying the _symmetric_ Ising model it is common to assume that the model is
 at equilibrium, such that
-$P(bold(S)^t = bold(s) | bold(S)^(t-1)) = P(bold(S) = bold(s))$ for all configurations
+$P(bold(S)^(t+1) = bold(s) | bold(S)^t) = P(bold(S) = bold(s))$ for all configurations
 $bold(s)$ and observation times $t$. The probability of
 observing $bold(s)$ is then time-invariant and given by the Boltzmann probability
 parameterised by the Hamiltonian $H(bold(s))$ @christensenComplexityCriticality2005
@@ -109,12 +109,12 @@ alternative to a typical unsustainable behaviour) or reinforce it. Any belief sy
 model intended for studying intervention dynamics therefore cannot assume equilibrium,
 and cannot define model dynamics using the Boltzmann distribution.
 
-We instead define the conditional distribution $P(bold(S)^t = bold(s) | bold(S)^(t-1))$
+We instead define the conditional distribution $P(bold(S)^(t+1) = bold(s) | bold(S)^t)$
 explicitly. Recall that the states of each pair of spins $S_i, S_j$ at time $t$ are
 conditionally independent random variables, given knowledge of the previous
-configuration $bold(S)^(t-1)$ (@subsec:methods-belief-system-dynamics). It therefore
+configuration $bold(S)^t$ (@subsec:methods-belief-system-dynamics). It therefore
 suffices for us to describe the distribution over spin states for an individual spin
-$S_i$ at time $t$, as conditional on $bold(S)^(t-1)$.
+$S_i$ at time $t+1$, as conditional on $bold(S)^t$.
 
 As in the standard Ising model formulation, we will assume that the model typically
 evolves in the direction of lower energy; however, rather than defining the energy
@@ -131,7 +131,7 @@ increases with the magnitude of $h_i$.
 Other spins influence $S_i$'s state through alignment or opposition relations. For
 a spin $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
 $i$'_). When $J_(i j)$ if positive or negative, $S_i$ is influenced to adopt the state
-$S_j^(t-1)$ or $-S_j^(t-1)$ respectively. In the special case when $j = i$, we refer
+$S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
 to $J_(i i)$ as a _self-influence_ effect. Positive self-influence effects reflect
 the inertia of $S_i$, i.e., the tendency to sustain a particular belief or attitude
 irrespective of other beliefs and attitudes. Negative self-influence effects are not
@@ -144,7 +144,7 @@ result of $s$ in combination with the baseline activation and influence effects 
 all spins with edges to $S_i$:
 
 $
-  H_i (s | bold(s)^(t-1)) = h_i dot s + sum_(j) A_(j i) J_(j i) s_j^(t - 1) dot s
+  H_i (s | bold(s)^t) = h_i dot s + sum_(j) A_(j i) J_(j i) s_j^t dot s
 $ <eqn:methods-model-local-energy>
 
 where $bold(A) in {0,1}^(n times n)$ is a pairwise adjacency matrix, with $A_(j i) = 1$,
@@ -152,15 +152,15 @@ iff, $S_j$ influences $S_i$. Dividing the common factor of $s$, we can equivalen
 write @eqn:methods-model-local-energy as
 
 $
-  H_i (s | bold(s)^(t-1)) = s dot h_i^"eff" (bold(s)^(t-1))
+  H_i (s | bold(s)^t) = s dot h_i^"eff" (bold(s)^t)
 $ <eqn:methods-model-local-energy-eff-field>
 
-where $h_i^"eff" (bold(s)^(t-1)) = h_i + sum_j A_(j i) J_(j i) s_j^(t-1)$ is the
+where $h_i^"eff" (bold(s)^t) = h_i + sum_j A_(j i) J_(j i) s_j^t$ is the
 effective baseline activation experienced by $S_i$ at time $t$. We then define the
 probability that $S_i$ adopts the state $s$ at time $t$ as:
 
 $
-  P(S_i^t = s | bold(S)^(t-1) = bold(s)) &= e^(1/T H_i (s | bold(s)))/(sum_(s' in {0,1}) e^(1/T H_i (s' | bold(s)))) \
+  P(S_i^(t+1) = s | bold(S)^t = bold(s)) &= e^(1/T H_i (s | bold(s)))/(sum_(s' in {0,1}) e^(1/T H_i (s' | bold(s)))) \
   &= e^(1/T H_i (s | bold(s)))/(e^(1/T H_i (s | bold(s))) + e^(-1/T H_i (-s | bold(s)))) \
   &= e^(1/T s dot h_i^"eff" (bold(s)))/(e^(1/T s dot h_i^"eff" (bold(s))) + e^(-1/T s dot h_i^"eff" (bold(s))))
 $
@@ -168,20 +168,19 @@ $
 For $s = +1$, this reduces to the logistic function:
 
 $
-  p_i^bold(s) := P(S_i^t = +1 | bold(S)^(t-1) = bold(s)) &= e^(1/T dot h_i^"eff" (bold(s)))/(e^(1/T dot h_i^"eff" (bold(s))) + e^(-1/T dot h_i^"eff" (bold(s)))) \
+  p_i^bold(s) := P(S_i^(t+1) = +1 | bold(S)^t = bold(s)) &= e^(1/T dot h_i^"eff" (bold(s)))/(e^(1/T dot h_i^"eff" (bold(s))) + e^(-1/T dot h_i^"eff" (bold(s)))) \
   &= 1/(1 + e^(-2 dot 1/T dot h_i^"eff" (bold(s)))) \
   &= op("logistic")(2 h_i^"eff" (bold(s))\/T )
-$
+$ <eqn:methods-model-logistic-probability>
 
 Therefore the complete conditional distribution is given by:
 
 $
-  P(bold(S)^t = bold(s)^t | bold(S)^(t-1) = bold(s)^(t-1)) &= product_(i=1)^n P(S_i^t = s_i | bold(S)^(t-1) = bold(s)^(t-1)) \
-  &= product_(i=1)^n [((1 + s_i)/2) p_i^bold(s)^(t-1) + ((1 - s_i)/2) (1 - p_i^bold(s)^(t-1))]
+  P(bold(S)^(t+1) = bold(s)^(t+1) | bold(S)^t = bold(s)^t) &= product_(i=1)^n P(S_i^(t+1) = s_i | bold(S)^t = bold(s)^t) \
+  &= product_(i=1)^n [((1 + s_i)/2) p_i^bold(s)^t + ((1 - s_i)/2) (1 - p_i^bold(s)^t)]
 $ <eqn:methods-model-conditional-prob-definition>
 
-*NOTE:* The initial distribution must be specified, since the model only captures
-transition probabilities.
+Where the initial distribution $P(bold(S)^0)$ is specified explicitly.
 
 == Symmetric and asymmetric belief systems
 
@@ -203,7 +202,7 @@ considered a simple extension of the symmetric Ising model with (i) self-interac
 terms and (ii) temporal dynamics, thus the symmetric belief system model tends toward
 an equilibrium steady state.
 
-== Simulation via Glauber dynamics
+== Simulation via Glauber dynamics <subsec:methods-glauber-dynamics>
 
 It is straightforward to draw samples from a belief system model using Glauber
 dynamics, given the conditional probability distribution defined in
@@ -213,7 +212,7 @@ Given an initial state $bold(s)^0 in {-1, +1}^N$, we sample a sequence of $T in 
 subsequent configurations:
 
 $
-  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^t ~ P(bold(S)^t | bold(S)^(t-1))
+  {bold(s)^t}_(t=0)^T, quad "where each" bold(s)^(t+1) ~ P(bold(S)^(t+1) | bold(S)^t)
 $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
 Each belief or attitude has the opportunity to update during every time interval. This
@@ -281,9 +280,64 @@ $
   bold(h)' = bold(h) + delta_h
 $
 
-*TODO:* Include discussion on the choice of $delta_h$, with reference to a figure
-showing how the activation probability depends on $h_i^"eff"$.
+@fig:methods-intervention-strengths-probability illustrates how the probability of
+activation for the intervention spin (@eqn:methods-model-logistic-probability) changes
+for different intervention scenarios. Recall that a spin's activation probability is
+a function of it's effective local field. Since interventions constitute offsets to the
+effective local field, they are reflected as horizontal shifts in the logistic curve.
 
+#figure(
+  image("../results/figures/methods/intervention_strengths.pdf"),
+  caption: caption(
+    short: [Impact of intervention on activation probability],
+    long: [
+      Impact of different intervention strengths ($delta_h in {0, 0.5, 1.5, 2.5}$) on
+      activation probability for the intervention spin. Activation probability is
+      calculated using @eqn:methods-model-logistic-probability.
+    ],
+  ),
+) <fig:methods-intervention-strengths-probability>
+
+The solid line denotes the null scenario in which no intervention is applied. Consider
+two individuals, positioned at different locations on this base curve:
+
++ $h_"eff" = 0$: Ambivalent disposition toward the intervention spin, and
+
++ $h_"eff" = -2$: Strong negative disposition toward the intervention spin.
+
+To understand the impacts of intervention strength on each individual, we draw a
+vertical line upward from the solid curve at each location, and read off the activation
+probability at each intersection with the other intervention curves. Under the null
+scenario the first individual exhibits an equal tendency toward each state, while the
+second is almost certain to adopt the state $-1$.
+
+Notice that interventions are not experienced equivalently by the two individuals. For
+a weak intervention ($delta_h = 0.5$), the first individual sees a substantial jump in
+activation probability, while the corresponding increase for the second individual is
+negligible. The stakes are reversed under a strong intervention ($delta_h = 2.5$).
+
+We can understand this difference in effect both conceptually and analytically. From
+a conceptual perspective, we can explain the large shift of the first individual under
+a weak intervention as resulting from their prior indifference, making them maximally
+susceptible to intervention. Prior to intervention, the second individual has a strong
+negative stance on this belief/attitude; weak interventions are insufficient to change
+their view. On the other hand, the second individual's negative stance provides more
+space for their attitude or belief to shift under a successful intervention. Compare
+this to the first individual, who is shifting from a place of indifference.
+
+
+*TODO:* Quantitative explanation:
+- Take derivative of the difference in activation probabilities between intervention
+  and null scenario; solve for derivative equal to zero. Corresponds to the unique
+  maximum since for $h_"eff" -> plus.minus infinity$ the second derivative is strictly
+  positive.
+- We find that maximum is at $h_"eff" = -delta_h / 2$.
+- i.e., for a given intervention strength, the maximum change in activation probability
+  occurs when the intervention causes $h_"eff"$ to increase to same magnitude on the
+  other side of zero.
+- Individuals below this point require a stronger intervention to move the same amount.
+- Individuals above this point experience ceiling effect. A smaller intervention could
+  achieve almost the same effect.
 
 
 // Interventions on a belief system $cal(M) = chevron S, bold(A), bold(J), bold(h) chevron.r$

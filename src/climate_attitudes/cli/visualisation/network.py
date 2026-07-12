@@ -134,7 +134,7 @@ class NetworkPlotCommand(BaseCommand):
         for node, label in enumerate(labels):
             G.nodes[node]["label"] = label
 
-        fig, ax = plt.subplots(figsize=(4, 4), constrained_layout=True)
+        fig, ax = plt.subplots(figsize=(2.5, 4), constrained_layout=True)
         # ax.set_aspect("equal")
 
         layout = nx.spring_layout(

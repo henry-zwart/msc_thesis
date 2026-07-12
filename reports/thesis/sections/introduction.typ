@@ -28,8 +28,6 @@
 
 
 == Contributions
-We
-+ We
 + We present a mathematical model for belief system dynamics that does not assume
   equilibrium and does not assume symmetric influence between cognitive aspects
   (@sec:asymmetric-belief-systems)

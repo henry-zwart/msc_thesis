@@ -1,6 +1,10 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 #import "@preview/zero:0.6.1": num
 
+#import "@preview/algorithmic:1.0.7"
+#import algorithmic: algorithm-figure, style-algorithm
+#show: style-algorithm
+
 == To-do
 - Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
   even when excluding self-loops.
@@ -51,7 +55,55 @@ intervention we run both intervention and null ($delta_h = 0$) scenarios with id
 random number generation settings, and define the _intervention effect_ as the
 difference between the observed outcomes.
 
-
+// #algorithm-figure(
+//   [Measure spin state],
+//   vstroke: .5pt + luma(200),
+//   {
+//     import algorithmic: *
+//     let glauber = Call.with("SampleGlauber")
+//     Function(
+//       "Measure-Spin-State",
+//       ([$bold(s)_0$], [$j$], [$cal(M)$], [$Q$], [rng]),
+//       {
+//         Assign[$bold(s)$][$bold(s)_0$]
+//         For($1 <= t <= Q$, {
+//           Assign([$bold(s)$], glauber($cal(M), bold(s), "rng"$))
+//         })
+//
+//         Return[$bold(s)[j]$]
+//       },
+//     )
+//   },
+// )
+//
+// #algorithm-figure(
+//   [Effect of Intervention ($S_i -> S_j$)],
+//   vstroke: .5pt + luma(200),
+//   {
+//     import algorithmic: *
+//     Procedure(
+//       "Effect-of-Intervention",
+//       ([$cal(M)$], [$i$], [$j$], [$delta_h$], [$Q$], [$bold(x)_0$], [$"rng"$]),
+//       {
+//         Assign([$cal(M)_"int"$], FnInline[Intervene][$cal(M), delta_h, i$])
+//         Assign([$bold(s)_0$], FnInline[Binarise][$bold(x)_0, "rng"$])
+//         LineBreak
+//
+//         Comment[Clone RNG for identical intervention & null contexts]
+//         Assign([$"rng"_"null"$], FnInline[Clone][rng])
+//         Assign([$"rng"_"int"$], FnInline[Clone][rng])
+//         LineBreak
+//
+//         Assign([$s_"null"$], CallInline[Measure-Spin-State][$bold(s)_0, j, cal(M), Q, "rng"_"null"$])
+//         Assign([$s_"int"$], CallInline[Measure-Spin-State][$bold(s)_0, j, cal(M)_"int", Q, "rng"_"int"$])
+//         LineBreak
+//
+//         Return[$s_"int" - s_"null"$]
+//       },
+//     )
+//   },
+// ) <algo:methods-effect-of-intervention>
+//
 
 
 
@@ -171,6 +223,67 @@ difference between the observed outcomes.
 // the causal directionality on this relationship is incorrect (support for climate policies
 // can reinforce other spins, but is fundamentally a result of these).
 
+== Binarisation <subsec:dataset-binarisation>
+
+Prior to model fitting, we binarise all variables, mapping data values to the
+domain ${-1, +1}$. Before binarising, we shift each variable such that the _survey
+midpoint_ (e.g., '3' on a 5-point Likert scale) aligns with 0, and rescale each
+variable such that the minimum and maximum possible values map to $-1$ and $+1$
+respectively. For variables with no well-defined midpoint, such as those with an even
+number of possible responses, we shift such that the minimal and maximal values are at
+equal distance from 0.
+
+We use a smooth binarisation process to robustly handle data points which are zero, or
+close to zero. This involves perturbing each data value $x in RR$ by an independent
+noise term $epsilon ~ cal(N)(0, sigma)$ before thresholding. @fig:methods-binarisation
+illustrates this process for a negative value of $x$ and given choice of $sigma$.
+
+#figure(
+  image(
+    "../results/figures/methods/binarisation/distribution.pdf",
+  ),
+  caption: caption(
+    short: [Binarisation using gaussian noise with thresholding],
+    long: [
+      $x in RR$ is smoothly binarised to ${-1, +1}$ by
+      thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
+      are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
+      increases with $sigma$ and $|x|^(-1)$.
+    ],
+  ),
+) <fig:methods-binarisation>
+
+Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
+such that $x + epsilon > 0$ (region A), or equivalently when $epsilon < x$ (region B).
+The probability that $x$ is mapped to $+1$ is then
+
+$
+  P(x mapsto +1) = Phi(x/sigma)
+$ <eqn:methods-dataset-binarisation-probability-map-to-1>
+
+#let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
+where $Phi$ is the standardised normal cumulative distribution function. This
+probability is small when $x$ has large magnitude, or when $sigma$ is small.
+For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
+a 'weakly oppose' response to a 7-point Likert scale
+#footnote[The oppose/support 7-point Likert scale has possible responses: strongly oppose, oppose, weakly oppose, neutral, weakly support, support, strongly support.]
+(value $1\/3$) is mapped to $+1$ with probability 0.05.
+
+#figure(
+  image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+  caption: caption(
+    short: [Likert-7 binarisation distribution],
+    long: [
+      The probability of binarisation to $+1$ for each possible response to a Likert-7
+      scale survey question, given $sigma approx #calc.round(binarisation_sigma, digits: 1)$. Ordered responses are:
+      _strongly oppose_ (SO), _oppose_ (O), _weakly oppose_ (WO), _neutral_ (N),
+      _weakly support_ (WS), _support_ (S), _strongly support_ (SS).
+
+      *TODO: Consider specifying Likert-7 scale options in a table, and referencing
+      that.*
+    ],
+  ),
+)
 
 == Parameter estimation <subsec:methods-parameter-estimation>
 
@@ -222,14 +335,14 @@ reasonable explanation for the non-binarised dataset, nor for any other possible
 binarisation in the case where a probabilistic binarisation scheme is used (such as
 the one described in @subsec:dataset-binarisation).
 
-- Formally, can say that any specific binarisation $D_B ~ op("Bin")(D)$ and
-  model $cal(M)$ estimated from $D_B$:
-
-$
-  I(D; cal(M)) <= I(D_B; cal(M))
-$
-
-- And this inequality is strict when $op("Bin")(D)$ is not constant.
+// - Formally, can say that any specific binarisation $D_B ~ op("Bin")(D)$ and
+//   model $cal(M)$ estimated from $D_B$:
+//
+// $
+//   I(D; cal(M)) <= I(D_B; cal(M))
+// $
+//
+// - And this inequality is strict when $op("Bin")(D)$ is not constant.
 
 Secondly, maximum likelihood estimation is prone to overfitting when the number of
 model parameters is similar to the number of observations
@@ -432,6 +545,7 @@ are displayed in @fig:methods-regularisation-ebic.
       the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
     ],
   ),
+  placement: auto,
 ) <fig:methods-regularisation-ebic>
 
 We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and
