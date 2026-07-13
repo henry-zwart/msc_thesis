@@ -596,8 +596,8 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 
 == Climate beliefs dataset <subsec:dataset-dataset-construction>
 
-*TODO:*
-- We exclude sixth wave due to no codebook
+// *TODO:*
+// - We exclude sixth wave due to no codebook
 
 In light of the complexities and breadth of content of the #full-dataset-name, we
 construct a smaller, targeted dataset of beliefs and attitudes relating to climate
@@ -643,10 +643,6 @@ removing items with no substantial correlations, and small groups of items which
 only internal correlations, we identify 17 relevant survey items, comprising both
 beliefs (epistemic positions, @tab:dataset-dataset-beliefs) and attitudes (qualitative
 evaluations, @tab:dataset-dataset-attitudes).
-
-*TODO:* Perhaps include this as a subsection/callout, and make a paragraph for each
-question to specify the question text and schema. Then include a summary table with
-the item name, schema, coding.
 
 //#{
 //  set par(spacing: 1em)

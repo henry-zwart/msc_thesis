@@ -3,19 +3,19 @@
 #import algorithmic: algorithm-figure, style-algorithm
 #show: style-algorithm
 
-== Plan
-
-First results section, for experiments on the effect of asymmetry
-
-- *RF1:* Show asymmetric model fit
-- *RQ2.1:* Existence of asymmetric relations. Some, but not all, are significant.
-  Categorising relations into types: symmetric, asymmetric (both directions exist,
-  with different effect sizes), and unidirectional (only one direction exists).
-- *RQ3.1:* Differences between symmetric and asymmetric models, with regards to
-  intervention strategy (which intervention to do) and effectiveness (magnitude of
-  change compared to the no-intervention case).
-
-#line(length: 100%)
+// == Plan
+//
+// First results section, for experiments on the effect of asymmetry
+//
+// - *RF1:* Show asymmetric model fit
+// - *RQ2.1:* Existence of asymmetric relations. Some, but not all, are significant.
+//   Categorising relations into types: symmetric, asymmetric (both directions exist,
+//   with different effect sizes), and unidirectional (only one direction exists).
+// - *RQ3.1:* Differences between symmetric and asymmetric models, with regards to
+//   intervention strategy (which intervention to do) and effectiveness (magnitude of
+//   change compared to the no-intervention case).
+//
+// #line(length: 100%)
 
 Belief system models based on the Ising model, inspired by the cognitive dissonance
 theory of belief system dynamics, demonstrate impressive descriptive and explanatory
@@ -128,39 +128,39 @@ bootstrapped models.
 
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
-- $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
-  intervention differs between symmetric and asymmetric models calibrated to the
-  climate beliefs dataset. _Re-state the corresponding research question_.
-
-- $checkmark$ *In broad strokes, how do we test this?*
-  - Two-pronged approach.
-    + We first consider how intervention effects propagate from a single point of
-      intervention for varying intervention strengths. We measure: (i) effect of
-      intervention at each other spin, and (*maybe*) (ii) the effect of asymmetry at
-      each other spin.
-    + We then consider targeted interventions, in which we wish to change the state of
-      a particular belief or attitude, and want to know where is best to intervene. We
-      measure: (i) the effect of intervention for each possible intervention point, and
-      (ii) the expected ranking of interventions, scored by collective effect.
-
-- $checkmark$ *Specific experimental details:*
-  - We calibrate the models on the full (non-bootstrapped) dataset.
-  - We use intervention strengths $delta_h in {0.5, 1.5, 2.5}$ (weak, medium, strong).
-  - We take each survey participant's binarised measurements from Wave 4 as the initial
-    state of the model, then draw samples using parallel Glauber dynamics until $t=5$
-    (2.5 years in simulation time).
-  - Since both the binarisation and sampling procedures are stochastic we repeat this
-    500 times for each individual.
-
-- *First set of results:*
-  - Figures showing how intervention effects propagate from $X$ and $Y$.
-  - Effect of asymmetry figure(s)
-
-- *Second set of results:*
-  - Target variable: 'Climate Action'
-  - Effect of interventions
-  - Ranked interventions
-    - Explaining the occasional wider error bars in ranked interventions.
+// - $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
+//   intervention differs between symmetric and asymmetric models calibrated to the
+//   climate beliefs dataset. _Re-state the corresponding research question_.
+//
+// - $checkmark$ *In broad strokes, how do we test this?*
+//   - Two-pronged approach.
+//     + We first consider how intervention effects propagate from a single point of
+//       intervention for varying intervention strengths. We measure: (i) effect of
+//       intervention at each other spin, and (*maybe*) (ii) the effect of asymmetry at
+//       each other spin.
+//     + We then consider targeted interventions, in which we wish to change the state of
+//       a particular belief or attitude, and want to know where is best to intervene. We
+//       measure: (i) the effect of intervention for each possible intervention point, and
+//       (ii) the expected ranking of interventions, scored by collective effect.
+//
+// - $checkmark$ *Specific experimental details:*
+//   - We calibrate the models on the full (non-bootstrapped) dataset.
+//   - We use intervention strengths $delta_h in {0.5, 1.5, 2.5}$ (weak, medium, strong).
+//   - We take each survey participant's binarised measurements from Wave 4 as the initial
+//     state of the model, then draw samples using parallel Glauber dynamics until $t=5$
+//     (2.5 years in simulation time).
+//   - Since both the binarisation and sampling procedures are stochastic we repeat this
+//     500 times for each individual.
+//
+// - *First set of results:*
+//   - Figures showing how intervention effects propagate from $X$ and $Y$.
+//   - Effect of asymmetry figure(s)
+//
+// - *Second set of results:*
+//   - Target variable: 'Climate Action'
+//   - Effect of interventions
+//   - Ranked interventions
+//     - Explaining the occasional wider error bars in ranked interventions.
 
 We now investigate how the behaviour of belief systems under intervention differs
 between symmetric and asymmetric models calibrated on the climate beliefs dataset.
