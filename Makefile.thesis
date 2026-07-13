@@ -55,13 +55,20 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf \
 		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf
 
+THESIS_DIAGRAMS := \
+		$(THESIS_DIR)/diagrams/modelling_interventions/intervention.svg \
+		$(THESIS_DIR)/diagrams/modelling_interventions/intervention_baseline_activation.svg \
+		$(THESIS_DIR)/diagrams/survey_database/database.svg
 
 THESIS_FIGURES := \
 		$(THESIS_FIGURES_MODEL) \
 		$(THESIS_FIGURES_METHODS) \
 		$(THESIS_FIGURES_DATASET) \
-		$(THESIS_FIGURES_ASYMMETRY_RESULTS)
+		$(THESIS_FIGURES_ASYMMETRY_RESULTS) \
+		$(THESIS_DIAGRAMS)
 		#$(THESIS_FIGURES_MODEL_FIT_STRATIFICATION)
+
+
 
 THESIS_VERIFICATION_FILES := \
 		$(THESIS_DIR)/results/verification/model/all_interventions.txt \

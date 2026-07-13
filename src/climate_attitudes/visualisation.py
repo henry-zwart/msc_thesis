@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 
 import iplotx as ipx
 import matplotlib.colors as mcolors
@@ -31,13 +32,16 @@ QUALITATIVE_SCHEME = mcolors.ListedColormap(
 )
 
 
-def configure_mpl(fonts_path: Path = Path("fonts")):
+def configure_mpl(
+    fonts_path: Path = Path("fonts"),
+    kind: Literal["paper", "thesis"] = "thesis",
+):
     """Configure Matplotlib style."""
     FONT_SIZES = {
         "paper": (8, 10),
         "thesis": (10, 12),
     }
-    FONT_SIZE_SMALL, FONT_SIZE_DEFAULT = FONT_SIZES["thesis"]
+    FONT_SIZE_SMALL, FONT_SIZE_DEFAULT = FONT_SIZES[kind]
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Regular.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusMono-Regular.otf")
     font_manager.fontManager.addfont(fonts_path / "LibertinusSerif-Bold.otf")

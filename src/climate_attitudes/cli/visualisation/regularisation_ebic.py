@@ -28,7 +28,7 @@ class RegularisationEBICPlotCommand(BaseCommand):
             np.load(self.asym_results),
         )
 
-        fig, ax = plt.subplots(figsize=(5.77, 2.5), constrained_layout=True)
+        fig, ax = plt.subplots(figsize=(5.25, 1.75), constrained_layout=True)
 
         for label, results, colour in zip(labels, all_results, colours, strict=True):
             λs = results["λs"]

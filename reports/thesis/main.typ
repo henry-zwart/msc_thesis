@@ -46,9 +46,9 @@
   / UvA: #strong[U]niversiteit #strong[v]an #strong[A]msterdam
 ]
 
-#let frontmatter-pages = (
-  (title: [Use of AI], body: include "sections/use_of_ai.typ"),
-)
+// #let frontmatter-pages = (
+//   (title: [Use of AI], body: include "sections/use_of_ai.typ"),
+// )
 
 #let signature = image("signature.png", height: 2cm)
 
@@ -67,7 +67,7 @@
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
   references: bibliography("references.bib", style: "apa"),
-  additional-frontmatter: frontmatter-pages,
+  additional-frontmatter: (),
   signature: signature,
   appendices: (appendix,),
 )
