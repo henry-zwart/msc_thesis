@@ -18,11 +18,10 @@ THESIS_FIGURES_MODEL := \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(d)_$(MEASURE_TIME)) \
-		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)) \
+		$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(MEASURE_TIME) \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/rank_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf \
@@ -33,7 +32,8 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/network/full_asym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf \
-		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf
+		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf \
+		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_4.pdf
 
 THESIS_FIGURES_METHODS := \
 		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
@@ -265,16 +265,17 @@ $(THESIS_DIR)/results/figures/model/intervention_individual_ranking: | $(THESIS_
 	mkdir -p $@
 
 
-$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.%_$(MEASURE_TIME): \
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_mean_individual_ranking.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_individual_ranking
 	uv run cadata plot intervention-mean-individual-rank \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-		--delta-str $* \
+		--intervention weak \
+		--intervention strong \
 		-z 1.0 \
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
@@ -363,7 +364,7 @@ $(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf: \
 		--output $@
 
 
-$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf: \
+$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_%.pdf: \
 			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
 			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
 			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
@@ -373,12 +374,10 @@ $(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf: \
 	uv run cadata plot identify-effective-personas \
 		--simulation-results $(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
 		--activation-probability-null $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
-		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
 		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_25_5.npz \
-		--intervention weak \
 		--intervention strong \
 		--target-spin-idx 7 \
-		--max-tree-depth 4 \
+		--max-tree-depth $* \
 		--output $@
 
 $(THESIS_DIR)/results/figures/model/heterogeneous_effects: | $(THESIS_DIR)/results/figures/model

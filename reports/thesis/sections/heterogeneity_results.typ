@@ -12,88 +12,198 @@ Introduction:
       experiments in previous section.
   + How do belief systems differ between individuals/groups of individuals?
 
-#figure(
-  image("../results/figures/model/intervention_effect_distribution/asym_05_cc_action.pdf"),
-  caption: caption(
-    short: [Intervention effects per-individual: Weak, targeting 'Climate Action'],
-    long: [
-      Distribution of intervention effects per-individual: Weak, targeting
-      'Climate Action'
-    ],
-  ),
-)
+#line(length: 100%)
+
+In this chapter we investigate individual heterogeneity in both intervention behaviour
+and belief system structure in asymmetric, non-equilibrium belief system models.
+
+While the previous chapter was primarily concerned with the _collective_ effects of
+intervention, a brief look at the distribution of expected effects across individuals
+for interventions targeting 'Climate Action' shows substantial variation between survey
+participants (@fig:heterogeneity-results-cc-action-distribution). In
+@sec:heterogeneity-results-intervention-effects we investigate the conditions under
+which a given intervention is likely to be effective.
 
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
   caption: caption(
-    short: [Intervention effects per-individual: Strong, targeting 'Climate Action'],
+    short: [Individual effective of 'Climate Action 'interventions],
     long: [
-      Distribution of intervention effects per-individual: Strong, targeting
-      'Climate Action'
+      The expected effect of intervention for strong interventions #box[($delta_h = 2.5$)]
+      targeting 'Climate Action' exhibits substantial variation between
+      individuals.
     ],
   ),
-)
+) <fig:heterogeneity-results-cc-action-distribution>
 
-== Heterogeneity in intervention effects
+Our subsequent investigation in @sec:heterogeneity-results-belief-system considers how
+inferred belief system structure varies between individuals, or subgroups in a
+population. Specifically, we compare belief systems calibrated to conservative and
+liberal subpopulations in the climate beliefs dataset.
 
-- *Overall goal of these experiments:* Characterise the groups of individuals in the
-  climate beliefs dataset for whom the interventions (targeting 'Climate Action') are
-  most effective.
 
-- *In broad strokes, how do we test this?*
-  - After running intervention simulations, we fit a decision-tree regression model for
-    the effect of intervention (for each point-of-intervention), using the
-    non-binarised initial state variables as predictors.
-  - We extract the decision paths to high-effect leaves as descriptors of the groups of
-    individuals for whom the intervention was effective.
+== Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
 
-- *Specific experimental details:*
-  - We say that an intervention is highly effect when the effect of intervention is in
-    the upper quartile for the population. Note that this does not capture 'absolute
-    effectiveness', i.e., the upper quartile for a particular point-of-intervention may
-    be very low compared to others.
-  - We only consider decision rules with a prevalence of at least 15% in the high-effect
-    population.
-  - We exclude points-of-intervention with upper quartile of intervention effects lower
-    than 0.075, i.e., where almost all interventions are low-effect.
-  - We only consider weak and strong intervention scenarios, $delta_h in {0.5, 2.5}$.
-  - We fit the decision tree with a maximum depth of 4, corresponding to four decision
-    points between the root and the leaves.
+// - *Overall goal of these experiments:* Characterise the groups of individuals in the
+//   climate beliefs dataset for whom the interventions (targeting 'Climate Action') are
+//   most effective.
+//
+// - *In broad strokes, how do we test this?*
+//   - After running intervention simulations, we fit a decision-tree regression model for
+//     the effect of intervention (for each point-of-intervention), using the
+//     non-binarised initial state variables as predictors.
+//   - We extract the decision paths to high-effect leaves as descriptors of the groups of
+//     individuals for whom the intervention was effective.
+//
+// - *Specific experimental details:*
+//   - We say that an intervention is highly effect when the effect of intervention is in
+//     the upper quartile for the population. Note that this does not capture 'absolute
+//     effectiveness', i.e., the upper quartile for a particular point-of-intervention may
+//     be very low compared to others.
+//   - We only consider decision rules with a prevalence of at least 15% in the high-effect
+//     population.
+//   - We exclude points-of-intervention with upper quartile of intervention effects lower
+//     than 0.075, i.e., where almost all interventions are low-effect.
+//   - We only consider weak and strong intervention scenarios, $delta_h in {0.5, 2.5}$.
+//   - We fit the decision tree with a maximum depth of 4, corresponding to four decision
+//     points between the root and the leaves.
+//
+// - *Results & figures:*
+//   - Rules heatmap
+//   - (*Maybe*) intervention rankings per-individual. i.e., we estimate the expected
+//     effect of intervention per-individual, for each point-of-intervention, by taking
+//     the average across repeats. We then rank the points of intervention, and show the
+//     _population_ mean and CIs. Contrasts the rankings in the previous section, where
+//     rankings were calculated over population-level average effect.
 
-- *Results & figures:*
-  - Rules heatmap
-  - (*Maybe*) intervention rankings per-individual. i.e., we estimate the expected
-    effect of intervention per-individual, for each point-of-intervention, by taking
-    the average across repeats. We then rank the points of intervention, and show the
-    _population_ mean and CIs. Contrasts the rankings in the previous section, where
-    rankings were calculated over population-level average effect.
+In this section we investigate the conditions under which interventions targeting the
+'Climate Action' attitude are likely to be successful, in asymmetric non-equilibrium
+models calibrated to the climate beliefs dataset.
+
+The intervention simulation procedure is identical to that described in the previous
+chapter. For each survey participant and point-of-intervention, we collect 500 repeated
+samples of the 'Climate Action' spin state at $t=5$. We simulate both _weak_ and
+_strong_ intervention scenarios, $delta_h in {0.5, 2.5}$.
+
+We first examine variation in the rankings over points of intervention between different
+individuals. For each participant, we estimate the expected effect of intervention by
+taking the average across repeated samples for each point-of-intervention and scenario.
+We then rank the points of intervention by expected effect, such that for each
+participant and scenario, we obtain a ranking over possible points of intervention.
+@fig:heterogeneity-results-interventions-ranking-variability shows the average rank
+across individuals for each possible point-of-intervention and scenario. The whiskers
+denote one standard deviation around the average.
 
 #figure(
-  image("../results/figures/model/heterogeneous_effects/climate_policy.pdf"),
+  image("../results/figures/model/intervention_individual_ranking/cc_action.pdf"),
+  caption: caption(
+    short: ['Climate Action' intervention rank variability],
+    long: [
+      Variability in point-of-intervention ranks across climate attitudes survey
+      participants, for interventions targeting 'Climate Action'. Bar height describes
+      mean rank across individuals; whiskers denote one standard deviation
+      around the mean. Bar colours indicate strong ($delta_h = 2.5$) and weak
+      ($delta_h = 0.5$) intervention scenarios.
+    ],
+  ),
+) <fig:heterogeneity-results-interventions-ranking-variability>
+
+*TODO: Observations*
+
+We now proceed to characterise the conditions under which each intervention is
+effective. Recall that the model's initial state is the only distinguishing factor
+between survey participants in the intervention simulations. It follows, therefore,
+that any difference in intervention effectiveness between participants results from
+differences in their initial states. To characterise the conditions for successful
+intervention, it then suffices to characterise the set of _initial states_ which lead
+to effective interventions, and distinguish them from those that do not.
+
+We fit a shallow decision tree regression model for each
+point-of-intervention, taking the expected intervention effect for each survey
+participant as the response variable, and the non-binarised measurements from the final
+wave of the climate beliefs dataset as features. The parameterised model partitions the
+space of possible initial states, assigning a prediction value to each region, such that
+the mean-squared error with respect to the observed intervention effects is minimal.
+We characterise the _personas_ which lead to effective interventions using the rules
+which define high-effect regions of the initial state space.
+
+#let treedepth-footnote = footnote[
+  A tree with depth $n in NN$ partitions the initial state space into $2^n$ regions,
+  each described using $n$ feature rules.
+]
+For this experiment, we use a tree depth of 3 so as to generate short
+rules#treedepth-footnote, and classify intervention effects within the upper quartile
+of observed values as 'high effect'. We only consider personas which are sufficiently
+prevalent in the observed data ($>= 15%$).
+
+@fig:heterogeneity-results-interventions-personas shows the high-effect personas for
+each intervention scenario and point-of-intervention, excluding points of intervention
+for which there are no sufficiently high-effect observations, where the upper quartile
+is below 0.1. Each row describes the results for a distinct point-of-intervention,
+indicated at the right of the figure. Let us step through the remaining columns:
+
+- The left-most column displays intervention effect
+  distribution for the strong intervention scenario, with upper quartile regions
+  indicated.
+
+- The central column describes the set of personas predicted to be most
+  susceptible to the given intervention. Each row describes a distinct persona. Each
+  cell described a subinterval of the range of possible feature values,
+  $I subset.eq [-1, 1]$, with 'L' referring to 'Low' and 'H' to 'High'. The modifiers
+  'V' and 'S' (not present) refer to 'Very' and 'Slightly', respectively. Entries with
+  the for '~$X$' refer to the complement of the interval named by $X$. The specific
+  interval mappings are defined in *REFERENCE TABLE*.
+
+- The rightmost column describes the prevalence of each persona within the 'high-effect'
+  population. Cell values are the proportion of individuals within the upper quartile
+  for each scenario who satisfy the persona. Missing entries indicate that a persona
+  was either not identified for the given scenario, or had prevalence below 15%.
+
+#figure(
+  image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
     long: [*TODO*],
   ),
-)
+) <fig:heterogeneity-results-interventions-personas>
 
-#figure(
-  image("../results/figures/model/intervention_individual_ranking/05_cc_action.pdf"),
-  caption: caption(
-    short: [Ranked intervention effects per-individual, weak, targeting climate action],
-    long: [Ranked intervention effects per-individual, weak, targeting climate action],
-  ),
-)
-
-#figure(
-  image("../results/figures/model/intervention_individual_ranking/25_cc_action.pdf"),
-  caption: caption(
-    short: [Ranked intervention effects per-individual, strong, targeting climate policy],
-    long: [Ranked intervention effects per-individual, strong, targeting climate policy],
-  ),
-)
+*TODO: Observations*
 
 
-== Heterogeneity in belief system structure
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #figure(
+//   image("../results/figures/model/intervention_individual_ranking/05_cc_action.pdf"),
+//   caption: caption(
+//     short: [Ranked intervention effects per-individual, weak, targeting climate action],
+//     long: [Ranked intervention effects per-individual, weak, targeting climate action],
+//   ),
+// )
+//
+// #figure(
+//   image("../results/figures/model/intervention_individual_ranking/25_cc_action.pdf"),
+//   caption: caption(
+//     short: [Ranked intervention effects per-individual, strong, targeting climate policy],
+//     long: [Ranked intervention effects per-individual, strong, targeting climate policy],
+//   ),
+// )
+//
+
+== Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
 - *Overall goal of these experiments:* Understand how the belief system inferred from
   the full climate beliefs dataset may differ from those inferred from subsets.

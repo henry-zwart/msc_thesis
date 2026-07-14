@@ -12,15 +12,15 @@ from scipy.stats import rankdata
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.visualisation import configure_mpl
 
+from .heterogeneous_intervention_effects import InterventionStrength
+
 np.set_printoptions(linewidth=200)
 
 
 def bootstrap_mean_ranks(measurements, z: float = 1.97):
-    mean_ranks_per_individual = rankdata(
-        measurements.mean(axis=0), method="min", axis=-1
-    )
-    mean = mean_ranks_per_individual.mean(axis=0)
-    ci = z * mean_ranks_per_individual.std(axis=0, ddof=1)
+    individual_ranks = rankdata(measurements.mean(axis=1), method="min", axis=-1)
+    mean = individual_ranks.mean(axis=1)
+    ci = z * individual_ranks.std(axis=1, ddof=1)
 
     return (
         mean,
@@ -33,7 +33,7 @@ class InterventionIndividualRankPlotCommand(BaseCommand):
     output_dir: Path
     data_dir: Path
 
-    delta_str: str
+    intervention: list[InterventionStrength]
 
     measure_time: int
 
@@ -43,26 +43,21 @@ class InterventionIndividualRankPlotCommand(BaseCommand):
         configure_mpl()
 
         # Load data
-        int_asym_data = np.load(
-            self.data_dir / f"ising_{self.delta_str}.npz",
-        )
-        int_sym_data = np.load(
-            self.data_dir / f"sym_ising_{self.delta_str}.npz",
-        )
-
-        # Calculate effects of intervention
-        int_asym_measurements = int_asym_data["measurements"][:, :, self.measure_time]
-        int_sym_measurements = int_sym_data["measurements"][:, :, self.measure_time]
+        measurements = []
+        for delta in self.intervention:
+            data = np.load(self.data_dir / f"ising_{delta.delta_str()}.npz")
+            measurements.append(data["measurements"][:, :, self.measure_time])
+        measurements = np.asarray(measurements)
 
         # Create plot for each choice of intervention column
-        N = int_asym_measurements.shape[-1]
-        labels = int_asym_data["labels"]
+        N = measurements.shape[-1]
+        labels = data["labels"]
         figures = []
         for i in range(N):
             fig = intervention_ranking_plot(
-                np.delete(int_asym_measurements[..., i], i, axis=-1),
-                np.delete(int_sym_measurements[..., i], i, axis=-1),
+                np.delete(measurements[..., i], i, axis=-1),
                 np.delete(labels, i),
+                self.intervention,
                 self.z,
             )
             figures.append(fig)
@@ -74,39 +69,38 @@ class InterventionIndividualRankPlotCommand(BaseCommand):
                 .lower()
                 .replace(" ", "_")
             )
-            filename = f"{self.delta_str}_{colname}"
-            fig.savefig(self.output_dir / f"{filename}.pdf", bbox_inches="tight")
-            fig.savefig(self.output_dir / f"{filename}.png", bbox_inches="tight")
+            fig.savefig(self.output_dir / f"{colname}.pdf", bbox_inches="tight")
+            fig.savefig(self.output_dir / f"{colname}.png", bbox_inches="tight")
 
 
 def intervention_ranking_plot(
-    int_asym_measurements: npt.NDArray[np.int64],
-    int_sym_measurements: npt.NDArray[np.int64],
+    measurements: npt.NDArray[np.int64],
     intervention_labels: npt.NDArray[np.str_],
+    scenarios: list[InterventionStrength],
     z: float,
 ) -> plt.Figure:
     fig, ax = plt.subplots(figsize=(5, 2.5), constrained_layout=True)
 
-    asym_mean, asym_lo, asym_hi = bootstrap_mean_ranks(int_asym_measurements, z)
-    sym_mean, sym_lo, sym_hi = bootstrap_mean_ranks(int_sym_measurements, z)
+    mean, lo, hi = bootstrap_mean_ranks(measurements, z)
 
-    sort_idxes = np.argsort(sym_mean)[::-1]
+    sort_idxes = np.argsort(mean[-1])[::-1]
     intervention_labels = intervention_labels[sort_idxes]
-    sym_mean = sym_mean[sort_idxes]
-    sym_lo = sym_lo[sort_idxes]
-    sym_hi = sym_hi[sort_idxes]
-    asym_mean = asym_mean[sort_idxes]
-    asym_lo = asym_lo[sort_idxes]
-    asym_hi = asym_hi[sort_idxes]
+    mean = mean[::-1, sort_idxes]
+    lo = lo[::-1, sort_idxes]
+    hi = hi[::-1, sort_idxes]
 
     n = intervention_labels.size + 1
+    scenario_names = [
+        f"$\\delta_h = {delta.delta_str()[0]}.{delta.delta_str()[1]}$"
+        for delta in reversed(scenarios)
+    ]
     plot_df = pl.DataFrame(
         {
-            "Model": ["Symmetric"] * (n - 1) + ["Asymmetric"] * (n - 1),
+            "Scenario": [name for name in scenario_names for _ in range(n - 1)],
             "Intervention": np.concat((intervention_labels, intervention_labels)),
-            "Mean rank": np.concat((sym_mean, asym_mean)),
-            "CI low": np.concat((sym_lo, asym_lo)),
-            "CI high": np.concat((sym_hi, asym_hi)),
+            "Mean rank": mean.flatten(),
+            "CI low": lo.flatten(),
+            "CI high": hi.flatten(),
         }
     )
 
@@ -115,15 +109,17 @@ def intervention_ranking_plot(
         plot_df,
         x="Intervention",
         y="Mean rank",
-        hue="Model",
+        hue="Scenario",
+        palette=["#5289C7", "#7BAFDE"],
         ax=ax,
     )
 
     # Show CIs as whiskers
     x = np.arange(n - 1)
     WIDTH = 0.4
-    for j, model in enumerate(["Symmetric", "Asymmetric"]):
-        subset_df = plot_df.filter(Model=model)
+
+    for j, scenario in enumerate(scenario_names):
+        subset_df = plot_df.filter(Scenario=scenario)
         offset = -WIDTH / 2 if j == 0 else WIDTH / 2
 
         ax.errorbar(
