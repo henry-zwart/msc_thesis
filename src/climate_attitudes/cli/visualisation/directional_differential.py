@@ -96,10 +96,12 @@ def plot_ranked_differentials(
     # asymmetric = asymmetric[positive_mean_idxes][sort_idxes]
     # unidirectional = unidirectional[positive_mean_idxes][sort_idxes]
     bar_color = np.array(["tab:red"] * (n * (n - 1) // 2), dtype=object)
+    # print(bar_color)
     # bar_color[null] = "tab:grey"
     # bar_color[symmetric] = "tab:blue"
     # bar_color[asymmetric] = "tab:red"
     # bar_color[unidirectional] = "tab:green"
+
     marker, _, bar = ax.errorbar(
         mean_diffs_flat,
         np.arange(n * (n - 1) // 2),
@@ -113,8 +115,14 @@ def plot_ranked_differentials(
     )
     plt.setp(bar[0], capstyle="round")
     marker.set_fillstyle("none")
-    bar[0].set_alpha(0.5)
     bar[0].set_linewidth(5)
+    # for i, _bar in enumerate(bar):
+    #     if mean_diffs_flat[i] - ci_lower_flat[i] <= 0:
+    #         _bar.set_alpha(0.5)
+    #     else:
+    #         _bar.set_alpha(1.0)
+
+    bar[0].set_alpha(0.5)
 
     # Draw 0.0 as dashed
     ax.axvline(x=0, linestyle="dashed", linewidth=0.75, color="gray", zorder=1)
@@ -149,6 +157,7 @@ def plot_ranked_differentials(
     for i in range(len(ylabels)):
         ax.axhline(y=i, linewidth=0.1, color="k", linestyle="solid")
 
+    ax.set_xlabel(r"Directional differential ($\Delta_{i,j}$)")
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
 

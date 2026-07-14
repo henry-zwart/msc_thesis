@@ -44,7 +44,7 @@ class RegularisationEBICPlotCommand(BaseCommand):
         ax.set_xscale("log")
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-        ax.set_xlabel(r"$\lambda$")
+        ax.set_xlabel(r"Regularisation strength ($\lambda$)")
         ax.set_ylabel(r"$\Delta$EBIC")
         λ_min = min(all_results[0]["λs"].min(), all_results[1]["λs"].min())
         λ_max = max(all_results[0]["λs"].max(), all_results[1]["λs"].max())
