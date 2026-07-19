@@ -37,52 +37,98 @@ the relative effectiveness of interventions.
 
 
 == Existence of asymmetric relations <subsec:asymmetry-results-existence>
-*TODO:*
-- Observations from figures:
-  - Existence of _non-symmetric_ relations:
-    - $"Politics" --> {"CC Action", "CC Worry", "CC Real"}$
-    - $"CC Worry" --> {"CC Impact", "CC Human"}$
-  - Within the non-symmetric relations, there exist different categories:
-    - Unidirectional (arrow only one way): Politics --> CC Real
-    - Remainder: Asymmetric (arrows each way; different strengths)
-    - Potentially some complexity in interpreting this, since we use regularisation
+// - Observations from figures:
+//   - Existence of _non-symmetric_ relations:
+//     - $"Politics" --> {"CC Action", "CC Worry", "CC Real"}$
+//     - $"CC Worry" --> {"CC Impact", "CC Human"}$
+//   - Within the non-symmetric relations, there exist different categories:
+//     - Unidirectional (arrow only one way): Politics --> CC Real
+//     - Remainder: Asymmetric (arrows each way; different strengths)
+//     - Potentially some complexity in interpreting this, since we use regularisation
 
-To investigate the existence of asymmetric relations we calibrate the non-equilibrium
-belief system model to the climate beliefs dataset using the parameter estimation
-method outlined in @subsec:methods-parameter-estimation, and then compare the
-inferred directional intervention strengths between each pair of spins.
+To investigate the existence of asymmetric relations in the asymmetric model calibrated
+to the climate beliefs dataset, we examine the differences in directional interaction
+effects for the asymmetric models calibrated using bootstrapping in the previous
+section.
 
-#let dataset-size-footnote = footnote[
-  In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
-]
-We use bootstrapping to estimate the uncertainty in our parameter estimates due to
-sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
-$M$, $T$, and $N$ denote the number of participants, observations, and spins
-respectively#dataset-size-footnote. We construct 500 bootstrapped
-datasets by sampling rows (participants) with replacement from $bold(D)$,
-such that each bootstrapped dataset has the same shape as the complete dataset.
+// To investigate the existence of asymmetric relations we calibrate the non-equilibrium
+// belief system model to the climate beliefs dataset using the parameter estimation
+// method outlined in @subsec:methods-parameter-estimation, and then compare the
+// inferred directional intervention strengths between each pair of spins.
+//
+// #let dataset-size-footnote = footnote[
+//   In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
+// ]
+// We use bootstrapping to estimate the uncertainty in our parameter estimates due to
+// sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
+// $M$, $T$, and $N$ denote the number of participants, observations, and spins
+// respectively#dataset-size-footnote. We construct 500 bootstrapped
+// datasets by sampling rows (participants) with replacement from $bold(D)$,
+// such that each bootstrapped dataset has the same shape as the complete dataset.
+//
+// For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
+// with parameters
+// $
+//   chevron bold(A), bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
+// $
+//
+// where $p in NN$ is the number of model parameters, and we take the adjacency matrix
+// $bold(A)$ as fully-connected, permitting influence relations to be inferred between
+// each pair of beliefs or attitudes.
 
-For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
-with parameters
-$
-  chevron bold(A), bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
-$
-
-where $p in NN$ is the number of model parameters, and we take the adjacency matrix
-$bold(A)$ as fully-connected, permitting influence relations to be inferred between
-each pair of beliefs or attitudes. For each bootstrapped dataset, we obtain an estimate
-for the directional differential matrix:
+For each bootstrapped model, $cal(M)_((i))$ with parameters
+$chevron bold(A), bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
+the directional differential matrix:
 
 $
   Delta_J^((i)) = bold(J)_((i)) - bold(J)^T_((i))
 $ <eqn:asymmetry-results-existence-directional-differential-matrix>
 
-Recall that the structure of an interaction effect matrix $bold(J)$ is such that a row
-#box[$k in {1, ..., N}$] describes the strength and direction of influence _from_ the
+Recall that the $k$'th row of $bold(J)_((i))$ (for #box[$k in {1, ..., N}$])
+describes the strength and direction of influence _from_ the
 spin $S_k$ _toward_ each other spin. Hence for $k, ell in {1, ..., N}$ we should
 interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
 as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
+
+@fig:asymmetry-results-existence-ranked-differentials shows the median directional
+differential for each pair of spins in the asymmetric model, in decreasing order.
+The 90% confidence intervals are calculated as the 5th and 95th percentiles across
+bootstrap samples of the directional differential matrix elements. For each pair of
+spins we display only the directional differential for which the median is positive
+(since $Delta_J$ is symmetric), and we exclude diagonal entries (which are zero by
+definition).
+
+In @sec:calibration we cautioned against using bootstrapped confidence intervals to
+test for the _existence_ of edges by comparison with
+zero when regularisation is used during calibration---this caution does not apply to
+the _comparison_ of edge weights via the mean difference
+@epskampEstimatingPsychologicalNetworks2018.
+// In @fig:asymmetry-results-existence-ranked-differentials, a confidence interval which
+// excludes zero indicates that we observe the corresponding asymmetry in most bootstrapped
+// models; if the confidence interval contains zero, we cannot (within the confidence
+// bounds) say that the two effects are different. This interpretation applies even when
+// regularisation is used. Suppose, for instance,
+// that the confidence interval for a relation $A --> B$ excludes zero because
+// regularisation pushes the opposite relation, $B --> A$, to zero in most bootstrapped
+// models. If the relation were symmetric, then $A --> B$ would also have been pushed to
+// zero in a majority of models. Conversely, if
+
+
+
+
+// NOTE:
+// For a directional pairwise
+// relation $A --> B$, if the corresponding confidence interval is consistently above
+// zero this indicates that we observe asymmetry in most bootstrapped models. Conversely,
+// if the corresponding confidence interval contains zero, then we cannot say (within the
+// confidence bounds) that the two interaction effects are different. This interpretation
+// applies even when regularisation is used in model calibration. Suppose, for instance,
+// that the confidence intervals are consistently above zero because regularisation pushes
+// the opposite relation, $B --> A$, to zero in most bootstrapped models. If the relation
+// were symmetric, then $A --> B$ would also have been pushed to zero in a majority of
+// models.
+
 
 #figure(
   image("../results/figures/model/directional_differentials/rank_no_structure.pdf"),
@@ -93,19 +139,20 @@ $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
   placement: auto,
 ) <fig:asymmetry-results-existence-ranked-differentials>
 
-By repeating this process for each bootstrapped dataset we obtain an approximation to
-the sampling distribution of $Delta_J$, i.e., that of the true directional differential
-matrix for datasets of the same size.
-@fig:asymmetry-results-existence-ranked-differentials shows the median directional
-differential for each pair of spins. The 90% confidence intervals are calculated using
-the 5th and 95th percentiles. For each pair of spins we only display the directional
-differential for which the median is positive, since $Delta_J$ is symmetric. We exclude
-diagonal entries, which are zero by definition.
+// By repeating this process for each bootstrapped dataset we obtain an approximation to
+// the sampling distribution of $Delta_J$, i.e., that of the true directional differential
+// matrix for datasets of the same size.
+// @fig:asymmetry-results-existence-ranked-differentials shows the median directional
+// differential for each pair of spins. The 90% confidence intervals are calculated using
+// the 5th and 95th percentiles. For each pair of spins we only display the directional
+// differential for which the median is positive, since $Delta_J$ is symmetric. We exclude
+// diagonal entries, which are zero by definition.
 
 
-@fig:asymmetry-results-existence-interaction-matrix shows the interaction effects,
-$J_(i j)$, between each pair of spins $S_i$, $S_j$, averaged across the calibrated
-bootstrapped models.
+// @fig:asymmetry-results-existence-interaction-matrix shows the interaction effects,
+// $J_(i j)$, between each pair of spins $S_i$, $S_j$, averaged across the calibrated
+// bootstrapped models.
+
 
 #figure(
   image("../results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf"),
@@ -115,6 +162,27 @@ bootstrapped models.
   ),
   placement: auto,
 ) <fig:asymmetry-results-existence-interaction-matrix>
+
+@fig:asymmetry-results-existence-ranked-differentials shows a majority of symmetric
+relations between spins (characterised by confidence intervals containing zero), with
+a small number of asymmetric relations. Most directional differentials display
+substantial uncertainty, with large confidence intervals ($> 0.1$ on average),
+reflecting the uncertainty in parameter estimates seen in the previous chapter
+(@fig:calibration-edge-accuracy).
+
+We can partition the asymmetric relations into two groups through examination of the
+interaction matrix for the model calibrated on the full dataset
+(@fig:asymmetry-results-existence-interaction-matrix, also shown in
+@fig:calibration-interaction-matrices of the previous chapter). The first group
+comprises pairs of spins for which both interaction effects are nonzero, shown with
+blue confidence intervals: $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$
+and $#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$. The second group
+comprises pairs for which the interaction effect is nonzero in only one direction,
+shown with orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
+// Note that
+// we also observe nonzero interaction effects in only one direction for some
+// _symmetric_ relations as well (e.g., $#raw("Politics") -> #raw("CC Human")$), we still
+// consider these symmetric, as the bootstr
 
 
 // #figure(
@@ -181,30 +249,12 @@ respect to collective change in attitude.
 
 The symmetric and asymmetric models are calibrated to the full (non-bootstrapped)
 climate beliefs dataset using the parameter estimation method described in
-@subsec:methods-parameter-estimation (*REFERENCE THE BELOW FIGURE*). For each model,
-we consider a range of intervention scenarios, with different intervention strengths,
-to understand how this may affect the results. We use $delta_h in {0.5, 1.5, 2.5}$,
-corresponding to weak, moderate, and strong interventions respectively
-(@subsec:asymmetric-belief-system-modelling-interventions).
+@subsec:methods-parameter-estimation (@fig:calibration-interaction-matrices). For
+each model, we consider a range of intervention scenarios, with different intervention
+strengths, to understand how this may affect the results. We use
+$delta_h in {0.5, 1.5, 2.5}$, corresponding to weak, moderate, and strong interventions
+respectively (@subsec:asymmetric-belief-system-modelling-interventions).
 
-*TODO:* Combine these networks into a single figure. Fix figure size, labels.
-#grid(
-  columns: 2,
-  figure(
-    image("../results/figures/model/network/full_sym_ising_no_structure.pdf"),
-    caption: caption(
-      short: [Climate belief system network (asymmetric)],
-      long: [TODO],
-    ),
-  ),
-  figure(
-    image("../results/figures/model/network/full_asym_ising_no_structure.pdf"),
-    caption: caption(
-      short: [Climate belief system network (asymmetric)],
-      long: [TODO],
-    ),
-  ),
-)
 
 
 We simulate interventions as being applied to the climate beliefs dataset survey
@@ -285,14 +335,6 @@ strength.
 )
 
 #figure(
-  image("../results/figures/model/intervention_effects/15_cc_worry.pdf"),
-  caption: caption(
-    short: [Outbound intervention effect: CC Worry (moderate)],
-    long: [Outbound intervention effect: CC Worry (moderate)],
-  ),
-)
-
-#figure(
   image("../results/figures/model/intervention_effects/25_cc_worry.pdf"),
   caption: caption(
     short: [Outbound intervention effect: CC Worry (strong)],
@@ -305,14 +347,6 @@ strength.
   caption: caption(
     short: [Outbound intervention effect: Politics (weak)],
     long: [Outbound intervention effect: Politics (weak)],
-  ),
-)
-
-#figure(
-  image("../results/figures/model/intervention_effects/15_politics.pdf"),
-  caption: caption(
-    short: [Outbound intervention effect: Politics (moderate)],
-    long: [Outbound intervention effect: Politics (moderate)],
   ),
 )
 
@@ -383,6 +417,10 @@ strength.
       compared to the no-intervention scenario.
     ],
   ),
+)
+
+#figure(
+  image("../results/figures/model/intervention_collective_ranking/cc_action.pdf"),
 )
 
 #figure(

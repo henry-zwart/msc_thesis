@@ -7,8 +7,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import numpy.typing as npt
+import seaborn as sns
 from ising.model import ModelType
-from ising.visualisation import DIVERGING_CMAP, DIVERGING_CMAP2
+from ising.visualisation import DIVERGING_CMAP2
 from matplotlib import cm
 from matplotlib.axes import Axes
 from rich.console import Console
@@ -66,7 +67,9 @@ def draw_network(G: nx.Graph, vlim_h: float, vlim_j: float, layout, ax: Axes):
 
     vmin, vmax = -vlim_j, vlim_j
     ipx_style["edge"]["color"] = [z["j"] for *_, z in G.edges(data=True)]
-    ipx_style["edge"]["cmap"] = DIVERGING_CMAP
+    # cmap = DIVERGING_CMAP
+    cmap = sns.color_palette("RdBu", as_cmap=True)
+    ipx_style["edge"]["cmap"] = cmap
     ipx_style["edge"]["norm"] = mcolors.Normalize(vmin=vmin, vmax=vmax)
 
     vertex_labels = [z["label"] for _, z in G.nodes(data=True)]
@@ -142,6 +145,15 @@ class NetworkIdeologyPlotCommand(BaseCommand):
 
         G_cons = conservative_model.to_networkx()
         G_lib = liberal_model.to_networkx()
+        labels = [
+            "Real",
+            "Human",
+            "Worry CC",
+            "Oth Worry CC ",
+            "Worry W",
+            "Impact",
+            "Action",
+        ]
         for node, label in enumerate(labels):
             G_cons.nodes[node]["label"] = label
             G_lib.nodes[node]["label"] = label

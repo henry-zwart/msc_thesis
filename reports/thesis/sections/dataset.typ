@@ -956,7 +956,7 @@ policy variables, as well as _CC Responsibility_ and _CC Scientists_.
     long: [*TODO*],
   ),
   placement: auto,
-)
+) <fig:dataset-marginal-distributions>
 
 
 

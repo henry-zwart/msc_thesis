@@ -20,6 +20,9 @@ from .intervention_mean_collective_effect import (
 from .intervention_mean_collective_ranking import (
     InterventionCollectiveRankPlotCommand as InterventionCollectiveRankPlotCommand,
 )
+from .intervention_mean_collective_ranking_comb import (
+    CollectiveRankCombPlotCommand as CollectiveRankCombPlotCommand,
+)
 from .intervention_mean_individual_ranking import (
     InterventionIndividualRankPlotCommand as InterventionIndividualRankPlotCommand,
 )

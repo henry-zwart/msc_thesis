@@ -62,7 +62,7 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         # J_ci = 1.97 * np.std(J, axis=0, ddof=1) / np.sqrt(repeats)
         # J_mean[(J_mean - J_ci < 0) & (J_mean + J_ci > 0)] = 0.0
 
-        fig, ax = plt.subplots(figsize=(4.5, 4), constrained_layout=True)
+        fig, ax = plt.subplots(figsize=(4, 3.7), constrained_layout=True)
         ax.set_aspect("equal")
         # Set vlim to max non-diag
         non_diag_J = J.copy()
@@ -86,8 +86,8 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         ax.set_xticks(
             np.arange(len(labels)) + 0.5,
             labels,
-            rotation=35,
-            horizontalalignment="right",
+            rotation=90,
+            # horizontalalignment="right",
         )
 
         # ax.legend(

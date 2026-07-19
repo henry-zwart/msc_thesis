@@ -7,7 +7,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import numpy.typing as npt
-from ising.model import ModelType
 from ising.visualisation import DIVERGING_CMAP, DIVERGING_CMAP2
 from matplotlib import cm
 from matplotlib.axes import Axes
@@ -16,7 +15,7 @@ from rich.console import Console
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.dataset import Dataset
 from climate_attitudes.visualisation import configure_mpl
-from ising import Ising
+from ising import Ising, SymmetricIsing
 
 np.set_printoptions(linewidth=200)
 
@@ -55,7 +54,7 @@ def draw_network(G: nx.Graph, vlim_h: float, vlim_j: float, layout, ax: Axes):
         },
     }
     edge_linewidths = {
-        (u, v): np.sqrt(abs(z["j"] * 3)) for u, v, z in G.edges(data=True)
+        (u, v): np.log(abs(z["j"]) * 20) for u, v, z in G.edges(data=True)
     }
 
     vmin, vmax = -vlim_h, vlim_h
@@ -65,7 +64,7 @@ def draw_network(G: nx.Graph, vlim_h: float, vlim_j: float, layout, ax: Axes):
     )
 
     vmin, vmax = -vlim_j, vlim_j
-    ipx_style["edge"]["color"] = [z["j"] for *_, z in G.edges(data=True)]
+    ipx_style["edge"]["color"] = [np.sign(z["j"]) for *_, z in G.edges(data=True)]
     ipx_style["edge"]["cmap"] = DIVERGING_CMAP
     ipx_style["edge"]["norm"] = mcolors.Normalize(vmin=vmin, vmax=vmax)
 
@@ -79,7 +78,7 @@ def draw_network(G: nx.Graph, vlim_h: float, vlim_j: float, layout, ax: Axes):
         vertex_labels=vertex_labels,
         edge_curved=True,
         edge_linewidth=edge_linewidths,
-        margin=0.1,
+        margin=0.15,
         style=ipx_style,
         ax=ax,
     )[0]
@@ -88,21 +87,21 @@ def draw_network(G: nx.Graph, vlim_h: float, vlim_j: float, layout, ax: Axes):
 
 
 class NetworkPlotCommand(BaseCommand):
-    model: Path
+    sym_model: Path
+    asym_model: Path
     output: Path | None = None
-    model_type: ModelType
 
     seed: int = 202606230923
 
     def cli_cmd(self) -> None:
         configure_mpl()
 
-        model_cls = self.model_type.get_cls()
-        if not issubclass(model_cls, Ising):
-            raise ValueError(
-                f"Unsupported model_type: '{self.model_type}'. Expected 'ising' "
-                f"or 'sym_ising'."
-            )
+        # model_cls = self.model_type.get_cls()
+        # if not issubclass(model_cls, Ising):
+        #     raise ValueError(
+        #         f"Unsupported model_type: '{self.model_type}'. Expected 'ising' "
+        #         f"or 'sym_ising'."
+        #     )
 
         dataset = Dataset.load(
             self.settings,
@@ -111,46 +110,60 @@ class NetworkPlotCommand(BaseCommand):
             verbose=False,
         )
         labels = dataset.schema.get_abbrevs(kind="measurement")
-        model_fit = np.load(self.model)
-
-        # Get column indices, in case only a subset of cols were fit
-        col_idxes = model_fit["col_idxes"]
-        labels = [label for i, label in enumerate(labels) if i in col_idxes]
+        sym_model_fit = np.load(self.sym_model)
+        asym_model_fit = np.load(self.asym_model)
 
         # Extract interaction effect matrices from params
-        model = unpack_model(
-            model_cls,
-            model_fit["params"],
-            labels,
-        )
+        networks = []
+        for model_fit, cls in zip(
+            (sym_model_fit, asym_model_fit), (SymmetricIsing, Ising), strict=True
+        ):
+            model = unpack_model(
+                cls,
+                model_fit["params"],
+                labels,
+            )
 
-        model.adj[abs(model.j) < 5e-2] = False
-        model.j[abs(model.j) < 5e-2] = 0
+            model.adj[np.diag_indices_from(model.adj)] = False
+            model.j[np.diag_indices_from(model.j)] = 0
+            model.adj[abs(model.j) < 5e-2] = False
+            model.j[abs(model.j) < 5e-2] = 0
 
-        # Ignore self-loops
-        model.adj[np.diag_indices_from(model.adj)] = False
+            # Ignore self-loops
+            model.adj[np.diag_indices_from(model.adj)] = False
 
-        G = model.to_networkx()
-        for node, label in enumerate(labels):
-            G.nodes[node]["label"] = label
+            G = model.to_networkx()
+            labels = [
+                "Real",
+                "Human",
+                "Worry CC",
+                "Oth Worry CC ",
+                "Worry W",
+                "Politics",
+                "Impact",
+                "Action",
+            ]
+            for node, label in enumerate(labels):
+                G.nodes[node]["label"] = label
 
-        fig, ax = plt.subplots(figsize=(2.5, 4), constrained_layout=True)
-        # ax.set_aspect("equal")
+            networks.append(G)
 
-        layout = nx.spring_layout(
-            G,
-            weight=None,
-            k=3,
-            seed=self.seed,
-        )
+        fig, axes = plt.subplots(ncols=2, figsize=(5.77, 3), constrained_layout=True)
 
-        artist = draw_network(G, 0.5, 0.5, layout, ax)
+        for ax, G in zip(axes.flatten(), networks, strict=True):
+            layout = nx.spring_layout(
+                G,
+                weight=None,
+                k=3,
+                seed=self.seed,
+            )
+            artist = draw_network(G, 0.5, 0.5, layout, ax)
 
         edge_cbar = fig.colorbar(
             artist.get_edges(),
             shrink=0.8,
             aspect=30,
-            ax=ax,
+            ax=axes[1],
         )
         vmin, vmax = artist.get_edges().get_clim()
         edge_cbar.set_ticks(
@@ -177,18 +190,10 @@ class NetworkPlotCommand(BaseCommand):
         if node_colour_norm.vmin is None or node_colour_norm.vmax is None:
             raise RuntimeError("This shouldn't happen")
         vertex_cbar.set_ticks([])
-        # vertex_cbar.set_ticks(
-        #     [
-        #         0.0,
-        #         np.round(node_colour_norm.vmax, 2),
-        #     ]
-        # )
         vertex_cbar.ax.set_title(r"$h$", pad=5)
-        # vertex_cbar.ax.tick_params(
-        #     which="both",
-        #     length=0,
-        #     pad=1,
-        # )
+
+        axes[0].set_title("Symmetric")
+        axes[1].set_title("Asymmetric")
 
         if self.output:
             fig.savefig(self.output, bbox_inches="tight")

@@ -5,6 +5,18 @@
 - Research questions (thinking these are perhaps better left to later, in favour of
   contributions here)
 
+== Motivation
+
+Issue support on climate policies in US driven by political identification and climate
+beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020
+@zieglerPoliticalOrientationEnvironmental2017 @roser-renoufGenesisClimateChange2014
+@unsworthItsPoliticalHow2014.
+
+But political identification is often not consistent with policy attitudes
+@iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
+identity-driven (symbolic) than issue-driven (operational)
+@masonIdeologuesIssuesPolarising2018. Also @eganIdentityDependentVariable2020.
+
 == Research questions
 
 *Theoretical contributions:*
@@ -26,6 +38,12 @@
 - *RQ3.2:* How do intervention outcome and effectiveness vary between individuals with
   different initial conditions, or between conservative and liberal individuals?
 
+#{
+  set text(fill: luma(70))
+  $
+    H_B (bold(s)) <- s_B dot [(h_B + #text(fill: rgb("1971c2"), $bold(delta_I)$)) + sum_x J(S_x -> S_B) s_x]
+  $
+}
 
 == Contributions
 + We present a mathematical model for belief system dynamics that does not assume
