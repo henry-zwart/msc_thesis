@@ -15,7 +15,7 @@ beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020
 But political identification is often not consistent with policy attitudes
 @iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
 identity-driven (symbolic) than issue-driven (operational)
-@masonIdeologuesIssuesPolarising2018. Also @eganIdentityDependentVariable2020.
+@masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
 
 == Research questions
 
