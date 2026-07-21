@@ -21,6 +21,8 @@ def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
         J = params[8:].reshape((8, 8))
         mask = np.zeros((8, 8), dtype=bool)
 
+    J[abs(J) < 1e-2] = 0
+
     sns.heatmap(
         J,
         mask=mask,

@@ -55,6 +55,7 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         # for r in range(repeats):
         #     J[r] = model_cls.unpack_params(bootstrap_params[r], k=k)[1]
         J = model_cls.unpack_params(params, k=k)[1]
+        J[abs(J) < 1e-2] = 0
 
         # Calculate mean interaction effect and CI
         # J_mean = J.mean(axis=0)

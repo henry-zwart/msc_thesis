@@ -1,3 +1,6 @@
+from .compare_outbound_int_effect import (
+    CompareOutboundIntEffectsPlotCommand as CompareOutboundIntEffectsPlotCommand,
+)
 from .directional_differential import (
     DirectionalDifferentialPlotCommand as DirectionalDifferentialPlotCommand,
 )
@@ -28,6 +31,9 @@ from .intervention_mean_individual_ranking import (
 )
 from .intervention_mean_int_effect import (
     InterventionMeanEffectsPlotCommand as InterventionMeanEffectsPlotCommand,
+)
+from .intervention_strength_relationship import (
+    CompareInterventionStrengthPlotCommand as CompareInterventionStrengthPlotCommand,
 )
 from .network import NetworkPlotCommand as NetworkPlotCommand
 from .regularisation_ebic import (

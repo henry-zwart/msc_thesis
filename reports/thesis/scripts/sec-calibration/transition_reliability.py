@@ -124,7 +124,7 @@ def main(P: npt.NDArray[np.float64], λ: float):
     fig.supxlabel(
         r"Transition probability: $P(S_i^{t+1} = +1 \mid \boldsymbol{S}^{t})$"
     )
-    fig.supylabel(r"Mean binarised state: $S_i^{t+1}$", y=0.55)
+    fig.supylabel(r"Mean Bin. probability: $P(S_i^{t+1} = +1)$", y=0.55)
 
     for ext in ("png", "pdf"):
         fig.savefig(

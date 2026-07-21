@@ -38,12 +38,6 @@ identity-driven (symbolic) than issue-driven (operational)
 - *RQ3.2:* How do intervention outcome and effectiveness vary between individuals with
   different initial conditions, or between conservative and liberal individuals?
 
-#{
-  set text(fill: luma(70))
-  $
-    H_B (bold(s)) <- s_B dot [(h_B + #text(fill: rgb("1971c2"), $bold(delta_I)$)) + sum_x J(S_x -> S_B) s_x]
-  $
-}
 
 == Contributions
 + We present a mathematical model for belief system dynamics that does not assume

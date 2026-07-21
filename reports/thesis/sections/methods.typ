@@ -21,7 +21,7 @@
 //   - Regularisation
 
 
-== Counterfactual interventions
+== Counterfactual interventions <sec:methods-counterfactual-interventions>
 
 Individuals have different belief systems. Influence relations between beliefs and
 attitudes reflect heterogeneity in individual experiences and perception. Often these

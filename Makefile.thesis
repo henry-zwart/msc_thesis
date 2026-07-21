@@ -51,7 +51,12 @@ THESIS_FIGURES_METHODS := \
 
 THESIS_FIGURES_ASYMMETRY_RESULTS := \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf \
-		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf 
+		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_5.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_10.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/inbound_effects.pdf
 		
 
 THESIS_FIGURES_DATASET := \
@@ -255,6 +260,66 @@ $(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf
 			$(PKG_PATH)/visualisation.py \
 			| $(THESIS_DIR)/results/figures/asymmetry_results
 	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_%.pdf: \
+			$(PKG_PATH)/cli/visualisation/compare_outbound_int_effect.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	uv run cadata plot compare-outbound-effects \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--point-of-intervention-idx 4 \
+		--point-of-intervention-idx 2 \
+		--point-of-intervention-idx 5 \
+		--delta 2.5 \
+		-z 1.96 \
+		--measure-time $*
+
+$(THESIS_DIR)/results/figures/asymmetry_results/inbound_effects.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/inbound_effects.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+	
+
+$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/outbound_effect_of_asymmetry.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf: \
+			$(PKG_PATH)/cli/visualisation/intervention_strength_relationship.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/model/intervention_effects
+	uv run cadata plot compare-intervention-strengths \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--point-of-intervention-idx 0 \
+		--point-of-intervention-idx 2 \
+		--point-of-intervention-idx 5 \
+		--delta 0.5 \
+		--delta 2.5 \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME)
 
 $(THESIS_DIR)/results/figures/asymmetry_results: | $(THESIS_DIR)/results/figures
 	@mkdir -p $@

@@ -56,7 +56,7 @@ def configure_mpl(
     plt.rc("axes", titlesize=FONT_SIZE_DEFAULT)  # fontsize of the axes title
     plt.rc("axes", labelsize=FONT_SIZE_DEFAULT)  # fontsize of the x and y labels
     plt.rc("figure", labelsize=FONT_SIZE_DEFAULT)
-    plt.rc("figure", dpi=200)
+    plt.rc("figure", dpi=300)
 
     sns.set_context(
         "paper",

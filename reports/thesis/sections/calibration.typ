@@ -12,7 +12,11 @@ the models explain the data?').
   image("../results/figures/model_fit/interaction_heatmap.pdf"),
   caption: caption(
     short: [Calibrated model interaction matrix],
-    long: [*TODO*],
+    long: [
+      Interaction effect matrices ($bold(J)$) for the symmetric and asymmetric belief
+      system model variants, calibrated to the climate beliefs dataset (@sec:dataset)
+      using the parameter estimation method in @subsec:methods-parameter-estimation.
+    ],
   ),
 ) <fig:calibration-interaction-matrices>
 
@@ -33,7 +37,12 @@ particularly true for `Politics`, and less so for `CC Others Worry` and `CC Impa
   image("../results/figures/model_fit/edge_accuracy.pdf"),
   caption: caption(
     short: [Calibrated model edge accuracy],
-    long: [*TODO*],
+    long: [
+      Interaction effect parameter accuracy for symmetric and asymmetric models
+      calibrated to the climate beliefs dataset (@sec:dataset). Mean parameter values
+      are shown in increasing order. 95% confidence intervals are calculated using the
+      percentile method over models calibrated to bootstrapped datasets (500 repeats).
+    ],
   ),
 ) <fig:calibration-edge-accuracy>
 
@@ -94,7 +103,11 @@ model.
   image("../results/figures/model_fit/selection_probability.pdf"),
   caption: caption(
     short: [Model calibration edge selection probability],
-    long: [*TODO*],
+    long: [
+      Edge selection probability for models calibrated to bootstrapped datasets sampled
+      with replacement from the climate beliefs dataset (500 repeats). Edges are
+      'selected' if they survive regularisation with magnitude at least $0.01$.
+    ],
   ),
 ) <fig:calibration-selection-probability>
 
@@ -133,7 +146,13 @@ for `CC Others Worry`).
   image("../results/figures/model_fit/transition_reliability.pdf"),
   caption: caption(
     short: [Calibrated model: transition reliability],
-    long: [*TODO*],
+    long: [
+      Reliability of transitions predicted by the model measured as the agreement
+      between conditional probabilities under the model,
+      $P(S_i^(t+1) = +1 | bold(S)^t)$, and expected proportion of $+1$ values after
+      binarisation, calculated as the average transition probability for survey
+      participants in a given conditional probability bin.
+    ],
   ),
 ) <fig:calibration-transition-reliability>
 
@@ -191,7 +210,13 @@ the next state, despite the binarisation process being fairly deterministic.
   image("../results/figures/model_fit/mean_relative_entropy.pdf"),
   caption: caption(
     short: [Calibrated model: mean relative entropy],
-    long: [*TODO*],
+    long: [
+      _(Left)_ Mean absolute relative entropy of the binarised dataset with respect to
+      the calibrated model, for the full-connected and null (only self-interactions)
+      models, using 10-fold cross-validation. Average calculated across spins and
+      survey participants. _(Right)_ Mean difference in relative entropy. Confidence
+      intervals display two standard deviations around the mean value.
+    ],
   ),
 ) <fig:calibration-mean-relative-entropy>
 
@@ -217,7 +242,12 @@ better explained by the fully-connected model than the null model.
   image("../results/figures/model_fit/kl_difference_dist.pdf"),
   caption: caption(
     short: [Null model relative entropy comparison],
-    long: [*TODO*],
+    long: [
+      Probability density function (left) and empirical cumulative distribution function
+      (right) of the mean difference in relative entropy between the fully-connected and
+      null (only self-interaction) models across survey participants. Negative values
+      indicate lower relative entropy for the fully-connected model.
+    ],
   ),
 ) <fig:relative-entropy-difference-dist>
 
@@ -249,7 +279,13 @@ this theory.
   image("../results/figures/model_fit/kl_difference_examples.pdf"),
   caption: caption(
     short: [Null model relative entropy comparison examples],
-    long: [*TODO*],
+    long: [
+      Observed transitions for sample survey participants in the left tail (top row) and
+      right tail (bottom row) of @fig:relative-entropy-difference-dist. Circles indicate
+      the probability that participants' observations in the first wave are binarised to
+      $+1$. Arrows denote the change in the second wave, colour-coded according to
+      whether the change is toward the positive (blue) or negative (orange) state.
+    ],
   ),
 ) <fig:relative-entropy-difference-examples>
 

@@ -182,7 +182,7 @@ def main(P: npt.NDArray[np.float64], λ: float):
         y="Relative Entropy",
         hue="Model",
         order=["Self-interactions", "Full connectivity"],
-        errorbar=("pi", 95),
+        errorbar=("sd", 1.96),
         gap=0.1,
         width=0.65,
         capsize=0.1,

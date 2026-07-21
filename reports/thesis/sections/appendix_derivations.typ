@@ -1,4 +1,5 @@
-= Appendix A <sec:appendix-derivations>
+= Derivations <sec:appendix-derivations>
+
 
 == Parameter estimation
 
@@ -15,4 +16,5 @@
 
 === Binarisation probability
 @eqn:methods-dataset-binarisation-probability-map-to-1
+
 

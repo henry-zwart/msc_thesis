@@ -308,6 +308,12 @@ class PlotSubCommand(BaseModel):
     ideology_networks: CliSubCommand[vis_cli.NetworkIdeologyPlotCommand]
     network: CliSubCommand[vis_cli.NetworkPlotCommand]
     identify_effective_personas: CliSubCommand[vis_cli.InterventionPersonasPlotCommand]
+    compare_outbound_effects: CliSubCommand[
+        vis_cli.CompareOutboundIntEffectsPlotCommand
+    ]
+    compare_intervention_strengths: CliSubCommand[
+        vis_cli.CompareInterventionStrengthPlotCommand
+    ]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
