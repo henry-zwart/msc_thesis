@@ -99,7 +99,6 @@ $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
   caption: caption(
     short: [Interaction matrix directional differentials],
     long: [
-
       Directional differentials---the difference between directed interaction effects
       for a pair of spins---in reverse order of median value. Confidence intervals are
       calculated using the percentile method on models calibrated using bootstrapping

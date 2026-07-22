@@ -64,20 +64,10 @@ class InterventionEffectDisPlotCommand(BaseCommand):
             (int_effect_asym, int_effect_sym),
             strict=True,
         ):
-            # Set xlim to be equally-sized around 0, just including all datapoints
-            max_effect_size = np.percentile(
-                abs(effects.mean(axis=0)), q=99.9, axis=0
-            ).max()
-            candidates = np.linspace(0, 2, 41)
-            xmax = candidates[np.argmax(candidates >= max_effect_size)]
-
             for i in range(N):
-                target_col = labels[i]
                 fig = intervention_effect_distribution_plot(
                     effects[..., i],
-                    target_col,
                     labels,
-                    xmax,
                 )
                 figures.append(fig)
 
@@ -100,16 +90,14 @@ class InterventionEffectDisPlotCommand(BaseCommand):
 
 def intervention_effect_distribution_plot(
     int_effects: npt.NDArray[np.int64],
-    target_label: np.str_,
     intervention_labels: npt.NDArray[np.str_],
-    xmax: float,
 ) -> plt.Figure:
     fig, axes = plt.subplots(
-        nrows=3,
-        ncols=3,
-        figsize=(5, 5),
+        nrows=2,
+        ncols=4,
+        figsize=(5.77, 2.5),
         constrained_layout=True,
-        sharey=True,
+        # sharey=True,
         sharex=True,
     )
 
@@ -120,23 +108,28 @@ def intervention_effect_distribution_plot(
         # if i == target_idx :
         #     continue
         ax = flat_axes[i]
-        sns.histplot(mean_effect[..., i], stat="probability", ax=ax)  # , binwidth=0.02)
-        ax.set_title(intervention, fontsize=10)
+        sns.kdeplot(mean_effect[..., i], fill=True, ax=ax)  # , binwidth=0.02)
+        ax.set_title(intervention, fontsize=9)
+        ax.set_xlabel("")
+        ax.set_ylabel("")
+        ax.spines.top.set_visible(False)
+        ax.spines.right.set_visible(False)
+
+    fig.supxlabel("Effect of intervention", fontsize=13, x=0.55)
+    fig.supylabel("Density", fontsize=13, y=0.55)
 
     # Set xlim to be equally-sized around 0, just including all datapoints
     # max_effect_size = np.percentile(abs(mean_effect), q=99, axis=0).max()
     # candidates = np.linspace(0, 1, 21)
     # xmax = candidates[min(np.argmax(candidates >= max_effect_size) - 1, 1)]
-    axes[0, 0].set_xlim(-xmax / 10, xmax)
-
-    for ax in axes[-1]:
-        ax.set_xlabel("Intervention effect")
+    # axes[0, 0].set_xlim(-xmax / 10, xmax)
+    axes[0, 0].set_xlim(0, mean_effect.max())
 
     # Set title
-    fig.suptitle(
-        f"Individual-level effects for interventions targeting '{target_label}'",
-        fontsize=12,
-        # pad=30,
-    )
+    # fig.suptitle(
+    #     f"Individual-level effects for interventions targeting '{target_label}'",
+    #     fontsize=12,
+    #     # pad=30,
+    # )
 
     return fig

@@ -44,7 +44,8 @@ THESIS_FIGURES_MODEL_CALIBRATION := \
 		$(THESIS_DIR)/results/figures/model_fit/mean_relative_entropy.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/kl_difference_dist.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/kl_difference_examples.pdf \
-		$(THESIS_DIR)/results/figures/model_fit/interaction_heatmap.pdf
+		$(THESIS_DIR)/results/figures/model_fit/interaction_heatmap.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/ideology_interaction_heatmap.pdf
 
 THESIS_FIGURES_METHODS := \
 		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
@@ -218,7 +219,16 @@ $(THESIS_DIR)/results/figures/model_fit/kl_difference_examples.pdf: \
 
 $(THESIS_DIR)/results/figures/model_fit/interaction_heatmap.pdf: \
 			$(THESIS_DIR)/scripts/sec-calibration/interaction_heatmaps.py \
-			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
+			$(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/ideology_interaction_heatmap.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/ideology_interaction_heatmaps.py \
+			$(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
 			$(PKG_PATH)/visualisation.py \
 			| $(THESIS_DIR)/results/figures/model_fit
 	@uv run $<
