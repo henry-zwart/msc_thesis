@@ -2,6 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import seaborn as sns
 from matplotlib.axes import Axes
 
@@ -10,7 +11,9 @@ from climate_attitudes.settings import Config
 from climate_attitudes.visualisation import DIVERGING_CMAP, configure_mpl
 
 
-def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
+def plot_heatmap(
+    model_path: Path, symmetric: bool, vlim: float, ax: Axes
+) -> npt.NDArray[np.float64]:
     params = np.load(model_path)["params"]
 
     if symmetric:
@@ -38,6 +41,8 @@ def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
         annot_kws=dict(fontsize=8),
     )
 
+    return J
+
 
 def main():
     config = Config(_env_file=".env")
@@ -58,18 +63,23 @@ def main():
     )
 
     # Draw heatmaps
-    plot_heatmap(
+    J_cons = plot_heatmap(
         Path("reports/thesis/results/data/model/ideology_fit_conservative.npz"),
         symmetric=False,
         vlim=0.35,
         ax=axes[0],
     )
-    plot_heatmap(
+    J_lib = plot_heatmap(
         Path("reports/thesis/results/data/model/ideology_fit_liberal.npz"),
         symmetric=False,
         vlim=0.35,
         ax=axes[1],
     )
+
+    cons_sparsity = np.isclose(J_cons, 0).sum() / (7**2 - 7)
+    lib_sparsity = np.isclose(J_lib, 0).sum() / (7**2 - 7)
+    print(f"Conservative sparsity: {cons_sparsity}")
+    print(f"Liberal sparsity: {lib_sparsity}")
 
     axes[0].set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0, fontsize=9)
     axes[1].tick_params("y", length=0)

@@ -23,6 +23,9 @@ def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
 
     J[abs(J) < 1e-2] = 0
 
+    sparsity = np.isclose(J, 0).sum() / (8**2 - 8)
+    print(sparsity)
+
     sns.heatmap(
         J,
         mask=mask,

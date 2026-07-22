@@ -11,12 +11,11 @@ import numpy as np
 import numpy.typing as npt
 import seaborn as sns
 from matplotlib.figure import Figure
+from sklearn.model_selection import RepeatedKFold, cross_validate
 from sklearn.tree import DecisionTreeRegressor
 
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.visualisation import DIVERGING_CMAP, configure_mpl
-
-np.set_printoptions(linewidth=200)
 
 ANNOTATIONS = {
     (-1.0, -1.0): "EL",  # Extremely low
@@ -270,6 +269,8 @@ class PersonaAnalysisRules:
     rules: list[tuple[tuple[RuleNode, ...], list[InterventionStrength]]]
     prevalence: npt.NDArray[np.float64]
     prevalence_mask: npt.NDArray[np.bool]
+    prevalence_low_eff: npt.NDArray[np.float64]
+    prevalence_low_eff_mask: npt.NDArray[np.bool]
     effect: npt.NDArray[np.float64]
     high_effect_threshold: dict[InterventionStrength, float]
 
@@ -292,6 +293,31 @@ def calculate_upper_percentile_prevalence(
     return x0_satisfy.shape[0] / x0_high_effect.shape[0]
 
 
+def calculate_lower_percentile_prevalence(
+    initial_state: npt.NDArray[np.float64],
+    effect: npt.NDArray[np.float64],
+    threshold: float,
+    rule: tuple[RuleNode, ...],
+) -> float:
+    x0_low_effect = initial_state[effect < threshold]
+    x0_satisfy = x0_low_effect.copy()
+    for rule_node in rule:
+        lower = rule_node.interval.lower if rule_node.interval.lower > -1 else -1.1
+        upper = rule_node.interval.upper if rule_node.interval.upper < 1 else 1.1
+        satisfies = (lower < x0_satisfy[:, rule_node.feature_idx]) & (
+            x0_satisfy[:, rule_node.feature_idx] <= upper
+        )
+        x0_satisfy = x0_satisfy[satisfies]
+    return x0_satisfy.shape[0] / x0_low_effect.shape[0]
+
+
+def cross_validation_r2(X0, Y, seed):
+    tree = DecisionTreeRegressor(max_depth=3)
+    cv = RepeatedKFold(n_splits=10, n_repeats=5, random_state=seed)
+    tree_scores = cross_validate(tree, X0, Y, cv=cv, scoring="r2")
+    print(tree_scores["test_score"].mean())
+
+
 def analyse_effective_interventions(
     initial_state: npt.NDArray[np.float64],
     effect: npt.NDArray[np.float64],
@@ -300,6 +326,7 @@ def analyse_effective_interventions(
     labels: list[str],
     high_effect_percentile: int,
     minimum_prevalence: float,
+    seed: int,
 ) -> PersonaAnalysisRules:
     models = {}
     rules = {}
@@ -307,7 +334,9 @@ def analyse_effective_interventions(
 
     for strength_idx, strength in enumerate(intervention_strengths):
         # Fit shallow decision tree to predict intervention effect from initial state
-        model = DecisionTreeRegressor(max_depth=max_tree_depth).fit(
+        cross_validation_r2(initial_state, effect[strength_idx], seed)
+
+        model = DecisionTreeRegressor(max_depth=max_tree_depth, random_state=seed).fit(
             initial_state, effect[strength_idx]
         )
 
@@ -342,14 +371,41 @@ def analyse_effective_interventions(
             )
             prevalence_mask[rule_idx, strength_idx] = False
 
+    prevalence_low_eff = np.zeros(
+        (len(rules), len(intervention_strengths)), dtype=np.float64
+    )
+    prevalence_low_eff_mask = np.ones_like(prevalence_low_eff, dtype=np.bool)
+    for rule_idx, (rule, strengths) in enumerate(rules):
+        for strength_idx, maybe_strength in enumerate(intervention_strengths):
+            if maybe_strength not in strengths:
+                continue
+            prevalence_low_eff[rule_idx, strength_idx] = (
+                calculate_lower_percentile_prevalence(
+                    initial_state,
+                    effect[strength_idx],
+                    high_effect_threshold[maybe_strength],
+                    rule,
+                )
+            )
+            prevalence_low_eff_mask[rule_idx, strength_idx] = False
+
     # Filter out rules which are below the minimum required prevalence in data
     keep_rules = prevalence.max(axis=1) >= minimum_prevalence
     prevalence = prevalence[keep_rules]
     prevalence_mask = prevalence_mask[keep_rules]
+    prevalence_low_eff = prevalence_low_eff[keep_rules]
+    prevalence_low_eff_mask = prevalence_low_eff_mask[keep_rules]
     rules = [r for i, r in enumerate(rules) if keep_rules[i]]
 
     return PersonaAnalysisRules(
-        models, rules, prevalence, prevalence_mask, effect, high_effect_threshold
+        models,
+        rules,
+        prevalence,
+        prevalence_mask,
+        prevalence_low_eff,
+        prevalence_low_eff_mask,
+        effect,
+        high_effect_threshold,
     )
 
 
@@ -364,6 +420,8 @@ class PlotData:
     heatmap_annot: npt.NDArray[np.str_]
     prevalence: npt.NDArray[np.float64]
     prevalence_mask: npt.NDArray[np.bool]
+    prevalence_low_eff: npt.NDArray[np.float64]
+    prevalence_low_eff_mask: npt.NDArray[np.bool]
     labels: npt.NDArray[np.str_]
 
 
@@ -407,6 +465,10 @@ def make_plot_data(
     heatmap_mask = heatmap_mask[row_idxes]
     analysis_results.prevalence = analysis_results.prevalence[row_idxes]
     analysis_results.prevalence_mask = analysis_results.prevalence_mask[row_idxes]
+    analysis_results.prevalence_low_eff = analysis_results.prevalence_low_eff[row_idxes]
+    analysis_results.prevalence_low_eff_mask = analysis_results.prevalence_low_eff_mask[
+        row_idxes
+    ]
 
     return PlotData(
         intervention_idx,
@@ -418,6 +480,8 @@ def make_plot_data(
         heatmap_annots,
         analysis_results.prevalence,
         analysis_results.prevalence_mask,
+        analysis_results.prevalence_low_eff,
+        analysis_results.prevalence_low_eff_mask,
         labels,
     )
 
@@ -490,7 +554,7 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         figsize=(W, H),
         constrained_layout=True,
         gridspec_kw={
-            "width_ratios": [2.75, n_heatmap_cols, n_strength_cols],
+            "width_ratios": [2.75, n_heatmap_cols, n_strength_cols * 2],
             "height_ratios": [d.heatmap_vals.shape[0] for d in plot_data],
             "wspace": 0.15,
             "hspace": 0.01,
@@ -575,7 +639,7 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
     # Display prevalence in top percentile
     for di, d in enumerate(plot_data):
         sns.heatmap(
-            d.prevalence,
+            np.concat((d.prevalence_low_eff, d.prevalence), axis=1),
             annot=True,
             fmt=".0%",
             annot_kws={"fontsize": 10},
@@ -586,7 +650,7 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             linewidths=1,
             ax=grid_axes[di, 2],
             square=True,
-            mask=d.prevalence_mask,
+            mask=np.concat((d.prevalence_low_eff_mask, d.prevalence_mask), axis=1),
         )
         grid_axes[di, 2].set_yticks([])
         if len(d.high_effect_threshold) > 1:
@@ -599,6 +663,11 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             )
         else:
             grid_axes[di, 2].set_xticks([])
+    grid_axes[-1, 2].set_xticks(
+        np.arange(2) + 0.5,
+        ["Low effect", "High effect"],
+        rotation=90,
+    )
 
     # Label rows with the intervention spin label
     for di, d in enumerate(plot_data):
@@ -646,6 +715,7 @@ class InterventionPersonasPlotCommand(BaseCommand):
     high_effect_percentile: int = 75
     prevalence_threshold: float = 0.15
     min_effect_threshold: float = 0.1
+    seed: int = 20260622
     output: Path
 
     def cli_cmd(self) -> None:
@@ -690,6 +760,7 @@ class InterventionPersonasPlotCommand(BaseCommand):
                 labels=labels,
                 high_effect_percentile=self.high_effect_percentile,
                 minimum_prevalence=self.prevalence_threshold,
+                seed=self.seed,
             )
             for i in range(N)
         }

@@ -1,5 +1,9 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+#import "@preview/theorion:0.6.0": *
+#import cosmos.clouds: *
+#show: show-theorion
+
 In this chapter we investigate individual heterogeneity in both intervention behaviour
 and belief system structure in asymmetric, non-equilibrium belief system models.
 
@@ -50,9 +54,9 @@ Our goal is to find a function which maps from an intervention effect to
 sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
 #box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
 
-Consider a function which does the opposite, mapping initial states to intervention
-effects, $f: X -> RR$. Given such a function, we can straightforwardly construct the
-corresponding effect characterisation function as:
+Consider a function which does the opposite, mapping initial states to a measure of
+intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
+construct the corresponding effect characterisation function as:
 
 $
   g: y mapsto {x in plus.minus 1^N subset RR^N | f(x) = y}
@@ -68,7 +72,7 @@ _concise description_ of that set of states.
 
 Regression decision tree models can provide such descriptions, using inequality bounds
 to partition the initial state space into regions, each of which is assigned a
-predicted effect of intervention. Given a parameterised regression decision tree, we
+predicted effect. Given a parameterised regression decision tree, we
 may construct a concise effect characterisation function by identifying, for each
 predicted effect, the combination of inequalities which define the corresponding
 infinite set of initial states. When the parameter estimation algorithm is restricted
@@ -87,13 +91,13 @@ _personas_.
 @fig:heterogeneity-results-interventions-personas shows the effect characterisation
 functions for different interventions targeting `CC Action`, obtained from shallow
 regression decision trees with depth 3. The response variable is the expected
-effect of intervention for each individual, estimated using the average effect across 500
-repeated simulations of the asymmetric belief system model calibrated to the full
-climate beliefs dataset (see @sec:calibration for calibration details). As in the
-previous chapter, we use a fixed intervention strength of $delta_h = 2.5$.
-
-*To-do:* Mention the model details, criterion, etc.
-*To-do:* State the $R^2$ values for the regression models.
+difference between the activation probabilities for `CC Action` at $t=5$, in the
+intervention and null models, estimated per-individual using the average probabilities
+across 500 repeated simulations. Each model is calibrated to the full climate beliefs
+dataset (see @sec:calibration for calibration details). As in the previous chapter, we
+use a fixed intervention strength of $delta_h = 2.5$. The decision trees are fit using
+a mean-squared error objective function, and each achieve $R^2$ values of at least $0.9$
+(estimated using 10-fold cross-validation).
 
 #let rounding-footnote = footnote[
   As our intention is to capture coarse patterns, we round the original `f64` values
@@ -102,54 +106,138 @@ previous chapter, we use a fixed intervention strength of $delta_h = 2.5$.
 ]
 
 Each row in the figure corresponds to a different point-of-intervention (specified on
-the right). The left-hand column shows the distribution of intervention effects across
-individuals. The central column shows the personas which yield intervention effects
-within the upper quartile. Each row is a separate persona, and the columns refer to
-different dimensions (beliefs/attitudes) of the initial state. The personas themselves
-are specified using a compressed representation#rounding-footnote: $"L" mapsto [-1, 0]$
-and $"H" mapsto [0, +1]$. The right-hand column displays the prevalence of each persona
-within the upper quartile of individuals, showing the proportional make-up of the
-high-effect population.
-
-
+the right). The left-hand column shows the distribution of differences in activation
+probabilities across individuals. The central column shows the personas which yield
+intervention effects within the upper quartile. Each row is a separate persona, and the
+columns refer to different dimensions (beliefs/attitudes) of the initial state. The
+personas themselves are specified using a compressed
+representation#rounding-footnote: $"L" mapsto [-1, 0]$ and $"H" mapsto [0, +1]$. The
+right-hand column displays the prevalence of each persona within/outside the upper
+quartile of individuals, showing the proportional make-up of the high-effect population.
 We exclude points-of-intervention with no sufficiently high-effect observations (e.g.,
 `CC Others Worry` in @fig:heterogeneity-results-cc-action-distribution), classified as
-an upper quartile less than 0.1. We only include personas with at least 15% prevalence
-in the observed upper quartile.
-
-*Observations*
-- General observations
-  - Left panel:
-    - Effect of intervention is bimodal for all of the considered points of intervention
-    - The upper quartile captures the higher mode in each case
-  - Centre and right panels:
-    - High prevalence with a small number of personas.
-- Low `CC Worry` is a necessary condition for all interventions to be successful.
-  - `CC Worry` has inbound and outbound interactions with all other variables.
-  - Several of the outbound interaction effects are large ($J_(i,j) approx 0.2$)
-  - Also has the highest interaction effect toward `CC Action` ($J_(i,j) = 0.25$)
-  - `CC Worry` also has lower inertia than some other variables. e.g., `Politics` is also
-    well-connected but has high inertia---harder to change.
-  - Therefore, if `CC Worry` is low, it negatively influences many other variables, but
-    since it is also influenced by many variables, if an intervention can change its
-    state, this provides positive influence to other variables.
-- With the exception of `CC Real`, a low initial state on the point-of-intervention is
-  necessary for effective interventions.
-  - The potential impact of an intervention on the behaviour of a point-of-intervention
-    decreases when the initial is high (decreases monotonically for values above 0)
-    (@subsec:asymmetric-belief-system-modelling-interventions). i.e., the theoretical
-    limit on the effect of intervention is lower when the initial state is higher.
-  - One interpretation of the `CC Real` personas is that we require low `CC Worry` and
-    `CC Human` (in which case the intervention on `CC Real` propagates to these
-    variables, which then lend greater influence to the target), and if we don't have
-    this, i.e., if `CC Human` is high, then we also require that `CC Action` is low,
-    such that the potential effect of intervention is higher.
-- A subset of the POIs also require low `CC Action`
+an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`). We only
+include personas with at least 15% prevalence in the observed upper quartile.
 
 
-If the initial state of the point-of-intervention is already high,
-have little impact on
 
+#let incomplete-descriptions-footnote = footnote[
+  Note that the personas are not necessarily complete. For instance, suppose that a pair
+  of variables are highly correlated in the initial state, and are Low whenever
+  the intervention effect is high. A complete characterisation includes both variables;
+  however, a decision tree is likely to include only one, since after splitting on one
+  of the two variables, the other is redundant. This is especially true for shallow
+  decision trees.
+]
+
+The expected difference in activation probabilities between the intervention and null
+models exhibits a clear bimodal distribution across survey
+participants for each scenario, with the higher mode contained within the upper quartile
+(indicated by the darker shaded regions). For each point-of-intervention we observe a
+small set of personas. In each case these exhibit high prevelence among individuals with
+high intervention effects, and considerably lower prevalence for other individuals,
+indicating that the identified personas effectively characterise the conditions for
+effective interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+
+// Recall that the effect of intervention measures the difference in effects between the
+// intervention model and the corresponding null (no-intervention) model
+// (@def:asymmetry-results-effect-of-intervention).
+For the present analysis, it is
+important to recognise that the intervention effect measured here does not, in general,
+reflect the resulting change in behaviour with respect to the initial state. It is
+entirely possible that both intervention and null models lead to an increase, or
+decrease, in the probability of desired behaviour for the target spin. Hence it is most
+appropriate to view 'high-effect' interventions as those which achieve substantially
+more desirable states than would be observed given no intervention.
+
+With this in mind, we now consider several specific features of interest in the
+identified personas. Firstly, we observe that all personas require a low initial
+state for `CC Worry`. This may result from this variable's relative low inertia
+and high connectivity --- in particular, its large outbound interaction effect
+toward the target variable (@fig:asymmetry-results-existence-interaction-matrix).
+These factors result in `CC Worry` being relatively influential,
+and influentia#emph[ble], therefore being an effective indirect pathway for
+various interventions targeting `CC Action`. The significance of the requirement
+that `CC Worry` be _low_ is evident when comparing the implications for the null
+and intervention models. Due to `CC Worry`'s considerable outbound interactions,
+an intervention which successfully activates this variable has increased potential
+for propagation. In the null model, however, these interactions work against the
+desired result---if `CC Worry` remains low, it exerts this influence on all other
+spins.
+
+Second, we observe that for each point-of-intervention (with the exception of `CC Real`),
+a necessary condition for high effect is that the initial state of point of intervention
+itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
+be too high. This aligns with our prior expectations regarding the varied effects of
+interventions with respect to pre-intervention state
+(@subsec:asymmetric-belief-system-modelling-interventions). `CC Real` does not exhibit
+this requirement, on account of high correlation with
+`CC Human`@footnote:incomplete-descriptions.
+
+
+// With the exception of `CC Real`, the personas for each point-of-intervention require that
+// the initial state of the point-of-intervention be low. This aligns with our expectations
+// per our earlier discussion on the varied effects of interventions on the behaviour of the
+// point-of-intervention, with respect to the pre-intervention state
+// (@subsec:asymmetric-belief-system-modelling-interventions).
+#let negative-cc-human-footnote = footnote[
+  The negative state for `CC Human` is an aggregation of the beliefs that climate change
+  is a natural phenomenon, and that climate change is not real (has no causes). See
+  @sec:dataset for further details.
+]
+
+Finally, the `CC Real` scenario is unique in that it includes two prevalent personas.
+The more prevalent persona corresponds to situations in which individuals are concerned
+about the current/future effects of climate change, but do not believe that climate
+change is human-caused#negative-cc-human-footnote. In the case where an individual does
+believe that climate change is human-caused, this intervention may still be effective,
+so long as they do not already have a positive attitude toward climate action.
+
+// *Observations*
+// - General observations
+//   - Left panel:
+//     - Effect of intervention is bimodal for all of the considered points of intervention
+//     - The upper quartile captures the higher mode in each case
+//   - Centre and right panels:
+//     - High prevalence with a small number of personas.
+// - Low `CC Worry` is a necessary condition for all interventions to be successful.
+//   - `CC Worry` has inbound and outbound interactions with all other variables.
+//   - Several of the outbound interaction effects are large ($J_(i,j) approx 0.2$)
+//   - Also has the highest interaction effect toward `CC Action` ($J_(i,j) = 0.25$)
+//   - `CC Worry` also has lower inertia than some other variables. e.g., `Politics` is also
+//     well-connected but has high inertia---harder to change.
+//   - Therefore, if `CC Worry` is low, it negatively influences many other variables, but
+//     since it is also influenced by many variables, if an intervention can change its
+//     state, this provides positive influence to other variables.
+// - With the exception of `CC Real`, a low initial state on the point-of-intervention is
+//   necessary for effective interventions.
+//   - The potential impact of an intervention on the behaviour of a point-of-intervention
+//     decreases when the initial is high (decreases monotonically for values above 0)
+//     (@subsec:asymmetric-belief-system-modelling-interventions). i.e., the theoretical
+//     limit on the effect of intervention is lower when the initial state is higher.
+//   - One interpretation of the `CC Real` personas is that we require low `CC Worry` and
+//     `CC Human` (in which case the intervention on `CC Real` propagates to these
+//     variables, which then lend greater influence to the target), and if we don't have
+//     this, i.e., if `CC Human` is high, then we also require that `CC Action` is low,
+//     such that the potential effect of intervention is higher.
+//     - Transition matrix analysis shows that this finding is due to the influence of
+//       `CC Human` on `CC Real`. If `CC Human` is high, then this places pressure on
+//       `CC Real` to be high, irrespective of the intervention, i.e., we also see a
+//       positive shift in the null model. Supposing that `CC Human` is high, we actually
+//       observe a higher absolute activation probability for `CC Action` when `CC Action`
+//       is _not_ initially low. If `CC Action` is initially low, then the absolute
+//       activation following the intervention is lower; however, the difference compared
+//       to the _null model_ is larger.
+//     - Why is this? Possibly because when `CC Action` is
+//       low, it provides reinforcing negative influence on the other spins, negating
+//       some of the upward pressure from `CC Human`, whereas if an intervention is applied
+//       then the additional upward pressure from `CC Real` helps to offset this.
+//       In comparison, if `CC Action` is not low, then `CC Human` being high provides
+//       sufficient upward pressure in the null model as well.
+//   - Key takeaway is that it is important to recall that the effect of intervention is
+//     always measured with reference to the no-intervention scenario, and in particular,
+//     the no-intervention scenario is not necessarily stable.
+// - A subset of the POIs also require low `CC Action`
 
 
 
@@ -314,6 +402,27 @@ have little impact on
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
+Until this point, we have considered belief systems as common to a population of
+individuals. However, the relations between beliefs and attitudes are inherently
+individual in nature. The existence, direction, and degree of relation between
+two beliefs is dependent on an individual's own beliefs regarding their relatedness.
+
+Here we investigate the extent to which belief systems may vary between groups of
+individuals with different self-reported political ideologies. While this is still
+far from representative of the differences between individuals
+@brandtBetweenpersonMethodsProvide2022, it will allow us to examine differences in
+general trends for these subpopulations. Using the parameter estimation approach
+described in Chapters @subsec:methods-parameter-estimation[] and @sec:calibration,
+we calibrate separate asymmetric belief systems to the subsets of the climate beliefs
+dataset which consistently (i.e., in both waves) self-report conservative and liberal
+political ideologies. We exclude the `Politics` variable from the model, since this
+is captured by the partitioned datasets. The hyperparameters used for regularisation
+strength and smoothing are listed in @tab:methods-hyperparameter-values.
+
+*To-do: * What are the sample sizes
+
+*To-do:* Maybe look at the directional differentials
+
 #figure(
   image(
     "../results/figures/model_fit/ideology_interaction_heatmap.pdf",
@@ -324,43 +433,83 @@ have little impact on
   ),
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
 
+@fig:heterogeneity-results-ideology-interaction-matrices shows the interaction effect
+matrices, $bold(J)$, for the conservative and liberal subpopulations.
+
+Observations:
+- Relative sparsity. Proportion of non-diagonal interactions which are zero.
+  Conservative: 38%, Liberal: 60%. Compared with the belief system fit to the full dataset: 30%.
+- Strength of interactions compared to one another, compared to the full model.
+- Comparison wrt the full model:
+  - Which variables are influential/have lots of interactions/are very sparse?
+  - Significant interactions which are weak in the full model?
+- Similarities:
+  - Diagonals
+  - Which (significant) non-diagonal interactions are shared?
+    - Very few, if any, bidirectional ones.
+    - One-directional:
+      - $"CC Worry" --> {"CC Real", "CC Impact","CC Action"}$
+      - $"CC Impact" --> {"CC Action"}$
+      - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
+- What are the most significant interactions in each model?
+  - Conservative:
+    - $"CC Worry" --> {"Weather Worry", "CC Impact", "CC Action"}$
+    - $"Weather Worry" --> {"CC Worry"}$
+    - $"CC Action" --> {"CC Worry"}$
+  - Liberal:
+    - $"CC Real" --> {"CC Worry", "CC Action"}$
+    - $"CC Human" --> {"CC Action"}$
+    - $"CC Worry" --> {"CC Impact"}$
+    - $"CC Impact" --> {"CC Worry"}$
+    - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
+- What interactions are symmetric/asymmetric in each model?
+  - Symmetric:
+    - Conservative:
+    - Liberal:
+  - Asymmetric:
+    - Conservative:
+    - Liberal:
+
+
 #line(length: 100%)
 
-- *Overall goal of these experiments:* Understand how the belief system inferred from
-  the full climate beliefs dataset may differ from those inferred from subsets.
-
-- *In broad strokes, how do we test this?*
-  - We partition the climate beliefs dataset into self-reported conservative and liberal
-    individuals. We then calibrate separate asymmetric belief system models for each
-    group.
-  - We compare the observed belief system structures, and contrast with the belief
-    system calibrated to the full dataset.
-
-- *Specific experimental details:*
-  - Since we subset the data by political ideology, we remove the `Politics` variable
-    from the climate beliefs dataset. So the models are calibrated with only seven
-    spins, as opposed to eight.
-  - We apply regularisation to the model calibration, with regularisation strength
-    determined independently for each group (@tab:methods-hyperparameter-values).
-
-- *Results & figures:*
-  - Belief system networks
 
 
-#figure(
-  image(
-    "../results/figures/model/ideology_fit/network.pdf",
-  ),
-  caption: caption(
-    short: [_Conservative_ and _Liberal_ belief networks],
-    long: [
-      Prefixes: A (attitude), B (belief); node labels: CC (climate change), CCA (climate
-      change anthropogenic), CCW (climate change worry), CCWO (climate change worry
-      others), CCI (climate change impacts), CCP (climate change policies), WW (weather
-      worry).
-    ],
-  ),
-) <fig:results-rq22-ideology-networks>
+// - *Overall goal of these experiments:* Understand how the belief system inferred from
+//   the full climate beliefs dataset may differ from those inferred from subsets.
+//
+// - *In broad strokes, how do we test this?*
+//   - We partition the climate beliefs dataset into self-reported conservative and liberal
+//     individuals. We then calibrate separate asymmetric belief system models for each
+//     group.
+//   - We compare the observed belief system structures, and contrast with the belief
+//     system calibrated to the full dataset.
+//
+// - *Specific experimental details:*
+//   - Since we subset the data by political ideology, we remove the `Politics` variable
+//     from the climate beliefs dataset. So the models are calibrated with only seven
+//     spins, as opposed to eight.
+//   - We apply regularisation to the model calibration, with regularisation strength
+//     determined independently for each group (@tab:methods-hyperparameter-values).
+//
+// - *Results & figures:*
+//   - Belief system networks
+
+
+// #figure(
+//   image(
+//     "../results/figures/model/ideology_fit/network.pdf",
+//   ),
+//   caption: caption(
+//     short: [_Conservative_ and _Liberal_ belief networks],
+//     long: [
+//       Prefixes: A (attitude), B (belief); node labels: CC (climate change), CCA (climate
+//       change anthropogenic), CCW (climate change worry), CCWO (climate change worry
+//       others), CCI (climate change impacts), CCP (climate change policies), WW (weather
+//       worry).
+//     ],
+//   ),
+// ) <fig:results-rq22-ideology-networks>
 
 
 // - *RQ2.2:* Fit models to conservative and liberal subsets of the data; compare and
