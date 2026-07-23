@@ -147,6 +147,8 @@ def main(P: npt.NDArray[np.float64], λ: float):
     axes[0].set_title("PDF")
     axes[1].set_title("ECDF")
 
+    fig.supxlabel("Relative entropy difference (fully-connected $-$ null)")
+
     for ext in ("png", "pdf"):
         fig.savefig(
             f"reports/thesis/results/figures/model_fit/kl_difference_dist.{ext}",

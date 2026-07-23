@@ -144,9 +144,12 @@ class CompareInterventionStrengthPlotCommand(BaseCommand):
             ax.spines.top.set_visible(False)
             ax.spines.right.set_visible(False)
 
+        axes[0].set_ylim(0, None)
+        for ax in axes:
+            ax.set_xlim(0, None)
         axes[0].legend(fontsize=8, frameon=True, loc="upper left")
-        fig.supxlabel("Effect (strong)", x=0.55)
-        fig.supylabel("Effect (weak)", y=0.55)
+        fig.supxlabel("Intervention effect (strong intervention)", x=0.55)
+        fig.supylabel("Intervention effect\n(weak intervention)", y=0.55)
 
         # # Replace seaborn legend with a prettier one
         # old_leg = axes[1].get_legend()

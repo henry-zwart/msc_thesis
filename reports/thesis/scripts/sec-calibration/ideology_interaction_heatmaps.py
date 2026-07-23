@@ -109,6 +109,8 @@ def main():
 
     axes[0].set_title("Conservative")
     axes[1].set_title("Liberal")
+    fig.supylabel("From", y=0.6)
+    fig.supxlabel("To", x=0.625)
 
     for ext in ("png", "pdf"):
         fig.savefig(

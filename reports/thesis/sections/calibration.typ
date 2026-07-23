@@ -8,6 +8,8 @@ symmetric and asymmetric belief system models to the climate beliefs dataset (se
 ('how accurate are the parameter estimates?') and predictive capacity ('how well do
 the models explain the data?').
 
+// TODO: Consider adding squares/indicators for elements which are zero
+
 #figure(
   image("../results/figures/model_fit/interaction_heatmap.pdf"),
   caption: caption(

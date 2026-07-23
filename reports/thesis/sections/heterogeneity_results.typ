@@ -452,32 +452,10 @@ used for regularisation strength and smoothing are listed in
 matrices, $bold(J)$, for the conservative and liberal subpopulations. We observe several
 differences between the two models, as well as with comparison to the model calibrated
 on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notably, the
-model calibrated to the liberal subpopulation has considerably higher sparsity
+model calibrated to the liberal subpopulation has higher sparsity
 (proportion of missing cross-interaction edges) and mean interaction effect over
 cross-interactions than either the conservative model or the complete model
 (@tab:heterogeneity-results-belief-systems-properties).
-
-In the complete model, the spins with the highest outbound connectivity are `CC Worry`
-and `CC Impact`. While `CC Worry` remains influential in both of the smaller models,
-`CC Impact` exhibits greater sparsity in the liberal model. We observe also that
-`CC Others Worry` and `Weather Worry` have no inbound interactions in the liberal model,
-i.e., they are not influenced by any other variables. This reflects the relatively
-small inbound interactions seen in the complete model.
-
-Cross-interactions which are not included in the complete model are generally also
-excluded from both the conservative and liberal models, with the exception of
-${#raw("CC Others Worry"), #raw("Weather Worry")} --> #raw("CC Action")$ which are
-present in the conservative model. Conversely, each of smaller models excludes some
-interactions which _are_ present in the complete model (e.g.,
-$#raw("CC Human") --> #raw("CC Action")$ in the conservative model,
-$#raw("CC Worry") --> #raw("Weather Worry")$ in the liberal model). In a small number
-of cases, we observe interactions in the complete model which are missing from both
-of the smaller models ($#raw("CC Real") --> #raw("CC Impact")$,
-$#raw("CC Human") --> #raw("CC Worry")$, $#raw("CC Impact") --> #raw("CC Human")$).
-These all correspond to small interactions in the complete model ($|J_(i,j)| < 0.1$),
-suggesting they are only weakly supported by the complete dataset,
-and are likely excluded from the smaller models due to the reduced sample sizes.
-
 
 #figure(
   table(
@@ -503,42 +481,104 @@ and are likely excluded from the smaller models due to the reduced sample sizes.
   ),
 ) <tab:heterogeneity-results-belief-systems-properties>
 
-Observations:
+The conservative model displays broad (yet mostly weak) reinforcing interactions
+between climate-related concerns, beliefs and others' concerns, and climate-impact
+beliefs. This contrasts the liberal model, in which only `CC Worry` and `CC Impact`
+are non-trivially related. Moreover, we observe that `CC Others Worry` and
+`Weather Worry` in fact have _no_ incoming cross-interactions.
+
+// NOTE: This may indicate that these variables are more stable in the liberal model,
+// and therefore we don't observe any relations between them in the small dataset.
+
+We also note differences in the interaction effects influencing `CC Action` between
+the two models. While the liberal model expects attitudes toward climate action to
+be influenced substantially by individuals' beliefs regarding the existence and nature
+of climate change, these influences are absent or trivial in the conservative model.
+Instead, we observe that concern about climate change (`CC Worry`) is the only
+large cross-interaction toward `CC Action` in the conservative model.
+
+Comparing now with the complete model (calibrated to the full dataset), we find that
+interactions absent from the complete model are generally also absent from both smaller
+models. The exceptions are
+${#raw("CC Others Worry"), #raw("Weather Worry")} --> #raw("CC Action")$, which are
+present in the conservative model, albeit with small effect sizes.
+
+The converse does
+not hold; in several cases edges are absent from the smaller models, yet included in
+the complete model (e.g., $#raw("CC Human") --> #raw("CC Action")$ in the conservative
+model, #box[$#raw("CC Worry") --> #raw("Weather Worry")$] in the liberal model). While
+it is tempting to interpret these as differences in the ideology-specific belief
+systems, this inference is not necessarily valid.
+Given the smaller datasets used to calibrate these models---and the slow-moving dynamics
+of the measured variables---these edges may be excluded on the basis that we do not
+observe their effects. This is less likely for effects which are more substantial in
+the complete model, and thus supported better by the dataset.
+
+// especially when the corresponding
+// effect size in the complete model is small (e.g.,
+// $#raw("CC Others Worry") --> #raw("Weather Worry")$ has effect size
+// $J_(i,j) approx 0.06$ in the complete model, and is absent from the liberal model).
+
+
+
+
+// In the complete model, the spins with the highest outbound connectivity are `CC Worry`
+// and `CC Impact`. While `CC Worry` remains influential in both of the smaller models,
+// `CC Impact` exhibits greater sparsity in the liberal model. We observe also that
+// `CC Others Worry` and `Weather Worry` have no inbound interactions in the liberal model,
+// i.e., they are not influenced by any other variables. This reflects the relatively
+// small inbound interactions seen in the complete model.
+
+// Cross-interactions which are not included in the complete model are generally also
+// excluded from both the conservative and liberal models, with the exception of
+// ${#raw("CC Others Worry"), #raw("Weather Worry")} --> #raw("CC Action")$ which are
+// present in the conservative model. Conversely, each of smaller models excludes some
+// interactions which _are_ present in the complete model (e.g.,
+// $#raw("CC Human") --> #raw("CC Action")$ in the conservative model,
+// $#raw("CC Worry") --> #raw("Weather Worry")$ in the liberal model). In a small number
+// of cases, we observe interactions in the complete model which are missing from both
+// of the smaller models ($#raw("CC Real") --> #raw("CC Impact")$,
+// $#raw("CC Human") --> #raw("CC Worry")$, $#raw("CC Impact") --> #raw("CC Human")$).
+// These all correspond to small interactions in the complete model ($|J_(i,j)| < 0.1$),
+// suggesting they are only weakly supported by the complete dataset,
+// and are likely excluded from the smaller models due to the reduced sample sizes.
+
+
+
+// Observations:
 // - Relative sparsity. Proportion of non-diagonal interactions which are zero.
 //   Conservative: 38%, Liberal: 60%. Compared with the belief system fit to the full dataset: 30%.
 // - Strength of interactions compared to one another, compared to the full model.
-- Comparison wrt the full model:
-  - Which variables are influential/have lots of interactions/are very sparse?
-  - Significant interactions which are weak in the full model?
-- Similarities:
-  - Diagonals
-  - Which (significant) non-diagonal interactions are shared?
-    - Very few, if any, bidirectional ones.
-    - One-directional:
-      - $"CC Worry" --> {"CC Real", "CC Impact","CC Action"}$
-      - $"CC Impact" --> {"CC Action"}$
-      - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
-- What are the most significant interactions in each model?
-  - Conservative:
-    - $"CC Worry" --> {"Weather Worry", "CC Impact", "CC Action"}$
-    - $"Weather Worry" --> {"CC Worry"}$
-    - $"CC Action" --> {"CC Worry"}$
-  - Liberal:
-    - $"CC Real" --> {"CC Worry", "CC Action"}$
-    - $"CC Human" --> {"CC Action"}$
-    - $"CC Worry" --> {"CC Impact"}$
-    - $"CC Impact" --> {"CC Worry"}$
-    - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
-- What interactions are symmetric/asymmetric in each model?
-  - Symmetric:
-    - Conservative:
-    - Liberal:
-  - Asymmetric:
-    - Conservative:
-    - Liberal:
+// - Comparison wrt the full model:
+//   - Which variables are influential/have lots of interactions/are very sparse?
+//   - Significant interactions which are weak in the full model?
+// - Similarities:
+//   - Diagonals
+//   - Which (significant) non-diagonal interactions are shared?
+//     - Very few, if any, bidirectional ones.
+//     - One-directional:
+//       - $"CC Worry" --> {"CC Real", "CC Impact","CC Action"}$
+//       - $"CC Impact" --> {"CC Action"}$
+//       - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
+// - What are the most significant interactions in each model?
+//   - Conservative:
+//     - $"CC Worry" --> {"Weather Worry", "CC Impact", "CC Action"}$
+//     - $"Weather Worry" --> {"CC Worry"}$
+//     - $"CC Action" --> {"CC Worry"}$
+//   - Liberal:
+//     - $"CC Real" --> {"CC Worry", "CC Action"}$
+//     - $"CC Human" --> {"CC Action"}$
+//     - $"CC Worry" --> {"CC Impact"}$
+//     - $"CC Impact" --> {"CC Worry"}$
+//     - $"CC Action" --> {"CC Real", "CC Human", "CC Impact"}$
+// - What interactions are symmetric/asymmetric in each model?
+//   - Symmetric:
+//     - Conservative:
+//     - Liberal:
+//   - Asymmetric:
+//     - Conservative:
+//     - Liberal:
 
-
-#line(length: 100%)
 
 
 

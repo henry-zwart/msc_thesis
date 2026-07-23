@@ -90,6 +90,8 @@ class InteractionHeatmapPlotCommand(BaseCommand):
             rotation=90,
             # horizontalalignment="right",
         )
+        fig.supylabel("From", y=0.65)
+        fig.supxlabel("To", x=0.6)
 
         # ax.legend(
         #     ncol=2,

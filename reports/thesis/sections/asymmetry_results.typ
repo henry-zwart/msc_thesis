@@ -19,7 +19,6 @@
 //   change compared to the no-intervention case).
 //
 // #line(length: 100%)
-*To-do:* Observations for outbound/inbound effects in @subsec:asymmetry-results-impact.
 
 Belief system models based on the Ising model, inspired by the cognitive dissonance
 theory of belief system dynamics, demonstrate impressive descriptive and explanatory
@@ -111,20 +110,22 @@ $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
   placement: auto,
 ) <fig:asymmetry-results-existence-ranked-differentials>
 
+#let edge-comparison-footnote = footnote[
+  In @sec:calibration we cautioned against using bootstrapped confidence intervals to
+  test for the _existence_ of edges by comparison with
+  zero when regularisation is used during calibration---this caution does not apply to
+  the _comparison_ of edge weights via the mean difference
+  @epskampEstimatingPsychologicalNetworks2018.
+]
+
 @fig:asymmetry-results-existence-ranked-differentials shows the median directional
 differential for each pair of spins in the asymmetric model, in decreasing order.
 The 90% confidence intervals are calculated as the 5th and 95th percentiles across
-bootstrap samples of the directional differential matrix elements. For each pair of
-spins we display only the directional differential for which the median is positive
-(since $Delta_J$ is symmetric), and we exclude diagonal entries (which are zero by
-definition).
+bootstrap samples of the directional differential matrix
+elements#edge-comparison-footnote. For each pair of spins we display only the
+directional differential for which the median is positive (since $Delta_J$ is
+symmetric), and we exclude diagonal entries (which are zero by definition).
 
-// TODO: This can be moved, e.g., to the figure caption
-In @sec:calibration we cautioned against using bootstrapped confidence intervals to
-test for the _existence_ of edges by comparison with
-zero when regularisation is used during calibration---this caution does not apply to
-the _comparison_ of edge weights via the mean difference
-@epskampEstimatingPsychologicalNetworks2018.
 // In @fig:asymmetry-results-existence-ranked-differentials, a confidence interval which
 // excludes zero indicates that we observe the corresponding asymmetry in most bootstrapped
 // models; if the confidence interval contains zero, we cannot (within the confidence
@@ -166,11 +167,7 @@ the _comparison_ of edge weights via the mean difference
 // $J_(i j)$, between each pair of spins $S_i$, $S_j$, averaged across the calibrated
 // bootstrapped models.
 
-// TODO: Make it very clear that this figure is the same as 5.1.
-//
 // TODO: Consider adding squares to the asymmetric entries
-//
-// TODO: Flip the colour scheme so large proportions are white.
 
 #figure(
   image("../results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf"),
@@ -178,8 +175,9 @@ the _comparison_ of edge weights via the mean difference
     short: [Climate belief system interaction effect matrix],
     long: [
       Interaction effect matrix ($bold(J)$) for the asymmetric belief system model
-      calibrated to the full climate beliefs dataset. See
-      @fig:calibration-interaction-matrices for original figure.
+      calibrated to the full climate beliefs dataset. This figure is identical to the
+      asymmetric interaction matrix in the previous chapter
+      (@fig:calibration-interaction-matrices).
     ],
   ),
 ) <fig:asymmetry-results-existence-interaction-matrix>
@@ -193,13 +191,14 @@ reflecting the uncertainty in parameter estimates seen in the previous chapter
 
 We can partition the asymmetric relations into two groups through examination of the
 interaction matrix for the model calibrated on the full dataset
-(@fig:asymmetry-results-existence-interaction-matrix, also shown in
-@fig:calibration-interaction-matrices of the previous chapter). The first group
-comprises pairs of spins for which both interaction effects are nonzero, shown with
-blue confidence intervals: $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$
-and $#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$. The second group
-comprises pairs for which the interaction effect is nonzero in only one direction,
-shown with orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
+(@fig:asymmetry-results-existence-interaction-matrix, which is the same interaction
+matrix as in @fig:calibration-interaction-matrices of the previous chapter).
+The first group comprises pairs of spins for which both interaction effects are
+nonzero, shown with blue confidence intervals:
+$#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
+$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$. The second group comprises
+pairs for which the interaction effect is nonzero in only one direction, shown with
+orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
 // Note that
 // we also observe nonzero interaction effects in only one direction for some
 // _symmetric_ relations as well (e.g., $#raw("Politics") -> #raw("CC Human")$), we still
@@ -268,13 +267,21 @@ to the belief or attitude on which an intervention is applied as the
 *point-of-intervention* and the belief or attitude whose resulting state is measured as
 the *target*.
 
-// TODO: Add Outbound/Inbound labels
-
-#figure(
-  image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 90%),
-  outlined: false,
-  placement: none,
-)
+#{
+  set text(size: 12pt)
+  figure(
+    grid(
+      columns: (1fr, 1fr),
+      rows: 2,
+      row-gutter: 0.8em,
+      align: (center, center),
+      [*Outbound*], [*Inbound*],
+      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 90%)),
+    ),
+    outlined: false,
+    placement: none,
+  )
+}
 
 For outbound intervention experiments we examine the effects of intervening on the
 following spins:

@@ -59,15 +59,24 @@ if __name__ == "__main__":
     sym_data = np.load(DATA_PATH / "bootstrapped_fit/sym_ising_no_structure.npz")
     asym_data = np.load(DATA_PATH / "bootstrapped_fit/ising_no_structure.npz")
 
-    fig, axes = plt.subplots(ncols=2, figsize=(5.77, 3), constrained_layout=True)
+    fig, axes = plt.subplots(
+        ncols=2,
+        figsize=(5, 3.5),
+        constrained_layout=True,
+        gridspec_kw=dict(wspace=0.075),
+    )
     plot_selection_prop(sym_data["params"][:, 8:], axes[0])
     plot_selection_prop(asym_data["params"][:, 8:], axes[1])
     labels = schema.post_index().get_short_names("measurement")
 
-    axes[0].set_xticks(np.arange(8) + 0.5, labels, rotation=90)
-    axes[1].set_xticks(np.arange(8) + 0.5, labels, rotation=90)
-    axes[0].set_yticks(np.arange(8) + 0.5, labels, rotation=0)
+    axes[0].set_xticks(np.arange(8) + 0.5, labels, rotation=90, fontsize=9)
+    axes[1].set_xticks(np.arange(8) + 0.5, labels, rotation=90, fontsize=9)
+    axes[0].set_yticks(np.arange(8) + 0.5, labels, rotation=0, fontsize=9)
     axes[1].set_yticks([])
+    axes[0].set_title("Symmetric")
+    axes[1].set_title("Asymmetric")
+    fig.supylabel("From", y=0.6)
+    fig.supxlabel("To", x=0.625)
 
     for ext in ("png", "pdf"):
         fig.savefig(
