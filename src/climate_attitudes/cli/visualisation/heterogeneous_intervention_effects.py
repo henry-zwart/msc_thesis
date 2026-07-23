@@ -693,7 +693,7 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         )
 
     # Add titles to each column
-    grid_axes[0, 0].set_title("Int. effect", pad=10, fontsize=12)
+    grid_axes[0, 0].set_title(r"$\Delta P(S_i^5 = +1)$", pad=10, fontsize=12)
     grid_axes[0, 1].set_title("Persona", pad=10, fontsize=12)
     grid_axes[0, 2].set_title("Prevalence", pad=10, fontsize=12, clip_on=False)
     # grid_axes[-1, 2].set_xticks(

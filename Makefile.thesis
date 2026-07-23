@@ -776,6 +776,7 @@ $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
 			| $(THESIS_DIR)/results/data/model
 	@uv run cadata analysis fit-ideology-model \
 		--output $@ \
+		--metadata-output $(@D)/ideology_fit_conservative_metadata.json \
 		--model-type ising \
 		--ideology conservative \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
@@ -791,6 +792,7 @@ $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz: \
 			| $(THESIS_DIR)/results/data/model
 	@uv run cadata analysis fit-ideology-model \
 		--output $@ \
+		--metadata-output $(@D)/ideology_fit_liberal_metadata.json \
 		--model-type ising \
 		--ideology liberal \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \

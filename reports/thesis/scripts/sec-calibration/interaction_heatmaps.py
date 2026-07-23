@@ -2,6 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import seaborn as sns
 from matplotlib.axes import Axes
 
@@ -10,7 +11,9 @@ from climate_attitudes.settings import Config
 from climate_attitudes.visualisation import DIVERGING_CMAP, configure_mpl
 
 
-def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
+def plot_heatmap(
+    model_path: Path, symmetric: bool, vlim: float, ax: Axes
+) -> npt.NDArray[np.float64]:
     params = np.load(model_path)["params"]
 
     if symmetric:
@@ -22,9 +25,6 @@ def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
         mask = np.zeros((8, 8), dtype=bool)
 
     J[abs(J) < 1e-2] = 0
-
-    sparsity = np.isclose(J, 0).sum() / (8**2 - 8)
-    print(sparsity)
 
     sns.heatmap(
         J,
@@ -40,6 +40,7 @@ def plot_heatmap(model_path: Path, symmetric: bool, vlim: float, ax: Axes):
         cbar=None,
         annot_kws=dict(fontsize=8),
     )
+    return J
 
 
 def main():
@@ -61,18 +62,37 @@ def main():
     )
 
     # Draw heatmaps
-    plot_heatmap(
+    J_sym = plot_heatmap(
         Path("reports/thesis/results/data/model/fit_full_sym_ising_no_structure.npz"),
         symmetric=True,
         vlim=0.35,
         ax=axes[0],
     )
-    plot_heatmap(
+    J_asym = plot_heatmap(
         Path("reports/thesis/results/data/model/fit_full_asym_ising_no_structure.npz"),
         symmetric=False,
         vlim=0.35,
         ax=axes[1],
     )
+
+    nondiag_elts = ~np.eye(J_sym.shape[0], dtype=bool)
+    nondiag_elts_symm = ~np.eye(J_sym.shape[0], dtype=bool) & ~np.tril(
+        np.ones(J_sym.shape, dtype=bool)
+    )
+    nondiag_J_sym = J_sym[nondiag_elts_symm]
+    nondiag_J_asym = J_asym[nondiag_elts]
+    sym_is_nonzero = ~np.isclose(nondiag_J_sym, 0)
+    asym_is_nonzero = ~np.isclose(nondiag_J_asym, 0)
+
+    sym_sparsity = np.isclose(nondiag_J_sym, 0).sum() / nondiag_J_sym.size
+    asym_sparsity = np.isclose(nondiag_J_asym, 0).sum() / nondiag_J_asym.size
+    print(f"Symmetric sparsity: {sym_sparsity:.2f}")
+    print(f"Asymmetric sparsity: {asym_sparsity:.2f}")
+
+    sym_mean = nondiag_J_sym[sym_is_nonzero].sum() / sym_is_nonzero.sum()
+    asym_mean = nondiag_J_asym[asym_is_nonzero].sum() / asym_is_nonzero.sum()
+    print(f"Symmetric mean effect: {sym_mean:.2f}")
+    print(f"Asymmetric mean effect: {asym_mean:.2f}")
 
     axes[0].set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0, fontsize=9)
     axes[1].tick_params("y", length=0)

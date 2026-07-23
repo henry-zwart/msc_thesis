@@ -19,12 +19,12 @@ def plot_heatmap(
     if symmetric:
         J = np.zeros((7, 7), dtype=np.float64)
         J[np.triu_indices_from(J)] = params[7:]
-        mask = np.tril(np.ones((7, 7), dtype=bool), k=-1)
     else:
         J = params[7:].reshape((7, 7))
-        mask = np.zeros((7, 7), dtype=bool)
 
     J[abs(J) < 1e-2] = 0
+    mask = np.zeros_like(J, dtype=np.bool)
+    mask[abs(J) < 1e-2] = True
 
     sns.heatmap(
         J,
@@ -76,10 +76,25 @@ def main():
         ax=axes[1],
     )
 
-    cons_sparsity = np.isclose(J_cons, 0).sum() / (7**2 - 7)
-    lib_sparsity = np.isclose(J_lib, 0).sum() / (7**2 - 7)
-    print(f"Conservative sparsity: {cons_sparsity}")
-    print(f"Liberal sparsity: {lib_sparsity}")
+    nondiag_elts = ~np.eye(J_cons.shape[0], dtype=bool)
+    nondiag_J_cons = J_cons[nondiag_elts]
+    nondiag_J_lib = J_lib[nondiag_elts]
+    cons_is_nonzero = ~np.isclose(nondiag_J_cons, 0)
+    lib_is_nonzero = ~np.isclose(nondiag_J_lib, 0)
+
+    cons_sparsity = np.isclose(nondiag_J_cons, 0).sum() / nondiag_J_cons.size
+    lib_sparsity = np.isclose(nondiag_J_lib, 0).sum() / nondiag_J_lib.size
+    # cons_sparsity = np.isclose(J_cons, 0).sum() / (7**2 - 7)
+    # lib_sparsity = np.isclose(J_lib, 0).sum() / (7**2 - 7)
+    print(f"Conservative sparsity: {cons_sparsity:.2f}")
+    print(f"Liberal sparsity: {lib_sparsity:.2f}")
+
+    # cons_mean = (J_cons.sum() - np.diag(J_cons).sum()) / (7**2 - 7)
+    # lib_mean = (J_lib.sum() - np.diag(J_lib).sum()) / (7**2 - 7)
+    cons_mean = nondiag_J_cons[cons_is_nonzero].sum() / cons_is_nonzero.sum()
+    lib_mean = nondiag_J_lib[lib_is_nonzero].sum() / lib_is_nonzero.sum()
+    print(f"Conservative mean effect: {cons_mean:.2f}")
+    print(f"Liberal mean effect: {lib_mean:.2f}")
 
     axes[0].set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0, fontsize=9)
     axes[1].tick_params("y", length=0)

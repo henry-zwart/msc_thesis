@@ -19,6 +19,7 @@ type InteractionEffects = npt.NDArray[np.float64]
 
 class FitIdeologyModelRunCommand(BaseCommand):
     output: Path
+    metadata_output: Path
     adjacency: Path | None = None
     model_type: ModelType
 
@@ -87,6 +88,7 @@ class FitIdeologyModelRunCommand(BaseCommand):
         )
 
         Y = Y[..., [0, 1, 2, 3, 4, 6, 7]]
+        P = P[..., [0, 1, 2, 3, 4, 6, 7]]
 
         lam = self.lam
         if lam is None:
@@ -112,7 +114,7 @@ class FitIdeologyModelRunCommand(BaseCommand):
             FitMethod.MARGINALISED if self.marginalise else FitMethod.TIME_SERIES
         )
         model = model_cls.fit(
-            y=Y,
+            y=P if self.marginalise else Y,
             optim_method=fit_method,
             update_method=UpdateMethod.SYNCHRONOUS,
             rng=rng,
@@ -134,3 +136,6 @@ class FitIdeologyModelRunCommand(BaseCommand):
             marginalise=self.marginalise,
             col_idxes=[0, 1, 2, 3, 4, 6, 7],
         )
+
+        with Path(self.metadata_output).open("w") as f:
+            json.dump({"dataset_size": Y.shape[0]}, f)

@@ -119,6 +119,7 @@ spins we display only the directional differential for which the median is posit
 (since $Delta_J$ is symmetric), and we exclude diagonal entries (which are zero by
 definition).
 
+// TODO: This can be moved, e.g., to the figure caption
 In @sec:calibration we cautioned against using bootstrapped confidence intervals to
 test for the _existence_ of edges by comparison with
 zero when regularisation is used during calibration---this caution does not apply to
@@ -165,6 +166,11 @@ the _comparison_ of edge weights via the mean difference
 // $J_(i j)$, between each pair of spins $S_i$, $S_j$, averaged across the calibrated
 // bootstrapped models.
 
+// TODO: Make it very clear that this figure is the same as 5.1.
+//
+// TODO: Consider adding squares to the asymmetric entries
+//
+// TODO: Flip the colour scheme so large proportions are white.
 
 #figure(
   image("../results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf"),
@@ -261,6 +267,8 @@ differences in effects on this spin when intervening elsewhere in the network. W
 to the belief or attitude on which an intervention is applied as the
 *point-of-intervention* and the belief or attitude whose resulting state is measured as
 the *target*.
+
+// TODO: Add Outbound/Inbound labels
 
 #figure(
   image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 90%),

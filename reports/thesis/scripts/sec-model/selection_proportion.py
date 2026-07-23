@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
@@ -30,16 +31,22 @@ def plot_selection_prop(interactions: npt.NDArray[np.float64], ax: Axes):
         mask = np.zeros((8, 8), dtype=np.bool)
 
     mask[np.isclose(p_selected, 1.0)] = True
+    orig_cmap = DIVERGING_CMAP
+    colours = orig_cmap(np.linspace(0.5, 1.0, 256))[::-1]
+    new_cmap = mcolors.LinearSegmentedColormap.from_list(
+        "diverging_upper_reversed", colours
+    )
 
     sns.heatmap(
         p_selected,
         mask=mask,
         annot=True,
-        cmap=DIVERGING_CMAP,
-        center=0,
+        cmap=new_cmap,
+        vmin=0,
         vmax=1,
         fmt=".0%",
         square=True,
+        linewidth=1,
         ax=ax,
         annot_kws=dict(fontsize=8),
         cbar=False,

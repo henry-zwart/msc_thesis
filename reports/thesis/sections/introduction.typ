@@ -1,3 +1,6 @@
+// TODO: Address the specific variables we look at in the outbound/inbound experiments.
+// Are the variables interesting independently of the asymmetry results/theoretically
+// motivated?
 == Plan
 
 - Motivate the problem

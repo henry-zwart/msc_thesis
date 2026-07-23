@@ -402,10 +402,25 @@ so long as they do not already have a positive attitude toward climate action.
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
+*To-do:* Include directional differential figure per-ideology (as in
+@fig:asymmetry-results-existence-ranked-differentials).
+
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs and attitudes are inherently
 individual in nature. The existence, direction, and degree of relation between
 two beliefs is dependent on an individual's own beliefs regarding their relatedness.
+
+#let liberal-metadata = json("../results/data/model/ideology_fit_liberal_metadata.json")
+#let conservative-metadata = json("../results/data/model/ideology_fit_conservative_metadata.json")
+#let nlib = liberal-metadata.dataset_size
+#let ncons = conservative-metadata.dataset_size
+
+#let smaller-dataset-footnote = footnote[
+  Note that the total number of samples across the conservative and liberal subsets is
+  smaller than the number of samples in the complete climate beliefs dataset, since we
+  only retain data from participants whose ideology is with consistent across survey
+  waves.
+]
 
 Here we investigate the extent to which belief systems may vary between groups of
 individuals with different self-reported political ideologies. While this is still
@@ -414,14 +429,14 @@ far from representative of the differences between individuals
 general trends for these subpopulations. Using the parameter estimation approach
 described in Chapters @subsec:methods-parameter-estimation[] and @sec:calibration,
 we calibrate separate asymmetric belief systems to the subsets of the climate beliefs
-dataset which consistently (i.e., in both waves) self-report conservative and liberal
-political ideologies. We exclude the `Politics` variable from the model, since this
-is captured by the partitioned datasets. The hyperparameters used for regularisation
-strength and smoothing are listed in @tab:methods-hyperparameter-values.
+dataset which consistently (i.e., in both waves) self-report conservative ($n=#ncons$)
+and liberal #box[($n=#nlib$)] political ideologies#smaller-dataset-footnote.
+We exclude the `Politics` variable
+from the model, since this is captured by the partitioned datasets. The hyperparameters
+used for regularisation strength and smoothing are listed in
+@tab:methods-hyperparameter-values.
 
-*To-do: * What are the sample sizes
 
-*To-do:* Maybe look at the directional differentials
 
 #figure(
   image(
@@ -434,12 +449,64 @@ strength and smoothing are listed in @tab:methods-hyperparameter-values.
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
 
 @fig:heterogeneity-results-ideology-interaction-matrices shows the interaction effect
-matrices, $bold(J)$, for the conservative and liberal subpopulations.
+matrices, $bold(J)$, for the conservative and liberal subpopulations. We observe several
+differences between the two models, as well as with comparison to the model calibrated
+on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notably, the
+model calibrated to the liberal subpopulation has considerably higher sparsity
+(proportion of missing cross-interaction edges) and mean interaction effect over
+cross-interactions than either the conservative model or the complete model
+(@tab:heterogeneity-results-belief-systems-properties).
+
+In the complete model, the spins with the highest outbound connectivity are `CC Worry`
+and `CC Impact`. While `CC Worry` remains influential in both of the smaller models,
+`CC Impact` exhibits greater sparsity in the liberal model. We observe also that
+`CC Others Worry` and `Weather Worry` have no inbound interactions in the liberal model,
+i.e., they are not influenced by any other variables. This reflects the relatively
+small inbound interactions seen in the complete model.
+
+Cross-interactions which are not included in the complete model are generally also
+excluded from both the conservative and liberal models, with the exception of
+${#raw("CC Others Worry"), #raw("Weather Worry")} --> #raw("CC Action")$ which are
+present in the conservative model. Conversely, each of smaller models excludes some
+interactions which _are_ present in the complete model (e.g.,
+$#raw("CC Human") --> #raw("CC Action")$ in the conservative model,
+$#raw("CC Worry") --> #raw("Weather Worry")$ in the liberal model). In a small number
+of cases, we observe interactions in the complete model which are missing from both
+of the smaller models ($#raw("CC Real") --> #raw("CC Impact")$,
+$#raw("CC Human") --> #raw("CC Worry")$, $#raw("CC Impact") --> #raw("CC Human")$).
+These all correspond to small interactions in the complete model ($|J_(i,j)| < 0.1$),
+suggesting they are only weakly supported by the complete dataset,
+and are likely excluded from the smaller models due to the reduced sample sizes.
+
+
+#figure(
+  table(
+    columns: (20%, 20%, 22%),
+    align: (center, center, center),
+    column-gutter: 1.5em,
+    stroke: none,
+    table.header[Data subset][Sparsity][Mean interaction],
+    table.hline(stroke: 0.5pt),
+    [Full], [0.30], [0.13],
+    [Conservative], [0.38], [0.10],
+    [Liberal], [0.60], [0.17],
+  ),
+  gap: 1.5em,
+  caption: caption(
+    short: [Comparison of ideological model properties],
+    long: [
+      Sparsity (proportion of missing cross-interactions) and mean
+      interaction effect (over cross-interactions) for asymmetric models
+      calibrated to the conservative and liberal subsets of the climate beliefs dataset,
+      compared with the model calibrated on the complete dataset.
+    ],
+  ),
+) <tab:heterogeneity-results-belief-systems-properties>
 
 Observations:
-- Relative sparsity. Proportion of non-diagonal interactions which are zero.
-  Conservative: 38%, Liberal: 60%. Compared with the belief system fit to the full dataset: 30%.
-- Strength of interactions compared to one another, compared to the full model.
+// - Relative sparsity. Proportion of non-diagonal interactions which are zero.
+//   Conservative: 38%, Liberal: 60%. Compared with the belief system fit to the full dataset: 30%.
+// - Strength of interactions compared to one another, compared to the full model.
 - Comparison wrt the full model:
   - Which variables are influential/have lots of interactions/are very sparse?
   - Significant interactions which are weak in the full model?
