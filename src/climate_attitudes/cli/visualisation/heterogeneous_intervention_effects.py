@@ -11,12 +11,11 @@ import numpy as np
 import numpy.typing as npt
 import seaborn as sns
 from matplotlib.figure import Figure
+from sklearn.model_selection import RepeatedKFold, cross_validate
 from sklearn.tree import DecisionTreeRegressor
 
 from climate_attitudes.cli.common import BaseCommand
 from climate_attitudes.visualisation import DIVERGING_CMAP, configure_mpl
-
-np.set_printoptions(linewidth=200)
 
 ANNOTATIONS = {
     (-1.0, -1.0): "EL",  # Extremely low
@@ -270,6 +269,8 @@ class PersonaAnalysisRules:
     rules: list[tuple[tuple[RuleNode, ...], list[InterventionStrength]]]
     prevalence: npt.NDArray[np.float64]
     prevalence_mask: npt.NDArray[np.bool]
+    prevalence_low_eff: npt.NDArray[np.float64]
+    prevalence_low_eff_mask: npt.NDArray[np.bool]
     effect: npt.NDArray[np.float64]
     high_effect_threshold: dict[InterventionStrength, float]
 
@@ -292,6 +293,31 @@ def calculate_upper_percentile_prevalence(
     return x0_satisfy.shape[0] / x0_high_effect.shape[0]
 
 
+def calculate_lower_percentile_prevalence(
+    initial_state: npt.NDArray[np.float64],
+    effect: npt.NDArray[np.float64],
+    threshold: float,
+    rule: tuple[RuleNode, ...],
+) -> float:
+    x0_low_effect = initial_state[effect < threshold]
+    x0_satisfy = x0_low_effect.copy()
+    for rule_node in rule:
+        lower = rule_node.interval.lower if rule_node.interval.lower > -1 else -1.1
+        upper = rule_node.interval.upper if rule_node.interval.upper < 1 else 1.1
+        satisfies = (lower < x0_satisfy[:, rule_node.feature_idx]) & (
+            x0_satisfy[:, rule_node.feature_idx] <= upper
+        )
+        x0_satisfy = x0_satisfy[satisfies]
+    return x0_satisfy.shape[0] / x0_low_effect.shape[0]
+
+
+def cross_validation_r2(X0, Y, seed):
+    tree = DecisionTreeRegressor(max_depth=3)
+    cv = RepeatedKFold(n_splits=10, n_repeats=5, random_state=seed)
+    tree_scores = cross_validate(tree, X0, Y, cv=cv, scoring="r2")
+    print(tree_scores["test_score"].mean())
+
+
 def analyse_effective_interventions(
     initial_state: npt.NDArray[np.float64],
     effect: npt.NDArray[np.float64],
@@ -300,6 +326,7 @@ def analyse_effective_interventions(
     labels: list[str],
     high_effect_percentile: int,
     minimum_prevalence: float,
+    seed: int,
 ) -> PersonaAnalysisRules:
     models = {}
     rules = {}
@@ -307,7 +334,9 @@ def analyse_effective_interventions(
 
     for strength_idx, strength in enumerate(intervention_strengths):
         # Fit shallow decision tree to predict intervention effect from initial state
-        model = DecisionTreeRegressor(max_depth=max_tree_depth).fit(
+        cross_validation_r2(initial_state, effect[strength_idx], seed)
+
+        model = DecisionTreeRegressor(max_depth=max_tree_depth, random_state=seed).fit(
             initial_state, effect[strength_idx]
         )
 
@@ -342,14 +371,41 @@ def analyse_effective_interventions(
             )
             prevalence_mask[rule_idx, strength_idx] = False
 
+    prevalence_low_eff = np.zeros(
+        (len(rules), len(intervention_strengths)), dtype=np.float64
+    )
+    prevalence_low_eff_mask = np.ones_like(prevalence_low_eff, dtype=np.bool)
+    for rule_idx, (rule, strengths) in enumerate(rules):
+        for strength_idx, maybe_strength in enumerate(intervention_strengths):
+            if maybe_strength not in strengths:
+                continue
+            prevalence_low_eff[rule_idx, strength_idx] = (
+                calculate_lower_percentile_prevalence(
+                    initial_state,
+                    effect[strength_idx],
+                    high_effect_threshold[maybe_strength],
+                    rule,
+                )
+            )
+            prevalence_low_eff_mask[rule_idx, strength_idx] = False
+
     # Filter out rules which are below the minimum required prevalence in data
     keep_rules = prevalence.max(axis=1) >= minimum_prevalence
     prevalence = prevalence[keep_rules]
     prevalence_mask = prevalence_mask[keep_rules]
+    prevalence_low_eff = prevalence_low_eff[keep_rules]
+    prevalence_low_eff_mask = prevalence_low_eff_mask[keep_rules]
     rules = [r for i, r in enumerate(rules) if keep_rules[i]]
 
     return PersonaAnalysisRules(
-        models, rules, prevalence, prevalence_mask, effect, high_effect_threshold
+        models,
+        rules,
+        prevalence,
+        prevalence_mask,
+        prevalence_low_eff,
+        prevalence_low_eff_mask,
+        effect,
+        high_effect_threshold,
     )
 
 
@@ -364,6 +420,8 @@ class PlotData:
     heatmap_annot: npt.NDArray[np.str_]
     prevalence: npt.NDArray[np.float64]
     prevalence_mask: npt.NDArray[np.bool]
+    prevalence_low_eff: npt.NDArray[np.float64]
+    prevalence_low_eff_mask: npt.NDArray[np.bool]
     labels: npt.NDArray[np.str_]
 
 
@@ -395,26 +453,6 @@ def make_plot_data(
     heatmap_annots = heatmap_annots[:, use_labels]
     labels = labels[use_labels]
 
-    # Re-order columns:
-    # 1. Necessary columns (always same value)
-    # 2. Not necessary columns, ordered using dendrogram
-    # 3. Empty columns
-    necessary = ~heatmap_mask.any(axis=0) & (heatmap_vals == heatmap_vals[0]).all(
-        axis=0
-    )
-    empty = heatmap_mask.all(axis=0)
-    necessary_cols = np.argwhere(necessary).flatten()
-    empty_cols = np.argwhere(empty).flatten()
-    remaining_cols = np.argwhere(~necessary & ~empty).flatten()
-
-    # Order the remaining columns using hierarchical clustering
-    if remaining_cols.size >= 2:
-        clust = sns.clustermap(heatmap_vals[:, remaining_cols], row_cluster=False)
-        plt.close(clust.fig)
-        remaining_cols = remaining_cols[np.asarray(clust.dendrogram_col.reordered_ind)]
-
-    col_idxes = np.concat((necessary_cols, remaining_cols, empty_cols))
-
     # Re-order rows such that prevalence is in decreasing binary order
     prevalence_mask = analysis_results.prevalence_mask
     weights = 2 ** np.arange(prevalence_mask.shape[1] - 1, -1, -1)
@@ -422,12 +460,15 @@ def make_plot_data(
     row_idxes = np.argsort(values)
 
     # Apply the re-orderings
-    heatmap_vals = heatmap_vals[row_idxes][:, col_idxes]
-    heatmap_annots = heatmap_annots[row_idxes][:, col_idxes]
-    heatmap_mask = heatmap_mask[row_idxes][:, col_idxes]
+    heatmap_vals = heatmap_vals[row_idxes]
+    heatmap_annots = heatmap_annots[row_idxes]
+    heatmap_mask = heatmap_mask[row_idxes]
     analysis_results.prevalence = analysis_results.prevalence[row_idxes]
     analysis_results.prevalence_mask = analysis_results.prevalence_mask[row_idxes]
-    labels = labels[col_idxes]
+    analysis_results.prevalence_low_eff = analysis_results.prevalence_low_eff[row_idxes]
+    analysis_results.prevalence_low_eff_mask = analysis_results.prevalence_low_eff_mask[
+        row_idxes
+    ]
 
     return PlotData(
         intervention_idx,
@@ -439,34 +480,84 @@ def make_plot_data(
         heatmap_annots,
         analysis_results.prevalence,
         analysis_results.prevalence_mask,
+        analysis_results.prevalence_low_eff,
+        analysis_results.prevalence_low_eff_mask,
         labels,
     )
 
 
+def occurrence_entropy(vals: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    entropy = np.zeros(vals.shape[-1])
+    for i in range(vals.shape[-1]):
+        value_counts = np.unique_counts(vals[:, i])
+        is_nonzero = ~np.isclose(value_counts.values, 0.0)
+        counts = value_counts.counts[is_nonzero]
+        props = counts / counts.sum()
+        entropy[i] = -(props * np.log(props)).sum()
+    return entropy
+
+
+def order_rule_columns(plot_data: list[PlotData]) -> list[PlotData]:
+    """Re-order columns in personas/rules.
+
+    Order by:
+    1. Decreasing proportion of occurrence across points of intervention
+    2. Increasing entropy
+    3. Decreasing upper quartile threshold
+    """
+    occurrence = np.asarray([~pd.heatmap_mask.all(axis=0) for pd in plot_data])
+    occurrence = occurrence.sum(axis=0) / occurrence.shape[0]
+    entropy = occurrence_entropy(np.concat([pd.heatmap_vals for pd in plot_data]))
+    threshold = np.zeros_like(occurrence, dtype=np.float64)
+    for i, label in enumerate(plot_data[0].labels):
+        for pd in plot_data:
+            if pd.intervention_label != label:
+                continue
+            threshold[i] = max(pd.high_effect_threshold.values())
+    sort_vals = [
+        (-occ, ent, -thresh)
+        for occ, ent, thresh in zip(occurrence, entropy, threshold, strict=True)
+    ]
+    sort_idx = list(sorted(range(len(sort_vals)), key=lambda i: sort_vals[i]))
+
+    for pd in plot_data:
+        pd.heatmap_vals = pd.heatmap_vals[:, sort_idx]
+        pd.heatmap_mask = pd.heatmap_mask[:, sort_idx]
+        pd.heatmap_annot = pd.heatmap_annot[:, sort_idx]
+        pd.labels = pd.labels[sort_idx]
+
+    return plot_data
+
+
 def make_figure(plot_data: list[PlotData]) -> Figure:
     # Determine max width of rule heatmap; trim matrices to size
-
-    n_heatmap_cols = max((~d.heatmap_mask.all(axis=0)).sum() for d in plot_data)
-    for d in plot_data:
-        d.heatmap_vals = d.heatmap_vals[:, :n_heatmap_cols]
-        d.heatmap_mask = d.heatmap_mask[:, :n_heatmap_cols]
-        d.heatmap_annot = d.heatmap_annot[:, :n_heatmap_cols]
-        d.labels = d.labels[:n_heatmap_cols]
+    # n_heatmap_cols = max((~d.heatmap_mask.all(axis=0)).sum() for d in plot_data)
+    # for d in plot_data:
+    #     d.heatmap_vals = d.heatmap_vals[:, :n_heatmap_cols]
+    #     d.heatmap_mask = d.heatmap_mask[:, :n_heatmap_cols]
+    #     d.heatmap_annot = d.heatmap_annot[:, :n_heatmap_cols]
+    #     d.labels = d.labels[:n_heatmap_cols]
 
     # Determine figure size from number of intervention idxes and rules
-    H = 1.6 * len(plot_data)
-    W = (H / len(plot_data)) * 3.25
-    n_strength_cols = d.prevalence.shape[-1]
+    n_heatmap_cols = plot_data[0].labels.size
+    height_per_row = 0.525
+    tick_height = 0.75
+    H = height_per_row * sum(pd.heatmap_vals.shape[0] for pd in plot_data) + tick_height
+    W = height_per_row * 9.0
+    print(f"figsize=({W:.2f},{H:.2f})")
+    # H = 1.3 * len(plot_data)
+    # W = (H / len(plot_data)) * 5.5
+    n_strength_cols = plot_data[0].prevalence.shape[-1]
     fig, grid_axes = plt.subplots(
         nrows=len(plot_data),
         ncols=3,
         figsize=(W, H),
         constrained_layout=True,
         gridspec_kw={
-            "width_ratios": [3, n_heatmap_cols, n_strength_cols],
+            "width_ratios": [2.75, n_heatmap_cols, n_strength_cols * 2],
             "height_ratios": [d.heatmap_vals.shape[0] for d in plot_data],
-            "wspace": 0.01,
-            "hspace": 0.1,
+            "wspace": 0.15,
+            "hspace": 0.01,
         },
     )
 
@@ -505,9 +596,18 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         kde_xlims[1] = max(kde_xlims[1], d.effect[-1].max())
 
     for i in range(len(plot_data)):
+        if i != (len(plot_data) - 1):
+            grid_axes[i, 0].set_xticks([])
+        else:
+            grid_axes[i, 0].set_xticks([0.15, 0.3])
+            # grid_axes[i, 0].set_xlabel("Int. Effect", fontsize=11)
         grid_axes[i, 0].set_xlim(*kde_xlims)
         grid_axes[i, 0].spines.top.set_visible(False)
         grid_axes[i, 0].spines.right.set_visible(False)
+        grid_axes[i, 0].set_ylabel("")
+    fig.supylabel("Density", fontsize=11)
+
+    fig.align_ylabels(grid_axes[:, 0])
 
     # Display rules as heatmap
     for di, d in enumerate(plot_data):
@@ -527,21 +627,21 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             cbar=False,
         )
         grid_axes[di, 1].set_yticks([])
-        column_present = ~d.heatmap_mask.all(axis=0)
+        grid_axes[di, 1].set_xticks([])
 
-        grid_axes[di, 1].set_xticks(
-            np.arange(column_present.sum()) + 0.5,
-            d.labels[column_present],
-            rotation=35,
-            horizontalalignment="right",
-        )
+    grid_axes[-1, 1].set_xticks(
+        np.arange(n_heatmap_cols) + 0.5,
+        d.labels,
+        rotation=90,
+        # horizontalalignment="right",
+    )
 
     # Display prevalence in top percentile
     for di, d in enumerate(plot_data):
         sns.heatmap(
-            d.prevalence,
+            np.concat((d.prevalence_low_eff, d.prevalence), axis=1),
             annot=True,
-            fmt=".2f",
+            fmt=".0%",
             annot_kws={"fontsize": 10},
             vmin=0,
             vmax=1,
@@ -550,26 +650,57 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             linewidths=1,
             ax=grid_axes[di, 2],
             square=True,
-            mask=d.prevalence_mask,
+            mask=np.concat((d.prevalence_low_eff_mask, d.prevalence_mask), axis=1),
         )
         grid_axes[di, 2].set_yticks([])
-        strengths = [s.title() for s in d.high_effect_threshold]
-        grid_axes[di, 2].set_xticks(
-            np.arange(len(strengths)) + 0.5,
-            strengths,
-            rotation=35,
-            horizontalalignment="right",
-        )
+        if len(d.high_effect_threshold) > 1:
+            strengths = [s.title() for s in d.high_effect_threshold]
+            grid_axes[di, 2].set_xticks(
+                np.arange(len(strengths)) + 0.5,
+                strengths,
+                rotation=35,
+                horizontalalignment="right",
+            )
+        else:
+            grid_axes[di, 2].set_xticks([])
+    grid_axes[-1, 2].set_xticks(
+        np.arange(2) + 0.5,
+        ["Low effect", "High effect"],
+        rotation=90,
+    )
 
     # Label rows with the intervention spin label
     for di, d in enumerate(plot_data):
-        grid_axes[di, 2].set_ylabel(d.intervention_label, rotation=0, labelpad=40)
-        grid_axes[di, 2].yaxis.set_label_position("right")
+        # grid_axes[di, 2].set_ylabel(
+        #     d.intervention_label,
+        #     rotation=0,
+        #     labelpad=40,
+        #     verticalalignment="center",
+        #     fontsize=11,
+        # )
+        # grid_axes[di, 2].yaxis.set_label_position("right")
+        grid_axes[di, 2].text(
+            1.0
+            + 40
+            / grid_axes[di, 2].get_window_extent().width,  # roughly mimics labelpad
+            0.5,
+            d.intervention_label,
+            transform=grid_axes[di, 2].transAxes,
+            rotation=0,
+            verticalalignment="center",
+            horizontalalignment="left",
+            fontsize=11,
+        )
 
     # Add titles to each column
-    grid_axes[0, 0].set_title("Intervention effect", pad=10)
-    grid_axes[0, 1].set_title("High-effect personas", pad=10)
-    grid_axes[0, 2].set_title("Prevalence", pad=10)
+    grid_axes[0, 0].set_title(r"$\Delta P(S_i^5 = +1)$", pad=10, fontsize=12)
+    grid_axes[0, 1].set_title("Persona", pad=10, fontsize=12)
+    grid_axes[0, 2].set_title("Prevalence", pad=10, fontsize=12, clip_on=False)
+    # grid_axes[-1, 2].set_xticks(
+    #     [0.5],
+    #     ["Prevalence"],
+    #     rotation=90,
+    # )
 
     return fig
 
@@ -583,7 +714,8 @@ class InterventionPersonasPlotCommand(BaseCommand):
     max_tree_depth: int
     high_effect_percentile: int = 75
     prevalence_threshold: float = 0.15
-    min_effect_threshold: float = 0.075
+    min_effect_threshold: float = 0.1
+    seed: int = 20260622
     output: Path
 
     def cli_cmd(self) -> None:
@@ -628,6 +760,7 @@ class InterventionPersonasPlotCommand(BaseCommand):
                 labels=labels,
                 high_effect_percentile=self.high_effect_percentile,
                 minimum_prevalence=self.prevalence_threshold,
+                seed=self.seed,
             )
             for i in range(N)
         }
@@ -661,6 +794,8 @@ class InterventionPersonasPlotCommand(BaseCommand):
             ],
             key=lambda d: -d.high_effect_threshold[self.intervention[-1]],
         )
+
+        plot_data = order_rule_columns(plot_data)
 
         fig = make_figure(plot_data)
         fig.savefig(self.output, bbox_inches="tight")

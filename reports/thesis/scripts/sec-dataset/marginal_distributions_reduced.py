@@ -41,10 +41,11 @@ def main(X: npt.NDArray[np.float64], labels: list[str]):
         ax.spines.top.set_visible(False)
         ax.spines.right.set_visible(False)
 
-    fig.savefig(
-        "reports/thesis/results/figures/dataset/marginal_distributions.pdf",
-        bbox_inches="tight",
-    )
+    for ext in ("png", "pdf"):
+        fig.savefig(
+            f"reports/thesis/results/figures/dataset/marginal_distributions.{ext}",
+            bbox_inches="tight",
+        )
 
 
 if __name__ == "__main__":

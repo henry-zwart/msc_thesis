@@ -242,6 +242,7 @@ value and outgoing edges toward a subset of beliefs and attitudes:
 
 #figure(
   outlined: false,
+  placement: none,
   image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
 )
 
@@ -267,6 +268,7 @@ baseline activation of certain beliefs and attitudes:
 
 #figure(
   outlined: false,
+  placement: none,
   image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
 )
 

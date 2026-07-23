@@ -5,11 +5,11 @@
 #import algorithmic: algorithm-figure, style-algorithm
 #show: style-algorithm
 
-== To-do
-- Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
-  even when excluding self-loops.
-  - If we could, this would simplify dataset. Wouldn't need to rely on repeating
-    participants.
+// TODO:
+// - Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
+//   even when excluding self-loops.
+//   - If we could, this would simplify dataset. Wouldn't need to rely on repeating
+//     participants.
 
 // == Plan
 //
@@ -21,7 +21,7 @@
 //   - Regularisation
 
 
-== Counterfactual interventions
+== Counterfactual interventions <sec:methods-counterfactual-interventions>
 
 Individuals have different belief systems. Influence relations between beliefs and
 attitudes reflect heterogeneity in individual experiences and perception. Often these
@@ -251,6 +251,7 @@ illustrates this process for a negative value of $x$ and given choice of $sigma$
       increases with $sigma$ and $|x|^(-1)$.
     ],
   ),
+  placement: auto,
 ) <fig:methods-binarisation>
 
 Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
@@ -266,24 +267,26 @@ where $Phi$ is the standardised normal cumulative distribution function. This
 probability is small when $x$ has large magnitude, or when $sigma$ is small.
 For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
 a 'weakly oppose' response to a 7-point Likert scale
-#footnote[The oppose/support 7-point Likert scale has possible responses: strongly oppose, oppose, weakly oppose, neutral, weakly support, support, strongly support.]
+#footnote[
+  The oppose/support 7-point Likert scale has possible responses: strongly oppose,
+  oppose, weakly oppose, neutral, weakly support, support, strongly support.
+] <fn:likert-7-scale-responses>
 (value $1\/3$) is mapped to $+1$ with probability 0.05.
 
 #figure(
   image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+  placement: auto,
   caption: caption(
     short: [Likert-7 binarisation distribution],
     long: [
       The probability of binarisation to $+1$ for each possible response to a Likert-7
-      scale survey question, given $sigma approx #calc.round(binarisation_sigma, digits: 1)$. Ordered responses are:
-      _strongly oppose_ (SO), _oppose_ (O), _weakly oppose_ (WO), _neutral_ (N),
-      _weakly support_ (WS), _support_ (S), _strongly support_ (SS).
-
-      *TODO: Consider specifying Likert-7 scale options in a table, and referencing
-      that.*
+      scale survey question@fn:likert-7-scale-responses, given
+      $sigma approx #calc.round(binarisation_sigma, digits: 1)$.
     ],
   ),
 )
+
+
 
 == Parameter estimation <subsec:methods-parameter-estimation>
 
@@ -501,7 +504,7 @@ The values for both are summarised in @tab:methods-hyperparameter-values.
       Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
       hyperparameters. Regularisation strength model- and dataset-specific;
       _Conservative_ and _Liberal_ refer to subsets of the climate attitudes dataset
-      (*TODO*: reference) comprising individuals with the specified ideology.
+      comprising individuals with the specified ideology (@sec:dataset).
     ],
   ),
   placement: auto,

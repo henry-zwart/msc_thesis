@@ -1,9 +1,24 @@
+// TODO: Address the specific variables we look at in the outbound/inbound experiments.
+// Are the variables interesting independently of the asymmetry results/theoretically
+// motivated?
 == Plan
 
 - Motivate the problem
 - Contributions
 - Research questions (thinking these are perhaps better left to later, in favour of
   contributions here)
+
+== Motivation
+
+Issue support on climate policies in US driven by political identification and climate
+beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020
+@zieglerPoliticalOrientationEnvironmental2017 @roser-renoufGenesisClimateChange2014
+@unsworthItsPoliticalHow2014.
+
+But political identification is often not consistent with policy attitudes
+@iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
+identity-driven (symbolic) than issue-driven (operational)
+@masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
 
 == Research questions
 
@@ -31,7 +46,7 @@
 + We present a mathematical model for belief system dynamics that does not assume
   equilibrium and does not assume symmetric influence between cognitive aspects
   (@sec:asymmetric-belief-systems)
-+ We describe a novel parameter estimation method for fitting binary models to
++ We describe a novel parameter estimation method for fitting binary Ising models to
   continuous data (@sec:methods).
 + We calibrate said model to data from a recent longitudinal survey including items on
   beliefs and attitudes regarding climate change
@@ -55,86 +70,86 @@
   (@sec:heterogeneity-in-belief-systems-and-intervention-effects).
 
 
-== Proposed thesis structure
-
-- *Terminology and notation*
-
-- *Introduction:*
-  - Motivate the problem,
-  - Outline contributions (research questions)
-
-- *Asymmetric belief system:*
-  - Define and illustrate the model
-  - Model simulation with Glauber dynamics
-  - How do we model interventions?
-
-- *Methods:*
-  - Counterfactual intervention experiments --- comparing against the no-intervention
-    scenario, measuring differences in effects.
-  - Parameter estimation:
-    - Maximum likelihood estimation
-      - Conditional on a specific binarisation
-      - Marginalising over binarisation process
-    - Regularisation
-
-- *Existence and impacts of asymmetry in belief systems*
-  - Results for:
-    - *RF1:* Show asymmetric model fit
-    - *RQ2.1:* Existence of asymmetric relations. Some, but not all, are significant.
-      Categorising relations into types: symmetric, asymmetric (both directions exist,
-      with different effect sizes), and unidirectional (only one direction exists).
-    - *RQ3.1:* Differences between symmetric and asymmetric models, with regards to
-      intervention strategy (which intervention to do) and effectiveness (magnitude of
-      change compared to the no-intervention case).
-
-- *Individual heterogeneity in belief systems and intervention dynamics*
-  - Second results section
-  - *RQ2.2:* Fit models to conservative and liberal subsets of the data; compare and
-    contrast. Compare with the model from the previous section, i.e., fit on the entire
-    dataset.
-  - *RQ3.2:*
-    - Distribution of intervention effectiveness by individual.
-    - How does intervention ranking vary across individuals?
-    - Characterising how different initial states affect intervention success.
-    - Looking at how other theory-driven features affect success, e.g.:
-      - How receptive is the individual to the intervention?
-
-        The effective baseline ($h_i + sum_j J_(j i) s_j$) determines the probability
-        that $S_i^(t+1) = s$ for a state $s in plus.minus 1$. Evaluating this after
-        intervening provides a measurement for the success of the intervention on the
-        intervention spin itself.
-
-        We could look at how this changes with different intervention strengths (it
-        follows a logistic curve).
-
-      - How consistent is the individual's belief state, as measured by the total system
-        energy?
-
-      - How 'entrenched' is the target attitude?
-
-        Measure $h_k s_k + sum_(j) J_(j k) s_j s_k$, where $k$ is the target attitude.
-
-- *General discussion*
-  - Draw out the key findings from the above two results sections
-  - Make clear the implications for our theory of belief system dynamics
-  - Sensitivity of parameter estimation to unmeasured factors or incorrect structural
-    assumptions. i.e., what happens when we cannot include an influential belief, or
-    when we falsely assume that a relation does or does not exist?
-  - Representational limitations of our model:
-    - Pairwise relations limit what can be modelled. Demonstrate using vaccination
-      example --- we can't capture relations between pairs of attitudes, whose effect
-      sign or magnitude depends on a third belief/attitude.
-    - Polar ($-1, +1$) spin state assumption; some beliefs may be better treated as
-      'on/off', where the 'off' state has _no_ effect on other spins, rather than a
-      negative effect.
-    - More generally, effect sizes may vary depending on specific spin states.
-
-- *Dataset*
-  - Introduce the (insert name here) dataset, give context, survey details
-  - Validation, cleaning, transformations
-  - Question selection, indexes
-  - Binarisation
-
-- *Literature review/related work*
-
-- *Conclusions and future work*
+// == Proposed thesis structure
+//
+// - *Terminology and notation*
+//
+// - *Introduction:*
+//   - Motivate the problem,
+//   - Outline contributions (research questions)
+//
+// - *Asymmetric belief system:*
+//   - Define and illustrate the model
+//   - Model simulation with Glauber dynamics
+//   - How do we model interventions?
+//
+// - *Methods:*
+//   - Counterfactual intervention experiments --- comparing against the no-intervention
+//     scenario, measuring differences in effects.
+//   - Parameter estimation:
+//     - Maximum likelihood estimation
+//       - Conditional on a specific binarisation
+//       - Marginalising over binarisation process
+//     - Regularisation
+//
+// - *Existence and impacts of asymmetry in belief systems*
+//   - Results for:
+//     - *RF1:* Show asymmetric model fit
+//     - *RQ2.1:* Existence of asymmetric relations. Some, but not all, are significant.
+//       Categorising relations into types: symmetric, asymmetric (both directions exist,
+//       with different effect sizes), and unidirectional (only one direction exists).
+//     - *RQ3.1:* Differences between symmetric and asymmetric models, with regards to
+//       intervention strategy (which intervention to do) and effectiveness (magnitude of
+//       change compared to the no-intervention case).
+//
+// - *Individual heterogeneity in belief systems and intervention dynamics*
+//   - Second results section
+//   - *RQ2.2:* Fit models to conservative and liberal subsets of the data; compare and
+//     contrast. Compare with the model from the previous section, i.e., fit on the entire
+//     dataset.
+//   - *RQ3.2:*
+//     - Distribution of intervention effectiveness by individual.
+//     - How does intervention ranking vary across individuals?
+//     - Characterising how different initial states affect intervention success.
+//     - Looking at how other theory-driven features affect success, e.g.:
+//       - How receptive is the individual to the intervention?
+//
+//         The effective baseline ($h_i + sum_j J_(j i) s_j$) determines the probability
+//         that $S_i^(t+1) = s$ for a state $s in plus.minus 1$. Evaluating this after
+//         intervening provides a measurement for the success of the intervention on the
+//         intervention spin itself.
+//
+//         We could look at how this changes with different intervention strengths (it
+//         follows a logistic curve).
+//
+//       - How consistent is the individual's belief state, as measured by the total system
+//         energy?
+//
+//       - How 'entrenched' is the target attitude?
+//
+//         Measure $h_k s_k + sum_(j) J_(j k) s_j s_k$, where $k$ is the target attitude.
+//
+// - *General discussion*
+//   - Draw out the key findings from the above two results sections
+//   - Make clear the implications for our theory of belief system dynamics
+//   - Sensitivity of parameter estimation to unmeasured factors or incorrect structural
+//     assumptions. i.e., what happens when we cannot include an influential belief, or
+//     when we falsely assume that a relation does or does not exist?
+//   - Representational limitations of our model:
+//     - Pairwise relations limit what can be modelled. Demonstrate using vaccination
+//       example --- we can't capture relations between pairs of attitudes, whose effect
+//       sign or magnitude depends on a third belief/attitude.
+//     - Polar ($-1, +1$) spin state assumption; some beliefs may be better treated as
+//       'on/off', where the 'off' state has _no_ effect on other spins, rather than a
+//       negative effect.
+//     - More generally, effect sizes may vary depending on specific spin states.
+//
+// - *Dataset*
+//   - Introduce the (insert name here) dataset, give context, survey details
+//   - Validation, cleaning, transformations
+//   - Question selection, indexes
+//   - Binarisation
+//
+// - *Literature review/related work*
+//
+// - *Conclusions and future work*

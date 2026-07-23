@@ -35,6 +35,19 @@ ${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json: \
 		--filter-null \
 		--waves [3,4]
 
+${CA_BUILT_ASSETS}/small_four_waves/metadata.json: \
+			${CA_BUILT_ASSETS}/base/metadata.json \
+			src/climate_attitudes/datasets/small_four_waves.py
+	@printf "Dataset → Build small-4-waves dataset (only full values)...\n"
+	@uv run cadata create dataset \
+		--name small_four_waves \
+		--force \
+		--no-centre-columns \
+		--with-indices \
+		--index average \
+		--filter-null \
+		--waves [1,2,3,4]
+
 ${CA_BUILT_ASSETS}/full_imp/metadata.json: \
 			${CA_BUILT_ASSETS}/base/metadata.json \
 			src/climate_attitudes/datasets/full.py

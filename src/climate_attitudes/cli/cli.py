@@ -15,6 +15,7 @@ import climate_attitudes.datasets.behaviour as behaviour_ds
 import climate_attitudes.datasets.full as full_ds
 import climate_attitudes.datasets.reduced as reduced_ds
 import climate_attitudes.datasets.reduced_no_imputation as reduced_no_imputation_ds
+import climate_attitudes.datasets.small_four_waves as small_four_waves_ds
 from climate_attitudes.cli import analysis as analysis_cli
 from climate_attitudes.cli import visualisation as vis_cli
 from climate_attitudes.dataset import Dataset
@@ -67,6 +68,8 @@ class CreateDerivedDatasetCommand(BaseCommand):
                 raise RuntimeError("Not supported: 'behaviour'")
             case "reduced_no_imputation":
                 ds_spec = reduced_no_imputation_ds
+            case "small_four_waves":
+                ds_spec = small_four_waves_ds
             case _:
                 raise RuntimeError(f"Unknown dataset: '{self.name}'")
 
@@ -291,6 +294,9 @@ class PlotSubCommand(BaseModel):
     intervention_mean_collective_effect: CliSubCommand[
         vis_cli.InterventionCollectiveEffectPlotCommand
     ]
+    intervention_mean_collective_rank_comb: CliSubCommand[
+        vis_cli.CollectiveRankCombPlotCommand
+    ]
     intervention_mean_collective_rank: CliSubCommand[
         vis_cli.InterventionCollectiveRankPlotCommand
     ]
@@ -302,6 +308,12 @@ class PlotSubCommand(BaseModel):
     ideology_networks: CliSubCommand[vis_cli.NetworkIdeologyPlotCommand]
     network: CliSubCommand[vis_cli.NetworkPlotCommand]
     identify_effective_personas: CliSubCommand[vis_cli.InterventionPersonasPlotCommand]
+    compare_outbound_effects: CliSubCommand[
+        vis_cli.CompareOutboundIntEffectsPlotCommand
+    ]
+    compare_intervention_strengths: CliSubCommand[
+        vis_cli.CompareInterventionStrengthPlotCommand
+    ]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)

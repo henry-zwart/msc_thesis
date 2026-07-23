@@ -46,13 +46,14 @@
   / UvA: #strong[U]niversiteit #strong[v]an #strong[A]msterdam
 ]
 
-#let frontmatter-pages = (
-  (title: [Use of AI], body: include "sections/use_of_ai.typ"),
-)
+// #let frontmatter-pages = (
+//   (title: [Use of AI], body: include "sections/use_of_ai.typ"),
+// )
 
 #let signature = image("signature.png", height: 2cm)
 
-#let appendix = include "sections/appendix_derivations.typ"
+#let derivation-appendix = include "sections/appendix_derivations.typ"
+#let extra-results-appendix = include "sections/appendix_extra_results.typ"
 
 #show: thesis.with(
   title: title,
@@ -67,9 +68,9 @@
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
   references: bibliography("references.bib", style: "apa"),
-  additional-frontmatter: frontmatter-pages,
+  additional-frontmatter: (),
   signature: signature,
-  appendices: (appendix,),
+  appendices: (derivation-appendix, extra-results-appendix),
 )
 
 // = Notes (things to remember, to-dos)
@@ -86,6 +87,9 @@
 
 = Methods <sec:methods>
 #include "sections/methods.typ"
+
+= Model Calibration <sec:calibration>
+#include "sections/calibration.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
 #include "sections/asymmetry_results.typ"

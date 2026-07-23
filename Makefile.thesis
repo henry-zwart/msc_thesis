@@ -8,7 +8,8 @@ THESIS_DATA_DEPS := \
 		$(THESIS_DIR)/results/data/dataset_metadata.json \
 		$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_no_structure.npz \
 		$(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
-		$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz
+		$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
+		${CA_BUILT_ASSETS}/small_four_waves/metadata.json
 
 THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/methods/binarisation/distribution.pdf \
@@ -18,11 +19,11 @@ THESIS_FIGURES_MODEL := \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
-			$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(d)_$(MEASURE_TIME)) \
-		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_collective_effect/.$(d)_$(MEASURE_TIME)) \
 		$(foreach d,05 10 15 25 80, \
 			$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)) \
+		$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(MEASURE_TIME) \
+		$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(MEASURE_TIME) \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/rank_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf \
@@ -30,17 +31,33 @@ THESIS_FIGURES_MODEL := \
 		$(THESIS_DIR)/results/figures/model/ideology_fit/conservative_interaction_matrix.pdf \
 		$(THESIS_DIR)/results/figures/model/ideology_fit/liberal_interaction_matrix.pdf \
 		$(THESIS_DIR)/results/figures/model/ideology_fit/network.pdf \
-		$(THESIS_DIR)/results/figures/model/network/full_asym_ising_no_structure.pdf \
-		$(THESIS_DIR)/results/figures/model/network/full_sym_ising_no_structure.pdf \
+		$(THESIS_DIR)/results/figures/model/network.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf \
-		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf
+		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf \
+		$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_4.pdf
+
+THESIS_FIGURES_MODEL_CALIBRATION := \
+		$(THESIS_DIR)/results/figures/model_fit/edge_accuracy.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/high_relative_entropy.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/selection_probability.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/transition_reliability.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/mean_relative_entropy.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/kl_difference_dist.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/kl_difference_examples.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/interaction_heatmap.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/ideology_interaction_heatmap.pdf
 
 THESIS_FIGURES_METHODS := \
 		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
 
 THESIS_FIGURES_ASYMMETRY_RESULTS := \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf \
-		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf 
+		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_5.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_10.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf \
+		$(THESIS_DIR)/results/figures/asymmetry_results/inbound_effects.pdf
 		
 
 THESIS_FIGURES_DATASET := \
@@ -53,15 +70,24 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/full_subset_dendrogram.pdf \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf \
 		$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf \
-		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf
+		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf \
+		$(THESIS_DIR)/results/figures/dataset/transition_probability.pdf
 
+THESIS_DIAGRAMS := \
+		$(THESIS_DIR)/diagrams/modelling_interventions/intervention.svg \
+		$(THESIS_DIR)/diagrams/modelling_interventions/intervention_baseline_activation.svg \
+		$(THESIS_DIR)/diagrams/survey_database/database.svg
 
 THESIS_FIGURES := \
 		$(THESIS_FIGURES_MODEL) \
 		$(THESIS_FIGURES_METHODS) \
+		$(THESIS_FIGURES_MODEL_CALIBRATION) \
 		$(THESIS_FIGURES_DATASET) \
-		$(THESIS_FIGURES_ASYMMETRY_RESULTS)
+		$(THESIS_FIGURES_ASYMMETRY_RESULTS) \
+		$(THESIS_DIAGRAMS)
 		#$(THESIS_FIGURES_MODEL_FIT_STRATIFICATION)
+
+
 
 THESIS_VERIFICATION_FILES := \
 		$(THESIS_DIR)/results/verification/model/all_interventions.txt \
@@ -138,6 +164,84 @@ $(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf: \
 			| $(THESIS_DIR)/results/figures/methods
 	@uv run $<
 
+# +++ Model calibration
+$(THESIS_DIR)/results/figures/model_fit/edge_accuracy.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/edge_accuracy.py \
+			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_no_structure.npz \
+			$(THESIS_DIR)/results/data/model/bootstrapped_fit/sym_ising_no_structure.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/selection_probability.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/selection_proportion.py \
+			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_no_structure.npz \
+			$(THESIS_DIR)/results/data/model/bootstrapped_fit/sym_ising_no_structure.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/transition_reliability.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/transition_reliability.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/mean_relative_entropy.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/mean_relative_entropy.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/kl_difference_dist.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/difference_relative_entropy.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/kl_difference_examples.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/relative_entropy_difference_examples.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/interaction_heatmap.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/interaction_heatmaps.py \
+			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
+			$(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/ideology_interaction_heatmap.pdf: \
+			$(THESIS_DIR)/scripts/sec-calibration/ideology_interaction_heatmaps.py \
+			$(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/model_fit/high_relative_entropy.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/relative_entropy.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
 # +++ Section: Asymmetry results
 $(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf: \
 			$(THESIS_DIR)/scripts/sec-asymmetry-results/effect_of_asymmetry_politics.py \
@@ -166,6 +270,66 @@ $(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf
 			$(PKG_PATH)/visualisation.py \
 			| $(THESIS_DIR)/results/figures/asymmetry_results
 	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effects_%.pdf: \
+			$(PKG_PATH)/cli/visualisation/compare_outbound_int_effect.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	uv run cadata plot compare-outbound-effects \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--point-of-intervention-idx 4 \
+		--point-of-intervention-idx 2 \
+		--point-of-intervention-idx 5 \
+		--delta 2.5 \
+		-z 1.96 \
+		--measure-time $*
+
+$(THESIS_DIR)/results/figures/asymmetry_results/inbound_effects.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/inbound_effects.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+	
+
+$(THESIS_DIR)/results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf: \
+			$(THESIS_DIR)/scripts/sec-asymmetry-results/outbound_effect_of_asymmetry.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/asymmetry_results
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf: \
+			$(PKG_PATH)/cli/visualisation/intervention_strength_relationship.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_00.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/model/intervention_effects
+	uv run cadata plot compare-intervention-strengths \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--point-of-intervention-idx 0 \
+		--point-of-intervention-idx 2 \
+		--point-of-intervention-idx 5 \
+		--delta 0.5 \
+		--delta 2.5 \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME)
 
 $(THESIS_DIR)/results/figures/asymmetry_results: | $(THESIS_DIR)/results/figures
 	@mkdir -p $@
@@ -198,15 +362,15 @@ $(THESIS_DIR)/results/figures/model/ideology_fit/network.pdf: \
 		--model-type ising \
 		--seed 20260623
 
-$(THESIS_DIR)/results/figures/model/network/%.pdf: \
-			$(THESIS_DIR)/results/data/model/fit_%.npz \
+$(THESIS_DIR)/results/figures/model/network.pdf: \
+			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
+			$(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
 			${PKG_PATH}/cli/visualisation/network.py \
 			| $(THESIS_DIR)/results/figures/model/network
-	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/plot_interaction_heatmap_parse_params.py $* model) && \
 	uv run cadata plot network \
-		--model $< \
+		--sym-model $(THESIS_DIR)/results/data/model/fit_full_sym_ising_no_structure.npz \
+		--asym-model $(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
 		--output $@ \
-		--model-type $$model \
 		--seed 20260623
 
 $(THESIS_DIR)/results/figures/model/network: | $(THESIS_DIR)/results/figures/model
@@ -254,20 +418,42 @@ $(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.%_$(MEASURE
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
+$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(MEASURE_TIME): \
+			$(PKG_PATH)/cli/visualisation/intervention_mean_collective_ranking_comb.py \
+			$(PKG_PATH)/visualisation.py \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+			| $(THESIS_DIR)/results/figures/model/intervention_collective_ranking
+	uv run cadata plot intervention-mean-collective-rank-comb \
+		--output-dir $(@D) \
+		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
+		--intervention weak \
+		--intervention strong \
+		--asym-results $(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+		--asym-results $(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
+		--sym-results $(THESIS_DIR)/results/data/model/all_interventions/sym_ising_05.npz \
+		--sym-results $(THESIS_DIR)/results/data/model/all_interventions/sym_ising_25.npz \
+		-z 1.96 \
+		--measure-time $(MEASURE_TIME) && \
+	touch $@
+
 $(THESIS_DIR)/results/figures/model/intervention_individual_ranking: | $(THESIS_DIR)/results/figures/model
 	mkdir -p $@
 
 
-$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.%_$(MEASURE_TIME): \
+$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(MEASURE_TIME): \
 			$(PKG_PATH)/cli/visualisation/intervention_mean_individual_ranking.py \
 			$(PKG_PATH)/visualisation.py \
-			$(THESIS_DIR)/results/data/model/all_interventions/ising_%.npz \
-			$(THESIS_DIR)/results/data/model/all_interventions/sym_ising_%.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_05.npz \
+			$(THESIS_DIR)/results/data/model/all_interventions/ising_25.npz \
 			| $(THESIS_DIR)/results/figures/model/intervention_individual_ranking
 	uv run cadata plot intervention-mean-individual-rank \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-		--delta-str $* \
+		--intervention weak \
+		--intervention strong \
 		-z 1.0 \
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
@@ -311,20 +497,24 @@ $(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.%_$(MEASUR
 
 $(THESIS_DIR)/results/figures/model/directional_differentials/rank_%.pdf: \
 			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
 			${PKG_PATH}/cli/visualisation/directional_differential.py \
 			| $(THESIS_DIR)/results/figures/model/directional_differentials
 	uv run cadata plot directional-differentials \
 		--bootstrap-models $< \
+		--full-model $(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
 		--output $@ \
 		-z 1.645 \
 		--kind rank
 
 $(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_%.pdf: \
 			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_%.npz \
+			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
 			${PKG_PATH}/cli/visualisation/directional_differential.py \
 			| $(THESIS_DIR)/results/figures/model/directional_differentials
 	uv run cadata plot directional-differentials \
 		--bootstrap-models $< \
+		--full-model $(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
 		--output $@ \
 		--kind pairwise
 
@@ -356,7 +546,7 @@ $(THESIS_DIR)/results/figures/model_fit/regularisation_ebic.pdf: \
 		--output $@
 
 
-$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf: \
+$(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy_treedepth_%.pdf: \
 			$(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
 			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
 			$(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
@@ -366,12 +556,10 @@ $(THESIS_DIR)/results/figures/model/heterogeneous_effects/climate_policy.pdf: \
 	uv run cadata plot identify-effective-personas \
 		--simulation-results $(THESIS_DIR)/results/data/model/all_interventions/ising_00.npz \
 		--activation-probability-null $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_00_5.npz \
-		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_05_5.npz \
 		--activation-probability-intervention $(THESIS_DIR)/results/data/model/all_interventions_activation_probability/ising_25_5.npz \
-		--intervention weak \
 		--intervention strong \
 		--target-spin-idx 7 \
-		--max-tree-depth 4 \
+		--max-tree-depth $* \
 		--output $@
 
 $(THESIS_DIR)/results/figures/model/heterogeneous_effects: | $(THESIS_DIR)/results/figures/model
@@ -380,6 +568,14 @@ $(THESIS_DIR)/results/figures/model/heterogeneous_effects: | $(THESIS_DIR)/resul
 			
 
 # +++ Section: Dataset
+$(THESIS_DIR)/results/figures/dataset/transition_probability.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/transition_probability.py \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
 $(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf: \
 			$(THESIS_DIR)/scripts/sec-dataset/likert_binarisation_probabilities.py \
 			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
@@ -493,6 +689,7 @@ $(THESIS_DIR)/results/data/methods: | $(THESIS_DIR)/results/data
 $(THESIS_DIR)/results/data/model/bootstrapped_fit/%.npz: \
 			${PKG_PATH}/cli/analysis/fit_bootstrapped_models.py \
 			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			| $(THESIS_DIR)/results/data/model/bootstrapped_fit
 	@model=$$(uv run $(THESIS_DIR)/scripts/sec-model/fit_bootstrapped_parse_params.py $* model) && \
@@ -579,6 +776,7 @@ $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz: \
 			| $(THESIS_DIR)/results/data/model
 	@uv run cadata analysis fit-ideology-model \
 		--output $@ \
+		--metadata-output $(@D)/ideology_fit_conservative_metadata.json \
 		--model-type ising \
 		--ideology conservative \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
@@ -594,6 +792,7 @@ $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz: \
 			| $(THESIS_DIR)/results/data/model
 	@uv run cadata analysis fit-ideology-model \
 		--output $@ \
+		--metadata-output $(@D)/ideology_fit_liberal_metadata.json \
 		--model-type ising \
 		--ideology liberal \
 		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \

@@ -54,6 +54,7 @@ def plot_ranked_differentials(
     mean_diff: npt.NDArray[np.float64],
     ci_lower: npt.NDArray[np.float64],
     ci_upper: npt.NDArray[np.float64],
+    full_interactions: npt.NDArray[np.float64],
     labels: list[str],
 ) -> Figure:
     fig, ax = plt.subplots(figsize=(5, 4), constrained_layout=True)
@@ -74,6 +75,13 @@ def plot_ranked_differentials(
     #     np.logical_xor(significant_edge, significant_edge.T) & ~equal_effect
     # )
 
+    significant_diff = (ci_lower > 1e-2) | (ci_upper < -1e-2)
+    # is_symmetric = ~significant_diff
+    is_asymmetric = significant_diff & (
+        abs(full_interactions * full_interactions.T) > 0
+    )
+    is_nonreciprocal = significant_diff & ~is_asymmetric
+
     # Scatter means
     positive_mean_idxes = np.where(mean_diff > 0)
     mean_diffs_flat = mean_diff[positive_mean_idxes]
@@ -90,16 +98,26 @@ def plot_ranked_differentials(
         label="Median difference",
     )
 
+    print(mean_diffs_flat[-3])
+    print(ci_lower_flat[-3])
+    print(ci_upper_flat[-3])
+
     # Show ci interval as shaded region
     # null = null[positive_mean_idxes][sort_idxes]
     # symmetric = symmetric[positive_mean_idxes][sort_idxes]
     # asymmetric = asymmetric[positive_mean_idxes][sort_idxes]
     # unidirectional = unidirectional[positive_mean_idxes][sort_idxes]
-    bar_color = np.array(["tab:red"] * (n * (n - 1) // 2), dtype=object)
+    is_asymmetric_flat = is_asymmetric[positive_mean_idxes][sort_idxes]
+    is_nonreciprocal_flat = is_nonreciprocal[positive_mean_idxes][sort_idxes]
+    bar_color = np.array(["tab:grey"] * (n * (n - 1) // 2), dtype=object)
+    bar_color[is_asymmetric_flat] = "tab:blue"
+    bar_color[is_nonreciprocal_flat] = "tab:orange"
+    # print(bar_color)
     # bar_color[null] = "tab:grey"
     # bar_color[symmetric] = "tab:blue"
     # bar_color[asymmetric] = "tab:red"
     # bar_color[unidirectional] = "tab:green"
+
     marker, _, bar = ax.errorbar(
         mean_diffs_flat,
         np.arange(n * (n - 1) // 2),
@@ -113,8 +131,14 @@ def plot_ranked_differentials(
     )
     plt.setp(bar[0], capstyle="round")
     marker.set_fillstyle("none")
-    bar[0].set_alpha(0.5)
     bar[0].set_linewidth(5)
+    # for i, _bar in enumerate(bar):
+    #     if mean_diffs_flat[i] - ci_lower_flat[i] <= 0:
+    #         _bar.set_alpha(0.5)
+    #     else:
+    #         _bar.set_alpha(1.0)
+
+    bar[0].set_alpha(0.5)
 
     # Draw 0.0 as dashed
     ax.axvline(x=0, linestyle="dashed", linewidth=0.75, color="gray", zorder=1)
@@ -149,6 +173,7 @@ def plot_ranked_differentials(
     for i in range(len(ylabels)):
         ax.axhline(y=i, linewidth=0.1, color="k", linestyle="solid")
 
+    ax.set_xlabel(r"Directional differential ($\Delta_{i,j}$)")
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
 
@@ -274,6 +299,7 @@ def plot_pairwise_differentials(
 
 class DirectionalDifferentialPlotCommand(BaseCommand):
     bootstrap_models: Path
+    full_model: Path
     output: Path | None = None
     kind: PlotKind
     z: float = 1.96
@@ -289,6 +315,12 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
         )
 
         labels = dataset.schema.get_short_names(kind="measurement")
+        full_model_interactions = np.load(
+            Path(
+                "reports/thesis/results/data/model/fit_full_asym_ising_no_structure.npz"
+            )
+        )["params"][8:].reshape((8, 8))
+        full_model_interactions[abs(full_model_interactions) < 1e-2] = 0
 
         bootstrap_results = np.load(self.bootstrap_models)
 
@@ -312,7 +344,11 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
                 #     mean_diff, mean_diff - ci_diff, mean_diff + ci_diff, labels
                 # )
                 fig = plot_ranked_differentials(
-                    np.median(diffs, axis=0), ci_diff_lower, ci_diff_upper, labels
+                    np.median(diffs, axis=0),
+                    ci_diff_lower,
+                    ci_diff_upper,
+                    full_model_interactions,
+                    labels,
                 )
             case PlotKind.PAIRWISE:
                 fig = plot_pairwise_differentials(mean_diff, ci_diff, labels)
