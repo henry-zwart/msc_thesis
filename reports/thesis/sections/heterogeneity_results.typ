@@ -84,7 +84,20 @@ _personas_.
   image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
-    long: [*TODO*],
+    long: [
+      Characterisation of initial states ('personas'; middle panel) which yield
+      effective interventions when targeting `CC Action` using different
+      points-of-intervention (rows). Intervention effect is measured as the difference
+      in `CC Action` activation probability between intervention ($delta_h = 2.5$) and
+      null (no-intervention) models at $t=5$, for the asymmetric belief model calibrated
+      to the climate beliefs dataset. Differences in the population upper quartile are
+      'high-effect'. (*Left*) Distribution of intervention effect
+      across survey participants. (*Centre*) Typical high-effect personas estimated
+      using a depth-3 regression decision tree. Rows are distinct personas. Cells
+      correspond to intervals of initial state dimensions ($L = [-1, 0]$, $H = [0, +1]$).
+      (*Right*) Prevalence of each persona in the high-effect and low-effect
+      subpopulations.
+    ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
 
@@ -443,8 +456,13 @@ used for regularisation strength and smoothing are listed in
     "../results/figures/model_fit/ideology_interaction_heatmap.pdf",
   ),
   caption: caption(
-    short: [TODO],
-    long: [*TODO*],
+    short: [Conservative and liberal belief system interaction matrices],
+    long: [
+      Interaction effect matrices ($bold(J)$) for asymmetric belief
+      systems calibrated to the conservative and liberal subsets of the climate beliefs
+      dataset (@sec:dataset) using the parameter estimation method in
+      @subsec:methods-parameter-estimation.
+    ],
   ),
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
 
