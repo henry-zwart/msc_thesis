@@ -1,6 +1,12 @@
-// TODO: Address the specific variables we look at in the outbound/inbound experiments.
-// Are the variables interesting independently of the asymmetry results/theoretically
-// motivated?
+*TODO:*
+- Address the specific variables we look at in the outbound/inbound experiments.
+  Are the variables interesting independently of the asymmetry results/theoretically
+  motivated?
+- Mention our hypotheses, where they exist.
+  - RQ3: That interventions can only be effective when the target and the
+    point-of-intervention are both low.
+
+
 == Plan
 
 - Motivate the problem
@@ -19,6 +25,62 @@ But political identification is often not consistent with policy attitudes
 @iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
 identity-driven (symbolic) than issue-driven (operational)
 @masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
+
+Suggestions of asymmetric/causal directionality in belief systems:
+- So far reviewed in Zotero: Belief Networks, Papers from Sara
+- @brandtWhatCentralPolitical2019[p.~2,9,10]
+- @brandtMeasuringBeliefSystem2022[p.~3,22]
+- @keskinturkOrganizationPoliticalBelief2022[p.~10]
+- @vannoordNatureStructureEuropean2025[p.~4]
+- @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
+  - Constraint, causality, exogenous factors all necessary for any theory of BS dynamics.
+  - Though still interprets edges as undirected/bi-directional
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "In some cases ... assume that causal influence
+  for some elements (e.g., partisan identification) is primarily in one direction".
+- @converseNatureBeliefSystems2006[p.~208] (mentioned in @brandtEvaluatingBeliefSystem2021[p.~2])
+- @coppockBeliefSystemsExhibit2022: Referenced in @brandtEvaluatingBeliefSystem2021
+
+Self-interaction effects:
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "we made the simplifying assumption that a node
+  does not affect itself".
+
+
+Variation in belief systems between individuals:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
+
+Stability of belief dynamics:
+- @osborneDoesOpennessExperience2020
+- @kileyMeasuringStabilityChange2020
+
+== Asymmetry example
+
+Suppose thin arrows have weight 1, thick arrows have weight 2, and a belief/attitude
+adopts the dominant state in its neighbourhood, weighted by the incoming edge weights.
+If your support for non-climate-related policies and your social circle are
+Republican-aligned, you adopt that political ideology. Suppose that you believe in
+human-caused climate change, then that reinforces your support for climate action;
+however, the net support is $-1$, so you flip, taking the support for Republican
+politics to $+4$. If you then become concerned about extreme weather, and believe
+that the impacts of climate change are high, your support for climate action flips
+to positive with a net support of $+1$. However, this is not sufficient to shift
+your Republican alignment, which stays at $-1$. In the extreme case, where there is
+no feedback to Politics, your change in attitude has no bearing on your political
+alignment.
+
+Asymmetry is then best thought of as the weight imposed on one belief/attitude by
+another being different from the opposite direction. To overcome Republican alignment,
+we need at least two pro-Democrat attitudes. To overcome negative `CC Action`,
+we require at least three other pro-climate attitudes.
+
+
+
+#figure(
+  image("../diagrams/draft/asymmetry_example.png"),
+  placement: none,
+)
 
 == Research questions
 

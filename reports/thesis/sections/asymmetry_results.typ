@@ -216,6 +216,17 @@ orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
 
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
+
+*TODO:*
+- Discuss how the observed effects of intervening on politics are _in spite of_
+  the high inertia on this variable. i.e., high inertia lowers the pre-intervention
+  $h_"eff"$, making it harder to intervene (higher barrier to surpass).
+- Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
+  lower for the asymmetric model. Since all outbound interactions are similar (or
+  better) than `Politics`, with the exception of `CC Action`, indicates that
+  the added difficulty of overcoming the barrier on politics is outweighed by
+  the greater influence on the target. Also perhaps due to the fact that the
+  inertia works in favour of the intervention once politics flips.
 // - $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
 //   intervention differs between symmetric and asymmetric models calibrated to the
 //   climate beliefs dataset. _Re-state the corresponding research question_.
@@ -276,7 +287,7 @@ the *target*.
       row-gutter: 0.8em,
       align: (center, center),
       [*Outbound*], [*Inbound*],
-      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 90%)),
+      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 85%)),
     ),
     outlined: false,
     placement: none,
@@ -315,33 +326,33 @@ effect of asymmetry is not inherently concerned with intervention, but is a gene
 measure for the difference between asymmetric and symmetry model dynamics.
 
 Both quantities compute a difference in effects between two distinct models: the
-intervention and null models in the case of the effect of intervention; the asymmetric
-and symmetric models in the case of the effect of asymmetry. To ensure comparability of
-results, difference are always computed between models with identical random number
+intervention and null models for the effect of intervention; the asymmetric
+and symmetric models for the effect of asymmetry. To ensure outcome
+comparability, differences are computed between models with identical random number
 generation contexts.
 
 #definition[Effect of Intervention][
-  Let $f_cal(M) (bold(s)_0; t)$ be the stochastic function which returns the state
-  $bold(s)^t$ resulting from simulation of the model $cal(M)$ with initial state
-  $bold(s)_0$.
+  Let $cal(M)$ be a non-equilibrium belief system model, and denote the result of
+  simulating the model for $t in NN$ timesteps with initial state $bold(s)_0$ as
+  $cal(M)^t (bold(s)_0)$.
 
-  For an intervention model $cal(M)_delta$ with arbitrary point-of-intervention, we
-  define the *effect of intervention* for $cal(M)_delta$ as the change in outcome with
-  respect to the null (no-intervention) model, $cal(M)_0$:
+  For an intervention model $cal(M)_delta$ with an arbitrary point-of-intervention, we
+  define the *effect of intervention* for $cal(M)_delta$ as the change in outcome at
+  time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
 
   $
-    f_(cal(M)_delta) (bold(s)_0; t) - f_(cal(M)_0) (bold(s)_0; t)
+    f_"int" (cal(M)_delta) = cal(M)_delta^t (bold(s)_0) - cal(M)_0^t (bold(s)_0)
   $
 ] <def:asymmetry-results-effect-of-intervention>
 
 #definition[Effect of Asymmetry][
-  Let $f_cal(M) (bold(s)_0; t)$ be defined as in
-  @def:asymmetry-results-effect-of-intervention. We define the *effect of asymmetry* for
-  an asymmetric model, $cal(M)^"asym"$, as the observed change in outcome with
-  respect to the corresponding symmetric model, $cal(M)^"sym"$:
-
+  Let $cal(M)_"asym"$ be a calibrated asymmetric non-equilibrium belief system model
+  with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
+  symmetric model calibrated to the same dataset.
+  We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
+  in the effect of intervention with respect to the symmetric model:
   $
-    f_(cal(M)^"asym") (bold(s)_0; t) - f_(cal(M)^"sym") (bold(s)_0; t)
+    f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
   $
 ] <def:asymmetry-results-effect-of-asymmetry>
 
@@ -394,7 +405,7 @@ direct impact on the behaviour of the point-of-intervention.
 ) <fig:asymmetry-results-compare-strength>
 
 We observe a strong linear relationship between intervention strength effects
-for each variable, indicating that---at the population-mean level---the
+for each point-of-intervention, indicating that---at the population-mean level---the
 impact of intervention strength on effect is mostly one of scale, that applies similarly
 to all target spins.
 For the purposes of the following experiments it then suffices to consider
@@ -451,7 +462,7 @@ evidence of this through comparison with an analogous
 figure (see @fig:apdx-extra-results-outbound-effects-10 in Appendix) using a measurement
 time of $t=10$ (approximate five years in the models' timescales), which shows larger
 increases in the effect of intervention for variables with stronger incoming
-interactions.
+interactions from non-intervention spins.
 
 While the confidence intervals for the symmetric and asymmetric models overlap
 significantly for most targets in @fig:asymmetry-results-outbound-effect (with some

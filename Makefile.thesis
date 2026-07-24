@@ -100,6 +100,7 @@ THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/sections/introduction.typ \
 		$(THESIS_DIR)/sections/asymmetric_belief_system.typ \
 		$(THESIS_DIR)/sections/methods.typ \
+		$(THESIS_DIR)/sections/calibration.typ \
 		$(THESIS_DIR)/sections/asymmetry_results.typ \
 		$(THESIS_DIR)/sections/heterogeneity_results.typ \
 		$(THESIS_DIR)/sections/discussion.typ \

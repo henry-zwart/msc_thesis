@@ -165,11 +165,11 @@ more desirable states than would be observed given no intervention.
 
 With this in mind, we now consider several specific features of interest in the
 identified personas. Firstly, we observe that all personas require a low initial
-state for `CC Worry`. This may result from this variable's relative low inertia
+state for `CC Worry`. This may result from this variable's low inertia
 and high connectivity --- in particular, its large outbound interaction effect
-toward the target variable (@fig:asymmetry-results-existence-interaction-matrix).
-These factors result in `CC Worry` being relatively influential,
-and influentia#emph[ble], therefore being an effective indirect pathway for
+toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
+These factors result in `CC Worry` being relatively influential
+and influentia#emph[ble], and therefore an effective indirect pathway for
 various interventions targeting `CC Action`. The significance of the requirement
 that `CC Worry` be _low_ is evident when comparing the implications for the null
 and intervention models. Due to `CC Worry`'s considerable outbound interactions,
@@ -178,14 +178,13 @@ for propagation. In the null model, however, these interactions work against the
 desired result---if `CC Worry` remains low, it exerts this influence on all other
 spins.
 
-Second, we observe that for each point-of-intervention (with the exception of `CC Real`),
+Second, we observe that for each point-of-intervention (with the exception of `CC Real`
+on account of high correlation with `CC Human`@footnote:incomplete-descriptions),
 a necessary condition for high effect is that the initial state of point of intervention
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of
 interventions with respect to pre-intervention state
-(@subsec:asymmetric-belief-system-modelling-interventions). `CC Real` does not exhibit
-this requirement, on account of high correlation with
-`CC Human`@footnote:incomplete-descriptions.
+(see @subsec:asymmetric-belief-system-modelling-interventions).
 
 
 // With the exception of `CC Real`, the personas for each point-of-intervention require that
@@ -415,8 +414,10 @@ so long as they do not already have a positive attitude toward climate action.
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
-*To-do:* Include directional differential figure per-ideology (as in
-@fig:asymmetry-results-existence-ranked-differentials).
+*To-do:*
+- Include directional differential figure per-ideology (as in
+  @fig:asymmetry-results-existence-ranked-differentials).
+- Discuss differences in baseline activations.
 
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs and attitudes are inherently
@@ -473,7 +474,10 @@ on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notab
 model calibrated to the liberal subpopulation has higher sparsity
 (proportion of missing cross-interaction edges) and mean interaction effect over
 cross-interactions than either the conservative model or the complete model
-(@tab:heterogeneity-results-belief-systems-properties).
+(@tab:heterogeneity-results-belief-systems-properties). The ideology-specific
+models display 48% overlap in nonzero cross-interactions. Among the interactions present
+in the liberal model, 82% also occur in the conservative model, contrasting the 54%
+of conservative interactions which are also in the liberal model.
 
 #figure(
   table(

@@ -3,6 +3,9 @@
 #let full-dataset-name = [*placeholder dataset*]
 #let dataset-name = [climate beliefs dataset]
 
+*TODO:*
+- Create table describing climate beliefs dataset variables
+
 // == Plan
 //
 // + Introduce and motivate:
