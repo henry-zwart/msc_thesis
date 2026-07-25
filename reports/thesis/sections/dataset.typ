@@ -5,6 +5,7 @@
 
 *TODO:*
 - Create table describing climate beliefs dataset variables
+- Discuss how we create the index variables
 
 // == Plan
 //
