@@ -1,5 +1,7 @@
 == Plan
 
+#let observation(x) = text(fill: red, x)
+
 - Draw out the key findings from the above two results sections
 - Make clear the implications for our theory of belief system dynamics
 - Sensitivity of parameter estimation to unmeasured factors or incorrect structural
@@ -30,6 +32,17 @@ Key points to hit:
 
 6. Conclude with summary of the main points and reiteration of our contributions
 
+*RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_ in models
+of climate change belief systems inferred from observational data?
+
+*RQ2:* How do asymmetric and symmetric beliefs systems inferred from the climate
+attitudes dataset differ with regards to intervention strategy and effectiveness?
+
+*RQ3:* How do intervention outcome and effectiveness vary between individuals with
+different initial conditions?
+
+*RQ4:* How do (symmetric or asymmetric) belief systems relating to climate change
+vary between conservative and liberal individuals?
 
 Plan:
 + *A:* What have we learned?
@@ -70,19 +83,20 @@ Plan:
       directed interaction effects is nonzero, such that there is a positive influence
       in one direction, with no feedback in the other.
     - *B:* However, not all pairs display this asymmetry. In some cases we find
-      near-symmetric relationships (small confidence intervals close to zero) or
-      inconclusive results due to sampling error (large confidence intervals which
-      contain zero).
+      near-symmetric relationships #observation[(small confidence intervals close to zero)] or
+      inconclusive results due to sampling error #observation[(large confidence intervals which
+        contain zero)].
     - *T:* The symmetric assumption may often be valid, or at least a reasonable
       approximation (e.g., when asymmetry exists, but the difference in effects is
       small), yet asymmetric relations are likely to exist, and will not be captured
       by such an approach.
     - *A:* Variables with low total influence are less likely to be significantly
       asymmetric (due to large error bars)
-    - *A:* The two observed asymmetric variables both have high total influence
-      (connectivity, interaction weights)
-    - *B:* `CC Action` is similar to `Politics`, and has no asymmetric influence.
-    - *T:* Asymmetry is not simply explained in terms of total influence.
+    - #observation[*A:* The two observed asymmetric variables both have high total influence
+        (connectivity, interaction weights)]
+    - #observation[*B:* `CC Action` is similar to `Politics`, and has no asymmetric influence.
+        - *T:* Asymmetry is not simply explained in terms of total influence.
+      ]
   - Interpretation:
     - We interpret relations temporally, as one variable's influence
       on the future state of another (@sec:asymmetric-belief-systems). In an asymmetric
@@ -115,12 +129,12 @@ Plan:
     - *B:* Whereas in the symmetric model the observed interaction effects
       were typically smaller, in order to capture both the large outbound and small
       inbound effects.
-    - *A:* Comparison with `CC Impact`, which has similar outbound interaction effects
-      in the asymmetric model, but has mostly symmetric relations. In the symmetric
-      model `CC Impact` stays influential, but `Politics` is reduced. e.g., they have
-      comparable outbound interactions with `CC Real`, `CC Human` in the asymmetric
-      model, but in the symmetric model, the relations for `Politics` are approximately
-      half the size of the corresponding relations for `CC Impact`.
+    - #observation[*A:* Comparison with `CC Impact`, which has similar outbound interaction effects
+        in the asymmetric model, but has mostly symmetric relations. In the symmetric
+        model `CC Impact` stays influential, but `Politics` is reduced. e.g., they have
+        comparable outbound interactions with `CC Real`, `CC Human` in the asymmetric
+        model, but in the symmetric model, the relations for `Politics` are approximately
+        half the size of the corresponding relations for `CC Impact`.]
     - *T:* When true relations are asymmetric, assuming symmetry during calibration can
       lead to biased predictions regarding intervention effects, caused by
       underestimation in interaction parameter magnitude.
@@ -152,7 +166,8 @@ Plan:
   - *B:* Unexpectedly, almost all highly effective interventions were also predicated
     on a low initial level of climate-related concern.
   - *T:* We attribute this to climate-related concern's high degree of influence in the
-    model, in combination with a high potential to _be influenced_.
+    model, in combination with a high potential to _be influenced_, compared with other
+    variables.
   - *T:* Intervention effectiveness is not only dependent on the initial states of the
     target and point-of-intervention, but also by other auxiliary beliefs and attitudes
     through which interventions can propagate indirectly.
