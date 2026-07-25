@@ -474,8 +474,7 @@ on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notab
 model calibrated to the liberal subpopulation has higher sparsity
 (proportion of missing cross-interaction edges) and mean interaction effect over
 cross-interactions than either the conservative model or the complete model
-(@tab:heterogeneity-results-belief-systems-properties). The ideology-specific
-models display 48% overlap in nonzero cross-interactions. Among the interactions present
+(@tab:heterogeneity-results-belief-systems-properties). Among the interactions present
 in the liberal model, 82% also occur in the conservative model, contrasting the 54%
 of conservative interactions which are also in the liberal model.
 

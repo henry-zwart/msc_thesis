@@ -1,3 +1,9 @@
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 *TODO:*
 - Address the specific variables we look at in the outbound/inbound experiments.
   Are the variables interesting independently of the asymmetry results/theoretically
@@ -13,6 +19,42 @@
 - Contributions
 - Research questions (thinking these are perhaps better left to later, in favour of
   contributions here)
+
+#emph-block[
+  The probable existence of directed causal relations between beliefs and attitudes, as
+  well as their potential implications for endogenous dynamics, is widely acknowledged
+  in recent studies on belief system modelling. In spite of this, empirical evidence for
+  the existence and impacts of such directed relations remains scarce, likely due,
+  in-part, to a historical focus on bidirectional (i.e., symmetric) models in theories of
+  belief dynamics (*CITE*), as well as the additional data requirements associated with
+  inferring directional relations @nguyenInverseStatisticalProblems2017[p.~35] (*CITE*).
+
+  These unknowns, _existence_ and _impact_, are the primary subjects of this
+  thesis, and of our first two research questions, introduced back in
+  @sec:introduction:
+
+  *RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
+
+  *RQ2:* How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
+
+  The _climate beliefs dataset_, here, refers to the reduced longitudinal dataset
+  whose construction we describe in @subsec:dataset-dataset-construction. These research
+  questions are concerned with population-level belief systems and intervention effects.
+  However, while some aspects of belief system structure are likely shared within a
+  population, the notion of a belief system is inherently individual. We also expect
+  differences in individuals' responses to interventions. Our final research questions
+  address these two topics, specifically for asymmetric belief systems:
+
+  *RQ3:* How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
+
+  *RQ4:* How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
 
 == Motivation
 

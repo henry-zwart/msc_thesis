@@ -188,16 +188,15 @@ $#raw("CC Others Worry") --> #raw("CC Real")$, and this is reflected in observed
 differences in selection probability.
 
 Due to the large confidence intervals on most directional differentials we are less
-likely to observe _significant_ asymmetric relations between variables with small
+likely to observe significant asymmetric relations between variables with small
 interaction effects (since the possible difference in effects is smaller by definition).
 Indeed, all observed significant cases of asymmetry have at least one interaction effect
 with magnitude exceeding $0.1$. This raises the question of whether asymmetry is instead
-simply explained by total interaction influence, i.e., whether stronger interaction
-effects interaction effects make asymmetry more likely. However, this hypothesis is
-disputed by `CC Action`, which has several strong interaction effects (its outbound
-effects are typically larger than those of `Politics`), yet does not exhibit significant
-asymmetric influence over any other variables. On the contrary, it is asymmetrically
-_influenced_ by `Politics`.
+simply explained by a high total interaction influence in combination with sampling
+error. However, this is disputed by `CC Action`, which has several strong interaction
+effects (its outbound effects are typically larger than those of `Politics`), yet does
+not exhibit significant asymmetric influence over any other variables. On the contrary,
+it is asymmetrically _influenced_ by `Politics`.
 
 
 // Note that
