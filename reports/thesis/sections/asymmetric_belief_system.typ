@@ -1,5 +1,8 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+// TODO: Discussion on interpreting asymmetric relations in terms of the
+// mathematical/conceptual models
+
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:

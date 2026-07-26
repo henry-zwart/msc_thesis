@@ -29,31 +29,232 @@ Key points to hit:
 // study, and the implications of our findings for future work on belief system dynamics
 // and belief-level interventions.
 
-In this chapter we interpret the results of the previous two chapters with respect to
-the research questions posed back in @sec:introduction and restated below, as well as
-the broader context of belief system dynamics. We then describe limitations of the
-present study, and conclude the chapter with a discussion on the implications of our
-findings for future work on belief system dynamics and belief-level interventions.
+In this chapter we review the research questions posed back in @sec:introduction
+(restated below) in light of the results presented in the previous two chapters, and
+discuss their place in the broader context of belief system dynamics and
+related streams of work. We then conclude the chapter with a discuss on the limitations
+of our findings, and implications for future work on belief system dynamics and
+belief-level interventions.
 
 //At the start of this thesis, we posed four research questions:
 
-*RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_, in models
-of climate change belief systems inferred from the climate beliefs dataset?
+#block(breakable: true, inset: 1em)[
+  *RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
 
-*RQ2:* How do asymmetric and symmetric beliefs systems differ with regards to
-intervention strategy and effectiveness, in models inferred from the climate
-beliefs dataset?
+  *RQ2:* How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
 
-*RQ3:* How do intervention outcome and effectiveness vary between individuals with
-different initial conditions in asymmetric belief systems inferred from the
-climate beliefs dataset?
+  *RQ3:* How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
 
-*RQ4:* How do asymmetric belief systems inferred from the climate beliefs dataset
-vary between conservative and liberal individuals?
+  *RQ4:* How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
 
-// NOTE:
-// The previous two chapters describe various experiments performed and results obtained in
-// pursuit of these research questions. Let's take a moment to review the key findings.
+
+// TODO: Can tie these together more. They don't need to be so separate.
+// - Maybe have RQ1---3, and then RQ4.
+
+== Asymmetry, and how it affects intervention dynamics
+
+On the question of existence, @subsec:asymmetry-results-existence found asymmetric
+relations between several pairs of beliefs and attitudes, while also finding that
+not _all_ pairs necessarily exhibit asymmetry. Two attitudes---political
+ideology/alignment and climate-related concerns---displayed significant preponderance
+of influence over several other beliefs and attitudes.
+The consequences of this asymmetric influence were subsequently reflected in
+@subsec:asymmetry-results-impact, where interventions on political ideology/alignment
+in the asymmetric model were found to be almost universally more effective than in the
+symmetric model. Moreover, for interventions targeting attitudes toward climate action,
+political ideology/alignment ranked higher with regards to collective effect in the
+asymmetric model than the symmetric model, displacing a mostly-symmetric belief with
+similar outbound interactions.
+
+Interestingly, while interventions on climate-related concerns typically
+outperformed those on political ideology/alignment in terms of absolute effect of
+intervention, the differences between the asymmetric and symmetric models for this
+variable were comparatively less pronounced.
+
+Before continuing on this point, let's take a moment to clarify the interpretation of
+asymmetric relations. Recall that in the non-equilibrium belief system model, relations
+reflect temporal influence---how much one belief or attitude constrains the future state
+of another (@sec:asymmetric-belief-systems). An asymmetric relation reflects a
+constraint differential, where one belief or attitude has greater influence on the other
+than vice versa. More generally, the asymmetric model differentiates between two forces:
+influentiality, and influentiability. Influentiality (the strength of outbound
+interactions) determines how the extent to which one belief or attitude influences
+others, while influentiability (the strength of inbound interactions) determines the
+extent to which its own behaviour is influenced by others.
+
+#let full-model-disclaimer = footnote[
+  Note that this discussion pertains to the model calibrated on the complete climate
+  beliefs dataset. In particular, this model omits several interactions (due to
+  regularisation) which are inconsistently excluded from the bootstrap models used to
+  assess the significance of asymmetric relations.
+]
+
+Returning to the above point, this finding likely relates to differences in
+influentiality and influentiability. Climate-related concern is more influential than
+political ideology/alignment, on account of its increased outbound interactions and
+interaction strength. The key difference, however, lies in the attitudes'
+influentiability; while climate-related concern has inbound and outbound interactions
+with all other beliefs and attitudes, political ideology/alignment has considerably
+fewer _inbound_ than _outbound_ edges#full-model-disclaimer. That is, several beliefs
+and attitudes influenced by this variable have no influence on it themselves.
+Since, by definition, the symmetric model must either include or exclude both directional
+interactions between a pair of beliefs or attitudes, cases where the asymmetric model
+specifies an interaction in only one direction necessarily lead to differences in
+observed model behaviour.
+
+This draws attention to a broader issue regarding relational symmetry assumptions. One
+of the symmetric model's key strengths is its small(er) parameter count. With fewer
+degrees of freedom than the asymmetric model, it can achieve more accurate parameter
+estimates when calibrated to the same dataset (i.e., smaller confidence intervals in
+@fig:calibration-edge-accuracy). However, this comes at the cost of model
+misspecification when a subset of the true relations are asymmetric. In the symmetric
+model, inferred strengths generally lie between the corresponding directional
+interaction strengths in the asymmetric model. For beliefs or attitudes with asymmetric
+relations this can result in substantially different influentiality and influentiability
+between models, as seen in the comparison of political ideology/alignment and beliefs
+regarding climate impact in @subsec:asymmetry-results-impact.
+
+How does this relate to findings from other studies? I.e., compare our conclusions
+regarding the influence/influentiabiltiy of these variables:
+- Showing that politics is influential
+- Showing that politics is hard to influence
+- Determinants of climate concern
+- Effects of climate concern on other climate beliefs, attitudes, attitude on action.
+
+== Heterogeneity in intervention dynamics
+
+The results of @sec:heterogeneity-results-intervention-effects found that
+intervention effectiveness depends predictably on individuals'
+pre-intervention belief states. Most high-effect interventions targeting attitudes
+toward climate action required low initial values for both the point-of-intervention and
+target. Surprisingly, pre-intervention climate-related concern was required to be low
+for _all_ of the personas identified as characteristic of effective interventions, even
+when this was neither the point-of-intervention, nor the target.
+
+== Heterogeneity in asymmetric belief systems
+
+Finally, @sec:heterogeneity-results-belief-system showed substantive differences
+between asymmetric belief system models calibrated separately to conservative and
+liberal subpopulations. Each model featured high-magnitude interactions not present
+in the other, yet while the liberal model was considerably sparser than the conservative
+model, most interactions in the former were also present in the latter. In comparison
+with the asymmetric model calibrated on the complete dataset, used in the prior
+experiments, the ideological models were both sparser, yet together had high overlap
+in connectivity with the complete model.
+
+
+
+
+
+// Asymmetry, for climate-related concern, is a matter of the degree to which
+// it is reinforced by other beliefs and attitudes. For political ideology/alignment, it
+// manifests as insensitivity to the states of those beliefs and attitudes which it,
+// itself, influences.
+
+
+
+
+
+// How should we interpret these differences in asymmetry, and, consequentially, the nature
+// of these two attitudes? Recall that relations in the non-equilibrium belief system model
+// reflect temporal influence---how much one belief or attitude constrains the future state
+// of another. Asymmetry reflects a constraint differential, such that one belief or
+// attitude has greater influence on a second than the second does on the first. The
+// high connectivity of climate-related concerns reflects an attitude which is reasonably
+// influential, and, albeit to a lesser degree, influentiable. We found that political
+// ideology/alignment tends to be less influential for other beliefs and attitudes than
+// climate-related concerns. It is, however, also less influenti#emph[able], affected only
+// by those concerns, beliefs about climate impacts, and support for climate action.
+// For concerns about climate change, asymmetry is mostly a matter of the degree to
+// which it is reinforced by other beliefs and attitudes, while for political
+// ideology/alignment it often manifests as an insensitivity to the states of those
+// beliefs and attitudes which it, itself, influences.
+
+
+#line(length: 100%)
+
+On the question of existence, @subsec:asymmetry-results-existence presented evidence of
+asymmetric directional relations between several pairs of beliefs and attitudes, while
+also finding that not _all_ pairs necessarily exhibit asymmetry. Two attitudes in
+particular---political ideology/alignment and climate-related concerns---displayed
+significant preponderance of influence over several other beliefs and attitudes.
+
+The consequences of asymmetric influence for political ideology/alignment were noticeably
+reflected in the findings of @subsec:asymmetry-results-impact, on the impacts of
+asymmetry on intervention dynamics. In particular, interventions on political
+ideology/alignment in the asymmetric model were found to be almost universally more
+effective than those in the symmetric model. Moreover, for inbound interventions
+targeting attitudes on climate action, the two models resulted in different assessments
+of relative intervention effectiveness. We found interventions on political
+ideology/alignment in the asymmetric model more effective (with regards to
+population-level outcomes) than those on beliefs about climate impacts --- a reversal
+in the expectations of the symmetric model.
+
+While interventions on climate-related concerns also differed in effectiveness between
+the models (seen in the effect of asymmetry,
+@fig:asymmetry-results-outbound-effect-of-asymmetry), these differences were not as
+pronounced. This finding is likely related to differences observed in the inbound and
+outbound connectivity of climate-related concerns and political ideology/alignment in
+the asymmetric model. While the former has inbound and outbound interactions with all
+other beliefs and attitudes in the asymmetric model, the latter has considerably more
+_outbound_ than _inbound_ interactions.
+
+// - *A:* Relate back to the mathematical model --- temporal influence. How much one
+//   belief or attitude constrains the future state of another.
+// - *A:* Climate-related concerns are reasonably influential, and, to a lesser degree,
+//   influentiable.
+// - *A:* Political ideology/alignment tend to be less influential than climate-related
+//   concerns.
+// - *B:* But they are also less influenti#emph[able].
+// - *T:* For concerns about climate change, asymmetry is mostly a matter of the degree to
+//   which it is reinforced by other beliefs and attitudes, while for political
+//   ideology/alignment it often manifests as an insensitivity to the states of those
+//   beliefs and attitudes which it, itself, influences.
+
+How should we interpret these differences in asymmetry, and, consequentially, the nature
+of these two attitudes? Recall that relations in the non-equilibrium belief system model
+reflect temporal influence---how much one belief or attitude constrains the future state
+of another. Asymmetry reflects a constraint differential, such that one belief or
+attitude has greater influence on a second than the second does on the first. The
+high connectivity of climate-related concerns reflects an attitude which is reasonably
+influential, and, albeit to a lesser degree, influentiable. We found that political
+ideology/alignment tends to be less influential for other beliefs and attitudes than
+climate-related concerns. It is, however, also less influenti#emph[able], affected only
+by those concerns, beliefs about climate impacts, and support for climate action.
+For concerns about climate change, asymmetry is mostly a matter of the degree to
+which it is reinforced by other beliefs and attitudes, while for political
+ideology/alignment it often manifests as an insensitivity to the states of those
+beliefs and attitudes which it, itself, influences.
+
+
+Comparison with other measures of influence
+
+// The consequences of the former were subsequently reflected in the findings of
+// @subsec:asymmetry-results-impact, on the impacts of asymmetry on intervention dynamics.
+// Interventions on political ideology/alignment in the
+// asymmetric model were found to be almost universally more effective than those in the
+// corresponding symmetric model. Moreover, for inbound interventions targeting attitudes
+// toward climate action, relative effect assessments differed meaningfully between the
+// symmetric and asymmetric models. In particular, we found
+// interventions on political ideology/alignment in the asymmetric model to be more
+// effective (with regards to population-level outcomes) than those on beliefs about climate
+// impacts --- a reversal in the expectations of the symmetric model.
+
+
+
+// impacts of these asymmetric relations were reflected in the findings of
+// @subsec:asymmetry-results-impact (on the impacts of asymmetry on intervention dynamics)
+// and @sec:heterogeneity-results-intervention-effects (on heterogeneity in intervention
+// effectiveness).
+
+#line(length: 100%)
 
 On the question of existence, @subsec:asymmetry-results-existence presented evidence of
 asymmetric directional relations between several pairs of beliefs or attitudes, while
@@ -88,13 +289,10 @@ with the asymmetric model calibrated on the complete dataset, used in the prior
 experiments, the ideological models were both sparser, yet together had high overlap
 in connectivity with the complete model.
 
-Interpreting asymmetric relations:
-- In terms of the mathematical model
-- Compare with other notions of 'influence' or 'centrality'
-
 Political ideology/alignment and climate-related concern as asymmetric instigators:
 - Interpret
-- Compare with other results
+- Compare with previous work
+- Compare with other notions of 'influence' or 'centrality'
 
 Explaining differences in intervention results:
 - In terms of influence/influentiability
@@ -102,7 +300,9 @@ Explaining differences in intervention results:
   - Also comes back in the heterogeneity results
 - Model misspecification
 
-Measurement timescales:
+(*Maybe*) Measurement timescales:
+
+Differences between belief systems:
 
 Answering the research questions:
 - Ideally 1--2 sentences for each
