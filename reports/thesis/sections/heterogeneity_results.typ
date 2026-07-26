@@ -450,7 +450,12 @@ from the model, since this is captured by the partitioned datasets. The hyperpar
 used for regularisation strength and smoothing are listed in
 @tab:methods-hyperparameter-values.
 
-
+Figures related to model calibration can be found in @sec:appendix-extra-results. The
+estimated parameters exhibit considerably higher uncertainty than in the model
+calibrated to the complete dataset due to the smaller sample sizes
+(@fig:apdx-extra-results-ideology-accuracy). We find only one significant case of
+asymmetry, on $#raw("CC Worry") --> #raw("CC Impact")$ in the conservative model
+(@fig:apdx-extra-results-ideology-differentials).
 
 #figure(
   image(

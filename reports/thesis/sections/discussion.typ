@@ -37,50 +37,89 @@ of our findings, and implications for future work on belief system dynamics and
 belief-level interventions.
 
 //At the start of this thesis, we posed four research questions:
+//
+#let show-rq(number, body) = block()[*RQ#number\:* #emph(body)]
 
-#block(breakable: true, inset: 1em)[
-  *RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_, in models
-  of climate change belief systems inferred from the climate beliefs dataset?
-
-  *RQ2:* How do asymmetric and symmetric beliefs systems differ with regards to
-  intervention strategy and effectiveness, in models inferred from the climate
-  beliefs dataset?
-
-  *RQ3:* How do intervention outcome and effectiveness vary between individuals with
-  different initial conditions in asymmetric belief systems inferred from the
-  climate beliefs dataset?
-
-  *RQ4:* How do asymmetric belief systems inferred from the climate beliefs dataset
-  vary between conservative and liberal individuals?
-]
 
 
 
 // TODO: Can tie these together more. They don't need to be so separate.
 // - Maybe have RQ1---3, and then RQ4.
 
+#show-rq(1)[To what extent are causal relations _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?]
 
 On the question of existence, @subsec:asymmetry-results-existence demonstrated
 asymmetric relations between several pairs of beliefs and attitudes, while also
 finding that asymmetry may  not _always_ be exhibited. Two attitudes---political
-ideology/alignment and climate-related concerns---displayed significant excess
+ideology/alignment and climate-related #box[concerns---displayed] significant excess
 influence over several other beliefs and attitudes.
 
-The findings regarding political identity/alignment are consistent with previous studies
-concerning the mutual influences of this variable with climate-related beliefs and
-attitudes in the USA. Political identity has been shown to substantially impact both
-climate-related beliefs @whitmarshScepticismUncertaintyClimate2011, as well as support
-for climate policies @bumannWhatAreDeterminants2021, with individuals tending to
-support or oppose specific policies on the basis of partisan identification rather than
-policy content @unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018.
-At the same time, while political identity in the USA is highly stable in the short-term
-@greenPartisanStabilityTurbulent2024, public beliefs and attitudes toward climate change
-have shifted significantly over the past two decades @marlonChangeUSStatelevel2022
-@hamiltonTrackingPublicBeliefs2015. This suggests that while political identity
-contributes meaningfully to climate-related beliefs and attitudes, changes in these states
-are unlikely to incite changes in political identity.
+How should we interpret these asymmetric relations? Recall that relations in the
+non-equilibrium belief system model reflect temporal influence---how much one belief or
+attitude constrains the future state of another (@sec:asymmetric-belief-systems). An
+asymmetric relation reflects a constraint differential, where one belief or attitude
+has greater influence on the other than vice versa. More generally, the asymmetric model
+differentiates between two forces: influentiality, and influentiability. Influentiality
+(the strength of outbound interactions) determines how the extent to which one belief or
+attitude influences others, while influentiability (the strength of inbound interactions)
+determines the extent to which its own behaviour is influenced by others.
 
-*NOTE:* Doesn't mention #cite(<eganIdentityDependentVariable2020>, form: "prose")
+Political identity being more influential than influentiable in this context is
+consistent with previous studies on the mutual influences of this variable
+with climate-related beliefs and attitudes in the USA. First, political identity
+has been shown to substantially impact both climate-related beliefs
+@whitmarshScepticismUncertaintyClimate2011, as well as support for climate policies
+@bumannWhatAreDeterminants2021, with individuals tending to support or oppose specific
+policies on the basis of partisan identification rather than policy content
+@unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018. At the same
+time, while political identity in the USA is highly stable in the short-term
+@greenPartisanStabilityTurbulent2024 @brandtBetweenpersonMethodsProvide2022, public
+beliefs and attitudes toward climate change have shifted significantly over the past two
+decades @marlonChangeUSStatelevel2022 @hamiltonTrackingPublicBeliefs2015. This suggests
+that while political identity contributes meaningfully to climate-related beliefs and
+attitudes, changes in these states are less likely to incite changes in political
+identity.
+
+// NOTE:
+// How does this relate to findings from other studies? I.e., compare our conclusions
+// regarding the influence/influentiabiltiy of these variables:
+// - Show that political ideology affects climate beliefs/worry/policy support AND
+//   these things have changed in recent years AND political alignment is fairly static AND
+//   policy support has changed only in liberal states.
+// - Showing that politics is influential
+//   - Politics influences climate beliefs: @whitmarshScepticismUncertaintyClimate2011
+//   - Politics causes policy support:
+//     In combination with climate beliefs @bumannWhatAreDeterminants2021;
+//     Drawing attention to ideology changes support @unsworthItsPoliticalHow2014;
+//     People choose policy along party lines, irrespective of content @vanbovenPsychologicalBarriersBipartisan2018;
+// - Showing that politics is hard to influence
+//   - Party identification is quite stable in the short run, but subject to long-term changes @greenPartisanStabilityTurbulent2024
+//   - @eganIdentityDependentVariable2020
+// - Determinants of climate concern
+//   - Politics, in US. Less so elsewhere @lewisCrossnationalVariationDeterminants2019
+//   - Contrasting result: extreme weather experience @chenGlobalPublicPerceptions2025
+//   - Politics:
+//     @palmWhatCausesPeople2017
+//     @mccrightIdeologyCapitalismClimate2016
+//     @dryzekOxfordHandbookClimate2011
+//     @mccrightPoliticizationClimateChange2011
+//     @lewisCrossnationalVariationDeterminants2019
+//   - Limited longitudinal support for influence of right-wing populism.
+// - Effects of climate concern on other climate beliefs, attitudes, attitude on action.
+//   - @goldbergIdentifyingMostImportant2021
+//   - Influences policy support directly and indirectly @boumanWhenWorryClimate2020
+// - Others:
+//   - Weather worry, extreme weather worry don't impact climate views much @shaoApprovalPoliticalLeaders2020
+
+// *NOTE:* Doesn't mention #cite(<eganIdentityDependentVariable2020>, form: "prose")
+
+#show-rq(2)[
+  How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
+]
+
 
 The consequences of asymmetry for belief system dynamics were subsequently reflected in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
@@ -94,16 +133,16 @@ outperformed those on political ideology/alignment in terms of absolute effect o
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
 
-Before continuing on this point, let's take a moment to clarify the interpretation of
-asymmetric relations. Recall that in the non-equilibrium belief system model, relations
-reflect temporal influence---how much one belief or attitude constrains the future state
-of another (@sec:asymmetric-belief-systems). An asymmetric relation reflects a
-constraint differential, where one belief or attitude has greater influence on the other
-than vice versa. More generally, the asymmetric model differentiates between two forces:
-influentiality, and influentiability. Influentiality (the strength of outbound
-interactions) determines how the extent to which one belief or attitude influences
-others, while influentiability (the strength of inbound interactions) determines the
-extent to which its own behaviour is influenced by others.
+// Before continuing on this point, let's take a moment to clarify the interpretation of
+// asymmetric relations. Recall that in the non-equilibrium belief system model, relations
+// reflect temporal influence---how much one belief or attitude constrains the future state
+// of another (@sec:asymmetric-belief-systems). An asymmetric relation reflects a
+// constraint differential, where one belief or attitude has greater influence on the other
+// than vice versa. More generally, the asymmetric model differentiates between two forces:
+// influentiality, and influentiability. Influentiality (the strength of outbound
+// interactions) determines how the extent to which one belief or attitude influences
+// others, while influentiability (the strength of inbound interactions) determines the
+// extent to which its own behaviour is influenced by others.
 
 #let full-model-disclaimer = footnote[
   Note that this point pertains to the model calibrated on the complete climate
@@ -112,21 +151,21 @@ extent to which its own behaviour is influenced by others.
   assess the significance of asymmetric relations.
 ]
 
-Returning to the above point, the distinction between political ideology/alignment and
-climate-related concern likely relates to differences in
-influentiality and influentiability between the two attitudes. Climate-related concern
-is more influential than political ideology/alignment, on account of its increased
-outbound interactions and interaction strength. The key difference, however, lies in
-the attitudes' influentiability; while climate-related concern has inbound and outbound
-interactions with all other beliefs and attitudes, political ideology/alignment has
-considerably fewer _inbound_ than _outbound_ edges#full-model-disclaimer. That is,
-several beliefs and attitudes influenced by this variable have no influence on it
-themselves. Since, by definition, the symmetric model must either include or exclude
-both directional interactions between a pair of beliefs or attitudes, cases where the
-asymmetric model specifies an interaction in only one direction necessarily lead to
-differences in observed model behaviour.
+This distinction in behaviour between political ideology/alignment and climate-related
+concern likely relates to differences in influentiality and influentiability between the
+two attitudes. Climate-related concern is more influential than political
+ideology/alignment, on account of its increased outbound interactions and interaction
+strength. The key difference, however, lies in the attitudes' influentiability; while
+climate-related concern has inbound and outbound interactions with all other beliefs and
+attitudes, political ideology/alignment has considerably fewer _inbound_ than _outbound_
+edges#full-model-disclaimer. That is, several beliefs and attitudes influenced by this
+variable have no influence on it themselves. Since, by definition, the symmetric model
+must either include or exclude both directional interactions between a pair of beliefs
+or attitudes, cases where the asymmetric model specifies an interaction in only one
+direction necessarily lead to differences in observed model behaviour.
+This draws attention to a broader issue regarding relational symmetry assumptions.
 
-This draws attention to a broader issue regarding relational symmetry assumptions. One
+One
 of the symmetric model's key strengths is its small(er) parameter count. With fewer
 degrees of freedom than the asymmetric model, it can achieve more accurate parameter
 estimates when calibrated to the same dataset (i.e., smaller confidence intervals in
@@ -134,9 +173,10 @@ estimates when calibrated to the same dataset (i.e., smaller confidence interval
 misspecification when a subset of the true relations are asymmetric. In the symmetric
 model, inferred strengths generally lie between the corresponding directional
 interaction strengths in the asymmetric model. For beliefs or attitudes with asymmetric
-relations this can result in substantially different influentiality and influentiability
-between models, as seen in the comparison of political ideology/alignment and beliefs
-regarding climate impact in @subsec:asymmetry-results-impact.
+relations we found that this can result in substantial differences in influentiality
+and influentiability between the two models.
+// , as seen in the comparison of political ideology/alignment and beliefs
+// regarding climate impact in @subsec:asymmetry-results-impact.
 
 // The asymmetric influence of political ideology/alignment over
 // climate-related beliefs and attitudes is consistent with previous studies concerning the
@@ -157,35 +197,6 @@ regarding climate impact in @subsec:asymmetry-results-impact.
 
 
 
-How does this relate to findings from other studies? I.e., compare our conclusions
-regarding the influence/influentiabiltiy of these variables:
-- Show that political ideology affects climate beliefs/worry/policy support AND
-  these things have changed in recent years AND political alignment is fairly static AND
-  policy support has changed only in liberal states.
-- Showing that politics is influential
-  - Politics influences climate beliefs: @whitmarshScepticismUncertaintyClimate2011
-  - Politics causes policy support:
-    In combination with climate beliefs @bumannWhatAreDeterminants2021;
-    Drawing attention to ideology changes support @unsworthItsPoliticalHow2014;
-    People choose policy along party lines, irrespective of content @vanbovenPsychologicalBarriersBipartisan2018;
-- Showing that politics is hard to influence
-  - Party identification is quite stable in the short run, but subject to long-term changes @greenPartisanStabilityTurbulent2024
-  - @eganIdentityDependentVariable2020
-- Determinants of climate concern
-  - Politics, in US. Less so elsewhere @lewisCrossnationalVariationDeterminants2019
-  - Contrasting result: extreme weather experience @chenGlobalPublicPerceptions2025
-  - Politics:
-    @palmWhatCausesPeople2017
-    @mccrightIdeologyCapitalismClimate2016
-    @dryzekOxfordHandbookClimate2011
-    @mccrightPoliticizationClimateChange2011
-    @lewisCrossnationalVariationDeterminants2019
-  - Limited longitudinal support for influence of right-wing populism.
-- Effects of climate concern on other climate beliefs, attitudes, attitude on action.
-  - @goldbergIdentifyingMostImportant2021
-  - Influences policy support directly and indirectly @boumanWhenWorryClimate2020
-- Others:
-  - Weather worry, extreme weather worry don't impact climate views much @shaoApprovalPoliticalLeaders2020
 
 Comparison with other measures of influence:
 - Can relate back to influence and influentiability
@@ -193,14 +204,32 @@ Comparison with other measures of influence:
   - Centrality (combines influence and influentiability)
   - Directed edges in Bayes net (Unclear interpretation)
 
-We now change tack to consider the results associated with the final two research
-questions. The results of @sec:heterogeneity-results-intervention-effects found that
+#show-rq(3)[
+  How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
+]
+
+// We now change tack to consider the results associated with the final two research
+// questions.
+In @sec:heterogeneity-results-intervention-effects we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
 states. Most high-effect interventions targeting attitudes toward climate action
 required low initial values for both the point-of-intervention and target. Surprisingly,
 pre-intervention climate-related concern was required to be low for _all_ of the
 personas identified as characteristic of effective interventions, even when this was
 neither the point-of-intervention, nor the target.
+
+The latter finding may be explained by the combination of high influence and
+influentiability associated with climate-related concern, making this variable an
+effective indirect route for various interventions (not restricted to this particular
+target). This stands in contrast with political ideology/alignment, which has similarly
+high influence on the target variable, but is harder to influence, as discussed above.
+
+#show-rq(4)[
+  How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
 
 Finally, @sec:heterogeneity-results-belief-system showed substantive differences
 between asymmetric belief system models calibrated separately to conservative and
@@ -209,9 +238,14 @@ in the other, yet while the liberal model was considerably sparser than the cons
 model, most interactions in the former were also present in the latter. In comparison
 with the asymmetric model calibrated on the complete dataset, used in the prior
 experiments, the ideological models were both sparser, yet together had high overlap
-in connectivity with the complete model.
+in connectivity with the complete model. Given the smaller sample sizes used to calibrate
+these models, we found only one case of significant asymmetry, which was also present in
+the model fit to the complete dataset.
 
-Consider the studies I looked at where they compare different country belief systems.
+- Sparser network implies a more restricted set of observed transitions. This is
+  expected
+
+- Consider the studies I looked at where they compare different country belief systems.
 
 - Contrary result, belief in anthropogenic CC causes climate worry @gregersenPoliticalOrientationModerates2020
   - We find only weak effects in the complete model. And no effects in the
@@ -595,6 +629,9 @@ Plan:
     the existence and strength of interactions can vary on an individual basis.
   - *A:* This has also been discussed at length in
     @brandtBetweenpersonMethodsProvide2022.
+  - *A:* While some of the problems with cross-sectional studies are mitigated here,
+    cross-lagged panel data exhibits similar issues with detangling between-person and
+    within-person effects @hamakerCritiqueCrosslaggedPanel2015
   - *B:* Estimating individual-level belief systems remains an open problem. Limited
     data, and the fact that many transitions will not be observed. Some progress has
     been made for bidirectional belief systems,
