@@ -466,6 +466,32 @@ constrained when *Happening* is high than when it is low.
 
 #underline[*Individual belief systems*]
 
+As discussed in #cite(<brandtBetweenpersonMethodsProvide2022>, form: "prose"), when
+beliefs and attitudes are fairly stable over time, cross-sectional methods for inferring
+belief system structure tend to identify _between_-person associations more so than
+the _within_-person associations typically desired. In the present study, we partially
+mitigate this problem by calibrating to longitudinal data and using self-interaction
+terms to capture persistence in belief/attitude state. However, this does not fully
+alleviate the issue, as self-interactions do not account for belief stability due to
+the presence of stable traits @hamakerCritiqueCrosslaggedPanel2015.
+
+#cite(<hamakerCritiqueCrosslaggedPanel2015>, form: "author") advise including individual
+random intercepts for each variable (in our case, belief or attitude) which are fixed
+across waves and account for possible stable traits. However, this requires at least
+three waves of data to be identifiable (*check this, and whether our approach is
+identifiable*). Their suggestion amounts to
+modelling individual baseline activations, such that the inferred interactions then
+reflect only the observed changes (within-person associations). In unreported experiments
+we tried a similar approach, allowing the baseline activation on each belief/attitude
+to vary as a linear function of individual demographic factors (e.g., age, education,
+urban/rural location, income). While the baseline activation functions were non-trivial
+(we observed noticeable differences in baseline activations between individuals), we
+found little-to-no impact on either the inferred interactions, or the intervention
+results.
+
+
+
+
 - *A:* We see differences between the ideological models which suggest that while
   individuals may share some structural components of their belief systems,
   the existence and strength of interactions can vary on an individual basis.
