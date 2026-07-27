@@ -713,7 +713,7 @@ class InterventionPersonasPlotCommand(BaseCommand):
     target_spin_idx: int
     max_tree_depth: int
     high_effect_percentile: int = 75
-    prevalence_threshold: float = 0.15
+    prevalence_threshold: float = 0.0
     min_effect_threshold: float = 0.1
     seed: int = 20260622
     output: Path

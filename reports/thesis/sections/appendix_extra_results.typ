@@ -31,6 +31,7 @@
   ),
 ) <fig:apdx-extra-results-ideology-accuracy>
 
+
 #figure(
   image("../results/figures/model/directional_differentials/ideology.pdf"),
   caption: caption(
@@ -38,3 +39,11 @@
     long: [Directional differentials for ideology-specific-models.],
   ),
 ) <fig:apdx-extra-results-ideology-differentials>
+
+#figure(
+  image("../results/figures/model_fit/ideology_edge_diffs.pdf"),
+  caption: caption(
+    short: [Differences in interaction effect between ideological models.],
+    long: [Differences in interaction effect between ideological models.],
+  ),
+) <fig:apdx-extra-results-ideology-edge-diffs>

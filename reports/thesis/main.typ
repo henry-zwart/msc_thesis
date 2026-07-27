@@ -103,8 +103,8 @@
 = Climate beliefs dataset <sec:dataset>
 #include "sections/dataset.typ"
 
-= Related work <sec:related-work>
-#include "sections/literature_review.typ"
+// = Related work <sec:related-work>
+// #include "sections/literature_review.typ"
 
 
 = Conclusions and future work <sec:conclusions>

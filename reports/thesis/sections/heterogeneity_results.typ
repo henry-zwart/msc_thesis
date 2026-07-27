@@ -80,6 +80,7 @@ to shallow trees (e.g., depth 3 or 4, referring to the number of inequality boun
 defining each region), these combinations can also be interpretable as rules or
 _personas_.
 
+
 #figure(
   image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
@@ -129,10 +130,15 @@ right-hand column displays the prevalence of each persona within/outside the upp
 quartile of individuals, showing the proportional make-up of the high-effect population.
 We exclude points-of-intervention with no sufficiently high-effect observations (e.g.,
 `CC Others Worry` in @fig:heterogeneity-results-cc-action-distribution), classified as
-an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`). We only
-include personas with at least 15% prevalence in the observed upper quartile.
+an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`).
+//We only include personas with at least 15% prevalence in the observed upper quartile.
 
-
+Since the regression decision tree produces a full tree, all personas have size 3
+by default. However, these can often be compressed. When two personas differ only
+along one feature dimension, split at the same value, and both predict high-effect
+interventions, we combine them into a single persona which omits that feature (i.e.,
+spans the entire feature dimension). This is observed, for instance, in the persona
+for interventions on `CC Worry`.
 
 #let incomplete-descriptions-footnote = footnote[
   Note that the personas are not necessarily complete. For instance, suppose that a pair
@@ -151,6 +157,9 @@ small set of personas. In each case these exhibit high prevelence among individu
 high intervention effects, and considerably lower prevalence for other individuals,
 indicating that the identified personas effectively characterise the conditions for
 effective interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+While prevalence among the high-effect individuals is generally high, this does vary
+across points-of-intervention (e.g., 20% of effective interventions on beliefs about
+climate impacts are not captured).
 
 // Recall that the effect of intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
@@ -455,7 +464,9 @@ estimated parameters exhibit considerably higher uncertainty than in the model
 calibrated to the complete dataset due to the smaller sample sizes
 (@fig:apdx-extra-results-ideology-accuracy). We find only one significant case of
 asymmetry, on $#raw("CC Worry") --> #raw("CC Impact")$ in the conservative model
-(@fig:apdx-extra-results-ideology-differentials).
+(@fig:apdx-extra-results-ideology-differentials), and only a minority of
+significant differences ($p < 0.05$) between interaction strengths, all for edges which
+are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-diffs).
 
 #figure(
   image(

@@ -53,6 +53,7 @@ THESIS_FIGURES_METHODS := \
 		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
 
 THESIS_FIGURES_ASYMMETRY_RESULTS := \
+		$(THESIS_DIR)/results/figures/model_fit/ideology_edge_diff.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf \
@@ -520,6 +521,13 @@ $(THESIS_DIR)/results/figures/model/directional_differentials/ideology.pdf: \
 		--full-model-lib $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
 		--output $@ \
 
+
+$(THESIS_DIR)/results/figures/model_fit/ideology_edge_diff.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/edge_diff_ideology.py \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/liberal.npz \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
 
 $(THESIS_DIR)/results/figures/model/directional_differentials/rank_%.pdf: \
 			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_%.npz \
