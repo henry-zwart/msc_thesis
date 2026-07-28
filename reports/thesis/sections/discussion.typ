@@ -299,9 +299,9 @@ These findings demonstrate both significant differences and similarities between
 relational belief system structures, conditional on political ideology, in line with
 earlier studies comparing belief systems on partisan identity
 @leeClimateChangeBelief2024. The observed differences suggest the presence of
-higher-order relationships between beliefs and attitudes, which is consistent with
+higher-order relationships between beliefs and attitudes, consistent with
 the view that belief system relations, themselves, correspond to beliefs or attitudes
-(e.g., the belief that two states of affairs are related) @fishbein1977belief[p.~219].
+(e.g., belief that two states of affairs are related) @fishbein1977belief[p.~219].
 
 Sparse networks imply a restricted set of commonly-observed transitions. This is, to
 an extent, expected for the liberal model, which is calibrated using fewer observations
@@ -329,58 +329,62 @@ the time-lagged interaction parameters used in the present study.
 
 == Limitations
 
-- _How we think about interventions:_
-  - *A:* We have assumed that interventions can act directly, and with equal effect on
-    different beliefs and attitudes. This is to say, we are not concerned here with the
-    nature of an intervention itself (the interface between the intervention and the
-    belief system). Rather, we operate under the assumption that we _can_ intervene,
-    and study the resulting endogenous dynamics.
-  - *B:* In reality, some beliefs or attitudes may be easier or harder to intervene on
-    than others.
-  - *T:* Taking the intervention process into account may result in different expected
-    effects of intervention. For instance, we found that political ideology is often
-    influential, but is difficult to influence, due to a scarcity of incoming
-    interactions. Supposing, then, that we can only intervene indirectly on politics,
-    the expected intervention outcomes may change.
-- _Synchronous updates:_
-  - *A:* We use synchronous updates to simulate model dynamics.
-  - *A:* This is due to both the nature of the dataset (long intervals between
-    measurements, such that multiple beliefs can change state) and computational reasons
-    (synchronous updates simplify the sampling process
-    @nguyenInverseStatisticalProblems2017)
-  - *B:* If beliefs update asynchronously (one at a time), this could affect the model
-    dynamics
+When beliefs and attitudes are fairly stable---as in the climate beliefs
+dataset---cross-sectional methods for inferring belief system structure tend to
+identify _between_-person associations more so than the _within_-person associations
+which are typically desired @brandtBetweenpersonMethodsProvide2022. We partially
+mitigate this problem by calibrating to longitudinal data, and using self-interaction
+terms to capture persistence in belief/attitude states. However, our model does not
+account for belief/attitude stability due to the presence of stable traits
+@hamakerCritiqueCrosslaggedPanel2015.
 
+#let identifiability-footnote = footnote[
+  For a given individual, each pair of consecutive waves constitutes a single
+  observation (given we model conditional transition probability). For a set of
+  $N in NN$ beliefs/attitudes the asymmetric model comprises $N^2 + N$ parameters,
+  with $M$ additional parameters when modelling individual baselines. Hence for
+  $M in NN$ individuals we require at least three observations per-individual
+  for the problem to be determined. Note that more waves may be required when
+  $N$ is large, such that the number of non-intercept model parameters is larger
+  than $M$.
+]
+#cite(<hamakerCritiqueCrosslaggedPanel2015>, form: "author") suggest modelling
+individual random intercepts (in our case, individual baseline activations) which
+are fixed across waves and account for some of the effects of stable traits. However,
+at least three waves of data are required for the random intercept model to be
+identifiable#identifiability-footnote, while the climate beliefs dataset comprises only
+two waves.
 
-- _Transferring natural endogenous dynamics to intervention:_
-  - Related to confounding factors, we (assume that we) calibrate the models to data
-    which is taken from a 'normal' environment.
-  - Possible that dynamics are different when we intervene. Raises 'temperature'.
-    Causes to think about beliefs/attitudes that would otherwise remain
-    dormant---conflicting but unnoticed.
+In unreported experiments we tried a similar approach, modelling baseline activations
+as linear functions of demographic factors (e.g., age, education, rural/urban status),
+which requires only two waves to be identifiable. While the resulting baseline
+activations varied substantially between individuals, indicating that they captured
+some differences in stable traits, we found little-to-no impact on either the inferred
+interactions or the intervention experiment results. Hence further investigation is
+required to determine the extent to which the models calibrated in @sec:calibration
+capture within-person associations.
 
-- _Data variables:_
-  - We use what is available, rather than what is ideal
+Relatedly, since the climate beliefs dataset comprises only two waves, we cannot
+distinguish between belief system dynamics arising due to endogenous factors (the
+states of other beliefs and attitudes) and exogenous factors (current events which
+affect beliefs and attitudes). We implicitly assume that (i) exogenous dynamics on
+an individual level are not substantially correlated between individuals, and thus
+not reflected in the model, and (ii) the time between measurements (approximately
+six months) is sufficiently short that widespread exogenous factors are negligible.
+The second assumption has questionable validity, since for instance, both the 2020 US
+presidential election and January 6 Capitol attack occurred during this timeframe.
 
-- _Confounding factors:_
-  - Model calibrated to only two waves. Cannot separate endogenous from exogenous
-    factors. Individual-level exogenous factors likely to be 'washed out'. Shared
-    factors (e.g. election, weather events) could cause correlated changes between
-    individuals.
+Moreover, our present focus on endogenous dynamics does not discount the substantial
+role of social interaction in belief and attitude change
+@karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
+@degrootReachingConsensus1974a or stability @prenticePluralisticIgnorancePerpetuation1996
+@brownMeasurementPartisanSorting2021, including in intervention contexts
+@brewerIncreasingVaccinationPutting2017.
 
-- _Sensitivity to unmeasured factors or incorrect structure:_
-  - What happens when we cannot include (because we don't measure) an influential belief,
-    i.e., a fork
-  - What about colliders, or paths?
-  - What happens when we falsely assume that there is/isn't a connection between two
-    beliefs?
-
-#underline[*Representational Limitations*]
-
-We discuss three representational limitations of the model used in the present study,
-pertaining to the use of pairwise relations, representation of belief and
+We now discuss three representational limitations of the model used in the present study,
+pertaining to (i) the use of pairwise relations, (ii) representation of belief and
 attitude states as Ising model spins, $s in {-1, +1}$, as opposed to binary variables,
-$s in {0,1}$, and the non-dependence of interacton effect magnitude on belief states.
+#box[$s in {0,1}$], and (iii) the non-dependence of interacton effect magnitude on belief states.
 
 Consider the following (hypothetical) motivating example. Suppose that parents'
 attitudes toward childhood vaccination typically depend, in a simplistic way, on
@@ -389,7 +393,7 @@ Positive attitudes prevail when the disease is considered more risky or dangerou
 than the vaccine. Values around family wellbeing conceivably influence the relationship
 between perceived risk and vaccine attitudes, serving to amplify the existing effect.
 
-#h(1em)
+#h(0.5em)
 #figure(
   image("../diagrams/vaccination_example/vaccination_example_nocircles.svg", width: 70%),
   placement: none,
@@ -405,9 +409,12 @@ the disease; for other individuals the opposite effect ensues.
 This relational structure can be seen as a triplet-interaction extension to the belief
 system model used in the present study. In a belief system model with triplet
 interactions, the _effective_ influence relations between pairs of beliefs or attitudes
-can vary in accordance with the specific belief state. To contrast, in the pairwise model
-used in the present study, interactions are static, and such scenarios cannot be
-captured.
+can vary in accordance with the specific belief state.
+Findings from #cite(<brewerIncreasingVaccinationPutting2017>, form: "prose") suggest
+that such interventions, which selectively leverage or amplify existing beliefs and
+attitudes may be more effective than interventions which attempt to change
+belief/attitude states. However, such relational structures cannot be captured in the
+pairwise model adopted here.
 
 #block(breakable: false)[
   Next, we consider the implications of our decision to model belief and attitude states
@@ -426,7 +433,6 @@ reasonable choices for the 'opposite' state:
   #block[_*Does not* believe that climate change is happening._]
 ]
 
-and
 
 #align(center)[
   #block[_Believes that climate change is *not* happening._]
@@ -436,24 +442,25 @@ As a consequence of our decision to model belief and attitude states as spins, w
 assuming that beliefs and attitudes always emit influence on associated variables,
 regardless of their state. However, it is not clear that this assumption is always
 reasonable, in particular for beliefs where the opposite state is a negation of the
-epistemic position (the first example).
+epistemic position (the first example), or in the case of neutral or ambiguous
+states @vandermaasStatisticalPhysicsPsychological2026.
 
-The climate attitudes survey, used in the present study, asks individuals whether or
-not they think that climate change is happening, with response options: _Yes_, _No_, and
-_Don't know_. While the first two options constitute affirmation and negation of the
-state-of-affairs, the third negates the epistemic position. We treat
-this option as a 'middle' state which is assigned to $-1$ or $+1$
-with equal probability during simulation. As argued in
-#cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose"), however, the
-situation for neutral, uncertain, or ambiguous states in psychological networks is
-nuanced, and often such states are more reasonably interpretable as having no influence
-on the rest of the network.
+// The climate attitudes survey, used in the present study, asks individuals whether or
+// not they think that climate change is happening, with response options: _Yes_, _No_, and
+// _Don't know_. While the first two options constitute affirmation and negation of the
+// state-of-affairs, the third negates the epistemic position. We treat
+// this option as a 'middle' state which is assigned to $-1$ or $+1$
+// with equal probability during simulation. As argued in
+// #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose"), however, the
+// situation for neutral, uncertain, or ambiguous states in psychological networks is
+// nuanced, and often such states are more reasonably interpretable as having no influence
+// on the rest of the network.
 
 Finally, while the present model assumes that interaction effects in asymmetric belief
 systems are independent of the 'influencing' variable's state, we argue that there is
 reason to think that this may not always be true. Consider two variables:
 
-- *Happening:* The belief that cliamte change is happening, and
+- *Happening:* The belief that climate change is happening, and
 
 - *Action:* General attitude toward climate action.
 
@@ -464,58 +471,127 @@ who _do_ believe in climate change may nonetheless oppose climate action for oth
 reasons (e.g., cost or prioritisation), suggesting that *Action* may be less
 constrained when *Happening* is high than when it is low.
 
-#underline[*Individual belief systems*]
-
-As discussed in #cite(<brandtBetweenpersonMethodsProvide2022>, form: "prose"), when
-beliefs and attitudes are fairly stable over time, cross-sectional methods for inferring
-belief system structure tend to identify _between_-person associations more so than
-the _within_-person associations typically desired. In the present study, we partially
-mitigate this problem by calibrating to longitudinal data and using self-interaction
-terms to capture persistence in belief/attitude state. However, this does not fully
-alleviate the issue, as self-interactions do not account for belief stability due to
-the presence of stable traits @hamakerCritiqueCrosslaggedPanel2015.
-
-#cite(<hamakerCritiqueCrosslaggedPanel2015>, form: "author") advise including individual
-random intercepts for each variable (in our case, belief or attitude) which are fixed
-across waves and account for possible stable traits. However, this requires at least
-three waves of data to be identifiable (*check this, and whether our approach is
-identifiable*). Their suggestion amounts to
-modelling individual baseline activations, such that the inferred interactions then
-reflect only the observed changes (within-person associations). In unreported experiments
-we tried a similar approach, allowing the baseline activation on each belief/attitude
-to vary as a linear function of individual demographic factors (e.g., age, education,
-urban/rural location, income). While the baseline activation functions were non-trivial
-(we observed noticeable differences in baseline activations between individuals), we
-found little-to-no impact on either the inferred interactions, or the intervention
-results.
-
-
-
-
-- *A:* We see differences between the ideological models which suggest that while
-  individuals may share some structural components of their belief systems,
-  the existence and strength of interactions can vary on an individual basis.
-- *A:* This has also been discussed at length in
-  @brandtBetweenpersonMethodsProvide2022.
-- *A:* While some of the problems with cross-sectional studies are mitigated here,
-  cross-lagged panel data exhibits similar issues with detangling between-person and
-  within-person effects @hamakerCritiqueCrosslaggedPanel2015
-- *B:* Estimating individual-level belief systems remains an open problem. Limited
-  data, and the fact that many transitions will not be observed. Some progress has
-  been made for bidirectional belief systems,
-  e.g., #cite(<brandtMeasuringBeliefSystem2022>, form: "prose").
-- *A:* In our experiments we have made the simplifying assumption that belief systems
-  are shared.
-- *B:* As seen in the comparison of symmetric and asymmetric model dynamics, the
-  structure and relative interaction strengths in a belief system can change
-  endogenous dynamics.
-- *A:* The complete model can be seen as a 'mixing' of the two ideological models.
-- *T:* We would expect to see differences in intervention dynamics between individuals
-  to a greater extent than observed in RQ3. Yet expect that the observations from the
-  complete model reflect an 'average case'.
+*I have other limitations to discuss, but judged these as the most critical*
+// // NOTE:
+// - _How we think about interventions:_
+//   - *A:* We have assumed that interventions can act directly, and with equal effect on
+//     different beliefs and attitudes. This is to say, we are not concerned here with the
+//     nature of an intervention itself (the interface between the intervention and the
+//     belief system). Rather, we operate under the assumption that we _can_ intervene,
+//     and study the resulting endogenous dynamics.
+//   - *B:* In reality, some beliefs or attitudes may be easier or harder to intervene on
+//     than others.
+//   - *T:* Taking the intervention process into account may result in different expected
+//     effects of intervention. For instance, we found that political ideology is often
+//     influential, but is difficult to influence, due to a scarcity of incoming
+//     interactions. Supposing, then, that we can only intervene indirectly on politics,
+//     the expected intervention outcomes may change.
+// - _Synchronous updates:_
+//   - *A:* We use synchronous updates to simulate model dynamics.
+//   - *A:* This is due to both the nature of the dataset (long intervals between
+//     measurements, such that multiple beliefs can change state) and computational reasons
+//     (synchronous updates simplify the sampling process
+//     @nguyenInverseStatisticalProblems2017)
+//   - *B:* If beliefs update asynchronously (one at a time), this could affect the model
+//     dynamics
+//
+//
+// - _Transferring natural endogenous dynamics to intervention:_
+//   - Related to confounding factors, we (assume that we) calibrate the models to data
+//     which is taken from a 'normal' environment.
+//   - Possible that dynamics are different when we intervene. Raises 'temperature'.
+//     Causes to think about beliefs/attitudes that would otherwise remain
+//     dormant---conflicting but unnoticed.
+//
+// - _Data variables:_
+//   - We use what is available, rather than what is ideal
+//
+// - _Confounding factors:_
+//   - Model calibrated to only two waves. Cannot separate endogenous from exogenous
+//     factors. Individual-level exogenous factors likely to be 'washed out'. Shared
+//     factors (e.g. election, weather events) could cause correlated changes between
+//     individuals.
+//
+// - _Sensitivity to unmeasured factors or incorrect structure:_
+//   - What happens when we cannot include (because we don't measure) an influential belief,
+//     i.e., a fork
+//   - What about colliders, or paths?
+//   - What happens when we falsely assume that there is/isn't a connection between two
+//     beliefs?
 
 
-== Future work
+
+
+
+
+// - *A:* We see differences between the ideological models which suggest that while
+//   individuals may share some structural components of their belief systems,
+//   the existence and strength of interactions can vary on an individual basis.
+// - *A:* This has also been discussed at length in
+//   @brandtBetweenpersonMethodsProvide2022.
+// - *A:* While some of the problems with cross-sectional studies are mitigated here,
+//   cross-lagged panel data exhibits similar issues with detangling between-person and
+//   within-person effects @hamakerCritiqueCrosslaggedPanel2015
+// - *B:* Estimating individual-level belief systems remains an open problem. Limited
+//   data, and the fact that many transitions will not be observed. Some progress has
+//   been made for bidirectional belief systems,
+//   e.g., #cite(<brandtMeasuringBeliefSystem2022>, form: "prose").
+// - *A:* In our experiments we have made the simplifying assumption that belief systems
+//   are shared.
+// - *B:* As seen in the comparison of symmetric and asymmetric model dynamics, the
+//   structure and relative interaction strengths in a belief system can change
+//   endogenous dynamics.
+// - *A:* The complete model can be seen as a 'mixing' of the two ideological models.
+// - *T:* We would expect to see differences in intervention dynamics between individuals
+//   to a greater extent than observed in RQ3. Yet expect that the observations from the
+//   complete model reflect an 'average case'.
+
+
+== Implications for future work
+
+Format:
+- Key result:
+  - Direct implications
+  - Specific areas for future work
+- Broader takeaways
+- Broader areas for future work
+
+- Evidence of asymmetry, especially for political attitudes and climate-related concerns:
+  - Affects how we should think about influence or centrality. A belief may be central
+    and influential, but hard to influence. Alternatively may be easy to influence but
+    not very influential.
+  - Extent to which this exists is unclear. Sampling error
+    results in confidence intervals with average width $approx 0.1$, preventing us
+    from distinguishing minor asymmetry from symmetry. Sampling error is expected
+    to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
+    timesteps.
+
+- Broader takeaways
+
+- Broader areas for future work:
+  - Individual belief systems, understanding the within-person components
+  - Experimental validation, and calibration based on experimental data with
+    interventions. Since natural dynamics are slow, but we anticipate
+    interventions may be quicker (we observe sudden changes in several beliefs;
+    if states changed independently and slowly for all people, we wouldn't see this).
+
+- RQ1:
+  - Evidence of asymmetry. Extent to which this exists is unclear. Sampling error
+    results in confidence intervals with average width $approx 0.1$, preventing us
+    from distinguishing minor asymmetry from symmetry. Sampling error is expected
+    to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
+    timesteps.
+  - Furthermore, additional investigation is required to determine the extent to
+    which the inferred interactions, and hence asymmetry, reflect within-person
+    associations.
+  - Practically, our findings suggest the symmetric assumption may often be valid, or
+    at least a reasonable
+    approximation, yet asymmetric relations are likely to exist, and will not be captured
+    by such an approach.
+  - Robustness to external events.
+  - Simplistic intervention assumptions (only affect one spin, )
+- RQ2:
+
 
 + *T:* Open questions and future work
   - Individual belief systems
