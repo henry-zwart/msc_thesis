@@ -1,32 +1,8 @@
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
-//#import cosmos.rainbow: *
-// #import cosmos.clouds: *
 #show: show-theorion
 
 
-// Key points to hit:
-// // 1. Remind the reader of the research questions
-//
-// // 2. Summarise the main findings clearly and concisely. Highlight unexpected, important,
-// //   or otherwise significant results
-//
-// 3. Interpret the results in relation to the research questions. What do they mean in
-//   the context of the study? How do they support/conflict with previous research?
-//
-// 4. Discuss limitations
-//
-// 5. Implications of findings. How can the results be applied practically? What
-//   questions/directions do the findings suggest?
-//
-// 6. Conclude with summary of the main points and reiteration of our contributions
-
-
-// In this chapter we interpret the results from the previous two chapters with respect
-// to each of the above research questions, as well as the broader context of belief
-// system dynamics. We then conclude the chapter with discussion on limitations of the
-// study, and the implications of our findings for future work on belief system dynamics
-// and belief-level interventions.
 
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
@@ -35,15 +11,8 @@ conclude the chapter with a discuss on the limitations
 of our findings, and implications for future work on belief system dynamics and
 belief-level interventions.
 
-//At the start of this thesis, we posed four research questions:
-//
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
 
-
-
-
-// TODO: Can tie these together more. They don't need to be so separate.
-// - Maybe have RQ1---3, and then RQ4.
 
 #show-rq(1)[
   To what extent are causal relations _symmetric_ or _asymmetric_, in models
@@ -171,17 +140,6 @@ return to this point shortly in our discussion of *RQ3* (see
 propagation may nonetheless be instrumental to achieving effective interventions at
 an individual level. <discussion-rq2-indirect-effects>
 
-// Before continuing on this point, let's take a moment to clarify the interpretation of
-// asymmetric relations. Recall that in the non-equilibrium belief system model, relations
-// reflect temporal influence---how much one belief or attitude constrains the future state
-// of another (@sec:asymmetric-belief-systems). An asymmetric relation reflects a
-// constraint differential, where one belief or attitude has greater influence on the other
-// than vice versa. More generally, the asymmetric model differentiates between two forces:
-// influentiality, and influentiability. Influentiality (the strength of outbound
-// interactions) determines how the extent to which one belief or attitude influences
-// others, while influentiability (the strength of inbound interactions) determines the
-// extent to which its own behaviour is influenced by others.
-
 #let full-model-disclaimer = footnote[
   Note that this point pertains to the model calibrated on the complete climate
   beliefs dataset. This model omits several interactions (due to
@@ -215,38 +173,12 @@ relations we found that this can result in substantial differences in influentia
 and influentiability between the two models.
 
 
-// , as seen in the comparison of political ideology/alignment and beliefs
-// regarding climate impact in @subsec:asymmetry-results-impact.
-
-// The asymmetric influence of political ideology/alignment over
-// climate-related beliefs and attitudes is consistent with previous studies concerning the
-// mutual influences of these variables in the USA. Political identity has been shown to
-// substantially impact both climate-related beliefs
-// @whitmarshScepticismUncertaintyClimate2011, as well as support for climate policies
-// @bumannWhatAreDeterminants2021, with individuals tending to support or oppose specific
-// policies on the basis of partisan identification rather than policy content
-// @unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018. At the same
-// time, while political identity in the USA is highly stable in the short-term
-// @greenPartisanStabilityTurbulent2024, public beliefs and attitudes toward climate change
-// have shifted significantly over the past two decades @marlonChangeUSStatelevel2022
-// @hamiltonTrackingPublicBeliefs2015. This suggests that while political identity
-// contributes meaningfully to climate-related beliefs and attitudes, changes in these states
-// are unlikely to incite changes in political identity.
-//
-// *NOTE:* Doesn't mention #cite(<eganIdentityDependentVariable2020>, form: "prose")
-
-
-
-
-
 #show-rq(3)[
   How do intervention outcome and effectiveness vary between individuals with
   different initial conditions in asymmetric belief systems inferred from the
   climate beliefs dataset?
 ] <discussion-rq3>
 
-// We now change tack to consider the results associated with the final two research
-// questions.
 In @sec:heterogeneity-results-intervention-effects we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
 states. Most high-effect interventions targeting attitudes toward climate action
@@ -354,11 +286,8 @@ explanations for this apparently contrary result, including parameter uncertaint
 the present study. Firstly, both studies are based in a European, as opposed to US,
 context; #cite(<leeVariationsClimateChange2025>, form: "prose") showed cross-national
 differences in climate belief systems including related variables. Second, both measure
-association using cross-sectional correlational measures, which primarily reflect
-between-person correlations @brandtBetweenpersonMethodsProvide2022, contrasting
-the time-lagged interaction parameters used in the present study.
-
-// TODO: (Above) Reference limitations discussion on within-person effects
+association using cross-sectional correlational measures, which may differ considerably
+from the time-lagged interaction parameters used in the present study.
 
 == Limitations
 
@@ -424,19 +353,34 @@ role of social interaction in belief and attitude change
 @karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
 @degrootReachingConsensus1974a or stability @prenticePluralisticIgnorancePerpetuation1996
 @brownMeasurementPartisanSorting2021, including in intervention contexts
-@brewerIncreasingVaccinationPutting2017.
+@brewerIncreasingVaccinationPutting2017. Rather, this decision reflects the fact that
+the dataset used in this study did not include social network information. The matter
+of integrating social and cognitive forces in similar belief system models has been
+explored in several accounts @rodriguezCollectiveDynamicsBelief2016
+@aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025, generally
+assuming dual objectives of cognitive consistency and social coherence
+@festingerCognitiveDissonance1962 @heiderAttitudesCognitiveOrganization1946
+@gawronskiCognitiveConsistencyFundamental2012. These approaches differ mostly with
+regards to the methods by which beliefs are communicated (e.g., individually or
+collectively, directly or indirectly via second-order social beliefs) and the underlying
+belief system model structure. The Networks of Belief theory, proposed by
+#cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose"), builds on the Causal
+Attitude Network model which also serves as the foundation for our proposed model. Since
+our work is mostly orthogonal to theirs, we anticipate that it would be straightforward
+to incorporate such social influences in our model.
 
-- Previous work integrating cognitive and social forces in belief system models:
-  - Social Knowledge Structure models @greenwaldUnifiedTheoryImplicit2002 (in which
-    nodes represent concepts, and edges are beliefs about association):
-    - Coherence of beliefs with social network @rodriguezCollectiveDynamicsBelief2016
-    - Belief communication as social contagion @aiyappaEmergenceSimpleComplex2024
-  - Causal Attitude Network framework @dalegeFormalizedAccountAttitudes2016 (nodes
-    are beliefs, relations are cognitive consistency relations; more similar to our
-    approach).
-    - Social influences modelled using second-order beliefs regarding others' belief
-      states @dalegeNetworksBeliefsIntegrative2025.
 
+// - Previous work integrating cognitive and social forces in belief system models:
+//   - Based on the assumption that individuals tend to strive for both cognitive
+//     consistency and social coherence in their beliefs and attitudes.
+//   - Extending the belief system energy description to include comparison
+//     of belief states between individuals (directly encouraging social coherence)
+//     @rodriguezCollectiveDynamicsBelief2016
+//   - Communicating specific beliefs between individuals @aiyappaEmergenceSimpleComplex2024
+//   - Indirect inluences via second-order beliefs about the states of others
+//     beliefs/attitudes.
+//   - Former two studies assume a Social Knowledge Structure model, while latter builds
+//     on the CAN model, so is directly applicable to our approach.
 
 We now discuss three representational limitations of the model used in the present study,
 pertaining to (i) the use of pairwise relations, (ii) representation of belief and
@@ -576,34 +520,6 @@ constrained when *Happening* is high than when it is low.
 //   - What happens when we falsely assume that there is/isn't a connection between two
 //     beliefs?
 
-
-
-
-
-
-// - *A:* We see differences between the ideological models which suggest that while
-//   individuals may share some structural components of their belief systems,
-//   the existence and strength of interactions can vary on an individual basis.
-// - *A:* This has also been discussed at length in
-//   @brandtBetweenpersonMethodsProvide2022.
-// - *A:* While some of the problems with cross-sectional studies are mitigated here,
-//   cross-lagged panel data exhibits similar issues with detangling between-person and
-//   within-person effects @hamakerCritiqueCrosslaggedPanel2015
-// - *B:* Estimating individual-level belief systems remains an open problem. Limited
-//   data, and the fact that many transitions will not be observed. Some progress has
-//   been made for bidirectional belief systems,
-//   e.g., #cite(<brandtMeasuringBeliefSystem2022>, form: "prose").
-// - *A:* In our experiments we have made the simplifying assumption that belief systems
-//   are shared.
-// - *B:* As seen in the comparison of symmetric and asymmetric model dynamics, the
-//   structure and relative interaction strengths in a belief system can change
-//   endogenous dynamics.
-// - *A:* The complete model can be seen as a 'mixing' of the two ideological models.
-// - *T:* We would expect to see differences in intervention dynamics between individuals
-//   to a greater extent than observed in RQ3. Yet expect that the observations from the
-//   complete model reflect an 'average case'.
-
-
 == Implications for future work
 
 Practical takeaways:
@@ -661,6 +577,15 @@ Future directions suggested by our findings:
     these directly to study their impacts. If we expect such factors to meaningfully
     affect belief system dynamics, modelling exogenous factors is perhaps more sensible
     than attempting to control for them.
+  - #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") consider a related
+    problem, namely the interface between different individuals' belief systems.
+    Individual beliefs are affected by (and affect) others' belief systems indirectly
+    via social beliefs---beliefs about the state of others' belief systems.
+    - This actually supports our method for modelling interventions. i.e., in the NB
+      model exogenous changes (other peoples' beliefs) affect your belief system via
+      an interaction term to the belief about that state. Our approach is analogous.
+      The exogenous change affects our belief (say, about the state of climate change)
+      via an interaction term.
 + How asymmetry arises:
   - We have posited two explanations for the asymmetric relations observed in political
     attitudes and climate-related worry. However, these are retrospectively applied to

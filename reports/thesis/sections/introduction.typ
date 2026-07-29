@@ -131,6 +131,30 @@ Stability of belief dynamics:
   - Most observed change in beliefs and behaviours is short-term (or measurement error)
   - This is consistent with the cognitive dissonance theory
 
+Individual belief dynamics are important to understanding behavioural influences
+between individuals: @rodriguezCollectiveDynamicsBelief2016
+@aiyappaEmergenceSimpleComplex2024
+- "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+
+Richness of _perceptions_ of others beliefs:
+- Discussed in @dalegeNetworksBeliefsIntegrative2025
+- References @galesicHumanSocialSensing2021
+
+Approaches to modelling belief systems/dynamics:
+- Regularised partial correlation networks, e.g., @brandtWhatCentralPolitical2019
+- Bayesian networks @powellModelingLeveragingIntuitive2023
+- Social Knowledge Structure @greenwaldUnifiedTheoryImplicit2002
+- Causal Attitude Network @dalegeFormalizedAccountAttitudes2016
+  - Attitudinal Entropy @dalegeAttitudinalEntropyAE2018
+- Hierarchical Ising Opinion model.
+- SEM?
+
+Our approach as an intermediate between undirected models and directed models with
+prespecified structure or acyclicity constraints.
+
+Understanding exogenous influences on belief systems and attitudes
+@coppockBeliefSystemsExhibit2022
+
 == Asymmetry example
 
 Suppose thin arrows have weight 1, thick arrows have weight 2, and a belief/attitude
