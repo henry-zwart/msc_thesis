@@ -4,6 +4,11 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
+#emph-block[
+  *Note:* This section is currently just a collection of mostly-unrelated thoughts and
+  ramblings. Disregard it :)
+]
+
 *TODO:*
 - Address the specific variables we look at in the outbound/inbound experiments.
   Are the variables interesting independently of the asymmetry results/theoretically

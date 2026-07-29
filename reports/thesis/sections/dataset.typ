@@ -1,4 +1,10 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 
 #let full-dataset-name = [*placeholder dataset*]
 #let dataset-name = [climate beliefs dataset]
@@ -603,6 +609,16 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 // *TODO:*
 // - We exclude sixth wave due to no codebook
 
+
+#emph-block[
+  *Note:* Take the content of this subsection with a grain of salt. I drafted this
+  a while back, and need to tidy it up. The variable selection description is
+  also incomplete, and we currently don't describe how the index variables are
+  constructed (we take their mean).
+]
+
+#set text(fill: luma(120))
+
 In light of the complexities and breadth of content of the #full-dataset-name, we
 construct a smaller, targeted dataset of beliefs and attitudes relating to climate
 change, which we expect -- on theoretical grounds -- to exhibit interdependent
@@ -638,7 +654,8 @@ The first is generally considered influential in shifting related attitudes, whi
 the second is expected to be influential on the first, as a perceived descriptive norm.
 Finally, while most inividuals in the USA believe in the _existence_ of climate change,
 there is relatively greater variation in beliefs about it's _causes_. Hence the third
-item is an interesting target for intervention studies. (*TODO: Add citations*)
+item is an interesting target for intervention studies. (*TODO*)
+// TODO: Citations
 
 Given the above requirements and the objective to maximise the number of observations,
 we identify Waves 3 & 4 as suitable candidates. These waves include 1693 repeat
@@ -962,5 +979,6 @@ policy variables, as well as _CC Responsibility_ and _CC Scientists_.
   placement: auto,
 ) <fig:dataset-marginal-distributions>
 
+#set text(fill: black)
 
 
