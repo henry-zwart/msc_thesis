@@ -426,6 +426,18 @@ role of social interaction in belief and attitude change
 @brownMeasurementPartisanSorting2021, including in intervention contexts
 @brewerIncreasingVaccinationPutting2017.
 
+- Previous work integrating cognitive and social forces in belief system models:
+  - Social Knowledge Structure models @greenwaldUnifiedTheoryImplicit2002 (in which
+    nodes represent concepts, and edges are beliefs about association):
+    - Coherence of beliefs with social network @rodriguezCollectiveDynamicsBelief2016
+    - Belief communication as social contagion @aiyappaEmergenceSimpleComplex2024
+  - Causal Attitude Network framework @dalegeFormalizedAccountAttitudes2016 (nodes
+    are beliefs, relations are cognitive consistency relations; more similar to our
+    approach).
+    - Social influences modelled using second-order beliefs regarding others' belief
+      states @dalegeNetworksBeliefsIntegrative2025.
+
+
 We now discuss three representational limitations of the model used in the present study,
 pertaining to (i) the use of pairwise relations, (ii) representation of belief and
 attitude states as Ising model spins, $s in {-1, +1}$, as opposed to binary variables,

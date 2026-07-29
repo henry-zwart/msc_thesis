@@ -6,7 +6,34 @@
 
 #emph-block[
   *Note:* This section is currently just a collection of mostly-unrelated thoughts and
-  ramblings. Disregard it :)
+  ramblings. Feel free to disregard it :)
+
+  I'm also considering a slight revision of the thesis structure. The current structure
+  of the following few sections is:
+  - *Non-equilibrium belief systems (Chapter 3):* Model theory, as well as details on
+    how we model interventions, and choose intervention strength.
+  - *Methods (Chapter 4):* Mostly parameter estimation theory, as well as the soft
+    binarisation, and comments on counterfactual simulations (comparing intervention
+    outcomes with the null/no-intervention model).
+  - *Calibration (Chapter 5):* Results and evaluation of calibrated models (excluding
+    the models calibrated to the ideology-specific data subsets).
+  - *Results (Chpaters 6 and 7):* Mostly results, but also some content that could
+    arguably be in methods (e.g., defining the directional differentials (difference in
+    directional interaction effects), the effect characterisation function).
+
+  The revision I'm considering is as follows:
+  - *Non-equilibrium belief systems (Chapter 3):* Only model theory.
+  - *Parameter estimation (Chapter 4):* Starts with the parameter estimation
+    theory (currently in Methods); finishes with current content of Calibration chapter.
+  - *Methods (Chapter 5):* No more parameter estimation here. The methods-style parts of the results
+    are shifted into this section, as well as intervention modelling approach. i.e.,
+    + Directional differentials as a way to measure asymmetry,
+    + Modelling interventions, discussion on intervention strengths,
+    + Outbound and inbound interventions, two metrics (effect of intervention, effect of
+      asymmetry), and ranking interventions, and
+    + Defining the effect characterisation function; outlining regression decision tree
+      approach as one way to represent this
+  - *Results (Chapters 6 and 7):* Mostly the same, with the methods-stuff removed.
 ]
 
 *TODO:*
