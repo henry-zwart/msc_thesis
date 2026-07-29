@@ -360,10 +360,7 @@ explored in several accounts @rodriguezCollectiveDynamicsBelief2016
 @aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025, generally
 assuming dual objectives of cognitive consistency and social coherence
 @festingerCognitiveDissonance1962 @heiderAttitudesCognitiveOrganization1946
-@gawronskiCognitiveConsistencyFundamental2012. These approaches differ mostly with
-regards to the methods by which beliefs are communicated (e.g., individually or
-collectively, directly or indirectly via second-order social beliefs) and the underlying
-belief system model structure. The Networks of Belief theory, proposed by
+@gawronskiCognitiveConsistencyFundamental2012. The Networks of Belief theory, proposed by
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose"), builds on the Causal
 Attitude Network model which also serves as the foundation for our proposed model. Since
 our work is mostly orthogonal to theirs, we anticipate that it would be straightforward
