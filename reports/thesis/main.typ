@@ -107,7 +107,7 @@
 // #include "sections/literature_review.typ"
 
 
-= Conclusions and future work <sec:conclusions>
+= Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
 
 = Ethics and Data Management

@@ -96,6 +96,8 @@ Variation in belief systems between individuals:
 Stability of belief dynamics:
 - @osborneDoesOpennessExperience2020
 - @kileyMeasuringStabilityChange2020
+  - Most observed change in beliefs and behaviours is short-term (or measurement error)
+  - This is consistent with the cognitive dissonance theory
 
 == Asymmetry example
 

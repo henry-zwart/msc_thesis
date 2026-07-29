@@ -1,6 +1,5 @@
-#lorem(100)
+- Influence is important for interventions but influentiability is really important
+  for _indirect_ interventions.
 
-#lorem(150)
 
-#lorem(100)
 

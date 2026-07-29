@@ -4,12 +4,6 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
-*Todos:*
-- Comparison with other measures of influence, e.g., centrality in PRCNs @brandtWhatCentralPolitical2019, hierarchy in Bayesian networks @powellModelingLeveragingIntuitive2023
-- Comparison of model with other kinds:
-  - Partial correlation networks
-  - Bayesian networks
-  - Symmetric (cross-sectional) Ising model
 
 // Key points to hit:
 // // 1. Remind the reader of the research questions
@@ -51,8 +45,10 @@ belief-level interventions.
 // TODO: Can tie these together more. They don't need to be so separate.
 // - Maybe have RQ1---3, and then RQ4.
 
-#show-rq(1)[To what extent are causal relations _symmetric_ or _asymmetric_, in models
-  of climate change belief systems inferred from the climate beliefs dataset?]
+#show-rq(1)[
+  To what extent are causal relations _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
+] <discussion-rq1>
 
 On the question of existence, @subsec:asymmetry-results-existence demonstrated
 asymmetric relations between several pairs of beliefs and attitudes, while also
@@ -60,9 +56,16 @@ finding that asymmetry may  not _always_ be exhibited. Two attitudes---political
 ideology/alignment and climate-related #box[concerns---displayed] significant excess
 influence over several other beliefs and attitudes.
 
+#let within-person-footnote = footnote[
+  Note that this interpretation (in particular, the use of the verb 'constrains') depends
+  on the assumption that the calibrated model captures within-person associations. We
+  discuss this matter in some depth
+  #link(<within-person-discussion>)[later in this chapter].
+]
+
 How should we interpret these asymmetric relations? Recall that relations in the
 non-equilibrium belief system model reflect temporal influence---how much one belief or
-attitude constrains the future state of another (@sec:asymmetric-belief-systems). An
+attitude constrains#within-person-footnote the future state of another (@sec:asymmetric-belief-systems). An
 asymmetric relation reflects a constraint differential, where one belief or attitude
 has greater influence on the other than vice versa. More generally, the asymmetric model
 distinguishes between two forces: influence, and influentiability. Influence
@@ -71,13 +74,21 @@ attitude constrains others, while influentiability (the strength of inbound inte
 determines the extent to which its own behaviour is constrained by others.
 
 Political identity being more influential than influentiable in this context is
-consistent with previous studies on the mutual influences of this variable
+consistent with previous studies on its mutual influences
 with climate-related beliefs and attitudes in the USA. First, political identity
 has been shown to substantially impact both climate-related beliefs
 @whitmarshScepticismUncertaintyClimate2011, as well as support for climate policies
 @bumannWhatAreDeterminants2021, with individuals tending to support or oppose specific
 policies on the basis of partisan identification rather than policy content
-@unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018. At the same
+@unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018.
+
+#figure(
+  image("../diagrams/politics_example/politics_example.svg", width: 80%),
+  placement: none,
+  outlined: false,
+)
+
+At the same
 time, while public beliefs and attitudes toward climate change in the USA have shifted
 significantly over the past two decades @marlonChangeUSStatelevel2022
 @hamiltonTrackingPublicBeliefs2015, political identity has been shown to be highly
@@ -86,13 +97,14 @@ stable over similar timeframes @greenPartisanStabilityTurbulent2024
 contributes meaningfully to climate-related beliefs and attitudes, changes in these
 states are less likely to incite changes in political identity.
 
+
 Climate-related concern exhibits asymmetric influence over beliefs regarding the
 anthropogenic nature and current impacts of climate change. Both relationships have
 received comparatively less attention in prior research than those of political
-ideology/alignment with climate beliefs and attitudes. One possible explanation for
-these asymmetric relations, however, is that climate worry and climate beliefs influence
-one another through different mechanisms, with
-#cite(<meadInformationSeekingGlobal2012>, form: "prose") suggesting that climate worry
+attitudes with climate beliefs and attitudes. One possible explanation for
+these asymmetric relations is that climate worry and climate beliefs influence
+one another through different mechanisms. For instance,
+#cite(<meadInformationSeekingGlobal2012>, form: "prose") suggest that climate worry
 may promote information-seeking behaviour, leading to changes in climate-related beliefs.
 
 
@@ -133,8 +145,7 @@ may promote information-seeking behaviour, leading to changes in climate-related
   How do asymmetric and symmetric beliefs systems differ with regards to
   intervention strategy and effectiveness, in models inferred from the climate
   beliefs dataset?
-]
-
+] <discussion-rq2>
 
 The consequences of asymmetry for belief system dynamics were subsequently reflected in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
@@ -147,6 +158,18 @@ Interestingly, while interventions on climate-related concerns typically
 outperformed those on political ideology/alignment in terms of absolute effect of
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
+
+For the measurement timescale used in these experiments (approximately 2.5 years),
+interventions appeared to act primarily through direct interactions, though smaller
+indirect effects were also present. Additional experiments included in
+@sec:appendix-extra-results found that longer timeframes led to increased indirect
+intervention effects. The presence of indirect effects is broadly expected given the
+pre-defined model dynamics; however, the observed magnitudes suggest that while state
+changes may propagate beyond direct connections, this process is typically slow. We
+return to this point shortly in our discussion of *RQ3* (see
+#link(<discussion-rq3-indirect-effects>)[here]), which finds that some indirect
+propagation may nonetheless be instrumental to achieving effective interventions at
+an individual level. <discussion-rq2-indirect-effects>
 
 // Before continuing on this point, let's take a moment to clarify the interpretation of
 // asymmetric relations. Recall that in the non-equilibrium belief system model, relations
@@ -174,10 +197,10 @@ strength. The key difference, however, lies in the attitudes' influentiability; 
 climate-related concern has inbound and outbound interactions with all other beliefs and
 attitudes, political ideology/alignment has considerably fewer _inbound_ than _outbound_
 edges#full-model-disclaimer. That is, several beliefs and attitudes influenced by this
-variable have no influence on it themselves. Since, by definition, the symmetric model
-must either include or exclude both directional interactions between a pair of beliefs
-or attitudes, cases where the asymmetric model specifies an interaction in only one
-direction necessarily lead to differences in observed model behaviour.
+variable have no influence on it themselves. Since the symmetric model
+must include or exclude both directional interactions between a pair of
+beliefs, cases where the asymmetric model specifies an interaction in only one
+direction necessarily lead to differences in model behaviour.
 This draws attention to a broader issue regarding relational symmetry assumptions.
 
 One
@@ -190,6 +213,7 @@ model, inferred strengths generally lie between the corresponding directional
 interaction strengths in the asymmetric model. For beliefs or attitudes with asymmetric
 relations we found that this can result in substantial differences in influentiality
 and influentiability between the two models.
+
 
 // , as seen in the comparison of political ideology/alignment and beliefs
 // regarding climate impact in @subsec:asymmetry-results-impact.
@@ -219,7 +243,7 @@ and influentiability between the two models.
   How do intervention outcome and effectiveness vary between individuals with
   different initial conditions in asymmetric belief systems inferred from the
   climate beliefs dataset?
-]
+] <discussion-rq3>
 
 // We now change tack to consider the results associated with the final two research
 // questions.
@@ -228,14 +252,19 @@ intervention effectiveness depends predictably on individuals' pre-intervention 
 states. Most high-effect interventions targeting attitudes toward climate action
 required low initial values for both the point-of-intervention and target.
 
-Surprisingly, pre-intervention climate-related concern was required to be low for _all_ of the
-personas identified as characteristic of effective interventions, even when this was
-neither the point-of-intervention, nor the target.
+Surprisingly, pre-intervention climate-related concern was required to be low for _all_
+of the personas identified as characteristic of effective interventions, even when this
+was neither the point-of-intervention, nor the target.
 This finding may be explained by the combination of high influence and
 influentiability associated with climate-related concern, thereby making this variable an
 effective indirect route for various interventions (not restricted to this particular
 target). This stands in contrast with political ideology/alignment, which has similarly
 high influence on the target variable, but is harder to influence, as discussed above.
+At first glance this finding appears to contradict our earlier discussion on *RQ2*
+(see #link(<discussion-rq2-indirect-effects>)[here]), which found indirect interventions
+to have limited impact on collective effects over short timeframes. However, this rather
+reflects the diversity in intervention outcomes across individuals.
+<discussion-rq3-indirect-effects>
 
 #let persona-count-footnote = footnote[
   The personas are given by the paths from the root to each leaf; a binary tree with
@@ -278,7 +307,7 @@ support for climate policy and related attitudes @grometPoliticalIdeologyAffects
 #show-rq(4)[
   How do asymmetric belief systems inferred from the climate beliefs dataset
   vary between conservative and liberal individuals?
-]
+] <discussion-rq4>
 
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
@@ -295,6 +324,11 @@ together had high overlap in connectivity with the complete model. We found only
 case of significant asymmetry, which was also present in the model fit to the complete
 dataset.
 
+// NOTE: Maybe include
+// Three interactions differed significantly between the models, consistent with
+// political identity as a moderating factor between climate beliefs and climate worry
+// @gregersenPoliticalOrientationModerates2020.
+
 These findings demonstrate both significant differences and similarities between
 relational belief system structures, conditional on political ideology, in line with
 earlier studies comparing belief systems on partisan identity
@@ -309,7 +343,6 @@ than the conservative model; however, the higher sparsity is also corroborated b
 significantly lower edge selection for several interaction in the liberal model across
 bootstrap samples. This finding may suggest a greater degree of consistency in the
 observed dynamics between individuals who self-identify as liberal.
-
 
 Previous studies by #cite(<gregersenPoliticalOrientationModerates2020>, form: "prose")
 and #cite(<lindComparingAttitudinalStructures2024>, form: "prose") identified
@@ -329,6 +362,7 @@ the time-lagged interaction parameters used in the present study.
 
 == Limitations
 
+#metadata[] <within-person-discussion>
 When beliefs and attitudes are fairly stable---as in the climate beliefs
 dataset---cross-sectional methods for inferring belief system structure tend to
 identify _between_-person associations more so than the _within_-person associations
@@ -367,14 +401,25 @@ capture within-person associations.
 Relatedly, since the climate beliefs dataset comprises only two waves, we cannot
 distinguish between belief system dynamics arising due to endogenous factors (the
 states of other beliefs and attitudes) and exogenous factors (current events which
-affect beliefs and attitudes). We implicitly assume that (i) exogenous dynamics on
-an individual level are not substantially correlated between individuals, and thus
-not reflected in the model, and (ii) the time between measurements (approximately
-six months) is sufficiently short that widespread exogenous factors are negligible.
-The second assumption has questionable validity, since for instance, both the 2020 US
-presidential election and January 6 Capitol attack occurred during this timeframe.
+affect beliefs and attitudes). We implicitly assume that (i) exogenously-driven
+dynamics at an individual level are not substantially correlated between individuals,
+and thus not reflected in the model, and (ii) the time between measurements
+(approximately six months) is sufficiently short that widespread exogenous factors are
+negligible.
 
-Moreover, our present focus on endogenous dynamics does not discount the substantial
+The second assumption has questionable validity, since for instance, both
+the 2020 US presidential election and January 6 Capitol attack occurred during this
+timeframe.
+However, we observed highly stable political attitudes over this period, consistent
+with prior studies @greenPartisanStabilityTurbulent2024. Given the significance and
+considerable media coverage of both events, as well as their highly-political nature,
+we would expect political attitudes to be affected more so than climate-related
+beliefs/attitudes. The fact that we do not see this reflected may suggest minimal
+exogenous impacts, more generally, on the beliefs and attitudes considered in this
+study.
+
+
+Our present focus on endogenous dynamics also does not discount the substantial
 role of social interaction in belief and attitude change
 @karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
 @degrootReachingConsensus1974a or stability @prenticePluralisticIgnorancePerpetuation1996
@@ -549,62 +594,143 @@ constrained when *Happening* is high than when it is low.
 
 == Implications for future work
 
-Format:
-- Key result:
-  - Direct implications
-  - Specific areas for future work
-- Broader takeaways
-- Broader areas for future work
+Practical takeaways:
++ Model choice:
+  - Symmetry assumption may often be valid
+  - But risks misspecification
++ Distinction between influence and influentiability:
+  - Compare with other measures of centrality/influence
+  - Influence is often important for interventions, but influentiability is also
+    important for indirect propagation.
 
-- Evidence of asymmetry, especially for political attitudes and climate-related concerns:
-  - Affects how we should think about influence or centrality. A belief may be central
-    and influential, but hard to influence. Alternatively may be easy to influence but
-    not very influential.
-  - Extent to which this exists is unclear. Sampling error
-    results in confidence intervals with average width $approx 0.1$, preventing us
-    from distinguishing minor asymmetry from symmetry. Sampling error is expected
-    to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
-    timesteps.
+Future work, building directly on our results:
++ Reducing sampling error/parameter uncertainty, to gauge extent of asymmetry,
+  better distinguish between symmetric and 'minimally asymmetric' cases.
++ Determine extent to which inferred models reflect within-person associations
+  or between-person associations.
++ Improve effect characterisation function approach:
+  - Handling of highly correlated features robustly
+  - Current approach constrains rule complexity by prespecifying decision tree depth.
+    This is somewhat arbitrary. Limits the number of rules (when more rules may be
+    required for a full characterisation) and implies a fixed rule length equal to the
+    depth. Also assumes a hierarchical structure to the rules (i.e., all rules include
+    the root feature). We could instead identify rules more flexibly and penalise the
+    characterisation complexity directly, e.g., using MDL.
++ Experimental extensions:
+  - Investigating transferability of models inferred from 'natural' dynamics (i.e.,
+    minimal exogenous influence, as assumed in the present study) to situations with
+    exogenous influences. Interventions fall under the latter category. Prior research
+    suggests dynamics may be different, for instance due to increased salience of
+    certain attitudes/beliefs @unsworthItsPoliticalHow2014.
+  - Experimental validation using intervention studies.
 
-- Broader takeaways
+Future directions suggested by our findings:
++ Modelling individual belief systems:
+  - Differences, but also similarities, between belief systems, implied by ideological
+    belief system experiment.
+  - Measuring or approximating individual baseline activations. Unreported experiments
+    show these can be somewhat approximated using demographic factors.
+  - Suggests a middle-ground between calibrating individual models and assuming a single
+    shared model. Akin to partial pooling, compared with no pooling or total pooling in
+    Bayesian statistics.
+  - Must consider how both baseline activations and belief system structure vary between
+    people.
++ The 'world-belief interface':
+  - We adopt a simplistic view of interventions, which assumes we can intervene directly
+    and equivalently on individual beliefs/attitudes. In reality some beliefs/attitudes
+    may be easier or more difficult to intervene on, and the communication of
+    interventions may be 'noisy' (e.g., subject to interpretation), potentially
+    impacting the magnitude, direction, and set of beliefs/attitudes affected. Each of
+    these has conceivable implications for intervention dynamics and effects.
+    Understanding how interventions cross this interface is therefore important.
+  - Exogenous factors (e.g., the 2020 presidential election) can, in theory, be treated
+    using the intervention framework applied in this study. These are simply
+    interventions which we don't control. From this perspective we can consider modelling
+    these directly to study their impacts. If we expect such factors to meaningfully
+    affect belief system dynamics, modelling exogenous factors is perhaps more sensible
+    than attempting to control for them.
++ How asymmetry arises:
+  - We have posited two explanations for the asymmetric relations observed in political
+    attitudes and climate-related worry. However, these are retrospectively applied to
+    the findings, so arguably have minimal evidential weight @popper1963science.
+  - Our model provides a method by which hypotheses about the general mechanisms by which
+    asymmetric belief and attitude relations occur can be tested.
 
-- Broader areas for future work:
-  - Individual belief systems, understanding the within-person components
-  - Experimental validation, and calibration based on experimental data with
-    interventions. Since natural dynamics are slow, but we anticipate
-    interventions may be quicker (we observe sudden changes in several beliefs;
-    if states changed independently and slowly for all people, we wouldn't see this).
 
-- RQ1:
-  - Evidence of asymmetry. Extent to which this exists is unclear. Sampling error
-    results in confidence intervals with average width $approx 0.1$, preventing us
-    from distinguishing minor asymmetry from symmetry. Sampling error is expected
-    to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
-    timesteps.
-  - Furthermore, additional investigation is required to determine the extent to
-    which the inferred interactions, and hence asymmetry, reflect within-person
-    associations.
-  - Practically, our findings suggest the symmetric assumption may often be valid, or
-    at least a reasonable
-    approximation, yet asymmetric relations are likely to exist, and will not be captured
-    by such an approach.
-  - Robustness to external events.
-  - Simplistic intervention assumptions (only affect one spin, )
-- RQ2:
-
-
-+ *T:* Open questions and future work
-  - Individual belief systems
-  - Representational capacity
-  - Purposeful intervention study
-  - Index variables could be derived intentionally, i.e., theoretically-motivated.
-
-_Implications of findings. How can the results be applied practically? What
-questions/directions do the findings suggest?_
-- *T:* The symmetric assumption may often be valid, or at least a reasonable
-  approximation (e.g., when asymmetry exists, but the difference in effects is
-  small), yet asymmetric relations are likely to exist, and will not be captured
-  by such an approach.
+// *Todos:*
+// - Comparison with other measures of influence, e.g., centrality in PRCNs @brandtWhatCentralPolitical2019, hierarchy in Bayesian networks @powellModelingLeveragingIntuitive2023
+// - Comparison of model with other kinds:
+//   - Partial correlation networks
+//   - Bayesian networks
+//   - Symmetric (cross-sectional) Ising model
+//
+// Format:
+// - Key result:
+//   - Direct implications
+//   - Specific areas for future work
+// - Broader takeaways
+// - Broader areas for future work
+//
+// - Evidence of asymmetry, especially for political attitudes and climate-related concerns:
+//   - Affects how we should think about influence or centrality. A belief may be central
+//     and influential, but hard to influence. Alternatively may be easy to influence but
+//     not very influential.
+//   - Extent to which this exists is unclear. Sampling error
+//     results in confidence intervals with average width $approx 0.1$, preventing us
+//     from distinguishing minor asymmetry from symmetry. Sampling error is expected
+//     to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
+//     timesteps. @hertzIsingModelsInferring2011
+//
+// - Broader takeaways
+//
+// - Broader areas for future work:
+//   - Individual belief systems, understanding the within-person components
+//     - While #cite(<hamakerCritiqueCrosslaggedPanel2015>, form: "prose") suggests
+//       modelling individual intercepts (baseline activations) to absorb between-person
+//       effects, accounting for the presence of stable traits, this is akin to 'using
+//       a hammer to kill a fly'. Ideally, we would measure the culprit traits directly
+//       (or proxies thereof). In unreported experiments, we found that a small
+//       number of demographic factors were sufficient to describe noticeable differences
+//       in baseline activations.
+//     - This also doesn't capture _individual_ belief systems. We saw evidence of these
+//       in the ideology experiment. Even if we capture within-person associations, if
+//       we do not model structural differences between individuals, the resulting model
+//       at best captures a murky approximation to the 'average' individual.
+//   - Experimental validation, and calibration based on experimental data with
+//     interventions. Since natural dynamics are slow, but we anticipate
+//     interventions may be quicker (we observe sudden changes in several beliefs;
+//     if states changed independently and slowly for all people, we wouldn't see this).
+//
+// - RQ1:
+//   - Evidence of asymmetry. Extent to which this exists is unclear. Sampling error
+//     results in confidence intervals with average width $approx 0.1$, preventing us
+//     from distinguishing minor asymmetry from symmetry. Sampling error is expected
+//     to reduce as $sqrt(M(T-1))$, where $M$ is the number of participants and $T$
+//     timesteps.
+//   - Furthermore, additional investigation is required to determine the extent to
+//     which the inferred interactions, and hence asymmetry, reflect within-person
+//     associations.
+//   - Practically, our findings suggest the symmetric assumption may often be valid, or
+//     at least a reasonable
+//     approximation, yet asymmetric relations are likely to exist, and will not be captured
+//     by such an approach.
+//   - Robustness to external events.
+//   - Simplistic intervention assumptions (only affect one spin, )
+// - RQ2:
+//
+//
+// + *T:* Open questions and future work
+//   - Individual belief systems
+//   - Representational capacity
+//   - Purposeful intervention study
+//   - Index variables could be derived intentionally, i.e., theoretically-motivated.
+//
+// _Implications of findings. How can the results be applied practically? What
+// questions/directions do the findings suggest?_
+// - *T:* The symmetric assumption may often be valid, or at least a reasonable
+//   approximation (e.g., when asymmetry exists, but the difference in effects is
+//   small), yet asymmetric relations are likely to exist, and will not be captured
+//   by such an approach.
 
 
 // NOTE: Re-statement of results
