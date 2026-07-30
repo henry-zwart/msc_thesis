@@ -1,9 +1,15 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 // TODO: Discussion on interpreting asymmetric relations in terms of the
 // mathematical/conceptual models
 
-== Belief system dynamics <subsec:methods-belief-system-dynamics>
+== (Endogenous) Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
 //   - Cognitive dissonance
@@ -17,57 +23,139 @@
 //   - Broader Markov process describes the state of the belief system as a whole
 //
 
-We will now formalise the dynamics of an individual belief system, under the following
-assumptions:
+#emph-block[
+  This requires some work, rethinking. Each belief/attitude should be a separate random
+  variable. The distribution over each one is conditional on the previous full set of
+  outcomes. This conditional distribution is time-invariant.
 
-+ Beliefs and attitudes can be treated as discrete entities.
+  Implications are:
+  + It makes sense to consider beliefs and atttudes as entities, which can be
+    characterised by their instantaneous state.
+  + That the behaviour of a belief/attitude depends on, and only on, the _previous_
+    states. i.e., memory $= 1$.
+  + That belief and attitude dynamics are not sensitive to exogenous contextual factors,
+    such as tiredness, exposure to current events, belief salience.
 
-+ The state of a belief or attitude is Markovian with respect to the previous system
-  configurations.
 
-+ The probability distribution relating current and future belief states does not
-  change over time.
+  *Note:* When we refer to a 'belief' or 'attitude', we are referring to the entity
+  rather than a specific state. Unless stated otherwise.
 
-The first assumption includes two key points. Firstly, that it makes sense to consider
-beliefs and attitudes as _entities_, or _objects_. This contrasts, for instance,
-alternative interpretations of attitudes as emissions from an underlying structure.
-(*TODO:* review CAN paper for further discussion on this matter). Secondly, that
-beliefs and attitudes can be considered _discrete_ or _separable_. This is to say
-that there are no absolute physical constraints on the combinations of states which
-may be observed (although certain combinations may be highly unlikely). In particular,
-this captures the requirement that each belief or attitude can be represented using a
-single state variable.
+  A 'Belief System' is a collection of beliefs and attitudes in combination with the
+  transition probability linking consecutive states.
+]
 
-Our second assumption concerns the treatment of beliefs and attitudes as Markovian.
-- Harder to justify conceptually, since individuals have memory and can recall prior
-  states beyond the previous second.
+Our theory of belief system dynamics rests on three main assumptions. First, we assume
+that beliefs and attitudes can be represented as discrete random variables. This allows
+us to consider beliefs and attitudes as entities characterised by an instantaneous
+state. In particular, this assumption contrasts alternative views that beliefs and
+attitudes are dispositional or the result of interactions with the environment, with no
+associated state of their own (*CITATIONS*). Second, we assume that the state
+distribution for any given belief or attitude is conditional on the previous states
+of all others, formalising the idea that past beliefs and attitudes influence present
+ones. Finally, we assume that these conditional distributions are time-invariant. While
+belief and attitude _states_ may change over time, the dynamics by which this happens do
+not.
 
-Consider a belief or attitude $S_i$ with domain $Omega_(S_i)$. The state of $S_i$
-at time $t$ depends on the previous states of other beliefs and attitudes, and
-we can therefore describe the trajectory of $S_i$ as a Markov process:
+// For instance, they  sensitive to context (e.g., being in a certain location or
+// talking to a specific person), physical state (e.g., tiredness), or
+// such as
 
+#important-block[
+  The terms *belief* and *attitude* are presently ambiguous. On one hand, they can refer
+  to generic concepts (e.g. belief regarding the contents of a box, or attitude toward
+  ...) or specific instances of those concepts (e.g., 'I believe that the box is empty',
+  or '...').
+
+  For the remainder of this thesis, unless stated otherwise, we adopt the
+  _generic_ sense. That is to say that we use the term 'belief' without assuming any
+  particular epistemic state, and 'attitudes' without assuming any particular
+  disposition.
+
+  For simplicity, we will also typically use the term *belief* to refer to both beliefs
+  and attitudes, except when the distinction is important.
+]
+
+
+
+
+// We will now formalise the dynamics of an individual belief system, under the following
+// three assumptions:
+//
+//
+// + Each belief or attitude can be treated as a distinct entity,   .
+//
+// + The state of a belief or attitude depends only on the previous configuration of beliefs
+//   and attitudes.
+//
+// + The transition probability is time-invariant.
+//
+// The first assumption includes two key points. Firstly, that it makes sense to consider
+// beliefs and attitudes as _entities_, or _objects_. This contrasts, for instance,
+// alternative interpretations of attitudes as emissions from an underlying structure.
+// (*TODO:* review CAN paper for further discussion on this matter). Secondly, that
+// beliefs and attitudes can be considered _discrete_ or _separable_. This is to say
+// that there are no absolute physical constraints on the combinations of states which
+// may be observed (although certain combinations may be highly unlikely). In particular,
+// this captures the requirement that each belief or attitude can be represented using a
+// single state variable.
+//
+// Our second assumption concerns the treatment of beliefs and attitudes as Markovian.
+// - Harder to justify conceptually, since individuals have memory and can recall prior
+//   states beyond the previous second.
+
+Consider a set of belief $bold(S) = {S_1, S_2, ..., S_N}$, where for each
+$i in 1..N$, the belief $$
+which takes values from .
+Given the above assumptions, we can describe the trajectory of a belief or
+attitude $S_i$ with domain $Omega_i$ as a sequence of states
 $
-  {s_i^t}_(t=1)^infinity quad "where" quad s_i^t in Omega_(S_i)
+  {s_i^t}_(t=1)^infinity quad "where" quad s_i^t in Omega_i
 $ <eqn:methods-belief-system-dynamics-belief-markov-process>
+characterised by the family of conditional distributions $P(sigma_i^(t+1) | bold(sigma)^t)$ for
+$1 < t in NN$ and an initial state $P(sigma_i^1)$.
 
-with conditional state probability $P(S_i^(tau+1) | bold(S)^1, ..., bold(S)^(tau)) = P(S_i^(tau + 1) | bold(S)^tau)$ for $tau in NN$.
-
-Since the state of $S_i^(t+1)$ depends only on the previous belief system state, it
-follows that for any other belief or attitude $S_j$, the states $S_i^(t+1)$ and
-$S_j^(t+1)$ are conditionally independent given $bold(S)^t$. We can therefore
-straightforwardly extend @eqn:methods-belief-system-dynamics-belief-markov-process to
-describe the evolution of the entire belief system as a Markov process,
+Noting that the state of a belief $S_i$ depends only on the previous states of all other
+beliefs and attitudes, it follows that any pair of beliefs or attitudes $S_i$ and $S_j$
+are conditionally independent at a given timestep given all previous belief and attitude
+states. In particular, this means we can describe the evolution of the complete set
+of beliefs and attitudes as a Markov process:
 
 $
-  {bold(s)^t}_(t=1)^infinity quad "where" bold(s)^t in Omega_(S_1) times dots.c times Omega_(S_n)
+  {bold(s)^t}_(t=1)^infinity quad "where" bold(s)^t in Omega_1 times dots.c times Omega_N
 $ <eqn:methods-belief-system-dynamics-belief-system-markov-process>
 
-with the probability of each belief system configuration given by the conditional
-distribution $P(bold(S)^(t+1) | bold(S)^t)$.
+with transition probability
+$P(bold(sigma)^(t+1) | bold(sigma)^t) = product_i^N P(sigma_i^(t+1) | bold(sigma)^t)$ for
+$1 < t in NN$ and initial state probability
+$P(bold(sigma)^1) = product_(i=1)^N P(sigma_i^1)$.
 
-Under this conceptualisation, the task of modelling a belief system thus reduces to
-describing how the instantaneous configuration of belief states affects the probability
-distribution over possible future states.
+We use the term *belief system* to refer to the combination of a collection of attitudes
+$bold(S)$ and its associated transition probability distribution
+$P(bold(S)^(t+1) | bold(S)^t)$.
+In this
+conceptualisation, the task of modelling a belief system reduces to describing how the
+instantaneous configuration of belief and attitude states affects the distribution over
+possible future states.
+
+
+
+// Consider a belief or attitude $S_i$ with domain $Omega_(S_i)$. The state of $S_i$
+// at time $t$ depends on the previous states of other beliefs and attitudes, and
+// we can therefore describe the trajectory of $S_i$ as a Markov process:
+//
+//
+// with conditional state probability $P(S_i^(t+1) | bold(S)^1, ..., bold(S)^t)) = P(S_i^(t + 1) | bold(S)^t)$ for $t in NN$.
+//
+// Since the state of $S_i^(t+1)$ depends only on the previous belief system state, it
+// follows that for any other belief or attitude $S_j$, the states $S_i^(t+1)$ and
+// $S_j^(t+1)$ are conditionally independent given $bold(S)^t$. We can therefore
+// straightforwardly describe the evolution of the entire belief system as the Markov
+// process:
+//
+//
+// with associated transition probability given by the conditional distribution
+// $P(bold(S)^(t+1) | bold(S)^t)$ and initial state probability $P(bold(S)^0)$.
+
 
 
 == Non-equilibrium belief system model <subsec:theory-nonequilibrium-belief-system-model>
@@ -87,24 +175,11 @@ distribution over possible future states.
 //   timescale for belief change.
 
 When studying the _symmetric_ Ising model it is common to assume that the model is
-at equilibrium, such that
-$P(bold(S)^(t+1) = bold(s) | bold(S)^t) = P(bold(S) = bold(s))$ for all configurations
-$bold(s)$ and observation times $t$. The probability of
-observing $bold(s)$ is then time-invariant and given by the Boltzmann probability
-parameterised by the Hamiltonian $H(bold(s))$ @christensenComplexityCriticality2005
-@cardyScalingRenormalizationStatistical1996:
+at equilibrium, such that the transition probability is stationary and given by the
+Boltzmann distribution @christensenComplexityCriticality2005
+@cardyScalingRenormalizationStatistical1996.
 
-$
-  P(bold(S) = bold(s)) = (e^(-1/(k_b T) dot H(bold(s))))/(sum_(bold(s)') e^(-1/(k_b T) dot H(bold(s)')))
-$ <eqn:methods-model-boltzmann>
-
-where $k_b$ is the Boltzmann constant, and the temperature parameter $T in RR^+$
-controls stochasticity. @eqn:methods-model-boltzmann converges to a uniform
-distribution over all configurations when $T -> +infinity$, and a uniform
-distribution over the restricted set of configurations for which $H(bold(s'))$ is
-minimised when $T -> 0^+$.
-
-For the purposes of this study, we are interested in intervention dynamics, which are
+For the purposes of this study, however, we are interested in intervention dynamics, which are
 inherently non-equilibrium. To see why this is the case, notice that the purpose of
 intervention is to change the distribution of observed states. This is true both
 interventions intended to change the dominant state (e.g., to promote a sustainable
@@ -133,7 +208,7 @@ increases with the magnitude of $h_i$.
 
 Other spins influence $S_i$'s state through alignment or opposition relations. For
 a spin $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
-$i$'_). When $J_(i j)$ if positive or negative, $S_i$ is influenced to adopt the state
+$i$'_). When $J_(i j)$ is positive or negative, $S_i$ is influenced to adopt the state
 $S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
 to $J_(i i)$ as a _self-influence_ effect. Positive self-influence effects reflect
 the inertia of $S_i$, i.e., the tendency to sustain a particular belief or attitude

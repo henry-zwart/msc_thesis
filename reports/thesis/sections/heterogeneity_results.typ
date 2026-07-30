@@ -140,6 +140,7 @@ interventions, we combine them into a single persona which omits that feature (i
 spans the entire feature dimension). This is observed, for instance, in the persona
 for interventions on `CC Worry`.
 
+// TODO: Consider making this part of the text, since we refer to it in the discussion
 #let incomplete-descriptions-footnote = footnote[
   Note that the personas are not necessarily complete. For instance, suppose that a pair
   of variables are highly correlated in the initial state, and are Low whenever
