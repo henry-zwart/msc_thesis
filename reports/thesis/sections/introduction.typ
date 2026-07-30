@@ -155,6 +155,8 @@ prespecified structure or acyclicity constraints.
 Understanding exogenous influences on belief systems and attitudes
 @coppockBeliefSystemsExhibit2022
 
+Modularity clustering for correlation networks @masudaIntroductionCorrelationNetworks2025
+
 == Asymmetry example
 
 Suppose thin arrows have weight 1, thick arrows have weight 2, and a belief/attitude

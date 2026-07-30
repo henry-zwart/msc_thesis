@@ -519,14 +519,84 @@ constrained when *Happening* is high than when it is low.
 
 == Implications for future work
 
-Practical takeaways:
-+ Model choice:
-  - Symmetry assumption may often be valid
-  - But risks misspecification
-+ Distinction between influence and influentiability:
-  - Compare with other measures of centrality/influence
-  - Influence is often important for interventions, but influentiability is also
-    important for indirect propagation.
+// NOTE:
+// Practical takeaways:
+// + Model choice:
+//   - Symmetry assumption may often be valid
+//   - But risks misspecification
+// + Distinction between influence and influentiability:
+//   - Compare with other measures of centrality/influence
+//   - Influence is often important for interventions, but influentiability is also
+//     important for indirect propagation.
+
+Our findings suggest that while the symmetric assumption may often be valid, or at
+least a reasonable approximation, asymmetric relations between beliefs and attitudes
+are nonetheless possible. When the true relations are asymmetric, not accounting for this
+when modelling belief interactions is a case of model misspecification, and can lead to
+incorrect inferences regarding the relative influence of different beliefs.
+
+The primary issue here is that symmetric models do not account for differences between
+a belief's influence (how much it affects the states of other beliefs) and
+influentiability (how much its own state is affected by other beliefs). Empirical
+studies on belief systems often use network centrality measures (e.g., degree, strength,
+betweenness, closeness) to assess nodes' relative 'importance' or 'influence'.
+
+- May be different for symmetric and asymmetric networks
+- Influence and influentiability are both important
+- While high values may indicate both high in asymmetric, low values don't necessarily
+  mean that both are low (e.g., in-degree vs out-degree for `Politics`).
+
+
+Measures of influence:
+- Centrality:
+  - Degree: Number of incident connections
+  - Strength: Strength of association with other nodes.
+  - Betweenness: Number of shortest paths a node occurs on
+  - Closeness: Average shortest path to each other node
+- Hierarchy (in DAG model)
+- Expected influence @robinaughIdentifyingHighlyInfluential2016
+
+
+While we have identified cases of apparent asymmetry, further work is required to
+understand both the extent to which asymmetry is the exception as opposed to the norm
+(requiring more observations to reduce sampling error), and the extent to which the
+inferred asymmetry reflects within-person associations (requiring at least three waves).
+The models used for the experiments detailed in the previous chapters were limited to
+two waves of the climate attitudes survey in order to assess a reasonable number of
+parameters, and certain variables of interest (see @subsec:dataset-dataset-construction).
+If we drop these requirements, however, then additional waves and observations become
+available, and both questions are somewhat approachable.
+
+For instance, if we use
+variables from Waves 2-5 of the climate attitudes survey, the total number of repeat
+participants is 1067. Since we expect the parameter error to go to zero like
+$1/sqrt(M(T-1))$, where $M$ is the number of participants and $T$ is the number of
+observations, ... *Actually, the number I see in the figure is before removing problem
+participants*
+
+However, if we drop these requirements, then then the potential dataset size and number of
+usable waves are
+
+The former requires a reduction in sampling error (and resulting parameter uncertainty);
+the latter requires at least three waves.
+
+Our experiments were limited
+WhileThis is readily approachable,
+While we were limited to two waves of data
+Our experiments were limited to two waves of data, due to differences in survey content and so as to include certain variables. This had adverse effects on parameter accuracy, and prohibits us
+from separating within-person and between-person associations.
+However, using a smaller set of variables, it is possible to make use of additional
+waves of data. We expect the parameter uncertainty to decrease as $1/sqrt(M(T-1))$.
+
+- We could only use two waves because we wanted to have a sufficient number of
+  variables.
+- With a smaller set of variables, we could potentially use more waves (e.g., 3,4,5
+  gives 1258 participants; 2,3,4,5 gives 1067), and be able to obtain lower sampling
+  error, as well as investigate the extent to which the models capture within-person
+  interactions.
+
+
+
 
 Future work, building directly on our results:
 + Reducing sampling error/parameter uncertainty, to gauge extent of asymmetry,
