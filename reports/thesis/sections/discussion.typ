@@ -2,6 +2,17 @@
 #import cosmos.simple: *
 #show: show-theorion
 
+#let internal-link(label) = {
+  show link: set text(fill: black)
+  let arrow = context {
+    if query(selector(label).after(selector(here()))).len() == 1 {
+      $arrow.r.hook$
+    } else {
+      $arrow.l.hook$
+    }
+  }
+  link(label, arrow)
+}
 
 
 In this chapter we review the research questions posed back in @sec:introduction
@@ -50,6 +61,7 @@ has been shown to substantially impact both climate-related beliefs
 @bumannWhatAreDeterminants2021, with individuals tending to support or oppose specific
 policies on the basis of partisan identification rather than policy content
 @unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018.
+<rq1-asymmetry-explanations>
 
 #figure(
   image("../diagrams/politics_example/politics_example.svg", width: 80%),
@@ -135,8 +147,8 @@ indirect effects were also present. Additional experiments included in
 intervention effects. The presence of indirect effects is broadly expected given the
 pre-defined model dynamics; however, the observed magnitudes suggest that while state
 changes may propagate beyond direct connections, this process is typically slow. We
-return to this point shortly in our discussion of *RQ3* (see
-#link(<discussion-rq3-indirect-effects>)[here]), which finds that some indirect
+return to this point shortly in our discussion of *RQ3*
+(#internal-link(<discussion-rq3-indirect-effects>)), which finds that some indirect
 propagation may nonetheless be instrumental to achieving effective interventions at
 an individual level. <discussion-rq2-indirect-effects>
 
@@ -193,7 +205,7 @@ effective indirect route for various interventions (not restricted to this parti
 target). This stands in contrast with political ideology/alignment, which has similarly
 high influence on the target variable, but is harder to influence, as discussed above.
 At first glance this finding appears to contradict our earlier discussion on *RQ2*
-(see #link(<discussion-rq2-indirect-effects>)[here]), which found indirect interventions
+(#internal-link(<discussion-rq2-indirect-effects>)), which found indirect interventions
 to have limited impact on collective effects over short timeframes. However, this rather
 reflects the diversity in intervention outcomes across individuals.
 <discussion-rq3-indirect-effects>
@@ -208,10 +220,11 @@ interventions accurately. The rare instances where individuals with these traits
 outside the high-effect region may be attributable to the rough-and-ready use of the
 upper quartile to classify high-effect interventions. On the other hand, while the
 personas capture _most_ cases where interventions are effective, this varies between
-points-of-intervention  This directly reflects the limited representational capacity of
+points-of-intervention. This directly reflects the limited representational capacity of
 effect characterisation functions based on shallow decision trees; a tree depth of three
 permits at most eight personas#persona-count-footnote to describe the full range of
 intervention effectiveness, each of which comprises at most three conditions.
+<rq3-prespecified-complexity>
 // NOTE: Do I need to say anything else here?
 
 The results also highlighted a separate issue with our regression decision tree
@@ -223,6 +236,7 @@ interventions on beliefs about the existence of climate change. While effective
 interventions here generally require that the initial point-of-intervention state be low,
 this was omitted due to high correlation between this variable and beliefs regarding the
 causes of climate change.
+<rq3-highly-correlated-features>
 
 As a final point, the findings from this experiment must be interpreted in the context
 of the belief system model calibrated to the complete dataset. Individual differences
@@ -529,98 +543,142 @@ constrained when *Happening* is high than when it is low.
 //   - Influence is often important for interventions, but influentiability is also
 //     important for indirect propagation.
 
+// - May be different for symmetric and asymmetric networks
+// - Influence and influentiability are both important
+// - While high values may indicate both high in asymmetric, low values don't necessarily
+//   mean that both are low (e.g., in-degree vs out-degree for `Politics`).
+
+// Measures of influence:
+// - Centrality:
+//   - Degree: Number of incident connections
+//   - Strength: Strength of association with other nodes.
+//   - Betweenness: Number of shortest paths a node occurs on
+//   - Closeness: Average shortest path to each other node
+// - Hierarchy (in DAG model)
+// - Expected influence @robinaughIdentifyingHighlyInfluential2016
+
 Our findings suggest that while the symmetric assumption may often be valid, or at
 least a reasonable approximation, asymmetric relations between beliefs and attitudes
-are nonetheless possible. When the true relations are asymmetric, not accounting for this
+are nonetheless possible. When true relations are asymmetric, not accounting for this
 when modelling belief interactions is a case of model misspecification, and can lead to
 incorrect inferences regarding the relative influence of different beliefs.
-
 The primary issue here is that symmetric models do not account for differences between
 a belief's influence (how much it affects the states of other beliefs) and
-influentiability (how much its own state is affected by other beliefs). Empirical
-studies on belief systems often use network centrality measures (e.g., degree, strength,
-betweenness, closeness) to assess nodes' relative 'importance' or 'influence'.
+influentiability (how much its own state is affected by other beliefs).
 
-- May be different for symmetric and asymmetric networks
-- Influence and influentiability are both important
-- While high values may indicate both high in asymmetric, low values don't necessarily
-  mean that both are low (e.g., in-degree vs out-degree for `Politics`).
+// Future work, building directly on our results:
+// + Reducing sampling error/parameter uncertainty, to gauge extent of asymmetry,
+//   better distinguish between symmetric and 'minimally asymmetric' cases.
+// + Determine extent to which inferred models reflect within-person associations
+//   or between-person associations.
+// + Improve effect characterisation function approach:
+//   - Handling of highly correlated features robustly
+//   - Current approach constrains rule complexity by prespecifying decision tree depth.
+//     This is somewhat arbitrary. Limits the number of rules (when more rules may be
+//     required for a full characterisation) and implies a fixed rule length equal to the
+//     depth. Also assumes a hierarchical structure to the rules (i.e., all rules include
+//     the root feature). We could instead identify rules more flexibly and penalise the
+//     characterisation complexity directly, e.g., using MDL.
+// + Experimental extensions:
+//   - Investigating transferability of models inferred from 'natural' dynamics (i.e.,
+//     minimal exogenous influence, as assumed in the present study) to situations with
+//     exogenous influences. Interventions fall under the latter category. Prior research
+//     suggests dynamics may be different, for instance due to increased salience of
+//     certain attitudes/beliefs @unsworthItsPoliticalHow2014.
+//   - Experimental validation using intervention studies.
 
+// Empirical
+// studies on belief systems often use network centrality measures (e.g., degree, strength,
+// betweenness, closeness) to assess nodes' relative 'importance' or 'influence', in lieu
+// of measures derived from model dynamics. While most of these measures have directed
+// network analogues---for instance, degree becomes in-degree and out-degree, closeness
+// becomes average shortest path length to, and from a node---it is well-known that the
+// directed-network values can differ significantly both from one another and from the
+// undirected-network measurements. Our findings reinforce this point, also demonstrating
+// that it holds for simulation-based measures of influence.
 
-Measures of influence:
-- Centrality:
-  - Degree: Number of incident connections
-  - Strength: Strength of association with other nodes.
-  - Betweenness: Number of shortest paths a node occurs on
-  - Closeness: Average shortest path to each other node
-- Hierarchy (in DAG model)
-- Expected influence @robinaughIdentifyingHighlyInfluential2016
+// While we have identified cases of apparent asymmetry, further work is required to
+// understand both the extent to which asymmetry is the exception as opposed to the norm
+// (requiring more observations to reduce sampling error), and the extent to which the
+// inferred asymmetry reflects within-person associations (requiring at least three waves).
+// The models used for the experiments detailed in the previous chapters were limited to
+// two waves of the climate attitudes survey in order to assess a reasonable number of
+// parameters, and certain variables of interest (see @subsec:dataset-dataset-construction).
+// If we drop these requirements, however, then additional waves and observations become
+// available, and both questions are somewhat approachable.
+//
+// For instance, if we use
+// variables from Waves 2-5 of the climate attitudes survey, the total number of repeat
+// participants is 1067. Since we expect the parameter error to go to zero like
+// $1/sqrt(M(T-1))$, where $M$ is the number of participants and $T$ is the number of
+// observations, ... *Actually, the number I see in the figure is before removing problem
+// participants*
 
-
-While we have identified cases of apparent asymmetry, further work is required to
-understand both the extent to which asymmetry is the exception as opposed to the norm
-(requiring more observations to reduce sampling error), and the extent to which the
-inferred asymmetry reflects within-person associations (requiring at least three waves).
-The models used for the experiments detailed in the previous chapters were limited to
-two waves of the climate attitudes survey in order to assess a reasonable number of
-parameters, and certain variables of interest (see @subsec:dataset-dataset-construction).
-If we drop these requirements, however, then additional waves and observations become
-available, and both questions are somewhat approachable.
-
-For instance, if we use
-variables from Waves 2-5 of the climate attitudes survey, the total number of repeat
-participants is 1067. Since we expect the parameter error to go to zero like
-$1/sqrt(M(T-1))$, where $M$ is the number of participants and $T$ is the number of
-observations, ... *Actually, the number I see in the figure is before removing problem
-participants*
-
-However, if we drop these requirements, then then the potential dataset size and number of
-usable waves are
-
-The former requires a reduction in sampling error (and resulting parameter uncertainty);
-the latter requires at least three waves.
-
-Our experiments were limited
-WhileThis is readily approachable,
-While we were limited to two waves of data
-Our experiments were limited to two waves of data, due to differences in survey content and so as to include certain variables. This had adverse effects on parameter accuracy, and prohibits us
-from separating within-person and between-person associations.
-However, using a smaller set of variables, it is possible to make use of additional
-waves of data. We expect the parameter uncertainty to decrease as $1/sqrt(M(T-1))$.
-
-- We could only use two waves because we wanted to have a sufficient number of
-  variables.
-- With a smaller set of variables, we could potentially use more waves (e.g., 3,4,5
-  gives 1258 participants; 2,3,4,5 gives 1067), and be able to obtain lower sampling
-  error, as well as investigate the extent to which the models capture within-person
-  interactions.
-
+// - We could only use two waves because we wanted to have a sufficient number of
+//   variables.
+// - With a smaller set of variables, we could potentially use more waves (e.g., 3,4,5
+//   gives 1258 participants; 2,3,4,5 gives 1067), and be able to obtain lower sampling
+//   error, as well as investigate the extent to which the models capture within-person
+//   interactions.
 
 
+Despite the promising results of this study, several questions remain. The limited
+number of waves in the climate beliefs dataset prohibits us from confidently
+distinguishing between within-person and between-person effects, which is required
+to make strong claims regarding causal influences. We note that the broader
+climate attitudes survey does contain several additional waves, which are usable if we
+drop our requirements regarding the number of variables and inclusion of specific
+beliefs/attitudes. However, this raises a separate issue regarding the intervals between
+measurements, as inter-response times between different pairs of waves can differ
+significantly, violating the model requirements. Further consideration is required to
+determine whether, for instance, the additional waves can be used _only_ to estimate
+individual baselines, while evenly-spaced observations are used to estimate interaction
+effects.
 
-Future work, building directly on our results:
-+ Reducing sampling error/parameter uncertainty, to gauge extent of asymmetry,
-  better distinguish between symmetric and 'minimally asymmetric' cases.
-+ Determine extent to which inferred models reflect within-person associations
-  or between-person associations.
-+ Improve effect characterisation function approach:
-  - Handling of highly correlated features robustly
-  - Current approach constrains rule complexity by prespecifying decision tree depth.
-    This is somewhat arbitrary. Limits the number of rules (when more rules may be
-    required for a full characterisation) and implies a fixed rule length equal to the
-    depth. Also assumes a hierarchical structure to the rules (i.e., all rules include
-    the root feature). We could instead identify rules more flexibly and penalise the
-    characterisation complexity directly, e.g., using MDL.
-+ Experimental extensions:
-  - Investigating transferability of models inferred from 'natural' dynamics (i.e.,
-    minimal exogenous influence, as assumed in the present study) to situations with
-    exogenous influences. Interventions fall under the latter category. Prior research
-    suggests dynamics may be different, for instance due to increased salience of
-    certain attitudes/beliefs @unsworthItsPoliticalHow2014.
-  - Experimental validation using intervention studies.
+As discussed above, the regression decision tree approach to modelling the effect
+characterisation function can produce incomplete descriptions when important
+features are highly correlated (#internal-link(<rq3-highly-correlated-features>)), and
+may not identify all effective-intervention conditions due to the somewhat arbitrary
+nature of tree depth to limit complexity (#internal-link(<rq3-prespecified-complexity>)).
+The first issue can be resolved post-hoc (by assessing correlations with identified
+variables). One promising direction for the second is to identify more flexible
+rulesets, allowing arbitrary quantity and size, while penalising characterisation
+complexity directly, e.g., using description length @aogaFindingProbabilisticRule2018
+@proencaInterpretableMulticlassClassification2020.
+
+The models calibrated in @sec:calibration are assumed to reflect 'natural' belief system
+dynamics (i.e., minimal exogenous influence). By simulating interventions on these
+models, we are therefore assuming transferrability to situations _with_ exogenous
+influences in the form of interventions. However, prior studies have demonstrated that
+belief system dynamics may differ in such situations, for instance due to increased
+salience of certain attitudes or beliefs @unsworthItsPoliticalHow2014. As such,
+experimental validation---and ideally, calibration to data collected under controlled
+intervention scenarios---is a natural continuation to the present study.
+
+Our findings also suggest and support several broader directions for future research.
+Firstly, we posited two explanations for the asymmetric relations observed with
+regards to political attitudes and climate-related worry
+(#internal-link(<rq1-asymmetry-explanations>)). These are retrospectively
+applied to the findings, so arguably have minimal evidential weight @popper1963science.
+However, they demonstrate how the asymmetric non-equilibrium belief system model may be
+used to test (as opposed to generate) hypotheses about the general mechanisms by which
+asymmetric belief/attitude relations may occur.
+
+
+
+
+
+
 
 Future directions suggested by our findings:
+// + How asymmetry arises:
+//   - We have posited two explanations for the asymmetric relations observed in political
+//     attitudes and climate-related worry. However, these are retrospectively applied to
+//     the findings, so arguably have minimal evidential weight @popper1963science.
+//   - Our model provides a method by which hypotheses about the general mechanisms by which
+//     asymmetric belief and attitude relations occur can be tested.
 + Modelling individual belief systems:
+  - Baselines _and_ structure. Separate questions.
   - Differences, but also similarities, between belief systems, implied by ideological
     belief system experiment.
   - Measuring or approximating individual baseline activations. Unreported experiments
@@ -653,12 +711,6 @@ Future directions suggested by our findings:
       an interaction term to the belief about that state. Our approach is analogous.
       The exogenous change affects our belief (say, about the state of climate change)
       via an interaction term.
-+ How asymmetry arises:
-  - We have posited two explanations for the asymmetric relations observed in political
-    attitudes and climate-related worry. However, these are retrospectively applied to
-    the findings, so arguably have minimal evidential weight @popper1963science.
-  - Our model provides a method by which hypotheses about the general mechanisms by which
-    asymmetric belief and attitude relations occur can be tested.
 
 
 // *Todos:*
