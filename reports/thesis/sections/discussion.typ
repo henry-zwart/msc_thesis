@@ -313,7 +313,7 @@ which are typically desired @brandtBetweenpersonMethodsProvide2022. We partially
 mitigate this problem by calibrating to longitudinal data, and using self-interaction
 terms to capture persistence in belief/attitude states. However, our model does not
 account for belief/attitude stability due to the presence of stable traits
-@hamakerCritiqueCrosslaggedPanel2015.
+@hamakerCritiqueCrosslaggedPanel2015 @usamiUnifiedFrameworkLongitudinal2019.
 
 #let identifiability-footnote = footnote[
   For a given individual, each pair of consecutive waves constitutes a single
@@ -652,7 +652,7 @@ models, we are therefore assuming transferrability to situations _with_ exogenou
 influences in the form of interventions. However, prior studies have demonstrated that
 belief system dynamics may differ in such situations, for instance due to increased
 salience of certain attitudes or beliefs @unsworthItsPoliticalHow2014. As such,
-experimental validation---and ideally, calibration to data collected under controlled
+experimental validation---and, ideally, calibration to data collected in controlled
 intervention scenarios---is a natural continuation to the present study.
 
 Our findings also suggest and support several broader directions for future research.
@@ -664,53 +664,81 @@ However, they demonstrate how the asymmetric non-equilibrium belief system model
 used to test (as opposed to generate) hypotheses about the general mechanisms by which
 asymmetric belief/attitude relations may occur.
 
+Secondly, while belief system structure is typically expected to vary on an individual
+basis @morganStructurePoliticalIdeology2017 @brandtBetweenpersonMethodsProvide2022,
+calibrating individual belief system models is generally considered infeasible due
+to the associated data requirements @brandtMeasuringBeliefSystem2022. Moreover, due to
+the potential stability of belief dynamics, as observed in the present study, even
+substantial individual-level data is likely to reflect only a small set of possible
+belief states, limiting counterfactual analysis in individual models. However, our
+findings demonstrate structural similarities, as well as differences, across ideological
+groups. This suggests that a middle-ground approach, between individual-level and
+population-level networks may be effective in capturing both the ways in which belief
+systems are different, and the ways in which they are similar. This is akin to the
+notion of partial-pooling in multi-level Bayesian models, which assumes individuals in a
+group vary with respect to one another, but are constrained by common parameters
+@gelmanBayesianDataAnalysis2013 @gelmanDataAnalysisUsing2007
+@mcelreathStatisticalRethinkingBayesian2020a. Note that this is distinct from the
+estimation of individual _baseline activations_ for the purpose of inferring
+within-person associations.
+
+Finally, we adopt a simplistic view of the interface between belief systems and the
+external world. This is most evident, for instance, in our treatment of interventions as
+acting directly and identically on individual beliefs/attitudes, and the assumption that
+current events (e.g., the 2020 US presidential election) have minimal impact on observed
+belief dynamics. In reality, some beliefs or attitudes may be easier or harder to affect
+directly than others. Communication of interventions or current events may be noisy
+(e.g., subject to interpretation), potentially impacting the magnitude, direction, and
+set of affected beliefs/attitudes, also on an individual basis. Clearly, a more realistic
+treatment of this interface is required for the proposed methods to be useful in the
+context of actual interventions. From a modelling perspective,
+#cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") consider a related problem,
+namely the interface between belief systems belonging to different individuals, modelling
+peer influence as indirect, via social beliefs which may only be indicative of the true
+external state.
 
 
-
-
-
-
-Future directions suggested by our findings:
+// Future directions suggested by our findings:
 // + How asymmetry arises:
 //   - We have posited two explanations for the asymmetric relations observed in political
 //     attitudes and climate-related worry. However, these are retrospectively applied to
 //     the findings, so arguably have minimal evidential weight @popper1963science.
 //   - Our model provides a method by which hypotheses about the general mechanisms by which
 //     asymmetric belief and attitude relations occur can be tested.
-+ Modelling individual belief systems:
-  - Baselines _and_ structure. Separate questions.
-  - Differences, but also similarities, between belief systems, implied by ideological
-    belief system experiment.
-  - Measuring or approximating individual baseline activations. Unreported experiments
-    show these can be somewhat approximated using demographic factors.
-  - Suggests a middle-ground between calibrating individual models and assuming a single
-    shared model. Akin to partial pooling, compared with no pooling or total pooling in
-    Bayesian statistics.
-  - Must consider how both baseline activations and belief system structure vary between
-    people.
-+ The 'world-belief interface':
-  - We adopt a simplistic view of interventions, which assumes we can intervene directly
-    and equivalently on individual beliefs/attitudes. In reality some beliefs/attitudes
-    may be easier or more difficult to intervene on, and the communication of
-    interventions may be 'noisy' (e.g., subject to interpretation), potentially
-    impacting the magnitude, direction, and set of beliefs/attitudes affected. Each of
-    these has conceivable implications for intervention dynamics and effects.
-    Understanding how interventions cross this interface is therefore important.
-  - Exogenous factors (e.g., the 2020 presidential election) can, in theory, be treated
-    using the intervention framework applied in this study. These are simply
-    interventions which we don't control. From this perspective we can consider modelling
-    these directly to study their impacts. If we expect such factors to meaningfully
-    affect belief system dynamics, modelling exogenous factors is perhaps more sensible
-    than attempting to control for them.
-  - #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") consider a related
-    problem, namely the interface between different individuals' belief systems.
-    Individual beliefs are affected by (and affect) others' belief systems indirectly
-    via social beliefs---beliefs about the state of others' belief systems.
-    - This actually supports our method for modelling interventions. i.e., in the NB
-      model exogenous changes (other peoples' beliefs) affect your belief system via
-      an interaction term to the belief about that state. Our approach is analogous.
-      The exogenous change affects our belief (say, about the state of climate change)
-      via an interaction term.
+// + Modelling individual belief systems:
+//   - Baselines _and_ structure. Separate questions.
+//   - Differences, but also similarities, between belief systems, implied by ideological
+//     belief system experiment.
+//   - Measuring or approximating individual baseline activations. Unreported experiments
+//     show these can be somewhat approximated using demographic factors.
+//   - Suggests a middle-ground between calibrating individual models and assuming a single
+//     shared model. Akin to partial pooling, compared with no pooling or total pooling in
+//     Bayesian statistics.
+//   - Must consider how both baseline activations and belief system structure vary between
+//     people.
+// + The 'world-belief interface':
+//   - We adopt a simplistic view of interventions, which assumes we can intervene directly
+//     and equivalently on individual beliefs/attitudes. In reality some beliefs/attitudes
+//     may be easier or more difficult to intervene on, and the communication of
+//     interventions may be 'noisy' (e.g., subject to interpretation), potentially
+//     impacting the magnitude, direction, and set of beliefs/attitudes affected. Each of
+//     these has conceivable implications for intervention dynamics and effects.
+//     Understanding how interventions cross this interface is therefore important.
+//   - Exogenous factors (e.g., the 2020 presidential election) can, in theory, be treated
+//     using the intervention framework applied in this study. These are simply
+//     interventions which we don't control. From this perspective we can consider modelling
+//     these directly to study their impacts. If we expect such factors to meaningfully
+//     affect belief system dynamics, modelling exogenous factors is perhaps more sensible
+//     than attempting to control for them.
+//   - #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") consider a related
+//     problem, namely the interface between different individuals' belief systems.
+//     Individual beliefs are affected by (and affect) others' belief systems indirectly
+//     via social beliefs---beliefs about the state of others' belief systems.
+// - This actually supports our method for modelling interventions. i.e., in the NB
+//   model exogenous changes (other peoples' beliefs) affect your belief system via
+//   an interaction term to the belief about that state. Our approach is analogous.
+//   The exogenous change affects our belief (say, about the state of climate change)
+//   via an interaction term.
 
 
 // *Todos:*
