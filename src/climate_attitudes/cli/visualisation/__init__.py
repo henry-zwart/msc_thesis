@@ -4,6 +4,9 @@ from .compare_outbound_int_effect import (
 from .directional_differential import (
     DirectionalDifferentialPlotCommand as DirectionalDifferentialPlotCommand,
 )
+from .directional_differential_ideology import (
+    DirectionalDiffIdeologyPlotCommand as DirectionalDiffIdeologyPlotCommand,
+)
 from .heterogeneous_intervention_effects import (
     InterventionPersonasPlotCommand as InterventionPersonasPlotCommand,
 )

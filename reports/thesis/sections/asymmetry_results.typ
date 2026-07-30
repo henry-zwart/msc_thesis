@@ -40,6 +40,10 @@ the relative effectiveness of interventions.
 
 
 == Existence of asymmetric relations <subsec:asymmetry-results-existence>
+*TODO:*
+- Consider adding squares to the asymmetric entries in
+  @fig:asymmetry-results-existence-interaction-matrix
+
 // - Observations from figures:
 //   - Existence of _non-symmetric_ relations:
 //     - $"Politics" --> {"CC Action", "CC Worry", "CC Real"}$
@@ -126,19 +130,6 @@ elements#edge-comparison-footnote. For each pair of spins we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
 
-// In @fig:asymmetry-results-existence-ranked-differentials, a confidence interval which
-// excludes zero indicates that we observe the corresponding asymmetry in most bootstrapped
-// models; if the confidence interval contains zero, we cannot (within the confidence
-// bounds) say that the two effects are different. This interpretation applies even when
-// regularisation is used. Suppose, for instance,
-// that the confidence interval for a relation $A --> B$ excludes zero because
-// regularisation pushes the opposite relation, $B --> A$, to zero in most bootstrapped
-// models. If the relation were symmetric, then $A --> B$ would also have been pushed to
-// zero in a majority of models. Conversely, if
-
-
-
-
 // NOTE:
 // For a directional pairwise
 // relation $A --> B$, if the corresponding confidence interval is consistently above
@@ -152,22 +143,6 @@ symmetric), and we exclude diagonal entries (which are zero by definition).
 // models.
 
 
-
-// By repeating this process for each bootstrapped dataset we obtain an approximation to
-// the sampling distribution of $Delta_J$, i.e., that of the true directional differential
-// matrix for datasets of the same size.
-// @fig:asymmetry-results-existence-ranked-differentials shows the median directional
-// differential for each pair of spins. The 90% confidence intervals are calculated using
-// the 5th and 95th percentiles. For each pair of spins we only display the directional
-// differential for which the median is positive, since $Delta_J$ is symmetric. We exclude
-// diagonal entries, which are zero by definition.
-
-
-// @fig:asymmetry-results-existence-interaction-matrix shows the interaction effects,
-// $J_(i j)$, between each pair of spins $S_i$, $S_j$, averaged across the calibrated
-// bootstrapped models.
-
-// TODO: Consider adding squares to the asymmetric entries
 
 #figure(
   image("../results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf"),
@@ -184,21 +159,46 @@ symmetric), and we exclude diagonal entries (which are zero by definition).
 
 @fig:asymmetry-results-existence-ranked-differentials shows a majority of symmetric
 relations between spins (characterised by confidence intervals containing zero), with
-a small number of asymmetric relations. Most directional differentials display
-substantial uncertainty, with large confidence intervals ($> 0.1$ on average),
-reflecting the uncertainty in parameter estimates seen in the previous chapter
-(@fig:calibration-edge-accuracy).
-
-We can partition the asymmetric relations into two groups through examination of the
-interaction matrix for the model calibrated on the full dataset
-(@fig:asymmetry-results-existence-interaction-matrix, which is the same interaction
-matrix as in @fig:calibration-interaction-matrices of the previous chapter).
-The first group comprises pairs of spins for which both interaction effects are
-nonzero, shown with blue confidence intervals:
+a small number of asymmetric relations.
+We can partition the asymmetric relations into two groups, according to whether
+directional interactions exist in only one direction, indicated using orange confidence
+intervals, or both directions with different strengths, indicated with blue confidence
+intervals (see @fig:asymmetry-results-existence-interaction-matrix, identical to the
+interaction matrix shown in @fig:calibration-interaction-matrices of the previous
+chapter). Pairs with two nonzero interactions comprise
 $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
-$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$. The second group comprises
-pairs for which the interaction effect is nonzero in only one direction, shown with
-orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
+$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$; the only pair with a single
+directional interaction is $#raw("Politics") -> #raw("CC Real")$.
+
+Most directional differentials display substantial uncertainty (confidence
+interval width $> 0.1$ on average), reflecting the parameter accuracy discussed in the
+previous chapter (@fig:calibration-edge-accuracy). This results in several inconclusive
+cases, where the median bootstrap-estimate directional differential is nonzero but
+the confidence interval contains zero. In other cases we observe apparent symmetric
+or near-symmetric relations (e.g., $#raw("Weather worry") --> #raw("CC Others Worry")$).
+
+At the top of @fig:asymmetry-results-existence-ranked-differentials we see several
+apparently skewed confidence intervals. These all correspond to cases where both
+interactions are zero in the complete model
+(@fig:asymmetry-results-existence-interaction-matrix), so the skews likely reflect
+differences in edge selection probability between the two directional interactions
+(@fig:calibration-selection-probability). For instance,
+$#raw("CC Others Worry") --> #raw("CC Human")$ exhibits a larger apparent skew than
+$#raw("CC Others Worry") --> #raw("CC Real")$, and this is reflected in observed
+differences in selection probability.
+
+Due to the large confidence intervals on most directional differentials we are less
+likely to observe significant asymmetric relations between variables with small
+interaction effects (since the possible difference in effects is smaller by definition).
+Indeed, all observed significant cases of asymmetry have at least one interaction effect
+with magnitude exceeding $0.1$. This raises the question of whether asymmetry is instead
+simply explained by a high total interaction influence in combination with sampling
+error. However, this is disputed by `CC Action`, which has several strong interaction
+effects (its outbound effects are typically larger than those of `Politics`), yet does
+not exhibit significant asymmetric influence over any other variables. On the contrary,
+it is asymmetrically _influenced_ by `Politics`.
+
+
 // Note that
 // we also observe nonzero interaction effects in only one direction for some
 // _symmetric_ relations as well (e.g., $#raw("Politics") -> #raw("CC Human")$), we still
@@ -216,6 +216,17 @@ orange confidence intervals: $#raw("Politics") -> #raw("CC Real")$.
 
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
+
+*TODO:*
+- Discuss how the observed effects of intervening on politics are _in spite of_
+  the high inertia on this variable. i.e., high inertia lowers the pre-intervention
+  $h_"eff"$, making it harder to intervene (higher barrier to surpass).
+- Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
+  lower for the asymmetric model. Since all outbound interactions are similar (or
+  better) than `Politics`, with the exception of `CC Action`, indicates that
+  the added difficulty of overcoming the barrier on politics is outweighed by
+  the greater influence on the target. Also perhaps due to the fact that the
+  inertia works in favour of the intervention once politics flips.
 // - $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
 //   intervention differs between symmetric and asymmetric models calibrated to the
 //   climate beliefs dataset. _Re-state the corresponding research question_.
@@ -276,7 +287,7 @@ the *target*.
       row-gutter: 0.8em,
       align: (center, center),
       [*Outbound*], [*Inbound*],
-      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 90%)),
+      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 85%)),
     ),
     outlined: false,
     placement: none,
@@ -315,33 +326,33 @@ effect of asymmetry is not inherently concerned with intervention, but is a gene
 measure for the difference between asymmetric and symmetry model dynamics.
 
 Both quantities compute a difference in effects between two distinct models: the
-intervention and null models in the case of the effect of intervention; the asymmetric
-and symmetric models in the case of the effect of asymmetry. To ensure comparability of
-results, difference are always computed between models with identical random number
+intervention and null models for the effect of intervention; the asymmetric
+and symmetric models for the effect of asymmetry. To ensure outcome
+comparability, differences are computed between models with identical random number
 generation contexts.
 
 #definition[Effect of Intervention][
-  Let $f_cal(M) (bold(s)_0; t)$ be the stochastic function which returns the state
-  $bold(s)^t$ resulting from simulation of the model $cal(M)$ with initial state
-  $bold(s)_0$.
+  Let $cal(M)$ be a non-equilibrium belief system model, and denote the result of
+  simulating the model for $t in NN$ timesteps with initial state $bold(s)_0$ as
+  $cal(M)^t (bold(s)_0)$.
 
-  For an intervention model $cal(M)_delta$ with arbitrary point-of-intervention, we
-  define the *effect of intervention* for $cal(M)_delta$ as the change in outcome with
-  respect to the null (no-intervention) model, $cal(M)_0$:
+  For an intervention model $cal(M)_delta$ with an arbitrary point-of-intervention, we
+  define the *effect of intervention* for $cal(M)_delta$ as the change in outcome at
+  time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
 
   $
-    f_(cal(M)_delta) (bold(s)_0; t) - f_(cal(M)_0) (bold(s)_0; t)
+    f_"int" (cal(M)_delta) = cal(M)_delta^t (bold(s)_0) - cal(M)_0^t (bold(s)_0)
   $
 ] <def:asymmetry-results-effect-of-intervention>
 
 #definition[Effect of Asymmetry][
-  Let $f_cal(M) (bold(s)_0; t)$ be defined as in
-  @def:asymmetry-results-effect-of-intervention. We define the *effect of asymmetry* for
-  an asymmetric model, $cal(M)^"asym"$, as the observed change in outcome with
-  respect to the corresponding symmetric model, $cal(M)^"sym"$:
-
+  Let $cal(M)_"asym"$ be a calibrated asymmetric non-equilibrium belief system model
+  with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
+  symmetric model calibrated to the same dataset.
+  We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
+  in the effect of intervention with respect to the symmetric model:
   $
-    f_(cal(M)^"asym") (bold(s)_0; t) - f_(cal(M)^"sym") (bold(s)_0; t)
+    f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
   $
 ] <def:asymmetry-results-effect-of-asymmetry>
 
@@ -394,7 +405,7 @@ direct impact on the behaviour of the point-of-intervention.
 ) <fig:asymmetry-results-compare-strength>
 
 We observe a strong linear relationship between intervention strength effects
-for each variable, indicating that---at the population-mean level---the
+for each point-of-intervention, indicating that---at the population-mean level---the
 impact of intervention strength on effect is mostly one of scale, that applies similarly
 to all target spins.
 For the purposes of the following experiments it then suffices to consider
@@ -451,7 +462,7 @@ evidence of this through comparison with an analogous
 figure (see @fig:apdx-extra-results-outbound-effects-10 in Appendix) using a measurement
 time of $t=10$ (approximate five years in the models' timescales), which shows larger
 increases in the effect of intervention for variables with stronger incoming
-interactions.
+interactions from non-intervention spins.
 
 While the confidence intervals for the symmetric and asymmetric models overlap
 significantly for most targets in @fig:asymmetry-results-outbound-effect (with some
@@ -463,17 +474,40 @@ several significant differences. In particular, all pairs of variables
 with asymmetric direct relations---identified in the previous section---display
 significant differences.
 
-Notice that while `CC Worry` exhibits greater intervention
-effects than `Politics` in @fig:asymmetry-results-outbound-effect, `Politics` exhibits
-larger mean effects of asymmetry in @fig:asymmetry-results-outbound-effect-of-asymmetry
-(though the latter differences are not statistically significant). Comparison of
-the interaction effect matrices (@fig:calibration-interaction-matrices) shows
-direct connectivity differences for `Politics` between the models.
-While the symmetric model excludes interactions with `CC Human`
-and `Weather Worry` entirely, the asymmetric model permits _outbound_ interactions with
-these spins, allowing interventions to propagate. By contrast,
-interventions on `Politics`  in the symmetric model are more reliant on indirect
-propagation.
+Comparing `Politics` and `CC Worry`, we observe that while `CC Worry` exhibits greater
+effects of intervention (@fig:asymmetry-results-outbound-effect), `Politics` exhibits
+larger mean effects of asymmetry (@fig:asymmetry-results-outbound-effect-of-asymmetry),
+though the latter differences are not statistically significant. In both cases we see
+that in the symmetric model the strengths of cross-interactions with other spins are
+typically between the corresponding inbound and outbound asymmetric interaction
+strengths. We contrast this with `CC Impact`, which has mostly symmetric relations.
+While `CC Impact` and `Politics` have extremely similar outbound interaction strengths
+in the asymmetric model, `CC Impact` is considerably more influential than `Politics`
+in the symmetric model (i.e., it has higher average interaction effects).
+
+Moreover, while `CC Worry` has inbound and outbound interactions with all other spins
+in both models, `Politics` has different inbound and outbound connectivity in the
+asymmetric model. We see this reflected in the symmetric model, which omits interactions
+with `CC Human` and `Weather Worry` entirely despite, outbound interactions to these
+spins in the asymmetric model. This explains the observed differences in the effects of
+intervention and asymmetry: `CC Worry` has higher effects of intervention in both models
+on account of its strong outbound interaction effects, which are also mostly retained
+in the symmetric model, while the removal of interactions for `Politics` results in
+lower influence and fewer (direct and indirect) paths in the symmetric model, compared
+with the asymmetric model.
+
+// Notice that while `CC Worry` exhibits greater intervention
+// effects than `Politics` in @fig:asymmetry-results-outbound-effect, `Politics` exhibits
+// larger mean effects of asymmetry in @fig:asymmetry-results-outbound-effect-of-asymmetry
+// (though the differences are not statistically significant). Comparison of
+// the interaction effect matrices (@fig:calibration-interaction-matrices) shows
+// direct connectivity differences for `Politics` between the models.
+// While the symmetric model excludes interactions with `CC Human`
+// and `Weather Worry` entirely, the asymmetric model permits _outbound_ interactions with
+// these spins, allowing interventions to propagate. By contrast,
+// interventions on `Politics`  in the symmetric model are more reliant on indirect
+// propagation.
+
 
 
 // - Compare models across points of intervention, for a single target

@@ -24,6 +24,7 @@ THESIS_FIGURES_MODEL := \
 			$(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.$(d)_$(MEASURE_TIME)) \
 		$(THESIS_DIR)/results/figures/model/intervention_collective_ranking/.$(MEASURE_TIME) \
 		$(THESIS_DIR)/results/figures/model/intervention_individual_ranking/.$(MEASURE_TIME) \
+		$(THESIS_DIR)/results/figures/model/directional_differentials/ideology.pdf \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/rank_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/directional_differentials/pairwise_no_structure.pdf \
 		$(THESIS_DIR)/results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf \
@@ -38,6 +39,7 @@ THESIS_FIGURES_MODEL := \
 
 THESIS_FIGURES_MODEL_CALIBRATION := \
 		$(THESIS_DIR)/results/figures/model_fit/edge_accuracy.pdf \
+		$(THESIS_DIR)/results/figures/model_fit/ideology_edge_accuracy.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/high_relative_entropy.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/selection_probability.pdf \
 		$(THESIS_DIR)/results/figures/model_fit/transition_reliability.pdf \
@@ -51,6 +53,7 @@ THESIS_FIGURES_METHODS := \
 		$(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf
 
 THESIS_FIGURES_ASYMMETRY_RESULTS := \
+		$(THESIS_DIR)/results/figures/model_fit/ideology_edge_diff.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/effect_of_asymmetry_cc_worry.pdf \
 		$(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pdf \
@@ -100,6 +103,7 @@ THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/sections/introduction.typ \
 		$(THESIS_DIR)/sections/asymmetric_belief_system.typ \
 		$(THESIS_DIR)/sections/methods.typ \
+		$(THESIS_DIR)/sections/calibration.typ \
 		$(THESIS_DIR)/sections/asymmetry_results.typ \
 		$(THESIS_DIR)/sections/heterogeneity_results.typ \
 		$(THESIS_DIR)/sections/discussion.typ \
@@ -165,6 +169,14 @@ $(THESIS_DIR)/results/figures/methods/intervention_strengths.pdf: \
 	@uv run $<
 
 # +++ Model calibration
+$(THESIS_DIR)/results/figures/model_fit/ideology_edge_accuracy.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/edge_accuracy_ideology.py \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/liberal.npz \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/conservative.npz \
+			$(PKG_PATH)/visualisation.py \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
 $(THESIS_DIR)/results/figures/model_fit/edge_accuracy.pdf: \
 			$(THESIS_DIR)/scripts/sec-model/edge_accuracy.py \
 			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_no_structure.npz \
@@ -495,6 +507,28 @@ $(THESIS_DIR)/results/figures/model/intervention_effect_distribution/.%_$(MEASUR
 		--measure-time $(MEASURE_TIME) && \
 	touch $@
 
+$(THESIS_DIR)/results/figures/model/directional_differentials/ideology.pdf: \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/liberal.npz \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
+			$(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+			${PKG_PATH}/cli/visualisation/directional_differential_ideology.py \
+			| $(THESIS_DIR)/results/figures/model/directional_differentials
+	@uv run cadata plot directional-diffs-ideology \
+		--bootstrap-models-con $(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/conservative.npz \
+		--bootstrap-models-lib $(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/liberal.npz \
+		--full-model-con $(THESIS_DIR)/results/data/model/ideology_fit_conservative.npz \
+		--full-model-lib $(THESIS_DIR)/results/data/model/ideology_fit_liberal.npz \
+		--output $@ \
+
+
+$(THESIS_DIR)/results/figures/model_fit/ideology_edge_diff.pdf: \
+			$(THESIS_DIR)/scripts/sec-model/edge_diff_ideology.py \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/conservative.npz \
+			$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/liberal.npz \
+			| $(THESIS_DIR)/results/figures/model_fit
+	@uv run $<
+
 $(THESIS_DIR)/results/figures/model/directional_differentials/rank_%.pdf: \
 			$(THESIS_DIR)/results/data/model/bootstrapped_fit/ising_%.npz \
 			$(THESIS_DIR)/results/data/model/fit_full_asym_ising_no_structure.npz \
@@ -686,6 +720,27 @@ $(THESIS_DIR)/results/data/methods: | $(THESIS_DIR)/results/data
 	@mkdir -p $@
 
 # +++ Section: Model
+$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit/%.npz: \
+			${PKG_PATH}/cli/analysis/fit_bootstrapped_models.py \
+			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+			$(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit
+	uv run cadata analysis fit-bootstrapped-ideology \
+		--output $@ \
+		--model-type ising \
+		--ideology $* \
+		--seed 202607262016 \
+		--repeats 500 \
+		--binarisation-kind gaussian \
+		--marginalise \
+		--lam-path $(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \
+		--sigma-path $(THESIS_DIR)/results/data/methods/binarisation_sigma.json \
+		$(QUIET_FLAG)
+
+$(THESIS_DIR)/results/data/model/ideology_bootstrapped_fit: | $(THESIS_DIR)/results/data/model
+	@mkdir -p $@
+
 $(THESIS_DIR)/results/data/model/bootstrapped_fit/%.npz: \
 			${PKG_PATH}/cli/analysis/fit_bootstrapped_models.py \
 			$(THESIS_DIR)/results/data/model_fit/optimised_regularisation.json \

@@ -83,7 +83,10 @@ def plot_ranked_differentials(
     is_nonreciprocal = significant_diff & ~is_asymmetric
 
     # Scatter means
-    positive_mean_idxes = np.where(mean_diff > 0)
+    positive_mean_idxes = np.where(
+        ((1 - np.eye(8, dtype=np.bool)) & (mean_diff > 0))
+        | (np.triu(np.ones((8, 8), dtype=np.bool), k=1) & (mean_diff == 0))
+    )
     mean_diffs_flat = mean_diff[positive_mean_idxes]
     sort_idxes = np.argsort(mean_diffs_flat)[::-1]
     mean_diffs_flat = mean_diffs_flat[sort_idxes]
@@ -331,6 +334,7 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
         bootstrap_interactions = bootstrap_results["params"][:, 8 * (k + 1) :].reshape(
             (-1, 8, 8)
         )
+        bootstrap_interactions[np.abs(bootstrap_interactions) < 1e-2] = 0
         diffs = bootstrap_interactions - np.swapaxes(bootstrap_interactions, 1, 2)
 
         # mean_diff = diffs.mean(axis=0)

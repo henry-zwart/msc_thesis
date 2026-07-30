@@ -1,5 +1,9 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+*TODO:*
+- Discuss how all interaction terms are positive.
+- Discuss differences in baseline activations.
+
 Before proceeding, let's take a moment to calibrate
 and evaluate the models which will be used in the upcoming experiments. Using the
 parameter estimation method outlined in the previous chapter, we calibrate the
@@ -420,4 +424,5 @@ this theory.
 // *Note:* We _could_ compare BIC/EBIC between the symmetric and asymmetric models,
 // but we don't. We're not doing model selection. Our goal is to have calibrated models
 // for each.
+
 

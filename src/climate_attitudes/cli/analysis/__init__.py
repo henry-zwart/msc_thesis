@@ -5,6 +5,9 @@ from .calculate_activation_probability import (
 from .choose_regularisation_strength import (
     ChooseRegularisationRunCommand as ChooseRegularisationRunCommand,
 )
+from .fit_bootstrapped_ideology_models import (
+    FitIdeologyBootstrappedRunCommand as FitIdeologyBootstrappedRunCommand,
+)
 from .fit_bootstrapped_models import (
     FitBootstrappedModelsRunCommand as FitBootstrappedModelsRunCommand,
 )

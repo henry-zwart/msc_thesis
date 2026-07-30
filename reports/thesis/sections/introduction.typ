@@ -1,12 +1,92 @@
-// TODO: Address the specific variables we look at in the outbound/inbound experiments.
-// Are the variables interesting independently of the asymmetry results/theoretically
-// motivated?
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
+#emph-block[
+  *Note:* This section is currently just a collection of mostly-unrelated thoughts and
+  ramblings. Feel free to disregard it :)
+
+  I'm also considering a slight revision of the thesis structure. The current structure
+  of the following few sections is:
+  - *Non-equilibrium belief systems (Chapter 3):* Model theory, as well as details on
+    how we model interventions, and choose intervention strength.
+  - *Methods (Chapter 4):* Mostly parameter estimation theory, as well as the soft
+    binarisation, and comments on counterfactual simulations (comparing intervention
+    outcomes with the null/no-intervention model).
+  - *Calibration (Chapter 5):* Results and evaluation of calibrated models (excluding
+    the models calibrated to the ideology-specific data subsets).
+  - *Results (Chpaters 6 and 7):* Mostly results, but also some content that could
+    arguably be in methods (e.g., defining the directional differentials (difference in
+    directional interaction effects), the effect characterisation function).
+
+  The revision I'm considering is as follows:
+  - *Non-equilibrium belief systems (Chapter 3):* Only model theory.
+  - *Parameter estimation (Chapter 4):* Starts with the parameter estimation
+    theory (currently in Methods); finishes with current content of Calibration chapter.
+  - *Methods (Chapter 5):* No more parameter estimation here. The methods-style parts of the results
+    are shifted into this section, as well as intervention modelling approach. i.e.,
+    + Directional differentials as a way to measure asymmetry,
+    + Modelling interventions, discussion on intervention strengths,
+    + Outbound and inbound interventions, two metrics (effect of intervention, effect of
+      asymmetry), and ranking interventions, and
+    + Defining the effect characterisation function; outlining regression decision tree
+      approach as one way to represent this
+  - *Results (Chapters 6 and 7):* Mostly the same, with the methods-stuff removed.
+]
+
+*TODO:*
+- Address the specific variables we look at in the outbound/inbound experiments.
+  Are the variables interesting independently of the asymmetry results/theoretically
+  motivated?
+- Mention our hypotheses, where they exist.
+  - RQ3: That interventions can only be effective when the target and the
+    point-of-intervention are both low.
+
+
 == Plan
 
 - Motivate the problem
 - Contributions
 - Research questions (thinking these are perhaps better left to later, in favour of
   contributions here)
+
+#emph-block[
+  The probable existence of directed causal relations between beliefs and attitudes, as
+  well as their potential implications for endogenous dynamics, is widely acknowledged
+  in recent studies on belief system modelling. In spite of this, empirical evidence for
+  the existence and impacts of such directed relations remains scarce, likely due,
+  in-part, to a historical focus on bidirectional (i.e., symmetric) models in theories of
+  belief dynamics (*CITE*), as well as the additional data requirements associated with
+  inferring directional relations @nguyenInverseStatisticalProblems2017[p.~35] (*CITE*).
+
+  These unknowns, _existence_ and _impact_, are the primary subjects of this
+  thesis, and of our first two research questions, introduced back in
+  @sec:introduction:
+
+  *RQ1:* To what extent are causal relations _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
+
+  *RQ2:* How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
+
+  The _climate beliefs dataset_, here, refers to the reduced longitudinal dataset
+  whose construction we describe in @subsec:dataset-dataset-construction. These research
+  questions are concerned with population-level belief systems and intervention effects.
+  However, while some aspects of belief system structure are likely shared within a
+  population, the notion of a belief system is inherently individual. We also expect
+  differences in individuals' responses to interventions. Our final research questions
+  address these two topics, specifically for asymmetric belief systems:
+
+  *RQ3:* How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
+
+  *RQ4:* How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
 
 == Motivation
 
@@ -19,6 +99,90 @@ But political identification is often not consistent with policy attitudes
 @iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
 identity-driven (symbolic) than issue-driven (operational)
 @masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
+
+Suggestions of asymmetric/causal directionality in belief systems:
+- So far reviewed in Zotero: Belief Networks, Papers from Sara
+- @brandtWhatCentralPolitical2019[p.~2,9,10]
+- @brandtMeasuringBeliefSystem2022[p.~3,22]
+- @keskinturkOrganizationPoliticalBelief2022[p.~10]
+- @vannoordNatureStructureEuropean2025[p.~4]
+- @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
+  - Constraint, causality, exogenous factors all necessary for any theory of BS dynamics.
+  - Though still interprets edges as undirected/bi-directional
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "In some cases ... assume that causal influence
+  for some elements (e.g., partisan identification) is primarily in one direction".
+- @converseNatureBeliefSystems2006[p.~208] (mentioned in @brandtEvaluatingBeliefSystem2021[p.~2])
+- @coppockBeliefSystemsExhibit2022: Referenced in @brandtEvaluatingBeliefSystem2021
+
+Self-interaction effects:
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "we made the simplifying assumption that a node
+  does not affect itself".
+
+
+Variation in belief systems between individuals:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
+
+Stability of belief dynamics:
+- @osborneDoesOpennessExperience2020
+- @kileyMeasuringStabilityChange2020
+  - Most observed change in beliefs and behaviours is short-term (or measurement error)
+  - This is consistent with the cognitive dissonance theory
+
+Individual belief dynamics are important to understanding behavioural influences
+between individuals: @rodriguezCollectiveDynamicsBelief2016
+@aiyappaEmergenceSimpleComplex2024
+- "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+
+Richness of _perceptions_ of others beliefs:
+- Discussed in @dalegeNetworksBeliefsIntegrative2025
+- References @galesicHumanSocialSensing2021
+
+Approaches to modelling belief systems/dynamics:
+- Regularised partial correlation networks, e.g., @brandtWhatCentralPolitical2019
+- Bayesian networks @powellModelingLeveragingIntuitive2023
+- Social Knowledge Structure @greenwaldUnifiedTheoryImplicit2002
+- Causal Attitude Network @dalegeFormalizedAccountAttitudes2016
+  - Attitudinal Entropy @dalegeAttitudinalEntropyAE2018
+- Hierarchical Ising Opinion model.
+- SEM?
+
+Our approach as an intermediate between undirected models and directed models with
+prespecified structure or acyclicity constraints.
+
+Understanding exogenous influences on belief systems and attitudes
+@coppockBeliefSystemsExhibit2022
+
+Modularity clustering for correlation networks @masudaIntroductionCorrelationNetworks2025
+
+== Asymmetry example
+
+Suppose thin arrows have weight 1, thick arrows have weight 2, and a belief/attitude
+adopts the dominant state in its neighbourhood, weighted by the incoming edge weights.
+If your support for non-climate-related policies and your social circle are
+Republican-aligned, you adopt that political ideology. Suppose that you believe in
+human-caused climate change, then that reinforces your support for climate action;
+however, the net support is $-1$, so you flip, taking the support for Republican
+politics to $+4$. If you then become concerned about extreme weather, and believe
+that the impacts of climate change are high, your support for climate action flips
+to positive with a net support of $+1$. However, this is not sufficient to shift
+your Republican alignment, which stays at $-1$. In the extreme case, where there is
+no feedback to Politics, your change in attitude has no bearing on your political
+alignment.
+
+Asymmetry is then best thought of as the weight imposed on one belief/attitude by
+another being different from the opposite direction. To overcome Republican alignment,
+we need at least two pro-Democrat attitudes. To overcome negative `CC Action`,
+we require at least three other pro-climate attitudes.
+
+
+
+#figure(
+  image("../diagrams/draft/asymmetry_example.png"),
+  placement: none,
+)
 
 == Research questions
 

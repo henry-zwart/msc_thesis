@@ -314,6 +314,9 @@ class PlotSubCommand(BaseModel):
     compare_intervention_strengths: CliSubCommand[
         vis_cli.CompareInterventionStrengthPlotCommand
     ]
+    directional_diffs_ideology: CliSubCommand[
+        vis_cli.DirectionalDiffIdeologyPlotCommand
+    ]
 
     def cli_cmd(self) -> None:
         CliApp.run_subcommand(self)
@@ -328,6 +331,9 @@ class AnalysisSubCommand(BaseModel):
     choose_regularisation: CliSubCommand[analysis_cli.ChooseRegularisationRunCommand]
     calculate_activation_probability: CliSubCommand[
         analysis_cli.CalculateActivationProbabilityCommand
+    ]
+    fit_bootstrapped_ideology: CliSubCommand[
+        analysis_cli.FitIdeologyBootstrappedRunCommand
     ]
 
     def cli_cmd(self) -> None:

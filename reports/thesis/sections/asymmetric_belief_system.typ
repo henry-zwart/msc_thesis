@@ -1,5 +1,8 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+// TODO: Discussion on interpreting asymmetric relations in terms of the
+// mathematical/conceptual models
+
 == Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
@@ -221,6 +224,15 @@ _asynchronous_ Glauber dynamics, in which only one spin can update during a give
 interval.
 
 == Modelling interventions <subsec:asymmetric-belief-system-modelling-interventions>
+
+*TODO:*
+- Discuss @dalegeNetworksBeliefsIntegrative2025, which is somewhat analogous.
+
+  In the NB model exogenous changes (other peoples' beliefs) affect your belief
+  system via an interaction term to the belief about that state. Our approach is
+  analogous. The exogenous change affects our belief (say, about the state of climate
+  change) via an interaction term.
+
 
 We now outline our approach to modelling interventions in the asymmetric belief
 system model. In this study we consider interventions which affect the _state_ of a

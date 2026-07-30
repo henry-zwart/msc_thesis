@@ -1,5 +1,6 @@
 #import "@local/drifting-cls-thesis:0.1.0": thesis
 
+
 #let author = (
   first-name: "Henry",
   surname: "Zwart",
@@ -103,11 +104,11 @@
 = Climate beliefs dataset <sec:dataset>
 #include "sections/dataset.typ"
 
-= Related work <sec:related-work>
-#include "sections/literature_review.typ"
+// = Related work <sec:related-work>
+// #include "sections/literature_review.typ"
 
 
-= Conclusions and future work <sec:conclusions>
+= Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
 
 = Ethics and Data Management

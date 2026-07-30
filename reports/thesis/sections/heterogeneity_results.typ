@@ -80,6 +80,7 @@ to shallow trees (e.g., depth 3 or 4, referring to the number of inequality boun
 defining each region), these combinations can also be interpretable as rules or
 _personas_.
 
+
 #figure(
   image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
@@ -129,10 +130,15 @@ right-hand column displays the prevalence of each persona within/outside the upp
 quartile of individuals, showing the proportional make-up of the high-effect population.
 We exclude points-of-intervention with no sufficiently high-effect observations (e.g.,
 `CC Others Worry` in @fig:heterogeneity-results-cc-action-distribution), classified as
-an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`). We only
-include personas with at least 15% prevalence in the observed upper quartile.
+an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`).
+//We only include personas with at least 15% prevalence in the observed upper quartile.
 
-
+Since the regression decision tree produces a full tree, all personas have size 3
+by default. However, these can often be compressed. When two personas differ only
+along one feature dimension, split at the same value, and both predict high-effect
+interventions, we combine them into a single persona which omits that feature (i.e.,
+spans the entire feature dimension). This is observed, for instance, in the persona
+for interventions on `CC Worry`.
 
 #let incomplete-descriptions-footnote = footnote[
   Note that the personas are not necessarily complete. For instance, suppose that a pair
@@ -151,6 +157,9 @@ small set of personas. In each case these exhibit high prevelence among individu
 high intervention effects, and considerably lower prevalence for other individuals,
 indicating that the identified personas effectively characterise the conditions for
 effective interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+While prevalence among the high-effect individuals is generally high, this does vary
+across points-of-intervention (e.g., 20% of effective interventions on beliefs about
+climate impacts are not captured).
 
 // Recall that the effect of intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
@@ -165,11 +174,11 @@ more desirable states than would be observed given no intervention.
 
 With this in mind, we now consider several specific features of interest in the
 identified personas. Firstly, we observe that all personas require a low initial
-state for `CC Worry`. This may result from this variable's relative low inertia
+state for `CC Worry`. This may result from this variable's low inertia
 and high connectivity --- in particular, its large outbound interaction effect
-toward the target variable (@fig:asymmetry-results-existence-interaction-matrix).
-These factors result in `CC Worry` being relatively influential,
-and influentia#emph[ble], therefore being an effective indirect pathway for
+toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
+These factors result in `CC Worry` being relatively influential
+and influentia#emph[ble], and therefore an effective indirect pathway for
 various interventions targeting `CC Action`. The significance of the requirement
 that `CC Worry` be _low_ is evident when comparing the implications for the null
 and intervention models. Due to `CC Worry`'s considerable outbound interactions,
@@ -178,14 +187,13 @@ for propagation. In the null model, however, these interactions work against the
 desired result---if `CC Worry` remains low, it exerts this influence on all other
 spins.
 
-Second, we observe that for each point-of-intervention (with the exception of `CC Real`),
+Second, we observe that for each point-of-intervention (with the exception of `CC Real`
+on account of high correlation with `CC Human`@footnote:incomplete-descriptions),
 a necessary condition for high effect is that the initial state of point of intervention
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of
 interventions with respect to pre-intervention state
-(@subsec:asymmetric-belief-system-modelling-interventions). `CC Real` does not exhibit
-this requirement, on account of high correlation with
-`CC Human`@footnote:incomplete-descriptions.
+(see @subsec:asymmetric-belief-system-modelling-interventions).
 
 
 // With the exception of `CC Real`, the personas for each point-of-intervention require that
@@ -415,8 +423,10 @@ so long as they do not already have a positive attitude toward climate action.
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
-*To-do:* Include directional differential figure per-ideology (as in
-@fig:asymmetry-results-existence-ranked-differentials).
+*To-do:*
+- Include directional differential figure per-ideology (as in
+  @fig:asymmetry-results-existence-ranked-differentials).
+- Discuss differences in baseline activations.
 
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs and attitudes are inherently
@@ -449,7 +459,14 @@ from the model, since this is captured by the partitioned datasets. The hyperpar
 used for regularisation strength and smoothing are listed in
 @tab:methods-hyperparameter-values.
 
-
+Figures related to model calibration can be found in @sec:appendix-extra-results. The
+estimated parameters exhibit considerably higher uncertainty than in the model
+calibrated to the complete dataset due to the smaller sample sizes
+(@fig:apdx-extra-results-ideology-accuracy). We find only one significant case of
+asymmetry, on $#raw("CC Worry") --> #raw("CC Impact")$ in the conservative model
+(@fig:apdx-extra-results-ideology-differentials), and only a minority of
+significant differences ($p < 0.05$) between interaction strengths, all for edges which
+are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-diffs).
 
 #figure(
   image(
@@ -473,7 +490,9 @@ on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notab
 model calibrated to the liberal subpopulation has higher sparsity
 (proportion of missing cross-interaction edges) and mean interaction effect over
 cross-interactions than either the conservative model or the complete model
-(@tab:heterogeneity-results-belief-systems-properties).
+(@tab:heterogeneity-results-belief-systems-properties). Among the interactions present
+in the liberal model, 82% also occur in the conservative model, contrasting the 54%
+of conservative interactions which are also in the liberal model.
 
 #figure(
   table(

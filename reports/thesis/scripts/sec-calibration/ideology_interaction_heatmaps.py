@@ -89,6 +89,14 @@ def main():
     print(f"Conservative sparsity: {cons_sparsity:.2f}")
     print(f"Liberal sparsity: {lib_sparsity:.2f}")
 
+    either_nonzero = ~np.isclose(nondiag_J_cons, 0) | ~np.isclose(nondiag_J_lib, 0)
+    both_nonzero = ~np.isclose(nondiag_J_cons, 0) & ~np.isclose(nondiag_J_lib, 0)
+    print(f"Overlap: {both_nonzero.sum() / either_nonzero.sum():.2f}")
+    overlap_cons = both_nonzero.sum() / (~np.isclose(nondiag_J_cons, 0)).sum()
+    overlap_lib = both_nonzero.sum() / (~np.isclose(nondiag_J_lib, 0)).sum()
+    print(f"Overlap (prop of Conservative): {overlap_cons:.2f}")
+    print(f"Overlap (prop of Liberal): {overlap_lib:.2f}")
+
     # cons_mean = (J_cons.sum() - np.diag(J_cons).sum()) / (7**2 - 7)
     # lib_mean = (J_lib.sum() - np.diag(J_lib).sum()) / (7**2 - 7)
     cons_mean = nondiag_J_cons[cons_is_nonzero].sum() / cons_is_nonzero.sum()

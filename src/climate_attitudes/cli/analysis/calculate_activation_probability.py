@@ -47,7 +47,11 @@ def calc_activation_probs[T: Ising](
     p = np.empty((R, M, T, N, N), dtype=np.float64)
     for r in range(R):
         h = params[r][:N]
-        j = params[r][N:].reshape((N, N))
+        if cls == Ising:
+            j = params[r][N:].reshape((N, N))
+        else:
+            j = np.zeros((N, N), dtype=np.float64)
+            j[np.triu_indices_from(j)] = params[r][N:]
         for intervene_idx in range(N):
             h_int = h.copy()
             h_int[intervene_idx] += intervention_delta
