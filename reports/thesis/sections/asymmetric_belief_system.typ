@@ -9,7 +9,6 @@
 // TODO: Discussion on interpreting asymmetric relations in terms of the
 // mathematical/conceptual models
 
-== (Endogenous) Belief system dynamics <subsec:methods-belief-system-dynamics>
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
 //   - Cognitive dissonance
@@ -23,33 +22,15 @@
 //   - Broader Markov process describes the state of the belief system as a whole
 //
 
-#emph-block[
-  This requires some work, rethinking. Each belief/attitude should be a separate random
-  variable. The distribution over each one is conditional on the previous full set of
-  outcomes. This conditional distribution is time-invariant.
-
-  Implications are:
-  + It makes sense to consider beliefs and atttudes as entities, which can be
-    characterised by their instantaneous state.
-  + That the behaviour of a belief/attitude depends on, and only on, the _previous_
-    states. i.e., memory $= 1$.
-  + That belief and attitude dynamics are not sensitive to exogenous contextual factors,
-    such as tiredness, exposure to current events, belief salience.
-
-
-  *Note:* When we refer to a 'belief' or 'attitude', we are referring to the entity
-  rather than a specific state. Unless stated otherwise.
-
-  A 'Belief System' is a collection of beliefs and attitudes in combination with the
-  transition probability linking consecutive states.
-]
 
 Our theory of belief system dynamics rests on three main assumptions. First, we assume
 that beliefs and attitudes can be represented as discrete random variables. This allows
 us to consider beliefs and attitudes as entities characterised by an instantaneous
 state. In particular, this assumption contrasts alternative views that beliefs and
 attitudes are dispositional or the result of interactions with the environment, with no
-associated state of their own (*CITATIONS*). Second, we assume that the state
+associated state of their own (*CITATIONS*).
+
+Second, we assume that the state
 distribution for any given belief or attitude is conditional on the previous states
 of all others, formalising the idea that past beliefs and attitudes influence present
 ones. Finally, we assume that these conditional distributions are time-invariant. While
@@ -190,7 +171,7 @@ and cannot define model dynamics using the Boltzmann distribution.
 We instead define the conditional distribution $P(bold(S)^(t+1) = bold(s) | bold(S)^t)$
 explicitly. Recall that the states of each pair of spins $S_i, S_j$ at time $t$ are
 conditionally independent random variables, given knowledge of the previous
-configuration $bold(S)^t$ (@subsec:methods-belief-system-dynamics). It therefore
+configuration $bold(S)^t$. It therefore
 suffices for us to describe the distribution over spin states for an individual spin
 $S_i$ at time $t+1$, as conditional on $bold(S)^t$.
 
