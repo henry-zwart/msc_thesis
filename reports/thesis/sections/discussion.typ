@@ -473,7 +473,7 @@ Finally, while the present model assumes that interaction effects in asymmetric 
 systems are independent of the 'influencing' variable's state, we argue that there is
 reason to think that this may not always be true. Consider two variables:
 
-- *Happening:* The belief that climate change is happening, and
+- *Happening:* The belief that climate change is happening.
 
 - *Action:* General attitude toward climate action.
 
@@ -624,13 +624,13 @@ influentiability (how much its own state is affected by other beliefs).
 
 
 Despite the promising results of this study, several questions remain. The limited
-number of waves in the climate beliefs dataset prohibits us from confidently
-distinguishing between within-person and between-person effects, which is required
+number of waves in the climate beliefs dataset prohibits us from
+distinguishing within-person and between-person effects, which is required
 to make strong claims regarding causal influences. We note that the broader
 climate attitudes survey does contain several additional waves, which are usable if we
 drop our requirements regarding the number of variables and inclusion of specific
-beliefs/attitudes. However, this raises a separate issue regarding the intervals between
-measurements, as inter-response times between different pairs of waves can differ
+beliefs/attitudes. However, this presents a separate issue regarding the intervals
+between measurements, as inter-response times between different pairs of waves can differ
 significantly, violating the model requirements. Further consideration is required to
 determine whether, for instance, the additional waves can be used _only_ to estimate
 individual baselines, while evenly-spaced observations are used to estimate interaction
