@@ -272,7 +272,7 @@ chapter (@sec:heterogeneity-results-intervention-effects).
 We consider both *outbound* and *inbound* interventions, illustrated below. Outbound
 intervention experiments (left) examine how interventions on a particular spin propagate
 to other beliefs and attitudes. On the other hand, inbound intervention experiments
-(right) consider a single belief or attitude as the intervention target, and examine the
+(right) consider a single belief or attitude as the intervention target and examine the
 differences in effects on this spin when intervening elsewhere in the network. We refer
 to the belief or attitude on which an intervention is applied as the
 *point-of-intervention* and the belief or attitude whose resulting state is measured as
@@ -326,7 +326,7 @@ effect of asymmetry is not inherently concerned with intervention, but is a gene
 measure for the difference between asymmetric and symmetry model dynamics.
 
 Both quantities compute a difference in effects between two distinct models: the
-intervention and null models for the effect of intervention; the asymmetric
+intervention and null models for the effect of intervention, and the asymmetric
 and symmetric models for the effect of asymmetry. To ensure outcome
 comparability, differences are computed between models with identical random number
 generation contexts.

@@ -331,6 +331,11 @@ All type-level and response-value validation checks succeed, providing a strong
 guarantee that the data schema matches our expectations per the codebook. We do,
 however, encounter several problems during null-value validation.
 
+#emph-block[
+  Acknowledge Sara and team for help diagnosing the errors, per the declaration
+  of authorship.
+]
+
 In some cases, these were due to errors in the codebook itself. These errors are
 relatively straightforward to identify from the null-value validation results, since
 they often affect all individuals in a particular wave. For instance, if the codebook

@@ -361,6 +361,8 @@ We mitigate these respective issues in our parameter estimation scheme by
 regularisation based on parameter magnitudes. We choose the parameterisation
 $bold(theta)^* in RR^p$ which satisfies the optimisation problem:
 
+// TODO: Add dependence on lambda and epsilon
+
 $
   bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
   f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad

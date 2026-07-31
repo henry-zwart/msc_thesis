@@ -18,8 +18,8 @@
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
 discuss their place in the broader context of belief system dynamics. We then
-conclude the chapter with a discuss on the limitations
-of our findings, and implications for future work on belief system dynamics and
+conclude the chapter with a discussion on the limitations
+of our findings and implications for future work on belief system dynamics and
 belief-level interventions.
 
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
@@ -45,13 +45,14 @@ influence over several other beliefs and attitudes.
 
 How should we interpret these asymmetric relations? Recall that relations in the
 non-equilibrium belief system model reflect temporal influence---how much one belief or
-attitude constrains#within-person-footnote the future state of another (@sec:asymmetric-belief-systems). An
-asymmetric relation reflects a constraint differential, where one belief or attitude
-has greater influence on the other than vice versa. More generally, the asymmetric model
-distinguishes between two forces: influence, and influentiability. Influence
-(the strength of outbound interactions) determines how the extent to which one belief or
-attitude constrains others, while influentiability (the strength of inbound interactions)
-determines the extent to which its own behaviour is constrained by others.
+attitude constrains#within-person-footnote the future state of another
+(@sec:asymmetric-belief-systems). An asymmetric relation reflects a constraint
+differential, where one belief or attitude has greater influence on the other than vice
+versa. More generally, the asymmetric model distinguishes between two forces: influence
+and influentiability. Influence (the strength of outbound interactions) determines how
+the extent to which one belief or attitude constrains others, while influentiability
+(the strength of inbound interactions) determines the extent to which its own behaviour
+is constrained by others.
 
 Political identity being more influential than influentiable in this context is
 consistent with previous studies on its mutual influences
