@@ -101,15 +101,14 @@
 = Discussion <sec:discussion>
 #include "sections/discussion.typ"
 
-= Climate beliefs dataset <sec:dataset>
-#include "sections/dataset.typ"
-
 // = Related work <sec:related-work>
 // #include "sections/literature_review.typ"
 
-
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
+
+= Climate beliefs dataset <sec:dataset>
+#include "sections/dataset.typ"
 
 = Ethics and Data Management
 A new requirement for the thesis is that there must be a short section in which you
