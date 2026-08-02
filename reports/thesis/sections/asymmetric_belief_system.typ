@@ -40,6 +40,8 @@ not.
 // For instance, they  sensitive to context (e.g., being in a certain location or
 // talking to a specific person), physical state (e.g., tiredness), or
 // such as
+*TODO: Make clear that when we say attitude we mean evaluative state, not precise
+definition used in @dalegeFormalizedAccountAttitudes2016*.
 
 #important-block[
   The terms *belief* and *attitude* are presently ambiguous. On one hand, they can refer
@@ -140,6 +142,18 @@ possible future states.
 
 
 == Non-equilibrium belief system model <subsec:theory-nonequilibrium-belief-system-model>
+
+*TODO:*
+- Builds on the CAN model, also known as the 'Ising model of attitudes'
+  @vandermaasPolarizationIndividualsHierarchical2020
+- Self-interaction term. Has two roles:
+  + Captures the timescale of the data; how quickly/slowly beliefs change
+  + Allows beliefs to be persistent in and of themselves. Consider that without
+    self-interactions, a node with only outbound edges would be entirely set be
+    its baseline activation. Self-interactions allow beliefs to be sticky, independently
+    of others.
+
+
 
 // - Why we can't use the boltzmann distribution and Hamiltonian, like in the symmetric
 //   Ising model:

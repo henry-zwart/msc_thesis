@@ -72,6 +72,8 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/full_subset_var.pdf \
 		$(THESIS_DIR)/results/figures/dataset/full_subset_dendrogram.pdf \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf \
+		$(THESIS_DIR)/results/figures/dataset/reduced_subset_contemporaneous.pdf \
+		$(THESIS_DIR)/results/figures/dataset/reduced_subset_temporal.pdf \
 		$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf \
 		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf \
 		$(THESIS_DIR)/results/figures/dataset/transition_probability.pdf
@@ -128,7 +130,6 @@ endif
 
 # ==== Report
 outputs/reports/thesis.pdf: $(THESIS_DEPS)
-	@echo ${TYPST_PACKAGE_PATH}
 	@typst compile $(THESIS_DIR)/main.typ $@
 
 # Results, figures, data
@@ -624,6 +625,18 @@ $(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf: \
 
 $(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf: \
 			$(THESIS_DIR)/scripts/sec-dataset/partial_correlation_reduced.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/reduced_subset_contemporaneous.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/contemporaneous_reduced.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/reduced_subset_temporal.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/temporal_reduced.py \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			| $(THESIS_DIR)/results/figures/dataset
 	@uv run $<

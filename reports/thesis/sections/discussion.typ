@@ -1,3 +1,4 @@
+#import "./introduction.typ": RQ1, RQ2, RQ3, RQ4
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
 #show: show-theorion
@@ -25,10 +26,7 @@ belief-level interventions.
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
 
 
-#show-rq(1)[
-  To what extent are causal relations _symmetric_ or _asymmetric_, in models
-  of climate change belief systems inferred from the climate beliefs dataset?
-] <discussion-rq1>
+#show-rq(1, RQ1) <discussion-rq1>
 
 On the question of existence, @subsec:asymmetry-results-existence demonstrated
 asymmetric relations between several pairs of beliefs and attitudes, while also
@@ -123,11 +121,7 @@ may promote information-seeking behaviour, leading to changes in climate-related
 
 // *NOTE:* Doesn't mention #cite(<eganIdentityDependentVariable2020>, form: "prose")
 
-#show-rq(2)[
-  How do asymmetric and symmetric beliefs systems differ with regards to
-  intervention strategy and effectiveness, in models inferred from the climate
-  beliefs dataset?
-] <discussion-rq2>
+#show-rq(2, RQ2) <discussion-rq2>
 
 The consequences of asymmetry for belief system dynamics were subsequently reflected in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
@@ -186,11 +180,7 @@ relations we found that this can result in substantial differences in influentia
 and influentiability between the two models.
 
 
-#show-rq(3)[
-  How do intervention outcome and effectiveness vary between individuals with
-  different initial conditions in asymmetric belief systems inferred from the
-  climate beliefs dataset?
-] <discussion-rq3>
+#show-rq(3, RQ3) <discussion-rq3>
 
 In @sec:heterogeneity-results-intervention-effects we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
@@ -251,10 +241,7 @@ support for climate policy and related attitudes @grometPoliticalIdeologyAffects
 @unsworthItsPoliticalHow2014 @allcottSocialNormsEnergy2011
 @vanvalkengoedSelectEffectiveInterventions2022.
 
-#show-rq(4)[
-  How do asymmetric belief systems inferred from the climate beliefs dataset
-  vary between conservative and liberal individuals?
-] <discussion-rq4>
+#show-rq(4, RQ4) <discussion-rq4>
 
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
@@ -366,16 +353,18 @@ study.
 Our present focus on endogenous dynamics also does not discount the substantial
 role of social interaction in belief and attitude change
 @karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
-@degrootReachingConsensus1974a or stability @prenticePluralisticIgnorancePerpetuation1996
-@brownMeasurementPartisanSorting2021, including in intervention contexts
+@degrootReachingConsensus1974a @converseNatureBeliefSystems2006 or stability
+@prenticePluralisticIgnorancePerpetuation1996 @brownMeasurementPartisanSorting2021,
+including in intervention contexts
 @brewerIncreasingVaccinationPutting2017. Rather, this decision reflects the fact that
 the dataset used in this study did not include social network information. The matter
 of integrating social and cognitive forces in similar belief system models has been
 explored in several accounts @rodriguezCollectiveDynamicsBelief2016
-@aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025, generally
-assuming dual objectives of cognitive consistency and social coherence
-@festingerCognitiveDissonance1962 @heiderAttitudesCognitiveOrganization1946
-@gawronskiCognitiveConsistencyFundamental2012. The Networks of Belief theory, proposed by
+@aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025
+@vandermaasPolarizationIndividualsHierarchical2020, generally assuming individuals have
+dual objectives of cognitive consistency and social coherence @festingerCognitiveDissonance1962
+@heiderAttitudesCognitiveOrganization1946 @gawronskiCognitiveConsistencyFundamental2012.
+The Networks of Belief theory, proposed by
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose"), builds on the Causal
 Attitude Network model which also serves as the foundation for our proposed model. Since
 our work is mostly orthogonal to theirs, we anticipate that it would be straightforward

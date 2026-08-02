@@ -2,7 +2,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from ising.evaluation._round_trip import fit_round_trip
-from ising.model import FitMethod
+from ising.model import FitMethod, UpdateMethod
 from ising.model_library import MODELS
 
 from ising import SymmetricIsing
@@ -28,7 +28,9 @@ def main():
         model.reset(RANDOM_SEED)
         fig, axes = plt.subplots(ncols=2, figsize=(10, 5), constrained_layout=True)
 
-        refit_model = fit_round_trip(model, n=N, timepoints=T)
+        refit_model = fit_round_trip(
+            model, n=N, timepoints=T, update_method=UpdateMethod.SYNCHRONOUS
+        )
 
         # Draw original model
         model.draw(ax=axes[0])
@@ -55,6 +57,7 @@ def main():
             n=N,
             timepoints=T,
             fit_method=FitMethod.TIME_SERIES,
+            update_method=UpdateMethod.SYNCHRONOUS,
             model_type=SymmetricIsing,
             use_structure=False,
         )

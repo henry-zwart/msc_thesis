@@ -4,45 +4,376 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
+
+// *TODO:*
+// - Address the specific variables we look at in the outbound/inbound experiments.
+//   Are the variables interesting independently of the asymmetry results/theoretically
+//   motivated?
+// - Mention our hypotheses, where they exist.
+//   - RQ3: That interventions can only be effective when the target and the
+//     point-of-intervention are both low.
+
+Our subjective interpretations of the world, natural phenomena, and
+those around us are dependent of a collection of beliefs about the way that things are,
+and the way that things work. These beliefs and attitudes are highly interdependent,
+related by both logical and psychological associations, which give way to notions of
+internal consistency---sets of beliefs and attitudes that are consistent with one
+another. Beliefs and attitudes are also often subject to social dynamics, as evidenced
+by observed geographic segregation of political attitudes in the United States. Moreover,
+the beliefs and attitudes held by an individual can have realised external consequences
+for behavioural decisions, and are in-turn influenced by these decisions, often in the
+form of reinforcing feedback loops. Put plainly, the beliefs and attitudes which
+allow us to make internal sense of the world inevitably shape our collective
+impact on it.
+
+Collections of beliefs and their interrelations are often referred to as *belief
+systems*. Within a belief system,
+- Some beliefs/attitudes more central to belief systems:
+  - Operational vs. symbolic ideology @brandtWhatCentralPolitical2019 @fishmanChangeWeCan2022
+- Some beliefs appear more 'fundamental' or 'influential' than others.
+- Some are very stable.
+- Some appear to have limited influence over attitudes which we would expect to
+  be related.
+  - e.g., Policy on political attitudes
+  - e.g., Central beliefs on others @fishmanChangeWeCan2022 @brandtInterattitudeCentralityDoes2023
+- When internal conflict arises, some beliefs/attitudes are more likely to change
+  than others.
+  - Various accounts suggesting that 'core' beliefs are more likely to be retained than
+    'peripheral' beliefs which are not as well connected @zotero-item-17041
+  - Differences in causal potency provide an alternative explanation (which is not
+    mutually exclusive). That some beliefs or attitudes, by way of their nature,
+    exert greater influence than they receive.
+
+
+
+
+
+are highly interdependent. Logical and psychological associations between beliefs
+and attitudes give way to the notion of internal consistency. Beliefs and attitudes also
+influence, and influenced by behavioural decisions. Moreover, they are subject to social
+dynamics,
+
+mutually influence and are _influenced by_ behavioural
+decisions, and oftne . Logical and psychological associations between certain beliefs
+and attitudes give way to the notion of internal consistency among beliefs.
+
+are highly interdependent. They affect one another, whether by way of logical relationships
+(e.g., *...*) or psychological associations (e.g., *...*). Attitudes and preferences
+are also generally considered key determinants of behaviour, and are often also
+themselves reinforced by behavioural choices. Moreover,
+
+Our individual interpretations of the world are predicated on a collection of beliefs, attitudes As individuals, our beliefs, attitudes, and dispositins
+
+At any point in time, our understanding of the world, ourselves, our
+
+== Plan
+
+High-level structure:
+- *A:*
+  - (Phenomenon) Beliefs and attitudes are interrelated. Some appear to be more
+    influential, or central, than others.
+  - (Empirical knowledge) Evidenced, for example, by stability of political attitudes
+    over the past decade, alongside broad shifts in public attitudes toward climate
+    change.
+  - (Why it matters) Understanding the mechanisms for belief change is important to
+    ...
+  - (Mechanistic knowledge) Internal consistency (cognitive dissonance), social cohesion.
+    We focus on the former.
+  - (Modelling knowledge)
+    - Beliefs as nodes. Edges are signed, weighted, and typically bi-directional edges
+      @dalegeFormalizedAccountAttitudes2016 @dalegeNetworksBeliefsIntegrative2025: based
+      on the connectionist model of attitudes @monroeGeneralConnectionistModel2008.
+    - Beliefs/attitudes often assessed in terms of network centrality (measured using
+      degree or strength(*?*))
+- *B:*
+  - Another possible explanation for differences is that some beliefs and
+    attitudes exert greater causal influence on others than vice versa.
+  - For instance, show example.
+  - While most authors acknowledge the plausibility of asymmetric influence relations,
+    most studies assume symmetric relations.
+  - Little empirical evidence
+
+
+
+
+
+
+
+=== Establish the territory
+
+*The phenomenon, and why it matters*
+- Beliefs and attitudes influence one another.
+- Some appear to be highly influential or stable, while others appear to be highly
+  influentiable and subject to change.
+
+*What we currently know, and how we know it*
+Empirical knowledge:
+- Clustering across individuals/geographic areas
+- Stability of political beliefs
+- Changes in beliefs/attitudes about climate change
+- Measurement approaches: surveys, correlational networks showing associations between
+  beliefs/attitudes.
+- ...?
+
+Mechanistic knowledge:
+- Theory:
+  - Individuals tend to minimise inconsistencies among their beliefs and attitudes
+    (cognitive dissonance). Tend to change beliefs when two are inconsistent with
+    one another. Consistent beliefs tend to hold each other in check.
+  - Individuals tend to align their beliefs and attitudes with those around them
+    (social coherence). Evidenced by geographic clustering, studies showing that
+    policy support is sensitive to partisan framing.
+
+Modelling knowledge:
+- Families of models:
+  - #cite(<rodriguezCollectiveDynamicsBelief2016>, form: "prose") and
+    #cite(<aiyappaEmergenceSimpleComplex2024>, form: "prose") consider belief systems
+    based on the Social Knowledge Structure (SKS) model @greenwaldUnifiedTheoryImplicit2002.
+    Nodes are concepts. Edges are beliefs about the association between a pair of concepts.
+    Internal inconsistency is measured with respect to unstable triads, building on Heider's
+    balance theory @heiderAttitudesCognitiveOrganization1946.
+    - *What does it buy you?*
+  - Bayesian networks have been used to capture conditional probability structures among
+    beliefs and attitudes @powellModelingLeveragingIntuitive2023
+    @cookRationalIrrationalityModeling2016. Models belief systems as directed acyclic
+    graph, where nodes represent beliefs, and a directed edges encode probabilistic
+    dependencies.
+    - *Benefit:* Flexible conditional distribution for each belief with respect to its
+      parents, such that state distribution can be a complex function of interacting
+      parent states. Observing 'upstream' beliefs (or priors) fixes the probability
+      distribution for downstream beliefs, making analysis of potential interventions
+      straightforward.
+    - *Downsides:* Since belief systems are inherently psychological constructs, there
+      is no reason to expect strict hierarchy of beliefs. Cannot capture mutual
+      reinforcement feedback loops.
+  - Connectionist models of belief: Nodes represent beliefs, which can take on different
+    states. Signed, weighted edges represent consistency between two beliefs. Examples
+    include the Causal Attitude Network (CAN) model @dalegeFormalizedAccountAttitudes2016
+    and the related Hierarchical Ising Opinion model
+    @vandermaasPolarizationIndividualsHierarchical2020. Based on theory of cognitive
+    dissonance @festingerCognitiveDissonance1962.
+    - *Benefits:* Theoretically motivated. ...
+- What does modelling enable in this domain:
+  - Theory/mechanism testing: Belief change and propagation is difficult to reason about
+    due to many connections. Models based on statistical physics are theories themselves.
+    Abstract away from individual beliefs and theorise about general mechanisms which
+    drive the _entire_ system.
+    - We see this particularly for CAN, Networks of Belief models. They are used to make
+      predictions about behaviour.
+  - Structural inference: Understanding how beliefs and attitudes relate.
+  - Simulation experiments: Understanding how changes in a belief system are likely to
+    propagate; testing interventions; investigating how phenomena arise
+    (e.g., polarisation).
+
+
+- Computational modelling approaches have been used to explain various observed phenomenon
+- Also help us to reason about how beliefs and attitudes in a given state are likely to
+  evolve.
+  - Can be used to test intervention effects _in silico_
+  - This requires that the model is an accurate reflection of the true dynamics.
+- CAN model:
+  - Based on Ising model: maximum entropy model that matches spin means and pair averages.
+  - Fits the data, reproduces key statistics.
+  - Assumes equilibrium belief state.
+  - But what if these are not sufficient? What if belief systems are non-equilibrium?
+
+Important motivators:
+- Understanding how collective behaviours arise.
+  - Beliefs and attitudes are determinants for individual behaviour.
+  - Beliefs and attitudes influence both individual and collective behaviour. Understanding
+  the causal structures that constitute a belief system is important to understanding how
+  behaviours spread.
+-
+
+
+*A:*
+- Beliefs and attitudes influence one another.
+
+
+
+*A:*
+- Beliefs and attitudes are interrelated. Internal consistency and social cohesion.
+- Some beliefs appear to be highly influential, while being relatively stable themselves.
+- Understanding how changes in certain beliefs and attitudes can lead to changes in
+  others is important, e.g., for climate mitigation. Driving behaviour change.
+- Models used to describe dependencies and explain dynamics.
+*B:*
+-
+
 #emph-block[
-  *Note:* This section is currently just a collection of mostly-unrelated thoughts and
-  ramblings. Feel free to disregard it :)
+  Two territories:
+  + System: What is the real-world system? What patterns, behaviours, outcomes are
+    important?
+  + Model: How have models been used here? What kinds exist? What can they do well?
+    What is standard practice? What can they _not_ do well?
 
-  I'm also considering a slight revision of the thesis structure. The current structure
-  of the following few sections is:
-  - *Non-equilibrium belief systems (Chapter 3):* Model theory, as well as details on
-    how we model interventions, and choose intervention strength.
-  - *Methods (Chapter 4):* Mostly parameter estimation theory, as well as the soft
-    binarisation, and comments on counterfactual simulations (comparing intervention
-    outcomes with the null/no-intervention model).
-  - *Calibration (Chapter 5):* Results and evaluation of calibrated models (excluding
-    the models calibrated to the ideology-specific data subsets).
-  - *Results (Chpaters 6 and 7):* Mostly results, but also some content that could
-    arguably be in methods (e.g., defining the directional differentials (difference in
-    directional interaction effects), the effect characterisation function).
-
-  The revision I'm considering is as follows:
-  - *Non-equilibrium belief systems (Chapter 3):* Only model theory.
-  - *Parameter estimation (Chapter 4):* Starts with the parameter estimation
-    theory (currently in Methods); finishes with current content of Calibration chapter.
-  - *Methods (Chapter 5):* No more parameter estimation here. The methods-style parts of the results
-    are shifted into this section, as well as intervention modelling approach. i.e.,
-    + Directional differentials as a way to measure asymmetry,
-    + Modelling interventions, discussion on intervention strengths,
-    + Outbound and inbound interventions, two metrics (effect of intervention, effect of
-      asymmetry), and ranking interventions, and
-    + Defining the effect characterisation function; outlining regression decision tree
-      approach as one way to represent this
-  - *Results (Chapters 6 and 7):* Mostly the same, with the methods-stuff removed.
+  *Goal:* Reader thinks that this is a real, interesting scientific problem, and modelling
+  is a legitimate way to address it.
 ]
 
-*TODO:*
-- Address the specific variables we look at in the outbound/inbound experiments.
-  Are the variables interesting independently of the asymmetry results/theoretically
-  motivated?
-- Mention our hypotheses, where they exist.
-  - RQ3: That interventions can only be effective when the target and the
-    point-of-intervention are both low.
+*Short short short*
+
+The phenomenon, and why it matters:
+- *A:*
+  - Beliefs, attitudes aren't random. Internally consistent, and often socially clustered.
+  - They influence behaviour.
+  - Current issues such as climate change, which require widespread changes in behaviour,
+    also require widespread changes in attitudes, which may spread socially.
+  - General attitudes toward climate action/policy often polarised, subject
+    to pluralistic ignorance. Presents a situation which feels like there is a lack of
+    consensus; prevents effective progress.
+  - Furthermore, some attitudes appear more influential or resistant to change than others.
+    - Increasingly polarised policy stances from Republicans and Democrats.
+    - Yet while there has been significant change in individuals' beliefs/attitudes toward
+      climate change over the past decade, political views have remained highly stable.
+    - Suggests that ...
+- *B:*
+  - In part due to the complex nature by which beliefs and attitudes appear to be related.
+    Any one belief or attitude is constrained by a multitude of others.
+  - Relatively little is known about how changes in attitudes spread to
+    other attitudes (known as dynamic constraint).
+- *T:*
+  - Complex systems approach
+
+What we currently know, and how we know it:
+- *A*
+
+
+
+=== Establish the niche
+
+#emph-block[
+  Typically two problems:
+  - Knowledge: something the field cannot yet explain, predict, estimate, or decide.
+  - Method: Limitation in how existing models represent mechanisms, scale,
+    heterogeneity, etc.
+
+  *Goal:* Narrowing from broad topic to specific puzzle.
+]
+
+*Target phenomenon:*
+
+*Failure mode of current understanding:*
+
+*Consequence of the problem:*
+
+*What is in scope:*
+
+*What is not in scope:*
+
+*What assumptions will matter later:*
+
+
+=== Occupy the niche
+
+#emph-block[
+  Stating what we will do, how we will do it, and why this is a credible response to the
+  problems above.
+
+  Comprises four steps:
+  + Precise RQ or RQs
+  + High-level modelling approach, without technical details
+  + How success is evaluated
+  + Contributions, with forward references to chapters
+]
+
+Recent empirical evidence of asymmetric relations in fast-changing context using
+temporal network @chambonHowComplianceBehavioural2023:
+- Frame as:
+  - Evidence of asymmetric relations
+  - Helpful for explaining changes in compliance.
+  - Focuses on bi-directional reinforcing relations (we argue unidirectional cases also important,
+    as are cases where they are different)
+  - Post-hoc analysis (we argue this means also useful for simulation studies)
+  - 'Temporal networks have been used to analyse temporal associations between attitudes
+    and compliance during COVID-19'. i.e., focus is on 'analysis'. Can then say
+    *mechanistic* models of belief system dynamics are mostly concerned with
+    static constraint (symmetric relations). Is Bayesian network a mechanistic model?
+
+Intervention effects have been analysed in terms of network features
+@chambonTailoredInterventionsBroad2022. Though not using simulation approach.
+
+-
+i.e., post-hoc explanation. Our argument is: (1)
+
+While most authors in the belief system modelling literature acknowledge the plausibility
+of asymmetric influences between beliefs and attitudes, currently predominant modelling
+practices assume symmetric relations. Two notable exceptions are Bayesian networks
+@pearl1988probabilistic and temporal networks @kriekeEcologicalMomentaryAssessments2015.
+Bayesian networks model conditional probabilistic relationships between random variables
+in a directed, acyclic structure, and have been applied to the study of belief dynamics
+@cookRationalIrrationalityModeling2016 @powellModelingLeveragingIntuitive2023. However,
+the strict acyclicity assumption prohibits modelling (even asymmetric)
+reciprocal influences between beliefs. Temporal (psychological) networks, on the other
+hand, are obtained by regressing instantaneous belief and attitude states on previous
+observations using a linear model.
+...
+
+// NOTE: Maybe talk about why symmetric relations prevalent. Easy (can use
+// cross-sectional data); historically-prevalent.
+
+// Empirical evidence for both the prevalence of asymmetric influences and their potential
+// impacts on belief system dynamics remain limited.
+
+*Diagram showing three possibilities: mostly symmetric, random directions, sinks and
+sources:*
+- First: not likely to differ much from symmetric
+- Second: different
+- Third: ...?
+
+This study explores the prevalence of asymmetric influence among beliefs and attitudes
+about climate change in the US, as well as the dynamic implications of symmetric and
+asymmetric modelling assumptions for belief-level interventions. The data used for this
+investigation is sourced from a longitudinal representative survey collected between
+2020 and 2023. Specifically, we will address the following research questions:
+
+#let RQ1 = [
+  To what extent are causal influences _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
+]
+
+#let RQ2 = [
+  How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
+]
+
+#let RQ3 = [
+  How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
+]
+
+#let RQ4 = [
+  How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
+
+#{
+  set enum(numbering: "RQ1.", indent: 1em)
+  block(width: 97%, [
+    + #RQ1 <RQ1>
+
+    + #RQ2 <RQ2>
+
+    + #RQ3 <RQ3>
+
+    + #RQ4 <RQ4>
+  ])
+}
+
+To assess intervention dynamics we require a mechanistic asymmetric belief system
+model, whose behaviour can be assessed via simulation. We extend the CAN model to
+a kinetic Ising model form, allowing directed interaction effects between each pair of
+beliefs to differ, and redefining model dynamics as explicitly dependent on the
+previous states of all beliefs and attitudes.
+
+Our contributions are as follows: *Workshop this---check academic phrasebank.*
+
+
+
+
+#line(length: 100%)
 
 
 == Plan
@@ -89,6 +420,38 @@
 ]
 
 == Motivation
+
+Causality in psychological networks @kossakowskiSearchCausalityComparison2021
+
+Practical considerations for designing empirical studies for psychological networks.
+Discusses limitations of cross-sectional studies for teasing apart within-person and
+between-person effects @chambonNetworkPsychometricsPractice2026.
+
+Dynamics vs. static constraint. @converseNatureBeliefSystems2006
+
+Intervention studies with belief system models:
+- Looks at dynamics constraint. Uses symmetric network, doesn't fit individual models.
+  Applies persuasive experimental condition and predicts how attitudes will change.
+  Finds that attitudes generally change most when close to the point-of-intervention
+  @turner-zwinkelsBeliefSystemNetworks2022
+- Finds that (counter to their hypothesis) peripheral attitudes changed less than
+  central ones (no 'straightforward association between inter-attitude centrality and
+  persuasion'). Also uses symmetric model. 'such a process is often assumed to be
+  bi-directional'. @brandtInterattitudeCentralityDoes2023
+  - Possible explanation for their findings: attitudes found to be peripheral may not
+    actually be peripheral. They may be asymmetric, with different
+    influence/influentiability.
+- Looks at temporal network of behavioural compliance in COVID-19
+  @chambonHowComplianceBehavioural2023. Says they measure within-person effects, but
+  not clear that this is true (they use temporal and contemporaneous networks).
+  - Their context is expected to have non-stable beliefs and attitudes. Early stages
+    of pandemic.
+  - They find cases of asymmetry, but these are typically in the other direction.
+    Variables which are mostly influenced by others. We find variables which mostly
+    influence others.
+  - Their focus is primarily on bi-directional reinforcing effects. They also don't
+    compare with symmetric model.
+- @chambonTailoredInterventionsBroad2022
 
 Issue support on climate policies in US driven by political identification and climate
 beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020

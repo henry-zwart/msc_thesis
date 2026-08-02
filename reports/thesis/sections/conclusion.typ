@@ -1,3 +1,7 @@
+*Note:*
+- Nodes considered peripheral in a symmetric model may be more central in an asymmetric
+  model.
+
 //*0. (Maybe) Little reminder of the gap(?)*
 
 While studies on belief system dynamics often acknowledge that certain beliefs and
