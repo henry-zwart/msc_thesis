@@ -257,6 +257,10 @@ mutually-related concepts with an odd number of negative associations). The latt
 that pairs of beliefs (and/or attitudes) may be more or less compatible, with compatible
 beliefs reinforcing one another, and incompatible ones causing inconsistency.
 
+*NOTE:* Add a bit more here on the SKS approach, to show that we have considered it.
+We don't use it because we're operating under the CAN model framework. Also because
+this is closely aligned with the empirical belief networks.
+
 These two theories have given way to two families of belief system models based on the
 statistical physics notion of energy minimisation (*CITE*), where 'energy' is measured
 in terms of inconsistency. For the purposes of this study, we focus here on the family
