@@ -166,34 +166,107 @@ centrality may contribute to the propagation of belief-level interventions to ot
 beliefs and attitudes.
 
 
-*(Mechanistic knowledge): Hypothesised causal mechanisms, conceptual frameworks*
-- Correlational approach provides valuable insight into belief system structure, but
-  does not make claims of causality.
-- @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
-- The use of the term _system_ implies an abstraction away from individual beliefs and
-  attitudes, refocusing on belief states and dynamics as characterised by the
-  interactions of the entire set of beliefs.
-  This perspective on the nature of beliefs
-  and attitudes lends itself naturally to formalisation of belief systems under the complex
-  systems framework.
-- Two main families of models under the complex systems/statistical physics framework.
-  These draw on separate theories of internal consistency.
-  + Festinger's theory of cognitive dissonance $-->$ connectionist model
-    - Cognitive dissonance: when two beliefs are in conflict, tend to adjust one of them
-      to resolve this.
-  + Heider's balance theory $-->$ SKS model (maybe cf.)
-- Causal models assume symmetric influences. Two beliefs related via a positive edge
-  reinforce one another with equal strength. Negative edge: oppose one another with
-  equal strength. In particular, holding all other beliefs constant, the influence of
-  one belief on the other is the same as vice versa.
+// NOTE:
+// *(Mechanistic knowledge): Hypothesised causal mechanisms, conceptual frameworks*
+// - Correlational approach provides valuable insight into belief system structure, but
+//   does not make claims of causality.
+// - The use of the term _system_ implies an abstraction away from individual beliefs and
+//   attitudes, refocusing on belief states and dynamics as characterised by the
+//   interactions of the entire set of beliefs.
+//   This perspective on the nature of beliefs
+//   and attitudes lends itself naturally to formalisation of belief systems under the complex
+//   systems framework.
+// - Two main families of models under the complex systems/statistical physics framework.
+//   These draw on separate theories of internal consistency.
+//   + Festinger's theory of cognitive dissonance $-->$ connectionist model
+//     - Cognitive dissonance: when two beliefs are in conflict, tend to adjust one of them
+//       to resolve this.
+//   + Heider's balance theory $-->$ SKS model (maybe cf.)
+// - Causal models assume symmetric influences. Two beliefs related via a positive edge
+//   reinforce one another with equal strength. Negative edge: oppose one another with
+//   equal strength. In particular, holding all other beliefs constant, the influence of
+//   one belief on the other is the same as vice versa.
 
-While the correlational network approach provides valuable insight into belief system
-structure, it does not, on its own, explain the mechanisms by which beliefs and
-attitudes are associated.
+// While correlational networks identify statistical associations between beliefs and
+// attitudes, they do not purport to explain the mechanisms by which beliefs and attitudes
+// are related, nor the dynamic implications of belief system structure. Several
+// influential theories of belief dynamics rest on the notion of internal
+// consistency---that individuals strive to hold largely compatible beliefs and
+// attitudes. In his theory of cognitive dissonance,
+// #cite(<festingerCognitiveDissonance1962>, form: "prose") argues that when an individual
+// holds two beliefs which they consider conflicting, they will tend to change one of them
+// to achieve a more consistent internal state.
+// #cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
+// #cite(<heiderAttitudesCognitiveOrganization1946>, form: "year") balance theory, which
+// conceptualises attitudes as signed associative relations between concepts, makes a
+// similar argument for attitude change as an effort to eliminate inconsistencies in the
+// form of unstable triads, defined as concepts related in a triangle structure with an odd
+// number of negative associations.
 
-- Distinction between static (predicting position on A given B) and dynamic constraint
-  (how much does $B$ change when $A$ changes).
-- Lends naturally to formalisation under
+While correlational networks identify statistical associations between beliefs and
+attitudes, they do not purport to explain the mechanisms by which beliefs and attitudes
+are related, nor the dynamic implications of belief system structure. Several
+influential theories of belief dynamics rest on the notion of internal
+consistency---that individuals strive to hold largely compatible beliefs and
+attitudes.
+#cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
+(#cite(<heiderAttitudesCognitiveOrganization1946>, form: "year")) balance theory,
+which conceptualises attitudes as signed associative relations between concepts,
+makes the case for attitude change as an effort to eliminate inconsistencies in the
+form of unstable triads. Similarly,
+In his theory of cognitive dissonance,
+#cite(<festingerCognitiveDissonance1962>, form: "prose") argues that when an individual
+holds two beliefs which they consider conflicting, they will tend to change one of them
+to achieve a more consistent internal state.
+
+
+// TODO: Doesn't reference monroe.
+// TODO: Doesn't use their version of 'attitude'
+// TODO: Maybe reference HIOM and networks of belief?
+These theories have given way to two families of belief system models based on the
+statistical physics notion of energy minimisation. The first class, building
+directly on Heider's balance theory, defines belief system dynamics as efforts to
+reduce internal inconsistencies in the form of unstable triads
+@greenwaldUnifiedTheoryImplicit2002 @rodriguezCollectiveDynamicsBelief2016
+@aiyappaEmergenceSimpleComplex2024. For the purposes of this study, however, we focus
+primarily on the second class of models. The Causal Attitude Network
+(CAN) model formalises Festinger's theory of cognitive dissonance in an Ising-style
+model @dalegeFormalizedAccountAttitudes2016. Beliefs and attitudes are represented as
+spins which take on values in ${-1, +1}$, representing two opposing states, and are
+related by reinforcing ($+$) or opposing ($-$) interaction effects. The tendency for each
+belief to be positive or negative, holding all interaction effects constant, is captured
+by their respective _baseline activations_. The CAN model defines belief system dynamics
+as efforts to reduce cognitive dissonance, such that positively related beliefs generally
+agree and negatively related beliefs generally disagree.
+
+
+
+
+
+// class of models, inspired by The second---which we focus
+// (SKS) model @greenwaldUnifiedTheoryImplicit2002 builds directly on Heider's balance
+// theory
+// The Causal Attitude Network (CAN)
+// model @dalegeFormalizedAccountAttitudes2016 formalises Festinger's theory of cognitive
+// dissonance in an Ising-style model. Beliefs and attitudes are represented as spins which
+// take on values $s in {-1, +1}$, representing two opposing states (e.g., 'climate change
+// is real' vs. 'climate change is fake', or 'likes dogs' vs. 'dislikes dogs'), and are
+// related via signed, weighted interaction effects which determine the extent to which a
+// pair of beliefs reinforce ($+$) or oppose ($-$) one another. Each belief also has an
+// associated _baseline activation_, reflecting its tendency to be positive or negative,
+// holding all interaction influences constant. Interaction relations are symmetric, such
+// that each pair of beliefs exert equal reinforcing or opposing influence on one another.
+// The model implements belief system dynamics as driven by efforts to reduce cognitive
+// dissonance (i.e., such that positively related beliefs generally have the same valence,
+// and negatively related beliefs generally have opposite valence). The second class
+// of models, inspired by Heider's balance theory, defines belief system dynamics in
+// terms of efforts to increase internal consistency as measured by absence of unstable
+// triangles @greenwaldUnifiedTheoryImplicit2002 @rodriguezCollectiveDynamicsBelief2016
+// @aiyappaEmergenceSimpleComplex2024.
+
+// - Distinction between static (predicting position on A given B) and dynamic constraint
+//   (how much does $B$ change when $A$ changes).
+// - Lends naturally to formalisation under
 
 Gives meaning to centrality:
 - More/stronger connections --> more constrained. More stable.
@@ -209,6 +282,12 @@ Choosing effective interventions with simulation studies: @castroCentralityMeasu
 
 
 *The puzzle*
+
+- Interpretation of node importance/influence in the CAN model. More constrained. Changes
+  affect many other beliefs.
+-
+
+
 + Target phenomenon: Some beliefs are more influential than others. Peripheral nodes
   can be good intervention targets.
 + Failure mode of current understanding:
