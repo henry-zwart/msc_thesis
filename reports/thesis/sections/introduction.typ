@@ -13,7 +13,7 @@
 //   - RQ3: That interventions can only be effective when the target and the
 //     point-of-intervention are both low.
 
-_Belief systems as interrelated beliefs_
+//_Belief systems as interrelated beliefs_
 
 Our subjective interpretations of the world, natural phenomena, and
 those around us are dependent on a collection of beliefs about how things are,
@@ -26,31 +26,145 @@ for behavioural decisions and are in turn influenced by these decisions, often i
 form of reinforcing feedback loops. Put plainly, the beliefs and attitudes which allow us
 to make internal sense of the world inevitably shape our collective impact on it.
 
-_Beliefs behave differently. May be more or less stable or influential._
+//_Beliefs behave differently. May be more or less stable or influential._
 
 Distinct beliefs and attitudes may behave differently within a belief system. Some
 attitudes, such as political ideology (e.g., conservativism or liberalism) are highly
 stable over time @greenPartisanStabilityTurbulent2024. Others appear to be more
 malleable (e.g., attitudes toward particular political candidates). In addition, some
-beliefs and attitudes appear to be more influential than others. For instance, while
-we may suppose that voting behaviour is driven by individuals' policy preferences,
-#cite(<unsworthItsPoliticalHow2014>, form: "prose") show that actual influence may, in
-fact, run counter to this intuition, with individuals' support for particular policies
-changing when partisan framing is introduced, holding all other content of the policy
-constant.
+beliefs and attitudes appear to be more influential than others. For instance, one
+might intuitively expect political alignment to be dependent on individuals' policy
+preferences. However, #cite(<unsworthItsPoliticalHow2014>, form: "prose") demonstrate
+that causal influence may actually flow in the opposite direction. When shown identical
+policies with different partisan framings, individuals' support for those policies
+shifts in line with their own political alignment, suggesting that partisan identity
+may shape policy preferences more so than in the other direction.
 
-*(Empirical knowledge): Measurement approaches*
-- Measurement via belief network analysis. Nodes are beliefs or attitudes, and
-  edges are partial correlations:
-  - First use @boutylineBeliefNetworkAnalysis2017
-  - Particularly used in the study of political belief systems
-    @brandtWhatCentralPolitical2019
-- Primarily useful for analysing structure of beliefs, but does not make claims
-  of causality.
-- Enables analysis of belief system structure using standard network science measures.
-- In particular, measures of centrality are frequently applied to understand differences
-  in belief connectivity.
-- However, centrality (or peripherality) is not always predictive of intervention effects
+//*(Empirical knowledge): Measurement approaches*
+
+// TODO: Mention other places this approach has been used
+//
+// - Measurement via belief network analysis. Nodes are beliefs or attitudes, and
+//   edges are correlations or partial correlations:
+//   - Individual attitudes:
+//     - @dalegeFormalizedAccountAttitudes2016
+//     - @dalegeNetworkAnalysisAttitudes2017
+//   - Political psychology:
+//     - First use @boutylineBeliefNetworkAnalysis2017
+//     - Symbolic vs operational ideology centrality @brandtWhatCentralPolitical2019
+//     - Comparing political belief systems across countries @vannoordNatureStructureEuropean2025 @keskinturkOrganizationPoliticalBelief2022
+//   - Other psychological traits:
+//     - @epskampGaussianGraphicalModel2018
+//     - @epskampEstimatingPsychologicalNetworks2018
+//     - @borsboomNetworkAnalysisMultivariate2021
+//     - Psychometrics:
+//       - @epskampQgraphNetworkVisualizations2012
+//   - Pychopathology:
+//     - @bringmannNetworkApproachPsychopathology2013
+//     - @epskampPersonalizedNetworkModeling2018
+//   - Comparing cross-national climate change belief systems:
+//     - @leeVariationsClimateChange2025
+//   - Climate belief systems across political ideologies:
+//     - @lindComparingAttitudinalStructures2024
+//     - @leeClimateChangeBelief2024
+Given belief systems' interdependent nature, understanding the behaviour of any single
+belief (or attitude) requires consideration not only of how it interacts with
+other beliefs, but also how _those beliefs_ interact with the broader belief system. Network
+science methods have proven valuable in this regard, enabling quantitative analysis
+beyond the level of individual beliefs. The typical analytical approach treats
+belief systems as undirected networks which describe the pairwise correlational structure
+(edges) among a set of distinct beliefs and attitudes (nodes)
+@epskampQgraphNetworkVisualizations2012 @dalegeFormalizedAccountAttitudes2016
+@dalegeNetworkAnalysisAttitudes2017. Once estimated, a 'belief system network' is
+amenible to analysis under the broad scope of network science methods. Caution is
+required, however, as quantities based on network distance are not straightforwardly
+applicable or interpretable in correlational networks
+@borsboomNetworkAnalysisMultivariate2021.
+
+// - Across countries:
+//   - @vannoordNatureStructureEuropean2025:
+//     - Diverse political belief systems in European countries.
+//     - No difference in strength of association.
+//   - @keskinturkOrganizationPoliticalBelief2022:
+//     - Tests differences across countries w.r.t. political institutionalisation.
+//     - Structural/density differences.
+//   - @leeVariationsClimateChange2025:
+//     - Climate change beliefs across countries
+//     - Differences in density. High-density and tight correlations vs. low-density.
+//     - Differences in inconsistency explained by conflict between fossil fuel reduction
+//       and support for renewable energy/climate policy prioritisation.
+//     - Information exposure correlated with density (+) and inconsistency (-).
+//     - GDP correlated with density (+).
+//     - Carbon resource dependence correlated with inconsistency (-).
+// - Across ideologies:
+//   - @lindComparingAttitudinalStructures2024:
+//     - Denmark.
+//     - Similarities in connectivity and node strength.
+//     - Differences in the most central nodes.
+//   - @leeClimateChangeBelief2024:
+//     - Worry is most central
+//       - Supports prior studies
+//     - Changes in belief systems over time: connections strengthened, increased consistency.
+//     - Democrats and republicans structure beliefs similarly
+
+Belief system network analysis has been used broadly to test theories about belief
+system structure as well as the properties and roles of particular beliefs and attitudes.
+Several studies have examined belief system networks inferred from cross-national surveys
+to understand geographic variation in belief systems on topics such as politics
+@keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025 and
+climate change @leeVariationsClimateChange2025. Such studies typically compare networks
+with respect to both specific network associations and whole-network measures such as
+density (proportion and strength of realised connections). For instance,
+#cite(<leeVariationsClimateChange2025>, form: "prose") finds that exposure to information
+on climate change correlates positively with network density and negatively with
+inconsistency between climate change beliefs and attitudes, indicating that information
+exposure leads to more complex, consistent views on climate change.
+
+#let centrality-footnote = footnote[
+  We set questions of the latter two indices' suitability for measuring belief
+  importance here. For extended discussion on this matter, see
+  #cite(<bringmannWhatCentralityMeasures2019>, form: "prose").
+]
+
+// - Not all centrality measures applicable
+// - Strength and betweenness
+// - In undirected networks, interpreted best as direct influence and structural importance
+//   @brandtWhatCentralPolitical2019
+// - What kinds beliefs are most fundamental? (what do people build belief systems around?)
+// - Where best to intervene?
+// - Node centrality can be used to answer questions about
+//
+// - Influence (more strength centrality @brandtWhatCentralPolitical2019) @robinaughIdentifyingHighlyInfluential2016
+// - Structural importance (more betweenness @brandtWhatCentralPolitical2019) @dalegeNetworkAnalysisAttitudes2017
+//
+// Other refs:
+// - @borsboomNetworkAnalysisMultivariate2021
+//
+// Not without problems @bringmannWhatCentralityMeasures2019 @forbes2017evidence @borsboomFalseAlarmComprehensive2017
+
+// Choosing effective interventions: @castroCentralityMeasuresPsychological2024
+Node centrality is often considered a measurement of a
+given belief's position @borsboomNetworkAnalysisMultivariate2021 @brandtWhatCentralPolitical2019,
+influence @robinaughIdentifyingHighlyInfluential2016, or structural importance
+@dalegeNetworkAnalysisAttitudes2017 @fonseca2018analisis @heveyNetworkAnalysisBrief2018
+within a belief system. The
+most prominent variants in belief systems literature are _strength centrality_ (the
+absolute sum of adjacent edges), _closeness centrality_ (the inverse sum of shortest
+path lengths to other nodes), and _betweenness centrality_ (the number of shortest paths
+in the network which the given node is incident to)#centrality-footnote.
+
+While most often used to assess the relative importance of beliefs or identify the
+'most central' beliefs on a given topic *CITE*, node centrality can also be used to
+test hypotheses about how different categories of beliefs are positioned within a
+belief system. For instance, #cite(<brandtWhatCentralPolitical2019>, form: "prose")
+demonstrates, for a political belief system, that symbolic attachments (i.e.,
+identity-based, such as partisan alignment) tend to be more central than operational
+attitudes (e.g., positions on specific issues or policies). Furthermore,
+for a belief system on attitudes surrounding COVID-19,
+#cite(<chambonTailoredInterventionsBroad2022>, form: "prose") demonstrate that node
+centrality may contribute to the propagation of belief-level interventions to other
+beliefs and attitudes.
+
 
 *(Mechanistic knowledge): Hypothesised causal mechanisms, conceptual frameworks*
 - Correlational approach provides valuable insight into belief system structure, but
@@ -73,6 +187,27 @@ constant.
   equal strength. In particular, holding all other beliefs constant, the influence of
   one belief on the other is the same as vice versa.
 
+While the correlational network approach provides valuable insight into belief system
+structure, it does not, on its own, explain the mechanisms by which beliefs and
+attitudes are associated.
+
+- Distinction between static (predicting position on A given B) and dynamic constraint
+  (how much does $B$ change when $A$ changes).
+- Lends naturally to formalisation under
+
+Gives meaning to centrality:
+- More/stronger connections --> more constrained. More stable.
+
+Centrality indices can be different in directed networks.
+
+
+Examples:
+- Belief system networks to represent dynamics of political belief systems. Capture
+  several phenomena @brandtEvaluatingBeliefSystem2021
+
+Choosing effective interventions with simulation studies: @castroCentralityMeasuresPsychological2024
+
+
 *The puzzle*
 + Target phenomenon: Some beliefs are more influential than others. Peripheral nodes
   can be good intervention targets.
@@ -83,6 +218,12 @@ constant.
     dynamics which capture asymmetric influences.
 + Consequence:
   - Conceivably matters for interventions. (Diagrams)
+
+Examples:
+- Asymmetry? @arceneauxCriticalEvaluationResearch2025
+- @brandtWhatCentralPolitical2019[p.~2] "Causal potency does not necessarily say
+  anything about centrality, as the causally potent variable may be on the periphery
+  of the belief system."
 
 *Our study ...*
 
