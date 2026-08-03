@@ -28,7 +28,7 @@ to make internal sense of the world inevitably shape our collective impact on it
 
 //_Beliefs behave differently. May be more or less stable or influential._
 
-Distinct beliefs and attitudes may behave differently within a belief system. Some
+Distinct beliefs and attitudes behave differently within a belief system. Some
 attitudes, such as political ideology (e.g., conservativism or liberalism) are highly
 stable over time @greenPartisanStabilityTurbulent2024. Others appear to be more
 malleable (e.g., attitudes toward particular political candidates). In addition, some
@@ -67,19 +67,53 @@ may shape policy preferences more so than in the other direction.
 //   - Climate belief systems across political ideologies:
 //     - @lindComparingAttitudinalStructures2024
 //     - @leeClimateChangeBelief2024
+
+// Given belief systems' interdependent nature, understanding the behaviour of any single
+// belief (or attitude) requires consideration not only of how it interacts with
+// other beliefs, but also how _those beliefs_ interact with the broader belief system.
+// Network science methods have proven valuable in this regard, enabling quantitative analysis
+// beyond the level of individual beliefs. The typical analytical approach treats
+// belief systems as undirected networks describing the pairwise correlational structure
+// (edges) between distinct beliefs and attitudes (nodes)
+// @epskampQgraphNetworkVisualizations2012 @dalegeFormalizedAccountAttitudes2016
+// @dalegeNetworkAnalysisAttitudes2017. Once estimated, a 'belief system network' is
+// amenible to analysis under the broad scope of network science methods. Caution is
+// required, however, as quantities based on network distance are not straightforwardly
+// applicable or interpretable in correlational networks
+// @borsboomNetworkAnalysisMultivariate2021.
+
+
 Given belief systems' interdependent nature, understanding the behaviour of any single
 belief (or attitude) requires consideration not only of how it interacts with
-other beliefs, but also how _those beliefs_ interact with the broader belief system. Network
-science methods have proven valuable in this regard, enabling quantitative analysis
-beyond the level of individual beliefs. The typical analytical approach treats
-belief systems as undirected networks which describe the pairwise correlational structure
-(edges) among a set of distinct beliefs and attitudes (nodes)
-@epskampQgraphNetworkVisualizations2012 @dalegeFormalizedAccountAttitudes2016
-@dalegeNetworkAnalysisAttitudes2017. Once estimated, a 'belief system network' is
-amenible to analysis under the broad scope of network science methods. Caution is
-required, however, as quantities based on network distance are not straightforwardly
-applicable or interpretable in correlational networks
-@borsboomNetworkAnalysisMultivariate2021.
+other beliefs, but also how _those beliefs_ interact with the broader belief system.
+This has motivated empirical approaches to studying belief system structure based on
+network science, which treat belief systems as undirected networks describing the
+pairwise correlational structure (edges) between distinct beliefs and attitudes (nodes).
+
+Analysis of such 'belief system networks' using network science methods has proven
+valuable for understanding belief system structure and the roles of specific beliefs and
+attitudes in topic-specific belief systems. Using cross-national surveys, several studies
+have examined geographic variation in belief system structure on topics including
+politics @keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025
+and climate change @leeVariationsClimateChange2025, comparing both specific relations and
+whole-network features such as density (the proportion of realised connections), and
+inconsistency (the number of negative correlations). Similarly,
+#cite(<chambonHowComplianceBehavioural2023>, form: "prose") examines how beliefs and
+attitudes relating to COVID-19 changed over time in the Netherlands during the start of
+the global pandemic. Node centrality---despite ongoing debate about its usefulness and
+applicability to belief system networks
+(cf. #cite(<bringmannWhatCentralityMeasures2019>, form: "prose"))---node
+centrality is frequently used to assess belief position within a belief system
+@brandtWhatCentralPolitical2019 @borsboomNetworkAnalysisMultivariate2021, relative influence
+@robinaughIdentifyingHighlyInfluential2016, or structural importance
+@dalegeNetworkAnalysisAttitudes2017 @fonseca2018analisis @heveyNetworkAnalysisBrief2018.
+In addition, #cite(<chambonTailoredInterventionsBroad2022>, form: "prose") demonstrate
+that node centrality may also contribute to the propagation of belief-level
+interventions, in the context of a belief system on COVID-19.
+
+
+
+
 
 // - Across countries:
 //   - @vannoordNatureStructureEuropean2025:
@@ -107,24 +141,26 @@ applicable or interpretable in correlational networks
 //     - Changes in belief systems over time: connections strengthened, increased consistency.
 //     - Democrats and republicans structure beliefs similarly
 
-Belief system network analysis has been used broadly to test theories about belief
-system structure as well as the properties and roles of particular beliefs and attitudes.
-Several studies have examined belief system networks inferred from cross-national surveys
-to understand geographic variation in belief systems on topics such as politics
-@keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025 and
-climate change @leeVariationsClimateChange2025. Such studies typically compare networks
-with respect to both specific network associations and whole-network measures such as
-density (proportion and strength of realised connections). For instance,
-#cite(<leeVariationsClimateChange2025>, form: "prose") finds that exposure to information
-on climate change correlates positively with network density and negatively with
-inconsistency between climate change beliefs and attitudes, indicating that information
-exposure leads to more complex, consistent views on climate change.
-
-#let centrality-footnote = footnote[
-  We set questions of the latter two indices' suitability for measuring belief
-  importance here. For extended discussion on this matter, see
-  #cite(<bringmannWhatCentralityMeasures2019>, form: "prose").
-]
+// Belief system network analysis has been used broadly to test theories about belief
+// system structure as well as the properties and roles of particular beliefs and attitudes.
+// Belief system network analysis has been used broadly to test theories about belief
+// system structure as well as the properties and roles of particular beliefs and attitudes.
+// Several studies have examined belief system networks inferred from cross-national surveys
+// to understand geographic variation in belief systems on topics such as politics
+// @keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025 and
+// climate change @leeVariationsClimateChange2025. Such studies typically compare networks
+// with respect to both specific network associations and whole-network measures such as
+// density (proportion and strength of realised connections). For instance,
+// #cite(<leeVariationsClimateChange2025>, form: "prose") finds that exposure to information
+// on climate change correlates positively with network density and negatively with
+// inconsistency between climate change beliefs and attitudes, indicating that information
+// exposure leads to more complex, consistent views on climate change.
+//
+// #let centrality-footnote = footnote[
+//   We set questions of the latter two indices' suitability for measuring belief
+//   importance here. For extended discussion on this matter, see
+//   #cite(<bringmannWhatCentralityMeasures2019>, form: "prose").
+// ]
 
 // - Not all centrality measures applicable
 // - Strength and betweenness
@@ -143,28 +179,28 @@ exposure leads to more complex, consistent views on climate change.
 // Not without problems @bringmannWhatCentralityMeasures2019 @forbes2017evidence @borsboomFalseAlarmComprehensive2017
 
 // Choosing effective interventions: @castroCentralityMeasuresPsychological2024
-Node centrality is often considered a measurement of a
-given belief's position @borsboomNetworkAnalysisMultivariate2021 @brandtWhatCentralPolitical2019,
-influence @robinaughIdentifyingHighlyInfluential2016, or structural importance
-@dalegeNetworkAnalysisAttitudes2017 @fonseca2018analisis @heveyNetworkAnalysisBrief2018
-within a belief system. The
-most prominent variants in belief systems literature are _strength centrality_ (the
-absolute sum of adjacent edges), _closeness centrality_ (the inverse sum of shortest
-path lengths to other nodes), and _betweenness centrality_ (the number of shortest paths
-in the network which the given node is incident to)#centrality-footnote.
-
-Although most often used to assess the relative importance of beliefs or identify the
-'most central' beliefs on a given topic *CITE*, node centrality can also be used to
-test hypotheses about how different categories of beliefs are positioned within a
-belief system. For instance, #cite(<brandtWhatCentralPolitical2019>, form: "prose")
-demonstrates, for a political belief system, that symbolic attachments (i.e.,
-identity-based, such as partisan alignment) tend to be more central than operational
-attitudes (e.g., positions on specific issues or policies). Furthermore,
-for a belief system on attitudes surrounding COVID-19,
-#cite(<chambonTailoredInterventionsBroad2022>, form: "prose") demonstrate that node
-centrality may contribute to the propagation of belief-level interventions to other
-beliefs and attitudes.
-
+// Node centrality is often considered a measurement of a
+// given belief's position @borsboomNetworkAnalysisMultivariate2021 @brandtWhatCentralPolitical2019,
+// influence @robinaughIdentifyingHighlyInfluential2016, or structural importance
+// @dalegeNetworkAnalysisAttitudes2017 @fonseca2018analisis @heveyNetworkAnalysisBrief2018
+// within a belief system. The
+// most prominent variants in belief systems literature are _strength centrality_ (the
+// absolute sum of adjacent edges), _closeness centrality_ (the inverse sum of shortest
+// path lengths to other nodes), and _betweenness centrality_ (the number of shortest paths
+// in the network which the given node is incident to)#centrality-footnote.
+//
+// Although most often used to assess the relative importance of beliefs or identify the
+// 'most central' beliefs on a given topic *CITE*, node centrality can also be used to
+// test hypotheses about how different categories of beliefs are positioned within a
+// belief system. For instance, #cite(<brandtWhatCentralPolitical2019>, form: "prose")
+// demonstrates, for a political belief system, that symbolic attachments (i.e.,
+// identity-based, such as partisan alignment) tend to be more central than operational
+// attitudes (e.g., positions on specific issues or policies). Furthermore,
+// for a belief system on attitudes surrounding COVID-19,
+// #cite(<chambonTailoredInterventionsBroad2022>, form: "prose") demonstrate that node
+// centrality may contribute to the propagation of belief-level interventions to other
+// beliefs and attitudes.
+//
 
 // NOTE:
 // *(Mechanistic knowledge): Hypothesised causal mechanisms, conceptual frameworks*
@@ -203,6 +239,62 @@ beliefs and attitudes.
 // form of unstable triads, defined as concepts related in a triangle structure with an odd
 // number of negative associations.
 
+Although belief system networks characterise the statistical associations between
+beliefs and attitudes in a belief system, they make no claims regarding the nature of
+these associations, how they arise, nor their implications for belief dynamics. To
+address these questions, we turn to theory-based models of belief systems. Most recent
+models of endogenous belief system dynamics are based on the notion of internal
+consistency---that individuals tend to adjust their beliefs and attitudes toward
+mutually compatible states. Two classical theories which have been particularly
+influential are
+#cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
+(#cite(<heiderAttitudesCognitiveOrganization1946>, form: "year")) balance theory and
+#cite(<festingerCognitiveDissonance1962>, form: "author")'s
+(#cite(<festingerCognitiveDissonance1962>, form: "year")) theory of cognitive dissonance.
+The former considers attitudes as signed associations (edges) between concepts (nodes),
+and measures inconsistency via the presence of unstable triads (i.e., three
+mutually-related concepts with an odd number of negative associations). The latter posits
+that pairs of beliefs (and/or attitudes) may be more or less compatible, with compatible
+beliefs reinforcing one another, and incompatible ones causing inconsistency.
+
+These two theories have given way to two families of belief system models based on the
+statistical physics notion of energy minimisation (*CITE*), where 'energy' is measured
+in terms of inconsistency. For the purposes of this study, we focus here on the family
+inspired by the theory of cognitive dissonance (cf. Heider's balance theory and the
+Social Knowledge Structure model @greenwaldUnifiedTheoryImplicit2002
+@rodriguezCollectiveDynamicsBelief2016 @aiyappaEmergenceSimpleComplex2024). The Causal
+Attitude Network (CAN) model
+
+
+
+
+of endog
+belief system dynamics are
+
+recent belief
+modelling approaches
+
+
+
+We focus
+here on models based on statistical physics, which are primarily inspired by The
+view of belief systems as collections of beliefs and attitudes whose global dynamics
+are characterised by pairwise relations lends itself well to formalisation under the
+complex systems framework, and indeed many recent
+
+Most
+current models of belief system dynamics are based on the statistical physics notion
+
+The
+view of belief systems as collections of beliefs and attitudes whose behaviour is
+characterised by their interactions lends itself well to formalisation under the
+complex systems framework.
+
+Classical
+theories
+
+do not explain how these associationsthese correlational networks are useful for describing the statistical
+associations between beliefs and attitudes, they do not
 Correlational networks identify statistical associations between beliefs and
 attitudes, but they do not purport to explain the mechanisms by which beliefs and attitudes
 are related, nor the dynamic implications of belief system structure. Several
