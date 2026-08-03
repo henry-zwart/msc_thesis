@@ -153,7 +153,7 @@ absolute sum of adjacent edges), _closeness centrality_ (the inverse sum of shor
 path lengths to other nodes), and _betweenness centrality_ (the number of shortest paths
 in the network which the given node is incident to)#centrality-footnote.
 
-While most often used to assess the relative importance of beliefs or identify the
+Although most often used to assess the relative importance of beliefs or identify the
 'most central' beliefs on a given topic *CITE*, node centrality can also be used to
 test hypotheses about how different categories of beliefs are positioned within a
 belief system. For instance, #cite(<brandtWhatCentralPolitical2019>, form: "prose")
@@ -203,8 +203,8 @@ beliefs and attitudes.
 // form of unstable triads, defined as concepts related in a triangle structure with an odd
 // number of negative associations.
 
-While correlational networks identify statistical associations between beliefs and
-attitudes, they do not purport to explain the mechanisms by which beliefs and attitudes
+Correlational networks identify statistical associations between beliefs and
+attitudes, but they do not purport to explain the mechanisms by which beliefs and attitudes
 are related, nor the dynamic implications of belief system structure. Several
 influential theories of belief dynamics rest on the notion of internal
 consistency---that individuals strive to hold largely compatible beliefs and
@@ -239,8 +239,17 @@ by their respective _baseline activations_. The CAN model defines belief system 
 as efforts to reduce cognitive dissonance, such that positively related beliefs generally
 agree and negatively related beliefs generally disagree.
 
-
-
+Critically, the CAN model defines interaction relations as symmetric, such that related
+beliefs exert equal reinforcing or opposing influence on one another. However,
+- Most authors agree than influence relations are not necessarily bi-directional.
+- There is evidence that they are not.
+- Asymmetric relations (can) affect measures of node centrality.
+- Asymmetric relations (can conceivably) affect belief system dynamics.
+- Therefore, asymmetric relations (can conceivably) affect how beliefs and attitudes
+  translate to individual behaviour.
+- Therefore also, others' beliefs and attitudes.
+- Therefore also, collective behaviour.
+- Therefore, asymmetric relations (can conceivably) affect intervention dynamics.
 
 
 // class of models, inspired by The second---which we focus
@@ -272,7 +281,10 @@ Gives meaning to centrality:
 - More/stronger connections --> more constrained. More stable.
 
 Centrality indices can be different in directed networks.
-
+- Commonly used in analysis, but directed networks plausible in reality?
+- @brandtWhatCentralPolitical2019[p.~2] "Causal potency does not necessarily say
+  anything about centrality, as the causally potent variable may be on the periphery
+  of the belief system."
 
 Examples:
 - Belief system networks to represent dynamics of political belief systems. Capture
