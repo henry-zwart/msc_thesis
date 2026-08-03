@@ -13,21 +13,191 @@
 //   - RQ3: That interventions can only be effective when the target and the
 //     point-of-intervention are both low.
 
-Our subjective interpretations of the world, natural phenomena, and
-those around us are dependent of a collection of beliefs about the way that things are,
-and the way that things work. These beliefs and attitudes are highly interdependent,
-related by both logical and psychological associations, which give way to notions of
-internal consistency---sets of beliefs and attitudes that are consistent with one
-another. Beliefs and attitudes are also often subject to social dynamics, as evidenced
-by observed geographic segregation of political attitudes in the United States. Moreover,
-the beliefs and attitudes held by an individual can have realised external consequences
-for behavioural decisions, and are in-turn influenced by these decisions, often in the
-form of reinforcing feedback loops. Put plainly, the beliefs and attitudes which
-allow us to make internal sense of the world inevitably shape our collective
-impact on it.
+_Belief systems as interrelated beliefs_
 
-Collections of beliefs and their interrelations are often referred to as *belief
-systems*. Within a belief system,
+Our subjective interpretations of the world, natural phenomena, and
+those around us are dependent on a collection of beliefs about how things are,
+and how they work. These beliefs and attitudes are highly interdependent,
+related by logical and psychological associations in what are often referred to as
+belief systems. Beliefs and attitudes are also subject to social dynamics, as
+evidenced by observed geographic segregation of political attitudes in the United
+States. Moreover, beliefs and attitudes held by an individual have external consequences
+for behavioural decisions and are in turn influenced by these decisions, often in the
+form of reinforcing feedback loops. Put plainly, the beliefs and attitudes which allow us
+to make internal sense of the world inevitably shape our collective impact on it.
+
+_Beliefs behave differently. May be more or less stable or influential._
+
+Distinct beliefs and attitudes may behave differently within a belief system. Some
+attitudes, such as political ideology (e.g., conservativism or liberalism) are highly
+stable over time @greenPartisanStabilityTurbulent2024. Others appear to be more
+malleable (e.g., attitudes toward particular political candidates). In addition, some
+beliefs and attitudes appear to be more influential than others. For instance, while
+we may suppose that voting behaviour is driven by individuals' policy preferences,
+#cite(<unsworthItsPoliticalHow2014>, form: "prose") show that actual influence may, in
+fact, run counter to this intuition, with individuals' support for particular policies
+changing when partisan framing is introduced, holding all other content of the policy
+constant.
+
+*(Empirical knowledge): Measurement approaches*
+- Measurement via belief network analysis. Nodes are beliefs or attitudes, and
+  edges are partial correlations:
+  - First use @boutylineBeliefNetworkAnalysis2017
+  - Particularly used in the study of political belief systems
+    @brandtWhatCentralPolitical2019
+- Primarily useful for analysing structure of beliefs, but does not make claims
+  of causality.
+- Enables analysis of belief system structure using standard network science measures.
+- In particular, measures of centrality are frequently applied to understand differences
+  in belief connectivity.
+- However, centrality (or peripherality) is not always predictive of intervention effects
+
+*(Mechanistic knowledge): Hypothesised causal mechanisms, conceptual frameworks*
+- Correlational approach provides valuable insight into belief system structure, but
+  does not make claims of causality.
+- @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
+- The use of the term _system_ implies an abstraction away from individual beliefs and
+  attitudes, refocusing on belief states and dynamics as characterised by the
+  interactions of the entire set of beliefs.
+  This perspective on the nature of beliefs
+  and attitudes lends itself naturally to formalisation of belief systems under the complex
+  systems framework.
+- Two main families of models under the complex systems/statistical physics framework.
+  These draw on separate theories of internal consistency.
+  + Festinger's theory of cognitive dissonance $-->$ connectionist model
+    - Cognitive dissonance: when two beliefs are in conflict, tend to adjust one of them
+      to resolve this.
+  + Heider's balance theory $-->$ SKS model (maybe cf.)
+- Causal models assume symmetric influences. Two beliefs related via a positive edge
+  reinforce one another with equal strength. Negative edge: oppose one another with
+  equal strength. In particular, holding all other beliefs constant, the influence of
+  one belief on the other is the same as vice versa.
+
+*The puzzle*
++ Target phenomenon: Some beliefs are more influential than others. Peripheral nodes
+  can be good intervention targets.
++ Failure mode of current understanding:
+  - Most authors agree/acknowledge directed influence relations as plausible
+  - Evidence of asymmetric relations between beliefs and attitudes from temporal networks
+  - To the best of our knowledge, there are no current theoretical models of belief
+    dynamics which capture asymmetric influences.
++ Consequence:
+  - Conceivably matters for interventions. (Diagrams)
+
+*Our study ...*
+
+
+
+// - Some beliefs/attitudes more central to belief systems:
+//   - Operational vs. symbolic ideology @brandtWhatCentralPolitical2019 @fishmanChangeWeCan2022
+// - Some beliefs appear more 'fundamental' or 'influential' than others.
+// - Some are very stable.
+// - Some appear to have limited influence over attitudes which we would expect to
+//   be related.
+//   - e.g., Policy on political attitudes
+//   - e.g., Central beliefs on others @fishmanChangeWeCan2022 @brandtInterattitudeCentralityDoes2023
+// - When internal conflict arises, some beliefs/attitudes are more likely to change
+//   than others.
+//   - Various accounts suggesting that 'core' beliefs are more likely to be retained than
+//     'peripheral' beliefs which are not as well connected @zotero-item-17041
+//   - Differences in causal potency provide an alternative explanation (which is not
+//     mutually exclusive). That some beliefs or attitudes, by way of their nature,
+//     exert greater influence than they receive.
+
+Importantly, beliefs and attitudes do not appear
+Beliefs and attitudes within a belief system vary in stability and apparent influence
+on other beliefs and attitudes.
+
+
+Within a belief system, different beliefs and attitudes exhibit different properties.
+In particular, some beliefs and attitudes appear to be more influential or resistant
+to change than others. From the Philosophy of Science, Quine
+(#cite(<zotero-item-17041>, form: "year"), #cite(<vanormanquineTwoDogmasEmpiricism1976>, form: "year"))
+adopts the notion of a belief system in the context of human knowledge and its relation
+to empirical evidence. He argues that, when faced with contradictory evidence to some
+theory, one can adjust either the theory itself or any number of auxiliary hypotheses
+such that the theory still stands. Moreover, he asserts that theories which are
+more central---supported by a plethora of auxiliary hypotheses---are relatively more
+stable than those closer to empirical reality, since to adjust a central theory would
+require vast changes in other beliefs.
+
+and those that are that   In the _Two Dogmas of Empiricism_
+(@vanormanquineTwoDogmasEmpiricism1976) and later _The Web of Belief_ @zotero-item-17041
+text, _The Web of Belief_, Quine
+#cite(<zotero-item-17041>, form: "year") argues that every facet of human knowledge is
+predicated on auxiliary hypotheses about the world. When faced with evidence that
+contradicts some belief, one can either update the belief in question, or the hypotheses
+that support it. He asserts that core beliefs---those which are further from empirical
+reality, and supported by a large number of auxiliary hypotheses---are more stable,
+since adjustments here would require vast changes in other areas of the web.
+
+of the
+evidence, these hypotheses can be updated
+Some attitudes, such as political ideology (e.g., conservativism or liberalism),
+are relatively stable over time, while others, such as views regarding particular
+political candidates, vary more readily. Likewise, some beliefs and attitudes appear
+to exert high degrees of influence on others; however, influence may not always flow in
+the expected direction. For instance, Influence does not, however, always
+flow in the
+
+Some are relatively stable over time (e.g., political ideology), while others vary more
+readily (e.g., support for particular policies or political candidates). Some appear
+to exert significant influence over other beliefs and attitudes (e.g., religiosity),
+while in other cases attitudes we would expect
+
+
+
+- Some beliefs are more stable or influential
+- Some which we would expect to be influential in fact have limited influence.
+- Quine; psychology
+
+
+_Complex systems approaches, and what we know. Current theories about centrality etc._
+These
+, which give way to notions of
+internal consistency---sets of beliefs and attitudes that are mutually compatible.
+
+The use of the term _system_ implies an abstraction away from individual beliefs and
+attitudes, refocusing on belief states and dynamics as characterised by the
+interactions of the entire set of beliefs.
+This perspective on the nature of beliefs
+and attitudes lends itself naturally to formalisation of belief systems under the complex
+systems framework.
+
+- Internal dynamics---internal consistency:
+  - Stable triads (based on Heider's balance theory)
+  - Connectionist view (based on Festinger's theory of cognitive dissonance)
+- Recent work including social influences:
+  - Misalignments between own beliefs and others' beliefs @rodriguezCollectiveDynamicsBelief2016
+    @vandermaasPolarizationIndividualsHierarchical2020 @aiyappaEmergenceSimpleComplex2024
+  - Misalignment between own beliefs and _perceptions_ of others' beliefs
+    @dalegeNetworksBeliefsIntegrative2025
+- We focus here on the connectionist view, and internal dynamics. However, our work is
+  orthogonal to the Networks of Belief approach to modelling social belief dynamics
+  proposed by #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose").
+
+_Problems with centrality when it comes to dynamic constraint._
+- Centrality doesn't always predict ease of change. Sometimes peripheral is better
+
+_Another perspective: asymmetry in causal influences_
+- Most authors agree it is plausible, yet model only symmetric relations
+- Empirical evidence to suggest it @chambonHowComplianceBehavioural2023
+- Three situations where it may/may not make a difference
+
+_Our study_
+
+
+
+
+This conceptualisation abstracts away from individual beliefs and attitudes, allowing
+for higher-level examination of belief dynamics as arising from the interactions of the
+system as a whole.
+- Belief systems view belief and attitude dynamics, not at the level of individual cognitive
+  states, but as the result
+Complex systems approaches lend themselves naturally to the study of belief
+systems, enabling  itto studying  Considering beliefs and attitudes in this    Often, within a belief system, certain beliefs or attitudes appear to be
+more stable, influential, or
+
 - Some beliefs/attitudes more central to belief systems:
   - Operational vs. symbolic ideology @brandtWhatCentralPolitical2019 @fishmanChangeWeCan2022
 - Some beliefs appear more 'fundamental' or 'influential' than others.
