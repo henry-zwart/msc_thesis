@@ -301,11 +301,11 @@ theory, we refer the reader to
 The _Causal Attitude Network_ (CAN) model @dalegeFormalizedAccountAttitudes2016
 formalises Festinger's theory of cognitive dissonance in an Ising-style model, also
 drawing on the more recently-proposed connectionist perspective on attitude change
-@monroeGeneralConnectionistModel2008. It can be viewed as a dynamic formulation of
+@monroeGeneralConnectionistModel2008. It can be viewed as a theory-driven variant of
 the belief network approach described above. While the Ising model was originally
-presented as a model of ferromagnetic behaviour, it has since been variously applied to
-describe diverse systems of interacting variables which attract or repel one another
-@nguyenInverseStatisticalProblems2017.
+presented as a model of ferromagnetic behaviour @isingBeitragZurTheorie1925, it has
+since been variously applied to describe diverse systems of interacting variables which
+attract or repel one another @nguyenInverseStatisticalProblems2017.
 In the CAN model, beliefs and attituds are
 represented as spins which take on values in the set ${-1, +1}$, representing two
 opposing states (e.g., 'climate change is happening' versus 'climate change is _not_
@@ -320,7 +320,10 @@ associated beliefs generally agree, and negatively associated beliefs generally 
 
 *TODO:* Diagram of the CAN model.
 
-*TODO:* Discuss model usefulness; extensions to model social influences.
+*TODO:* Model usefulness
+- Explaining phenomena;
+- Reasoning about how things will change;
+- Extensions to model social influences
 
 
 
@@ -349,10 +352,275 @@ associated beliefs generally agree, and negatively associated beliefs generally 
 // as efforts to reduce cognitive dissonance, such that positively related beliefs generally
 // agree and negatively related beliefs generally disagree.
 
+// TODO: The CAN model doesn't actually specify how things will change when something
+// changes. It just defines a probability distribution over states based on their energy
+// (inconsistency). @marsman
 Critically, the CAN model defines interaction relations as symmetric, such that related
-beliefs exert equal reinforcing or opposing influence on one another. This is
-mathematically convenient. In particular, with symmetric relations, the underlying
-Ising model satisfies detailed balance, and can be analysed as an equibrium system.
+beliefs exert equal reinforcing or opposing influence on one another. Under this
+assumption the underlying Ising model satisfied detailed balance and can be considered
+an equilbrium system. This is mathematically convenient, as it allows the CAN model to
+define belief system dynamics implicitly using the Boltzmann distribution, such that
+each belief system state is observed with constant probability as a decreasing function
+of that state's inconsistency (or 'energy' in statistical physics terms).
+
+// NOTE: Could point out the Monroe inspired CAN, and was 10 years prior.
+
+Although mathematically convenient, symmetric interactions are not psychologically
+necessary. Indeed, this has been broadly acknowledged within the belief systems modelling
+literature as a limitation of current approaches. Most authors explicitly mention
+either causal directionality underlying inferred bi-directional associations, or
+asymmetric/non-reciprocal influences as _plausible_
+@epskampPersonalizedNetworkModeling2018 @brandtMeasuringBeliefSystem2022
+@brandtEvaluatingBeliefSystem2021 @leeClimateChangeBelief2024
+@powellModelingLeveragingIntuitive2023 @monroeGeneralConnectionistModel2008
+@keskinturkOrganizationPoliticalBelief2022.
+#cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose")
+go so far as to assert that asymmetric influences are _likely_, for instance, in
+relations linking attitudes and behaviour. Moreover, there exists some empirical evidence
+for asymmetric interactions. For instance,
+#cite(<chambonHowComplianceBehavioural2023>, form: "prose") observe directional
+differences in temporal networks @kriekeEcologicalMomentaryAssessments2015 used to study
+belief systems relating to COVID-19; however, as identifying asymmetry was not a core aim
+of this study they do not test for the significance of these differences.
+
+
+Yet despite general agreement on the plausibility of asymmetric interactions in
+belief systems, relatively little is known about their potential theoretical and
+empirical implications.
+Several studies use Bayesian networks to model belief systems with causal directionality
+@powellModelingLeveragingIntuitive2023 @cookRationalIrrationalityModeling2016. However,
+these do not allow for reinforcing relationships. Moreover, they fall victim to the
+same problem as faced by the statistical belief system networks---while they describe the
+relationships observed in data, they provide no explanation for the nature of these
+relationships.
+
+A handful of authors make reference to simulation studies in
+which asymmetric edges are used and found to have little impact
+@vandermaasPolarizationIndividualsHierarchical2020 @monroeGeneralConnectionistModel2008.
+However, these experiments are rarely described in detail, and we are not aware of any
+instances in which asymmetric models are estimated from data. For the purposes of
+mean-field approximation, #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose")
+argue that theoretical results derived for Ising-style belief system models are robust
+to asymmetric and non-reciprocity assumptions. However, they note that studies outside
+the belief system modelling literature demonstrate that non-reciprocal Ising models
+can, under certain conditions, exhibit considerably more complex behaviour than
+the symmetric variant. From an empirical perspective, the presence of asymmetric
+interactions has potentially significant implications for node centrality. While
+most undirected-network centrality indices have directed-network analogues, these
+can differ substantially in value @bringmannWhatCentralityMeasures2019.
+
+Belief-level interventions may be particularly sensitive to
+assumptions about interaction asymmetry. For instance, beliefs with many connections
+(i.e., high strength or degree centrality) are often considered both (i) good targets
+for interventions intended to propagate to other beliefs
+(cf. #cite(<chambonTailoredInterventionsBroad2022>, form: "prose")), and (ii) more
+resistant to such interventions, on account of their received influence from adjacent
+beliefs (cf. #cite(<brandtInterattitudeCentralityDoes2023>, form: "prose")).
+Both conclusions rely on the assumption that influence between
+beliefs flows bi-directionally, such that well-connected beliefs are both highly
+influential and highly influenced. However, if influence may be asymmetric or
+non-reciprocal it is entirely possible that some well-connected beliefs or attitudes
+are related primarily via incoming interactions, such that they have limited influence
+on others, or primarily via outgoing interactions, with limited
+resistance to interventions.
+
+
+
+- Alternatively, it may be the case that asymmetry only features as minor differences in
+  interaction strength, in which case the impacts would be smaller
+- Whether such beliefs and attitudes actually exist has not been studied
+
+This study explores the prevalence of asymmetric influence among beliefs and attitudes
+about climate change in the US, as well as the dynamic implications of symmetric and
+asymmetric modelling assumptions for belief-level interventions. Specifically, we will address the following research questions:
+
+#let RQ1 = [
+  To what extent are belief-level influences _symmetric_ or _asymmetric_, in models
+  of climate change belief systems inferred from the climate beliefs dataset?
+]
+
+#let RQ2 = [
+  How do asymmetric and symmetric beliefs systems differ with regards to
+  intervention strategy and effectiveness, in models inferred from the climate
+  beliefs dataset?
+]
+
+#let RQ3 = [
+  How do intervention outcome and effectiveness vary between individuals with
+  different initial conditions in asymmetric belief systems inferred from the
+  climate beliefs dataset?
+]
+
+#let RQ4 = [
+  How do asymmetric belief systems inferred from the climate beliefs dataset
+  vary between conservative and liberal individuals?
+]
+
+#{
+  set enum(numbering: "RQ1.", indent: 1em)
+  block(width: 97%, [
+    + #RQ1 <RQ1>
+
+    + #RQ2 <RQ2>
+
+    + #RQ3 <RQ3>
+
+    + #RQ4 <RQ4>
+  ])
+}
+
+This study applies a combination of (i) data-driven and (ii) simulation-based approaches
+to answer the research questions regarding the existence of asymmetric and structural
+features of asymmetric belief systems (i) and intervention dynamics (ii) respectively.
+The data used for this study is sourced from the Longitudinal Panel of Perceptions About
+Climate Change and Covid representative longitudinal survey (*CCCV*), collected in the US
+between 2020 and 2023.
+
+Our contributions are as follows. In @sec:asymmetric-belief-systems we extend the Causal
+Attitude Network model to a kinetic Ising formulation which we term the *non-equilibrium
+belief system model*. The resulting model captures distinct directional interaction
+effects between each pair of belief/attitudes, and redefines belief system dynamics as
+explicitly time-dependent. Following this, in @sec:methods we introduce a parameter
+estimation method for robustly inferring binary-state models from continuous data. We
+then use this to calibrate the model
+to a dataset comprising belief and attitude measures related to cliamte change, extracted
+from the CCCV.
+
+
+#line(length: 100%)
+
+
+
+
+*Effects of asymmetry*
+- Some authors run simulation studies which allow for asymmetry, demonstrating little
+  change. However, these are rarely described in detail, and we are not aware of any
+  instances where the asymmetric models are estimated using data.
+- #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose") argue that
+  theoretical results obtained using mean-field approximation for Ising-style belief
+  system models are robust to assumptions about asymmetry and non-reciprocity.
+- However, as noted by #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "author"),
+  studies outside the belief system modelling literature demonstrate that
+  non-reciprocal Ising models can exhibit considerably more complex behaviour than
+  the symmetric variant @avniNonreciprocalIsingModel2025.
+-
+
+
+However, despite broad agree
+
+
+Moreover, via the use of temporal networks @kriekeEcologicalMomentaryAssessments2015,
+multiple studies have demonstrated empirical evidence of suc
+
+
+
+
+- No reason in principle why influence between beliefs (and/or attitudes) must be
+  symmetric:
+  - @monroeGeneralConnectionistModel2008 (foundational to the CAN model)
+  - @brandtEvaluatingBeliefSystem2021 (e.g. partisan alignment)
+  - @brandtMeasuringBeliefSystem2022
+  - @leeClimateChangeBelief2024
+- Use of temporal networks to identify:
+  - @epskampPersonalizedNetworkModeling2018 @chambonHowComplianceBehavioural2023
+- Likely:
+  - @keskinturkOrganizationPoliticalBelief2022
+  - @vandermaasPolarizationIndividualsHierarchical2020 (some are likely)
+- Effects:
+  - @brandtWhatCentralPolitical2019 (periphery)
+  - @vandermaasStatisticalPhysicsPsychological2026
+  - @avniNonreciprocalIsingModel2025
+
+
+This implies
+that consecutive observations are Note that this
+implies that consecutive observations are considered independent, and therefore temporal
+trends
+
+When analysing such systems, it is common practice to
+
+In particular,
+the probability of observing a specific set of belief and attitude states at any point
+in time is independent of the previous state. In part
+
+
+
+
+
+with respect to . Under this assumption the underlying Ising model satisfies
+detailed balance, and can be considered an equilibrium system. In particular, this
+allows for belief system dynamics in the CAN model to be defined implicitly at
+stationarity, such that each using the
+Boltzmann distribution, such that belief system states are
+
+parameterised by This allow, in particular,
+that
+
+the underlying Ising model to be considered an
+equilibrium system. Under this assumption the underlying Ising model satisfies
+detailed balance, and can be considered an equilibrium system
+@christensenComplexityCriticality2005. In particular,  allows belief system dynamics
+to be defined implicitly using the Boltzmann distribution---belief system states are  such
+that belief system states are observed with probability depend
+distribution---belief system states are observed
+
+for the description of Belief system dynamics
+are the
+
+
+However, symmetric relations are not psychologically necessary.
+
+Suggestions that interactions are not symmetric:
+- Converse:
+  - #cite(<converseNatureBeliefSystems2006>, form: "full")
+    - Page 70: [Social] groups which are "more or less potent as points of reference"
+    - View treats centrality as the measure of potency.
+- Brandt:
+  - #cite(<brandtWhatCentralPolitical2019>, form: "full")
+    - Page 2: Distinguishes causal potency from the simple 'centrality' adopted by
+      Converse. Asserts that causally potent variables may be on the periphery.
+    - Page 9: "It may be that some components with high centrality are never the cause
+      and only the consequence of other components."
+  - #cite(<brandtEvaluatingBeliefSystem2021>, form: "full")
+    - Page 6: "It is plausible that some nodes do not have reciprocal associations, [or]
+      that nodes affect themselves."
+  - #cite(<brandtMeasuringBeliefSystem2022>, form: "full")
+    - Page 3: Acknowledges plausibility of causal directionality, and limitation of
+      not capturing this with conceptual similarity judgements. Argues that this "may
+      be sufficient at this time as the theoretical models of belief systems also do
+      not specify causal direction". i.e., evidence that not modelling causal
+      directionality may be constraining advances.
+- Keskinturk:
+  - #cite(<keskinturkOrganizationPoliticalBelief2022>, form: "full")
+    - Page 10: "It is imperative for future research to incorporate the questions of
+      time and causal identification into the analyses."
+- Epskamp:
+  - #cite(<epskampPersonalizedNetworkModeling2018>, form: "full")
+    - Use of temporal networks to identify potential causal relations.
+- Sanguk Lee:
+  - #cite(<leeClimateChangeBelief2024>, form: "full")
+- Monroe:
+  - #cite(<monroeGeneralConnectionistModel2008>, form: "full")
+    - "No reason in principle that [weights must be symmetric]".
+- Van de Maas:
+  - #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "full")
+    - Asserts that some relations---particularly between attitudes and behaviours---are
+      likely to be asymmetric.
+  - #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "full")
+    - Asymmetry may not affect mean-field results so much. But in some situations
+      can exhibit more complex behaviour @avniNonreciprocalIsingModel2025.
+
+
+
+@avniNonreciprocalIsingModel2025: Ising models with non-reciprocal or asymmetric edges
+can exhibit considerably more complex behaviour.
+
+
+
+explanatory power as
+While some belief system models, such as Bayesian networks, include directed edges,
+we are not aware of any
+
 
 dynamics to be the assumption of detailed balance, and
 consequentially as it enables belief systems to be analysed under the
