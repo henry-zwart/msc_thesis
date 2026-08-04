@@ -690,6 +690,8 @@ namely the interface between belief systems belonging to different individuals, 
 peer influence as indirect, via social beliefs which may only be indicative of the true
 external state.
 
+*TODO:* Discuss interventions on edges. Changing the structure of the network.
+Supported by @aggarwalWiredCoherenceNetwork2026 (keyword intervention).
 
 // Future directions suggested by our findings:
 // + How asymmetry arises:

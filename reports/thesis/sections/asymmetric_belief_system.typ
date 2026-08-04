@@ -8,6 +8,11 @@
 
 // TODO: Discussion on interpreting asymmetric relations in terms of the
 // mathematical/conceptual models
+//
+*TODO:* "The DT-VAR model suffers from the problem of time-interval
+dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
+- Ours does not(?) because we use temporal data, and include self-interaction
+  effects which set timescale.
 
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
