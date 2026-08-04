@@ -35,10 +35,10 @@ malleable (e.g., attitudes toward particular political candidates). In addition,
 beliefs and attitudes appear to be more influential than others. For instance, one
 might intuitively expect political alignment to be dependent on individuals' policy
 preferences. However, #cite(<unsworthItsPoliticalHow2014>, form: "prose") demonstrate
-that causal influence may actually flow in the opposite direction. When shown identical
-policies with different partisan framings, individuals' support for those policies
-shifts in line with their own political alignment, suggesting that partisan identity
-may shape policy preferences more so than in the other direction.
+that causal influence may actually flow primarily in the opposite direction. When shown
+identical policies with different partisan framings, individuals' support for those
+policies shifts in line with their own political alignment, suggesting that partisan
+identity may shape policy preferences more so than in the other direction.
 
 //*(Empirical knowledge): Measurement approaches*
 
@@ -90,7 +90,7 @@ This has motivated empirical approaches to studying belief system structure base
 network science, which treat belief systems as undirected networks describing the
 pairwise correlational structure (edges) between distinct beliefs and attitudes (nodes).
 
-Analysis of such 'belief system networks' using network science methods has proven
+Analysis of _belief system networks_ using network science methods has proven
 valuable for understanding belief system structure and the roles of specific beliefs and
 attitudes in topic-specific belief systems. Using cross-national surveys, several studies
 have examined geographic variation in belief system structure on topics including
@@ -239,104 +239,126 @@ interventions, in the context of a belief system on COVID-19.
 // form of unstable triads, defined as concepts related in a triangle structure with an odd
 // number of negative associations.
 
+// TODO: 'Both of these aspects are important to understanding how beliefs and attitudes
+// change, affect one another and behaviour, and spread between individuals'.
 Although belief system networks characterise the statistical associations between
 beliefs and attitudes in a belief system, they make no claims regarding the nature of
-these associations, how they arise, nor their implications for belief dynamics. To
-address these questions, we turn to theory-based models of belief systems. Most recent
-models of endogenous belief system dynamics are based on the notion of internal
-consistency---that individuals tend to adjust their beliefs and attitudes toward
-mutually compatible states. Two classical theories which have been particularly
-influential are
+these associations, how they arise, nor their implications for belief dynamics.
+Several explanatory models have been proposed to address these shortcomings, most often
+considering endogenous belief system dynamics as driven by individuals' efforts to
+achieve consistent sets of beliefs and attitudes; that is, which are perceived as
+mutually compatible. This perspective is particularly amenible to formalisation under
+the framework of complex systems, treating belief system dynamics as arising from
+micro-level attempts to resolve perceived inconsistencies between beliefs and attitudes.
+
+Current theories (and models) of belief system dynamics have been especially influenced
+by two classical theories of belief and attitude consistency:
 #cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
-(#cite(<heiderAttitudesCognitiveOrganization1946>, form: "year")) balance theory and
+_balance theory_
+(#cite(<heiderAttitudesCognitiveOrganization1946>, form: "year")) and
 #cite(<festingerCognitiveDissonance1962>, form: "author")'s
-(#cite(<festingerCognitiveDissonance1962>, form: "year")) theory of cognitive dissonance.
-The former considers attitudes as signed associations (edges) between concepts (nodes),
-and measures inconsistency via the presence of unstable triads (i.e., three
-mutually-related concepts with an odd number of negative associations). The latter posits
-that pairs of beliefs (and/or attitudes) may be more or less compatible, with compatible
-beliefs reinforcing one another, and incompatible ones causing inconsistency.
+_theory of cognitive dissonance_
+(#cite(<festingerCognitiveDissonance1962>, form: "year")).
+Heider's balance theory interprets attitudes as signed, affective associations between
+concepts. Inconsistency arises when three concepts are related in a triangle for which
+the product of edge weights is negative. Festinger's theory of cognitive dissonance,
+on the other hand, takes the view that beliefs (and by extension, attitudes) can be
+more or less compatible with one another. The difference is best clarified with an
+example. For instance, consider a person who cares deeply about animal wellbeing but who
+also eats meat. We illustrate the two interpretations below. Heider (_left_) considers
+the cognitive inconsistency as arising from the negative association between animals and
+meat consumption (interpreted as 'harm'). To resolve this, the individual could adjust
+their attitudes toward animal wellbeing, change their dietary habits, or limiting the
+perceived association between animals and meat consumption. Festinger (_right_) instead
+relates the individual's attitudes directly, rather than via their conceptual referrents,
+but comes to the same conclusion, namely that the person will tend to change one of the
+two attitudes, or reduce their perceived negative association.
 
-*NOTE:* Add a bit more here on the SKS approach, to show that we have considered it.
-We don't use it because we're operating under the CAN model framework. Also because
-this is closely aligned with the empirical belief networks.
+#grid(
+  columns: (1fr, 1fr),
+  align: (center, center),
+  row-gutter: 0.8em,
+  [*(Balance theory)*], [*(Cognitive dissonance)*],
+  image("../diagrams/cog_inconsistency/balance_theory.svg", height: 8em),
+  image("../diagrams/cog_inconsistency/cognitive_dissonance.svg", height: 8em),
+)
 
-These two theories have given way to two families of belief system models based on the
-statistical physics notion of energy minimisation (*CITE*), where 'energy' is measured
-in terms of inconsistency. For the purposes of this study, we focus here on the family
-inspired by the theory of cognitive dissonance (cf. Heider's balance theory and the
-Social Knowledge Structure model @greenwaldUnifiedTheoryImplicit2002
-@rodriguezCollectiveDynamicsBelief2016 @aiyappaEmergenceSimpleComplex2024). The Causal
-Attitude Network (CAN) model
-
-
-
-
-of endog
-belief system dynamics are
-
-recent belief
-modelling approaches
-
-
-
-We focus
-here on models based on statistical physics, which are primarily inspired by The
-view of belief systems as collections of beliefs and attitudes whose global dynamics
-are characterised by pairwise relations lends itself well to formalisation under the
-complex systems framework, and indeed many recent
-
-Most
-current models of belief system dynamics are based on the statistical physics notion
-
-The
-view of belief systems as collections of beliefs and attitudes whose behaviour is
-characterised by their interactions lends itself well to formalisation under the
-complex systems framework.
-
-Classical
-theories
-
-do not explain how these associationsthese correlational networks are useful for describing the statistical
-associations between beliefs and attitudes, they do not
-Correlational networks identify statistical associations between beliefs and
-attitudes, but they do not purport to explain the mechanisms by which beliefs and attitudes
-are related, nor the dynamic implications of belief system structure. Several
-influential theories of belief dynamics rest on the notion of internal
-consistency---that individuals strive to hold largely compatible beliefs and
-attitudes.
-#cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
-(#cite(<heiderAttitudesCognitiveOrganization1946>, form: "year")) balance theory,
-which conceptualises attitudes as signed associative relations between concepts,
-makes the case for attitude change as an effort to eliminate inconsistencies in the
-form of unstable triads. Similarly,
-In his theory of cognitive dissonance,
-#cite(<festingerCognitiveDissonance1962>, form: "prose") argues that when an individual
-holds two beliefs which they consider conflicting, they will tend to change one of them
-to achieve a more consistent internal state.
-
-
-// TODO: Doesn't reference monroe.
 // TODO: Doesn't use their version of 'attitude'
 // TODO: Maybe reference HIOM and networks of belief?
-These theories have given way to two families of belief system models based on the
-statistical physics notion of energy minimisation. The first class, building
-directly on Heider's balance theory, defines belief system dynamics as efforts to
-reduce internal inconsistencies in the form of unstable triads
-@greenwaldUnifiedTheoryImplicit2002 @rodriguezCollectiveDynamicsBelief2016
-@aiyappaEmergenceSimpleComplex2024. For the purposes of this study, however, we focus
-primarily on the second class of models. The Causal Attitude Network
-(CAN) model formalises Festinger's theory of cognitive dissonance in an Ising-style
-model @dalegeFormalizedAccountAttitudes2016. Beliefs and attitudes are represented as
-spins which take on values in ${-1, +1}$, representing two opposing states, and are
-related by reinforcing ($+$) or opposing ($-$) interaction effects. The tendency for each
-belief to be positive or negative, holding all interaction effects constant, is captured
-by their respective _baseline activations_. The CAN model defines belief system dynamics
-as efforts to reduce cognitive dissonance, such that positively related beliefs generally
-agree and negatively related beliefs generally disagree.
+Balance theory and the theory of cognitive dissonance have given way to two families
+of belief system models basd on the statistical physics notion of energy minimisation
+(*CITE*). The present study primarily considers models inspired by Festinger's theory of
+cognitive dissonance, which is more so concerned with relations _between_ beliefs and
+attitudes than attitudes as relating concepts. For models based on Heider's balance
+theory, we refer the reader to
+#cite(<greenwaldUnifiedTheoryImplicit2002>, form: "prose"),
+#cite(<rodriguezCollectiveDynamicsBelief2016>, form: "prose"), and
+#cite(<aiyappaEmergenceSimpleComplex2024>, form: "prose").
+
+// TODO: We don't use the precise notion of attitude that they use
+// TODO: Mention the HIOM, Networks of Belief as social extensions.
+//  - More generally, mention the usefulness of these models.
+The _Causal Attitude Network_ (CAN) model @dalegeFormalizedAccountAttitudes2016
+formalises Festinger's theory of cognitive dissonance in an Ising-style model, also
+drawing on the more recently-proposed connectionist perspective on attitude change
+@monroeGeneralConnectionistModel2008. It can be viewed as a dynamic formulation of
+the belief network approach described above. While the Ising model was originally
+presented as a model of ferromagnetic behaviour, it has since been variously applied to
+describe diverse systems of interacting variables which attract or repel one another
+@nguyenInverseStatisticalProblems2017.
+In the CAN model, beliefs and attituds are
+represented as spins which take on values in the set ${-1, +1}$, representing two
+opposing states (e.g., 'climate change is happening' versus 'climate change is _not_
+happening' or 'support' versus 'oppose'). These are related by reinforcing ($+$) or
+opposing ($-$) interaction effects, based on the notion of cognitive dissonance.
+Model dynamics are described in terms energy (read 'inconsistency') minimisation.
+That is, individuals tend to reduce cognitive dissonance, such that positively
+associated beliefs generally agree, and negatively associated beliefs generally disagree.
+// The tendency for each
+// belief to be positive or negative, holding all interaction effects constant, is captured
+// by their respective _baseline activations_.
+
+*TODO:* Diagram of the CAN model.
+
+*TODO:* Discuss model usefulness; extensions to model social influences.
+
+
+
+
+// *NOTE:* Add a bit more here on the SKS approach, to show that we have considered it.
+// We don't use it because we're operating under the CAN model framework. Also because
+// this is closely aligned with the empirical belief networks.
+// - SKS models are concerned with belief system consistency, taking attitudes as relating
+//   concepts.
+// - Connectionist models are more similar to the belief network empirical approach, and
+//   are concerned with how beliefs themselves are related.
+
+// These theories have given way to two families of belief system models based on the
+// statistical physics notion of energy minimisation. The first class, building
+// directly on Heider's balance theory, defines belief system dynamics as efforts to
+// reduce internal inconsistencies in the form of unstable triads
+// @greenwaldUnifiedTheoryImplicit2002 @rodriguezCollectiveDynamicsBelief2016
+// @aiyappaEmergenceSimpleComplex2024. For the purposes of this study, however, we focus
+// primarily on the second class of models. The Causal Attitude Network
+// (CAN) model formalises Festinger's theory of cognitive dissonance in an Ising-style
+// model @dalegeFormalizedAccountAttitudes2016. Beliefs and attitudes are represented as
+// spins which take on values in ${-1, +1}$, representing two opposing states, and are
+// related by reinforcing ($+$) or opposing ($-$) interaction effects. The tendency for each
+// belief to be positive or negative, holding all interaction effects constant, is captured
+// by their respective _baseline activations_. The CAN model defines belief system dynamics
+// as efforts to reduce cognitive dissonance, such that positively related beliefs generally
+// agree and negatively related beliefs generally disagree.
 
 Critically, the CAN model defines interaction relations as symmetric, such that related
-beliefs exert equal reinforcing or opposing influence on one another. However,
+beliefs exert equal reinforcing or opposing influence on one another. This is
+mathematically convenient. In particular, with symmetric relations, the underlying
+Ising model satisfies detailed balance, and can be analysed as an equibrium system.
+
+dynamics to be the assumption of detailed balance, and
+consequentially as it enables belief systems to be analysed under the
+assumption of equilibrium
+assumption  for the assumption that enabling analysis of belief system dynamics under the
+assumption
 - Most authors agree than influence relations are not necessarily bi-directional.
 - There is evidence that they are not.
 - Asymmetric relations (can) affect measures of node centrality.

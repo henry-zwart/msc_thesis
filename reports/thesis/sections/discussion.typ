@@ -135,6 +135,9 @@ outperformed those on political ideology/alignment in terms of absolute effect o
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
 
+*TODO:* Refer back to @chambonTailoredInterventionsBroad2022, who found most effects
+were direct.
+
 For the measurement timescale used in these experiments (approximately 2.5 years),
 interventions appeared to act primarily through direct interactions, though smaller
 indirect effects were also present. Additional experiments included in
