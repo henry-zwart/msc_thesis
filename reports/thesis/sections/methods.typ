@@ -526,6 +526,8 @@ a parameter $theta$ is considered nonzero if $|theta| > 10^(-2)$. We take
 $gamma = 0.25$, which has been shown to work well in general for network
 inference in the inverse Ising problem @barberHighdimensionalIsingModel2015.
 
+*TODO:* Argue this better. Explain what the EBIC does (induces prior). Say that they
+show even a slight bias toward sparser networks is effective.
 
 
 The EBIC is an evaluative criterion for model selection, which balances maximisation of

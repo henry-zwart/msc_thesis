@@ -145,27 +145,6 @@ That is, individuals tend to reduce cognitive dissonance, such that positively
 associated beliefs generally agree, and negatively associated beliefs generally disagree.
 
 // *TODO:* (Maybe) Diagram of the CAN model.
-
-*TODO:* Model usefulness
-- Explaining phenomena;
-- Reasoning about how things will change;
-  - Intervention and persuasion studies.
-- Extensions to model social influences
-
-*Interventions*
-- Simulation-based approaches that mirror ours:
-  - @dalegeNetworkAnalysisAttitudes2017
-  - @schlicht-schmalzleAttitudeNetworkAnalysis2018
-  - @lunanskyInterveningPsychopathologyNetworks2022
-  - @berteroConsolidationChangeExploring2025
-  - @wuSimulatingNodeManipulations2026
-  All use symmetric models. AFAIK none use glauber dynamics, i.e., assume equilibrium
-  right after intervention. So don't account for temporal dynamics, belief stability,
-  individual effects, etc.
-- Control theory approach @henryControlPsychologicalNetworks2022
-- Continuous-time approach (avoids the discrete time problem) @ryanTimeInterveneContinuousTime2022
-
-
 Critically, the CAN model defines interaction relations as symmetric, such that related
 beliefs exert equal reinforcing or opposing influence on one another. Under this
 assumption the underlying Ising model satisfied detailed balance and can be considered
@@ -174,13 +153,36 @@ define belief system dynamics implicitly using the Boltzmann distribution, such 
 each belief system state is observed with constant probability as a decreasing function
 of that state's inconsistency (or 'energy' in statistical physics terms).
 
+In spite of its simple foundations, the CAN model and recent variants have
+proven effective at capturing observed phenomena and demonstrated value for
+predicting, or testing hypotheses about belief and attitude change.
+For instance, both #cite(<dalegeAttitudinalEntropyAE2018>, form: "prose") and
+#cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose") show
+that such models may explain how merely thinking about a topic can induce more
+extreme views. In several cases the CAN model (or analogous models) have been
+used to explore the potential effects of intervention or persuasion attempts
+on belief system dynamics via simulation
+@dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
+@lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025.
+Furthermore, #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose")
+and #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") demonstrate that
+extensions of the CAN model which incorporate social influences on belief and
+attitude dynamics are also highly expressive. In both cases, the authors model
+social network influences via theoretically simple social cohesion mechanisms
+(i.e., the assumption that individuals who interact tend to align their beliefs
+and attitudes). This turns out to be sufficient to capture various phenomena
+observed in reality, including: (i) attitude polarisation, (ii) how interventions
+can drive extreme attitudes on topics that has previously received limited
+attention, and (iii) how minority views propagate through a population
+@dalegeNetworksBeliefsIntegrative2025.
+
 // NOTE: Could point out the Monroe inspired CAN, and was 10 years prior.
 
-Although mathematically convenient, symmetric interactions are not psychologically
-necessary. Indeed, this has been broadly acknowledged within the belief systems modelling
-literature as a limitation of current approaches. Most authors explicitly mention
-either causal directionality underlying inferred bi-directional associations, or
-asymmetric/non-reciprocal influences as _plausible_
+However, although mathematically convenient, symmetric interactions are not
+psychologically necessary. Indeed, this has been broadly acknowledged within the belief
+systems modelling literature as a limitation of current approaches. Most authors
+explicitly mention either causal directionality underlying inferred bi-directional
+associations, or asymmetric/non-reciprocal influences as _plausible_
 @epskampPersonalizedNetworkModeling2018 @brandtMeasuringBeliefSystem2022
 @brandtEvaluatingBeliefSystem2021 @leeClimateChangeBelief2024
 @powellModelingLeveragingIntuitive2023 @monroeGeneralConnectionistModel2008
@@ -217,6 +219,7 @@ the belief system modelling literature demonstrate that non-reciprocal Ising mod
 can, under certain conditions, exhibit considerably more complex behaviour than
 the symmetric variant.
 
+
 One area where the effects of asymmetric influence are likely to surface is the
 assessment of belief importance, often quantified using centrality indices (as discussed
 above). While most undirected-network centrality indices have directed-network analogues,
@@ -236,9 +239,14 @@ little-to-no resistance to interventions, respectively.
 
 However, at the time of writing, empirical and theoretical studies into the existence,
 nature, and potential structure of asymmetric influences among beliefs remain scarce.
+Of particular concern, the absence of theoretical models of asymmetric
+influences appears to be self-perpetuating, with some studies citing historical
+trends as justification for continued focus on symmetric models
+@brandtMeasuringBeliefSystem2022[p.~3].
 Consequentially, it remains unclear as to whether asymmetric influence---should it
 exist---meaningfully impacts belief system dynamics, or the conclusions we draw from
 models thereof.
+
 
 
 
