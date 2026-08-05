@@ -116,10 +116,10 @@ two attitudes, or reduce their perceived negative association.
 // TODO: Maybe reference HIOM and networks of belief?
 Balance theory and the theory of cognitive dissonance have given way to two families
 of belief system models basd on the statistical physics notion of energy minimisation
-(*CITE*). The present study primarily considers models inspired by Festinger's theory of
-cognitive dissonance, which is more so concerned with relations _between_ beliefs and
-attitudes than attitudes as relating concepts. For models based on Heider's balance
-theory, we refer the reader to
+@isingBeitragZurTheorie1925. The present study primarily considers models inspired by
+Festinger's theory of cognitive dissonance, which is more so concerned with relations
+_between_ beliefs and attitudes than attitudes as relating concepts. For models based
+on Heider's balance theory, we refer the reader to
 #cite(<greenwaldUnifiedTheoryImplicit2002>, form: "prose"),
 #cite(<rodriguezCollectiveDynamicsBelief2016>, form: "prose"), and
 #cite(<aiyappaEmergenceSimpleComplex2024>, form: "prose").
@@ -322,10 +322,7 @@ address the following four research questions:
 This study is divided into two halves. In the first half we establish a framework for
 modelling belief systems with asymmetric influence relations, and estimating such models
 from time-series data. In the second half, we then use this framework to address the
-research questions listed above. The data used for this study is sourced from the
-Longitudinal Panel of Perceptions About Climate Change and Covid representative
-longitudinal survey (*CCCV*), collected in the US between 2020 and 2023.
-
+research questions listed above.
 
 In @sec:asymmetric-belief-systems we introduce the *non-equilibrium belief system* model
 (NEBS), a kinetic Ising model formulation of the Causal Attitude Network (CAN) model.
@@ -342,8 +339,9 @@ model dynamics. @sec:methods then outlines a parameter estimation method for NEB
 on maximum likelihood estimation. The proposed method uses knowledge of
 a pre-defined soft binarisation function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-We use this method to calibrate the NEBS model to an extracted subset of the CCCV
-comprising beliefs and attitudes relating to climate change.
+We use this method to calibrate the NEBS model to a two-wave longitudinal
+dataset comprising beliefs and attitudes relating to climate change (see below).
+
 // ---the calibrated model is
 // subsequently used to address our research questions in the second half of this study.
 
@@ -357,7 +355,17 @@ We assess the existency of asymmetry and its population-level implications for
 intervention dynamics in @sec:results-asymmetry-in-belief-systems, and
 heterogeneity in intervention outcomes and belief systems in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects, relating these back
-to our research questions in @sec:discussion.
+to our research questions in @sec:discussion, also discussing broader implications
+for belief system modelling.
+
+The data used for this study is sourced from the Longitudinal Panel of Perceptions About
+Climate Change and Covid representative longitudinal survey (*CCCV*), collected in the
+US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022. Comprehensively
+validating this dataset and constructing the targeted dataset of beliefs and attitudes
+relating to climate change used in our experiments constituted substantial components of
+this investigation, and contribute to future use of the CCCV dataset. We detail both
+processes in @sec:dataset.
+
 
 In its totality, this study presents a theory-driven approach to studying the structure
 and dynamics of asymmetric belief systems. We apply this to investigate the existence and
