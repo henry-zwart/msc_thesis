@@ -18,18 +18,19 @@
   @coppockBeliefSystemsExhibit2022
 ]
 
-#emph-block[
-  Richness of _perceptions_ of others beliefs:
-  - Discussed in @dalegeNetworksBeliefsIntegrative2025
-  - References @galesicHumanSocialSensing2021
-]
+// #emph-block[
+//   Richness of _perceptions_ of others beliefs:
+//   - Discussed in @dalegeNetworksBeliefsIntegrative2025
+//   - References @galesicHumanSocialSensing2021
+// ]
 
 Our subjective interpretations of the world, natural phenomena, and
 those around us are dependent on a collection of beliefs about how things are,
 and how they work. These beliefs and attitudes are highly interdependent,
 related by logical and psychological associations in what are often referred to as
 belief systems @converseNatureBeliefSystems2006 @fishbein1977belief. Beliefs and
-attitudes are also subject to social dynamics, as evidenced by observed geographic
+attitudes are also subject to social dynamics @galesicHumanSocialSensing2021, as
+evidenced by observed geographic
 segregation of political attitudes in the United States
 @brownMeasurementPartisanSorting2021. Moreover, beliefs and attitudes held by an
 individual have external consequences for behavioural decisions
