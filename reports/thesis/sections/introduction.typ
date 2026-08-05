@@ -13,6 +13,16 @@
 //   - RQ3: That interventions can only be effective when the target and the
 //     point-of-intervention are both low.
 
+#emph-block[
+  Understanding exogenous influences on belief systems and attitudes
+  @coppockBeliefSystemsExhibit2022
+]
+
+#emph-block[
+  Richness of _perceptions_ of others beliefs:
+  - Discussed in @dalegeNetworksBeliefsIntegrative2025
+  - References @galesicHumanSocialSensing2021
+]
 
 Our subjective interpretations of the world, natural phenomena, and
 those around us are dependent on a collection of beliefs about how things are,
@@ -28,7 +38,8 @@ to make internal sense of the world inevitably shape our collective impact on it
 
 Distinct beliefs and attitudes behave differently within a belief system. Some
 attitudes, such as political ideology (e.g., conservativism or liberalism) are highly
-stable over time @greenPartisanStabilityTurbulent2024. Others appear to be more
+stable over time @greenPartisanStabilityTurbulent2024 @osborneDoesOpennessExperience2020
+@kileyMeasuringStabilityChange2020. Others appear to be more
 malleable (e.g., attitudes toward particular political candidates). In addition, some
 beliefs and attitudes appear to be more influential than others. For instance, one
 might intuitively expect political alignment to be dependent on individuals' policy
@@ -381,7 +392,6 @@ prevalence of asymmetry in an observational context regarding beliefs and attitu
 climate change, and the consequences of symmetry and asymmetry assumptions for reasoning
 about intervention dynamics.
 
-#line(length: 100%)
 
 
 
@@ -482,106 +492,43 @@ about intervention dynamics.
 // impacts on belief system dynamics remain limited.
 
 
-== Motivation
-
-Causality in psychological networks @kossakowskiSearchCausalityComparison2021
-
-Practical considerations for designing empirical studies for psychological networks.
-Discusses limitations of cross-sectional studies for teasing apart within-person and
-between-person effects @chambonNetworkPsychometricsPractice2026.
-
-Dynamics vs. static constraint. @converseNatureBeliefSystems2006
-
-Intervention studies with belief system models:
-- Looks at dynamics constraint. Uses symmetric network, doesn't fit individual models.
-  Applies persuasive experimental condition and predicts how attitudes will change.
-  Finds that attitudes generally change most when close to the point-of-intervention
-  @turner-zwinkelsBeliefSystemNetworks2022
-- Finds that (counter to their hypothesis) peripheral attitudes changed less than
-  central ones (no 'straightforward association between inter-attitude centrality and
-  persuasion'). Also uses symmetric model. 'such a process is often assumed to be
-  bi-directional'. @brandtInterattitudeCentralityDoes2023
-  - Possible explanation for their findings: attitudes found to be peripheral may not
-    actually be peripheral. They may be asymmetric, with different
-    influence/influentiability.
-- Looks at temporal network of behavioural compliance in COVID-19
-  @chambonHowComplianceBehavioural2023. Says they measure within-person effects, but
-  not clear that this is true (they use temporal and contemporaneous networks).
-  - Their context is expected to have non-stable beliefs and attitudes. Early stages
-    of pandemic.
-  - They find cases of asymmetry, but these are typically in the other direction.
-    Variables which are mostly influenced by others. We find variables which mostly
-    influence others.
-  - Their focus is primarily on bi-directional reinforcing effects. They also don't
-    compare with symmetric model.
-- @chambonTailoredInterventionsBroad2022
-
-Issue support on climate policies in US driven by political identification and climate
-beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020
-@zieglerPoliticalOrientationEnvironmental2017 @roser-renoufGenesisClimateChange2014
-@unsworthItsPoliticalHow2014.
-
-But political identification is often not consistent with policy attitudes
-@iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
-identity-driven (symbolic) than issue-driven (operational)
-@masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
-
-Suggestions of asymmetric/causal directionality in belief systems:
-- So far reviewed in Zotero: Belief Networks, Papers from Sara
-- @brandtWhatCentralPolitical2019[p.~2,9,10]
-- @brandtMeasuringBeliefSystem2022[p.~3,22]
-- @keskinturkOrganizationPoliticalBelief2022[p.~10]
-- @vannoordNatureStructureEuropean2025[p.~4]
-- @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
-  - Constraint, causality, exogenous factors all necessary for any theory of BS dynamics.
-  - Though still interprets edges as undirected/bi-directional
-- @brandtEvaluatingBeliefSystem2021[p.~22]: "In some cases ... assume that causal influence
-  for some elements (e.g., partisan identification) is primarily in one direction".
-- @converseNatureBeliefSystems2006[p.~208] (mentioned in @brandtEvaluatingBeliefSystem2021[p.~2])
-- @coppockBeliefSystemsExhibit2022: Referenced in @brandtEvaluatingBeliefSystem2021
-
-Self-interaction effects:
-- @brandtEvaluatingBeliefSystem2021[p.~22]: "we made the simplifying assumption that a node
-  does not affect itself".
 
 
-Variation in belief systems between individuals:
-- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
-  time, and political contexts", "Although ... belief systems are at the individuals level,
-  this does not mean that structure is not shared"
 
 
-Stability of belief dynamics:
-- @osborneDoesOpennessExperience2020
-- @kileyMeasuringStabilityChange2020
-  - Most observed change in beliefs and behaviours is short-term (or measurement error)
-  - This is consistent with the cognitive dissonance theory
+// Suggestions of asymmetric/causal directionality in belief systems:
+// - So far reviewed in Zotero: Belief Networks, Papers from Sara
+// - @brandtWhatCentralPolitical2019[p.~2,9,10]
+// - @brandtMeasuringBeliefSystem2022[p.~3,22]
+// - @keskinturkOrganizationPoliticalBelief2022[p.~10]
+// - @vannoordNatureStructureEuropean2025[p.~4]
+// - @brandtEvaluatingBeliefSystem2021[p.~2]: Belief system _dynamics_ require causal connections.
+//   - Constraint, causality, exogenous factors all necessary for any theory of BS dynamics.
+//   - Though still interprets edges as undirected/bi-directional
+// - @brandtEvaluatingBeliefSystem2021[p.~22]: "In some cases ... assume that causal influence
+//   for some elements (e.g., partisan identification) is primarily in one direction".
+// - @converseNatureBeliefSystems2006[p.~208] (mentioned in @brandtEvaluatingBeliefSystem2021[p.~2])
+// - @coppockBeliefSystemsExhibit2022: Referenced in @brandtEvaluatingBeliefSystem2021
 
-Individual belief dynamics are important to understanding behavioural influences
-between individuals: @rodriguezCollectiveDynamicsBelief2016
-@aiyappaEmergenceSimpleComplex2024
-- "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
 
-Richness of _perceptions_ of others beliefs:
-- Discussed in @dalegeNetworksBeliefsIntegrative2025
-- References @galesicHumanSocialSensing2021
 
-Approaches to modelling belief systems/dynamics:
-- Regularised partial correlation networks, e.g., @brandtWhatCentralPolitical2019
-- Bayesian networks @powellModelingLeveragingIntuitive2023
-- Social Knowledge Structure @greenwaldUnifiedTheoryImplicit2002
-- Causal Attitude Network @dalegeFormalizedAccountAttitudes2016
-  - Attitudinal Entropy @dalegeAttitudinalEntropyAE2018
-- Hierarchical Ising Opinion model.
-- SEM?
 
-Our approach as an intermediate between undirected models and directed models with
-prespecified structure or acyclicity constraints.
 
-Understanding exogenous influences on belief systems and attitudes
-@coppockBeliefSystemsExhibit2022
 
-Modularity clustering for correlation networks @masudaIntroductionCorrelationNetworks2025
+
+// Approaches to modelling belief systems/dynamics:
+// - Regularised partial correlation networks, e.g., @brandtWhatCentralPolitical2019
+// - Bayesian networks @powellModelingLeveragingIntuitive2023
+// - Social Knowledge Structure @greenwaldUnifiedTheoryImplicit2002
+// - Causal Attitude Network @dalegeFormalizedAccountAttitudes2016
+//   - Attitudinal Entropy @dalegeAttitudinalEntropyAE2018
+// - Hierarchical Ising Opinion model.
+// - SEM?
+
+// Our approach as an intermediate between undirected models and directed models with
+// prespecified structure or acyclicity constraints.
+
+
 
 // == Asymmetry example
 //

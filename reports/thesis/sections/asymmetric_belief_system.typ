@@ -158,6 +158,11 @@ possible future states.
     its baseline activation. Self-interactions allow beliefs to be sticky, independently
     of others.
 
+*NOTE:*
+Self-interaction effects:
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "we made the simplifying assumption that a node
+  does not affect itself".
+
 
 
 // - Why we can't use the boltzmann distribution and Hamiltonian, like in the symmetric
@@ -307,6 +312,20 @@ interval.
   system via an interaction term to the belief about that state. Our approach is
   analogous. The exogenous change affects our belief (say, about the state of climate
   change) via an interaction term.
+
+Other intervention studies:
+- Simulation-based approaches that mirror ours:
+  - @dalegeNetworkAnalysisAttitudes2017
+  - @schlicht-schmalzleAttitudeNetworkAnalysis2018
+  - @lunanskyInterveningPsychopathologyNetworks2022
+  - @berteroConsolidationChangeExploring2025
+  - @wuSimulatingNodeManipulations2026
+  All use symmetric models. AFAIK none use glauber dynamics, i.e., assume equilibrium
+  right after intervention. So don't account for temporal dynamics, belief stability,
+  individual effects, etc.
+- Control theory approach @henryControlPsychologicalNetworks2022
+- Continuous-time approach (avoids the discrete time problem) @ryanTimeInterveneContinuousTime2022
+
 
 
 We now outline our approach to modelling interventions in the asymmetric belief

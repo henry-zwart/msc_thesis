@@ -7,7 +7,48 @@
 A collection of notes, to-do items, discussion points, and snippets taken from old
 drafts. This section is temporary, and for my own benefit :)
 
+== Politics --> Policy narrative
+
+Issue support on climate policies in US driven by political identification and climate
+beliefs @bumannWhatAreDeterminants2021 @shaoApprovalPoliticalLeaders2020
+@zieglerPoliticalOrientationEnvironmental2017 @roser-renoufGenesisClimateChange2014
+@unsworthItsPoliticalHow2014.
+
+But political identification is often not consistent with policy attitudes
+@iyengarAffectNotIdeology2012 @huddyExpressivePartisanshipCampaign2015. More often
+identity-driven (symbolic) than issue-driven (operational)
+@masonIdeologuesIssuesPolarizing2018. Also @eganIdentityDependentVariable2020.
+
+
 == General notes, to-do items
+
+Modularity clustering for correlation networks @masudaIntroductionCorrelationNetworks2025
+
+Intervention studies with belief system models:
+- Looks at dynamics constraint. Uses symmetric network, doesn't fit individual models.
+  Applies persuasive experimental condition and predicts how attitudes will change.
+  Finds that attitudes generally change most when close to the point-of-intervention
+  @turner-zwinkelsBeliefSystemNetworks2022
+- Finds that (counter to their hypothesis) peripheral attitudes changed less than
+  central ones (no 'straightforward association between inter-attitude centrality and
+  persuasion'). Also uses symmetric model. 'such a process is often assumed to be
+  bi-directional'. @brandtInterattitudeCentralityDoes2023
+  - Possible explanation for their findings: attitudes found to be peripheral may not
+    actually be peripheral. They may be asymmetric, with different
+    influence/influentiability.
+- Looks at temporal network of behavioural compliance in COVID-19
+  @chambonHowComplianceBehavioural2023. Says they measure within-person effects, but
+  not clear that this is true (they use temporal and contemporaneous networks).
+  - Their context is expected to have non-stable beliefs and attitudes. Early stages
+    of pandemic.
+  - They find cases of asymmetry, but these are typically in the other direction.
+    Variables which are mostly influenced by others. We find variables which mostly
+    influence others.
+  - Their focus is primarily on bi-directional reinforcing effects. They also don't
+    compare with symmetric model.
+- @chambonTailoredInterventionsBroad2022
+
+Causality in psychological networks @kossakowskiSearchCausalityComparison2021
 
 See @epskampEstimatingPsychologicalNetworks2018 for discussion on the use of
 bootstrapping in assessing edge weight variability. Also argument against the use of

@@ -1,5 +1,11 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 *TODO:*
 - Discuss how all interaction terms are positive.
 - Discuss differences in baseline activations.
@@ -37,6 +43,13 @@ Both models feature a dominant diagonal, indicating that most variables are slow
 with respect to the modelled timescale#timescale-footnote (they are 'sticky'). This is
 particularly true for `Politics`, and less so for `CC Others Worry` and `CC Impact`.
 
+#emph-block[
+  Stability of belief dynamics:
+  - @osborneDoesOpennessExperience2020
+  - @kileyMeasuringStabilityChange2020
+    - Most observed change in beliefs and behaviours is short-term (or measurement error)
+    - This is consistent with the cognitive dissonance theory
+]
 
 
 #figure(

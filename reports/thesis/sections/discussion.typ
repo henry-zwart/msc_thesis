@@ -15,6 +15,12 @@
   link(label, arrow)
 }
 
+#emph-block[
+  Individual belief dynamics are important to understanding behavioural influences
+  between individuals: @rodriguezCollectiveDynamicsBelief2016
+  @aiyappaEmergenceSimpleComplex2024
+  - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+]
 
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
@@ -295,6 +301,12 @@ association using cross-sectional correlational measures, which may differ consi
 from the time-lagged interaction parameters used in the present study.
 
 == Limitations
+
+#emph-block[
+  Practical considerations for designing empirical studies for psychological networks.
+  Discusses limitations of cross-sectional studies for teasing apart within-person and
+  between-person effects @chambonNetworkPsychometricsPractice2026.
+]
 
 #metadata[] <within-person-discussion>
 When beliefs and attitudes are fairly stable---as in the climate beliefs

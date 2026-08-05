@@ -429,10 +429,17 @@ so long as they do not already have a positive attitude toward climate action.
   @fig:asymmetry-results-existence-ranked-differentials).
 - Discuss differences in baseline activations.
 
+*Note:*
+Variation in belief systems between individuals:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs and attitudes are inherently
 individual in nature. The existence, direction, and degree of relation between
 two beliefs is dependent on an individual's own beliefs regarding their relatedness.
+
 
 #let liberal-metadata = json("../results/data/model/ideology_fit_liberal_metadata.json")
 #let conservative-metadata = json("../results/data/model/ideology_fit_conservative_metadata.json")
