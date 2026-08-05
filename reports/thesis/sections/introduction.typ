@@ -319,26 +319,51 @@ address the following four research questions:
   ])
 }
 
-The data used for this study is sourced from the Longitudinal Panel
-of Perceptions About Climate Change and Covid representative longitudinal survey
-(*CCCV*), collected in the US between 2020 and 2023.
+This study is divided into two halves. In the first half we establish a framework for
+modelling belief systems with asymmetric influence relations, and estimating such models
+from time-series data. In the second half, we then use this framework to address the
+research questions listed above. The data used for this study is sourced from the
+Longitudinal Panel of Perceptions About Climate Change and Covid representative
+longitudinal survey (*CCCV*), collected in the US between 2020 and 2023.
 
-In the first half of the study, we present a methodology for estimating and simulating
-asymmetric belief systems. In @sec:asymmetric-belief-systems we introduce the
-*non-equilibrium belief system* model (NEBS) as an kinetic Ising model formulation of
-the Causal Attitude Network (CAN) model, which assumes neither symmetric influence nor
-equilibrium dynamics. Specifically, NEBS represents directional interaction effects
-as distinct parameters, and redefines belief system dynamics to be explicitly
-time-dependent.
-In @sec:methods we describe a parameter estimation method for NEBS which robustly
-infers binary model parameters from not-necessarily-binary data, by optimising
-with respect to a pre-defined smooth binarisation function. We then use this method
-to calibrate a NEBS model to the climate beliefs dataset, which will be used for the
-subsequent experiments.
 
-Chapters @sec:methods[], @sec:results-asymmetry-in-belief-systems[], and
-@sec:heterogeneity-results-belief-system[]
+In @sec:asymmetric-belief-systems we introduce the *non-equilibrium belief system* model
+(NEBS), a kinetic Ising model formulation of the Causal Attitude Network (CAN) model.
+NEBS represents directed belief influences using distinct parameters, so is well-suited
+for studying asymmetry in belief systems. NEBS' dynamics are explicitly time-dependent,
+enabling straightforward analysis of belief system dynamics, including
+post-intervention behaviour, on an _individual_ basis. This contrasts past studies that
+analyse intervention effects via simulation on the CAN model
+@dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
+@lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
+or GGM models @wuSimulatingNodeManipulations2026, which do
+consider neither individuals' pre-intervention belief states, nor the time-scale of
+model dynamics. @sec:methods then outlines a parameter estimation method for NEBS based
+on maximum likelihood estimation. The proposed method uses knowledge of
+a pre-defined soft binarisation function to robustly estimate binary model parameters
+from survey data that is not necessarily binary, without requiring explicit binarisation.
+We use this method to calibrate the NEBS model to an extracted subset of the CCCV
+comprising beliefs and attitudes relating to climate change.
+// ---the calibrated model is
+// subsequently used to address our research questions in the second half of this study.
 
+We then subsequently use the calibrated model to address our research questions in
+the second half of the study. Inspired by approaches used in the context of the CAN
+model, in @sec:methods we formalise interventions in Ising-style belief system models
+as additional influencing variables. We also give algorithms for: (i) quantifying expected
+intervention effects on an individual basis and (ii) comparing effects between symmetric
+and asymmetric models, using Common Random Numbers to ensure result comparability.
+We assess the existency of asymmetry and its population-level implications for
+intervention dynamics in @sec:results-asymmetry-in-belief-systems, and
+heterogeneity in intervention outcomes and belief systems in
+@sec:heterogeneity-in-belief-systems-and-intervention-effects, relating these back
+to our research questions in @sec:discussion.
+
+In its totality, this study presents a theory-driven approach to studying the structure
+and dynamics of asymmetric belief systems. We apply this to investigate the existence and
+prevalence of asymmetry in an observational context regarding beliefs and attitudes about
+climate change, and the consequences of symmetry and asymmetry assumptions for reasoning
+about intervention dynamics.
 
 #line(length: 100%)
 

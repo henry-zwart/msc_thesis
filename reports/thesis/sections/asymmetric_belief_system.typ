@@ -49,7 +49,7 @@ not.
 definition used in @dalegeFormalizedAccountAttitudes2016*.
 
 #important-block[
-  The terms *belief* and *attitude* are presently ambiguous. On one hand, they can refer
+  The terms *belief* and *attitude* are presently ambiguous. They can refer
   to generic concepts (e.g. belief regarding the contents of a box, or attitude toward
   ...) or specific instances of those concepts (e.g., 'I believe that the box is empty',
   or '...').
