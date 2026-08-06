@@ -1,3 +1,9 @@
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 *Note:*
 - Nodes considered peripheral in a symmetric model may be more central in an asymmetric
   model.
@@ -9,9 +15,152 @@ attitudes may be more causally influential than others, current research practic
 is almost exclusively concerned with symmetric influence relations. Theoretical
 belief system models which capture asymmetric relations remain scarce, as do
 empirical studies on their existence and their potential impacts on belief
-system dynamics.
+system dynamics. This study set out to address these theoretical and
+empirical shortcomings.
 
-//*1. Remind reader of the research questions*
+In the first half of the study, we presented the Kinetic Belief System model (KBS) as a
+theory-driven model of belief system dynamics, based
+on the Causal Attitude Network (CAN) model @dalegeFormalizedAccountAttitudes2016.
+In contrast to the CAN model, KBS can represent both asymmetric _and_ symmetric belief
+relations, and defines belief system dynamics as explicitly time-dependent and
+conditional on instantaneous beliefs and attitudes.
+
+In the second half of the study we used the KBS model to address four research questions.
+The primary aim of this study was to investigate the existence, prevalence, and structure
+of asymmetric influence relations amongst beliefs and attitudes about climate change
+(*RQ1*), and the dynamic implications of modelling assumptions about relational symmetry
+in the context of belief-level interventions (*RQ2*). The secondary aims of this study
+were to investigate how intervention effectiveness varies among individuals with
+asymmetric belief systems (*RQ3*), and how asymmetric belief systems may differ
+structurally between conservative and liberal subpopulations (*RQ4*).
+We assessed the existence of asymmetric
+relations and structural differences between ideological belief systems via direct
+analysis of the calibrated models, and investigated the consequences of asymmetry for
+intervention dynamics by comparing simulated outcomes with those of an analogous
+symmetric model using common random numbers.
+
+
+Our investigation identified several apparent cases of asymmetry. Among these,
+political ideology/alignment and climate-related worry were consistently identified as
+having excess influence on other variables. This suggests that asymmetry
+is likely to exist within belief systems, and may be better characterised in terms of
+the difference between a given belief's influence and influentiability in general, than
+as a property of particular relations. Most relations were
+not conclusively asymmetric, indicating that asymmetry may be the exception as opposed
+to the norm. An issue that was not addressed in this
+investigation was the disentangling of within-person from between-person effects. As such
+we cannot say whether the observed asymmetric relations are features of individual belief
+dynamics or population-level variation. Our study is not unique in this limitation;
+disentangling these effects has received increased attention in recent years
+@brandtBetweenpersonMethodsProvide2022 @brandtMeasuringBeliefSystem2022, yet remains
+difficult without substantial individual-level data. As methods
+progress in this area we consider addressing this limitation highly important.
+
+// Asymmetry was found to significantly impact simulated intervention dynamics, particularly
+// when targeting or intervening on asymmetric beliefs or attitudes. with both
+// of the previously-identified 'high influence' attitudes demonstrating increased overall
+// effectiveness as points-of-intervention in the asymmetric model.
+We found that assumptions regarding belief system symmetry or asymmetry can significantly
+impact model dynamics in intervention scenarios.  Both of the 'high-influence' attitudes
+identified in our initial investigation demonstrated increased overall effectiveness as
+points-of-intervention in asymmetric models. The evidence from these experiments suggests
+that asymmetry can meaningfully impact belief system dynamics, and assumptions of
+symmetry can, in some cases, change simulation-based conclusions about intervention
+strategy. We attribute the difference between the symmetric and asymmetric model dynamics
+to misspecification under the symmetric model when true relations are symmetric, showing
+that this can lead to underestimating, overestimating, falsely including, or falsely
+excluding interaction effects.
+
+// #emph-block[
+//   Turning to our secondary aims, we found that variations in intervention effectiveness
+//   between individuals were straightforwardly characterisable in terms of the individuals'
+//   initial states. The results suggest that indirect propagation of intervention effects
+//   (i.e., through variables that are neither intervened on directly nor the target) can
+//   contribute substantially to intervention effectiveness.
+//
+//   Expected intervention effectiveness was found to depend predictably on an individual's
+//   belief system state prior to intervention. Most effective interventions required that
+//   the point-of-intervention and target both be different from their desired
+//   post-intervention states. While this was expected behaviour, we additionally found
+//   that all highly effective interventions required that prior climate-related worry be
+//   low. We attribute this finding to the variable's high levels of both influence and
+//   influentiability, which make it an effective indirect pathway for various interventions
+//   to propagate.
+//
+// ]
+
+Expected intervention effectiveness was found to depend predictably on an individual's
+belief system state prior to intervention. Most effective interventions required that
+the point-of-intervention and target both be different from their desired
+post-intervention states. While this was expected behaviour, we additionally found
+that all highly effective interventions required that prior climate-related worry be
+low. We attribute this finding to the variable's high levels of both influence and
+influentiability, which make it an effective indirect pathway for various interventions
+to propagate.
+
+// #emph-block[
+//   Finally, in spite of sample size limitations, we found that conservative and liberal
+//   belief systems exhibited both structural _similarities_ and structural _differences_.
+//   From a descriptive perspective this finding broadly aligns with previous studies using
+//   symmetric belief system networks. From a theory-based modelling perspective, however,
+//   the observed differences between the subpopulations may indicate the presence of
+//   higher-order interactions between beliefs and attitudes. In @sec:discussion we
+//   demonstrated a hypothetical scenario in which such higher-order interactions
+//   result in complex intervention dynamics. As such, while these are not presently
+//   captured by the KBS model, our findings here suggest that this may be a worthwhile
+//   extension.
+//
+// In spite of relatively smaller sample sizes, our findings suggest that belief systems
+// for the conservative and liberal subsets of the dataset may differ in sparsity (the
+// proportion of missing edges) and specific belief relations, while also displaying broad
+// structural similarities. These similarities suggest, in line with previous studies,
+// that while belief systems likely vary between individuals, they also likely
+// display common structural features (e.g., based on shared experiences or world-views).
+// The observed differences in pairwise relations when stratifying by
+// political ideology suggest the presence of higher-order relations between beliefs. This
+// is to say that the existence, strength, or direction of a given relation between two
+// beliefs may depend on the specific state of a third (in this case, political ideology).
+// In @sec:discussion we
+//   demonstrated a hypothetical scenario in which such higher-order interactions
+//   result in complex intervention dynamics. As such, while these are not presently
+//   captured by the KBS model, our findings here suggest that this may be a worthwhile
+//   extension.
+//
+// ]
+
+In spite of relatively smaller sample sizes, our findings suggest that belief systems
+for the conservative and liberal subsets of the dataset may differ in sparsity (the
+proportion of missing edges) and specific belief relations, while also displaying broad
+structural similarities. These similarities suggest, in line with previous studies,
+that while belief systems likely vary between individuals, they also likely
+display common structural features (e.g., based on shared experiences or world-views).
+The observed differences in pairwise relations when stratifying by
+political ideology suggest the presence of higher-order relations between beliefs. This
+is to say that the existence, strength, or direction of a given relation between two
+beliefs may depend on the specific state of a third (in this case, political ideology).
+In @sec:discussion we
+demonstrated a hypothetical scenario in which such higher-order interactions
+result in complex intervention dynamics. As such, while these are not presently
+captured by the KBS model, our findings here suggest that this may be a worthwhile
+extension.
+
+*Should I mention the dataset validation, etc?*
+
+In addition to the limitations discussed above, the outcomes of this study suggest
+several interesting avenues for future work, not limited to: empirically validating
+the intervention dynamics predicted by our experiments, using the KBS model to
+test hypotheses about the presence and behaviour of asymmetric influences, and
+considering more realistic intervention mechanisms (e.g., which do not assume
+all beliefs/attitudes are equally easy to intervene on).
+
+
+
+
+
+
+
+
+#line(length: 100%)
 
 This study set out to address these theoretical and empirical unknowns, primarily
 investigating the prevalence and structure of asymmetric influence
@@ -24,12 +173,25 @@ ideologies (*RQ4*).
 
 To address these research questions we first introduced the *Kinetic Belief System*
 model (KBS) as an extension on the Causal Attitude Network (CAN) model
-@dalegeFormalizedAccountAttitudes2016, which: (i) supports both symmetric and asymmetric
-influence relations, enabling us to compare these assumptions under a common framework,
-and (ii) defines belief system dynamics as explicitly time-dependent and conditional on
-instantaneous beliefs and attitudes. We then calibrated this model
+@dalegeFormalizedAccountAttitudes2016. KBS differs
+from the CAN model in two important respects which make it well-suited to our
+investigation. Firstly, it crucially supports both symmetric and asymmetric influence
+relations, enabling us to compare these assumptions under a common framework. Secondly,
+it defines belief system dynamics as explicitly time-dependent and conditional on
+instantaneous beliefs and attitudes. This enables two key aspects of the current study:
+(i) the ability to examine, via simulation, the propagation of (inherently
+non-equilibrium) intervention effects over time, and (ii) to investigate how intervention
+dynamics depend on an individual's initial state.
 
-Using
+We then calibrated the KBS model to a two-wave longitudinal dataset comprising beliefs
+and attitudes about climate change in the US.
+
+Our findings demonstrate the likely existence of asymmetric influence relations, which
+are the exception rather than the norm.
+
+Our findings demonstrated that asymmetric influence between beliefs and attitudes is
+likely to exist, but is most likely the exception rather than the norm. Moreover, we
+tWe found that asymmetry is likely to exist in
 
 // To do so, we introduce the *Kinetic Belief System* model (KBS) as an extension on the
 // Causal Attitude Network (CAN) model @dalegeFormalizedAccountAttitudes2016. KBS differs
