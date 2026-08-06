@@ -36,14 +36,50 @@ intervention effectiveness, in some cases potentially impacting conclusions abou
 to intervene. These effects were most pronounced when targeting or intervening on
 variables with several asymmetric influence relations.
 
+The structural consequences of using a symmetric model when true relations are asymmetric
+are not entirely predictable. We might expect the inferred symmetric influence relations
+to be a simple average of the directed effects; however, this is flawed for X reasons:
+
++ The MLE doesn't work like that: suppose that the effect is weak in one direction
+  but the effect is realised often, and strong in other but realised rarely.
++ The interaction effects are not decided in isolation, but depend on all other
+  interactions contributing to the spin's behaviour.
+  - So depends on the other interactions, which might also be different
+  - Also depends on the interactions going into the _other_ spin, where the asymmetric
+    case just looks at the one spin.
++ Regularisation is often used to obtain sparse network representations and reduce
+  overfitting. This distorts parameter values non-linearly.
+
+Result is that:
++ We can't accurately predict interaction weight
++ Or existence!
+  - Symmetric may include or exclude interactions which are only present in
+    one direction.
+
+In reality we see:
+- Symmetric interactions are generally between asymmetric ones, but not always, and
+  not predicably in the middle
+  (due to accounting for other interaction effects in MLE, regularisation)
+- Symmetric model excludes some unidirectional interactions, and keeps others.
+
+
+//
+// Relations which are deemIn situations where the asymmetric model deems a relation
+// When an influence relations is deemed asymmetric
+// Under closer inspection of the differences between the symmetric and asymmetric models,
+// we find that
+//   We attribute the
+//   difference in dynamics between the symmetric and asymmetric models to misspecification
+//   under the symmetric model when true relations are asymmetric, showing that this can
+//   result in underestimating, overestimating, falsely including, or falsely
+//   excluding interaction effects.
+
 Our secondary investigation examined how intervention effectiveness varies among
 individuals, and potential differences between belief systems for liberal and
 conservative subpopulations. In the first case, intervention effectiveness was found
 to depend predictably on the pre-intervention state of individuals' belief systems.
-Most effective interventions required that the point-of-intervention and target both
-be different from their desired post-intervention states. While this was expected
-behaviour, we additionally found that _all_ highly effective interventions required that
-prior climate-related worry be low, suggesting that attitudes which are both highly
+Interestingly, _all_ highly effective intervention scenarios featured a low level of
+pre-intervention climate-related worry, suggesting that attitudes which are both highly
 influential and highly influentiable may serve as effective indirect pathways for various
 interventions.
 
@@ -55,10 +91,24 @@ that while belief systems likely vary between individuals, they also likely
 display common structural features (e.g., based on shared experiences or world-views).
 The observed differences in pairwise relations when stratifying by
 political ideology suggest the presence of higher-order relations between beliefs. This
-is to say that the existence, strength, or direction of a given relation between two
+is to say that the existence, strength, or direction of influence between two
 beliefs may depend on the specific state of a third (in this case, political ideology).
 
-Returning
+Returning to the primary topic of our investigation, our findings support
+the existence of asymmetric relations between beliefs and attitudes about climate change.
+Crucially, we have also demonstrated that this _matters_, both for studies concerning
+belief system structure, and those concerning belief system dynamics.
+When true relations are asymmetric, symmetric models cannot capture this and so are
+misspecified. This can cause incorrect assessments of relation
+existence and strength, which are frequently used to assess belief/attitude
+importance via node centrality indices. Moreover, this has immediate and obvious dynamic
+implications, since variables deemed
+non-influential in the symmetric model may simply be non-influentia#emph[ble]
+in reality---this was the case for political alignment/ideology in our experiments.
+
+
+
+
 
 
 #emph-block[
