@@ -4,11 +4,92 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
-*Note:*
-- Nodes considered peripheral in a symmetric model may be more central in an asymmetric
-  model.
+// NOTE:
+// - Nodes considered peripheral in a symmetric model may be more central in an asymmetric
+//   model.
 
 //*0. (Maybe) Little reminder of the gap(?)*
+
+Most studies on belief system structure or dynamics acknowledge the likelihood
+that some beliefs or attitudes may be more causally influential than others. Despite
+this, current research deals, almost universally, in belief system models which assume
+symmetric influences between beliefs and/or attitudes. Theoretical models which capture
+asymmetric relations remain scarce, as do empirical studies on the existence of such
+asymmetry and its potential implications for belief system dynamics.
+
+In this study we have addressed both theoretical and empirical shortcomings. We first
+introduced the Kinetic Belief System model (KBS) as a theory-based model of belief system
+dynamics based on the Causal Attitude Network model  @dalegeFormalizedAccountAttitudes2016,
+which: (i) _does not_ require symmetric influence and (ii) _does not_ assume equilibrium
+dynamics. We then used the KBS model, calibrated to a longitudinal dataset comprising
+beliefs and attitudes about climate change in the US, to address the four research
+questions outined in the first chapter.
+
+Our empirical investigation identified several clear asymmetric influence relations which
+appeared to be structured around a small set of highly influential attitudes (political
+views and climate-related worry). This suggests that (i) asymmetry may be the exception
+rather than the norm, and (ii) asymmetry may be better characterised in terms of the
+difference between a belief's influence and influentiability _in general_, than as a
+property of specific relations. Furthermore, our simulated intervention
+experiments demonstrated that asymmetry in a belief system can meaningfully affect
+intervention effectiveness, in some cases potentially impacting conclusions about where
+to intervene. These effects were most pronounced when targeting or intervening on
+variables with several asymmetric influence relations.
+
+Our secondary investigation examined how intervention effectiveness varies among
+individuals, and potential differences between belief systems for liberal and
+conservative subpopulations. In the first case, intervention effectiveness was found
+to depend predictably on the pre-intervention state of individuals' belief systems.
+Most effective interventions required that the point-of-intervention and target both
+be different from their desired post-intervention states. While this was expected
+behaviour, we additionally found that _all_ highly effective interventions required that
+prior climate-related worry be low, suggesting that attitudes which are both highly
+influential and highly influentiable may serve as effective indirect pathways for various
+interventions.
+
+Second, despite relatively smaller sample sizes, conservative and liberal
+belief systems differed in sparsity and specific belief relations, while
+also displaying broad structural similarities. Both findings align with those of previous
+studies using symmetric networks @leeClimateChangeBelief2024. The similarities suggest
+that while belief systems likely vary between individuals, they also likely
+display common structural features (e.g., based on shared experiences or world-views).
+The observed differences in pairwise relations when stratifying by
+political ideology suggest the presence of higher-order relations between beliefs. This
+is to say that the existence, strength, or direction of a given relation between two
+beliefs may depend on the specific state of a third (in this case, political ideology).
+
+Returning
+
+
+#emph-block[
+  An issue that was not addressed in this
+  investigation was the disentangling of within-person from between-person effects. As such
+  we cannot say whether the observed asymmetric relations are features of individual belief
+  dynamics or population-level variation. Our study is not unique in this limitation;
+  disentangling these effects has received increased attention in recent years
+  @brandtBetweenpersonMethodsProvide2022 @brandtMeasuringBeliefSystem2022, yet remains
+  difficult without substantial individual-level data. As methods
+  progress in this area we consider addressing this limitation highly important.
+]
+
+#emph-block[
+  We attribute the
+  difference in dynamics between the symmetric and asymmetric models to misspecification
+  under the symmetric model when true relations are asymmetric, showing that this can
+  result in underestimating, overestimating, falsely including, or falsely
+  excluding interaction effects.
+]
+
+#emph-block[
+  In @sec:discussion we
+  demonstrated a hypothetical scenario in which such higher-order interactions
+  result in complex intervention dynamics. As such, while these are not presently
+  captured by the KBS model, our findings here suggest that this may be a worthwhile
+  extension.
+]
+
+#line(length: 100%)
+
 
 While most studies on belief system dynamics acknowledge that some beliefs and
 attitudes may be more causally influential than others, current research practice
@@ -172,6 +253,10 @@ test hypotheses about the presence and behaviour of asymmetric influences, and
 considering more realistic intervention mechanisms (e.g., which do not assume
 all beliefs/attitudes are equally easy to intervene on).
 
+*Contribution statement:*
+- Theory: model
+- Data: validation, reusable pipeline
+- Empirical: existence, impacts.
 
 
 

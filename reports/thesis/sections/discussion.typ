@@ -20,6 +20,8 @@
   between individuals: @rodriguezCollectiveDynamicsBelief2016
   @aiyappaEmergenceSimpleComplex2024
   - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+
+  *To-do:* Discuss node centrality findings.
 ]
 
 In this chapter we review the research questions posed back in @sec:introduction
