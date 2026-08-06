@@ -488,7 +488,7 @@ who _do_ believe in climate change may nonetheless oppose climate action for oth
 reasons (e.g., cost or prioritisation), suggesting that *Action* may be less
 constrained when *Happening* is high than when it is low.
 
-*I have other limitations to discuss, but judged these as the most critical*
+//*I have other limitations to discuss, but judged these as the most critical*
 // // NOTE:
 // - _How we think about interventions:_
 //   - *A:* We have assumed that interventions can act directly, and with equal effect on
