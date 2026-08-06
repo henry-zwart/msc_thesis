@@ -4,14 +4,54 @@
 
 //*0. (Maybe) Little reminder of the gap(?)*
 
-While studies on belief system dynamics often acknowledge that certain beliefs and
-attitudes may be more causally influential than others, current research focuses
-predominantly on symmetric influence relations. Theoretical belief system models which
-capture asymmetric relations remain scarce, as do empirical studies on the existence of
-asymmetric belief relations or their potential impacts on belief system dynamics.
+While most studies on belief system dynamics acknowledge that some beliefs and
+attitudes may be more causally influential than others, current research practice
+is almost exclusively concerned with symmetric influence relations. Theoretical
+belief system models which capture asymmetric relations remain scarce, as do
+empirical studies on their existence and their potential impacts on belief
+system dynamics.
 
 //*1. Remind reader of the research questions*
 
+This study set out to address these theoretical and empirical unknowns, primarily
+investigating the prevalence and structure of asymmetric influence
+relations among climate change beliefs and attitudes in the US (*RQ1*), and the dynamic
+implications of symmetry assumptions for belief-level interventions (*RQ2*).
+The second aims of this study were to investigate how intervention effectiveness varies
+among individuals with asymmetric belief systems (*RQ3*), and how asymmetric belief
+systems may differ structurally between subpopulation with different political
+ideologies (*RQ4*).
+
+To address these research questions we first introduced the *Kinetic Belief System*
+model (KBS) as an extension on the Causal Attitude Network (CAN) model
+@dalegeFormalizedAccountAttitudes2016, which: (i) supports both symmetric and asymmetric
+influence relations, enabling us to compare these assumptions under a common framework,
+and (ii) defines belief system dynamics as explicitly time-dependent and conditional on
+instantaneous beliefs and attitudes. We then calibrated this model
+
+Using
+
+// To do so, we introduce the *Kinetic Belief System* model (KBS) as an extension on the
+// Causal Attitude Network (CAN) model @dalegeFormalizedAccountAttitudes2016. KBS differs
+// from the CAN model in two important respects.
+// Firstly, KBS supports both symmetric and asymmetric influence relations,
+// while the CAN model only supports symmetric relations.
+// Crucially, this makes it possible for us to compare these assumptions under a common
+// framework. Secondly, KBS defines belief system behaviour as explicitly time-dependent,
+// and conditional on instantaneous beliefs and attitudes, as opposed to the equilibrium
+// dynamics assumption used in the CAN model. This enables two key aspects of the present
+// study: (i) the ability to examine, via simulation the propagation of (inherently
+// non-equilibrium) intervention effects over time, and (ii) to investigate how intervention
+// dynamics depend on an individual's initial state. This contrasts previous simulation
+// studies which use the CAN model to examine how interventions affect the _equilibrium
+// state_ of a given belief/attitude.
+
+
+
+
+
+
+In this study, we set out to
 This study set out to explore the presence of asymmetric relations in beliefs and
 attitudes relating to climate change in the US (*RQ1*), and their potential consequences
 for collective interventions on belief systems (*RQ2*). The secondary aims
