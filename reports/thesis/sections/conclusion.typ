@@ -32,35 +32,35 @@ rather than the norm, and (ii) asymmetry may be better characterised in terms of
 difference between a belief's influence and influentiability _in general_, than as a
 property of specific relations. Furthermore, our simulated intervention
 experiments demonstrated that asymmetry in a belief system can meaningfully affect
-intervention effectiveness, in some cases potentially impacting conclusions about where
+intervention effectiveness, in some cases potentially changing conclusions about where
 to intervene. These effects were most pronounced when targeting or intervening on
 variables with several asymmetric influence relations.
 
-The structural consequences of using a symmetric model when true relations are asymmetric
-are not entirely predictable. We might expect the inferred symmetric influence relations
-to be a simple average of the directed effects; however, this is flawed for X reasons:
+// The structural consequences of using a symmetric model when true relations are asymmetric
+// are not entirely predictable. We might expect the inferred symmetric influence relations
+// to be a simple average of the directed effects; however, this is flawed for X reasons:
 
-+ The MLE doesn't work like that: suppose that the effect is weak in one direction
-  but the effect is realised often, and strong in other but realised rarely.
-+ The interaction effects are not decided in isolation, but depend on all other
-  interactions contributing to the spin's behaviour.
-  - So depends on the other interactions, which might also be different
-  - Also depends on the interactions going into the _other_ spin, where the asymmetric
-    case just looks at the one spin.
-+ Regularisation is often used to obtain sparse network representations and reduce
-  overfitting. This distorts parameter values non-linearly.
-
-Result is that:
-+ We can't accurately predict interaction weight
-+ Or existence!
-  - Symmetric may include or exclude interactions which are only present in
-    one direction.
-
-In reality we see:
-- Symmetric interactions are generally between asymmetric ones, but not always, and
-  not predicably in the middle
-  (due to accounting for other interaction effects in MLE, regularisation)
-- Symmetric model excludes some unidirectional interactions, and keeps others.
+// + The MLE doesn't work like that: suppose that the effect is weak in one direction
+//   but the effect is realised often, and strong in other but realised rarely.
+// + The interaction effects are not decided in isolation, but depend on all other
+//   interactions contributing to the spin's behaviour.
+//   - So depends on the other interactions, which might also be different
+//   - Also depends on the interactions going into the _other_ spin, where the asymmetric
+//     case just looks at the one spin.
+// + Regularisation is often used to obtain sparse network representations and reduce
+//   overfitting. This distorts parameter values non-linearly.
+//
+// Result is that:
+// + We can't accurately predict interaction weight
+// + Or existence!
+//   - Symmetric may include or exclude interactions which are only present in
+//     one direction.
+//
+// In reality we see:
+// - Symmetric interactions are generally between asymmetric ones, but not always, and
+//   not predicably in the middle
+//   (due to accounting for other interaction effects in MLE, regularisation)
+// - Symmetric model excludes some unidirectional interactions, and keeps others.
 
 
 //
@@ -98,8 +98,8 @@ Returning to the primary topic of our investigation, our findings support
 the existence of asymmetric relations between beliefs and attitudes about climate change.
 Crucially, we have also demonstrated that this _matters_, both for studies concerning
 belief system structure, and those concerning belief system dynamics.
-When true relations are asymmetric, symmetric models cannot capture this and so are
-misspecified. This can cause incorrect assessments of relation
+When true relations are asymmetric, the use of symmetric models amounts to
+misspecification. This can cause incorrect assessments of relation
 existence and strength, which are frequently used to assess belief/attitude
 importance via node centrality indices. Moreover, this has immediate and obvious dynamic
 implications, since variables deemed
@@ -122,13 +122,13 @@ in reality---this was the case for political alignment/ideology in our experimen
   progress in this area we consider addressing this limitation highly important.
 ]
 
-#emph-block[
-  We attribute the
-  difference in dynamics between the symmetric and asymmetric models to misspecification
-  under the symmetric model when true relations are asymmetric, showing that this can
-  result in underestimating, overestimating, falsely including, or falsely
-  excluding interaction effects.
-]
+// #emph-block[
+//   We attribute the
+//   difference in dynamics between the symmetric and asymmetric models to misspecification
+//   under the symmetric model when true relations are asymmetric, showing that this can
+//   result in underestimating, overestimating, falsely including, or falsely
+//   excluding interaction effects.
+// ]
 
 #emph-block[
   In @sec:discussion we

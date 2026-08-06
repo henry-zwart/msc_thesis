@@ -179,17 +179,25 @@ beliefs, cases where the asymmetric model specifies an interaction in only one
 direction necessarily lead to differences in model behaviour.
 This draws attention to a broader issue regarding relational symmetry assumptions.
 
-One
-of the symmetric model's key strengths is its small(er) parameter count. With fewer
+One of the symmetric model's key strengths is its small(er) parameter count. With fewer
 degrees of freedom than the asymmetric model, it can achieve more accurate parameter
 estimates when calibrated to the same dataset (i.e., smaller confidence intervals in
 @fig:calibration-edge-accuracy). However, this comes at the cost of model
-misspecification when a subset of the true relations are asymmetric. In the symmetric
-model, inferred strengths generally lie between the corresponding directional
-interaction strengths in the asymmetric model. For beliefs or attitudes with asymmetric
-relations we found that this can result in substantial differences in influentiality
-and influentiability between the two models.
-
+misspecification when a subset of the true relations are asymmetric. We might expect
+the inferred symmetric influence relations to be similar to the average of the
+corresponding directed effects, yet this reasoning turns out to be flawed for at least
+two reasons. Firstly, interaction effects are not estimated in isolation, but jointly
+with all other parameters which influencing the same spin (or _both_ spins in the
+symmetric case). Hence, when one interaction parameter changes---for instance, if we
+replace a pair of asymmetric interactions by their average---the rest are likely to
+change as well. Secondly, regularisation is often used to obtain sparse network
+representations and reduce overfitting, and distorts parameter values non-linearly
+in the process. In reality we find that while most symmetric interactions lie between
+their asymmetric analogues, this is not always the case, and those that are do not
+fall predictably near the middle. As observed in the case of political
+ideology/alignment, the symmetric model may also exclude pairwise interactions
+altogether, or create a (bi-)directional interaction where influence actually
+flows unidirectionally.
 
 #show-rq(3, RQ3) <discussion-rq3>
 
