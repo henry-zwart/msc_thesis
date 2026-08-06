@@ -111,10 +111,10 @@ equally amenible to testing pre-existing hypotheses about beliefs or attitudes w
 more (or less) influential than they are subject to influence. Secondly, in the previous
 chapter we discussed a hypothetical example in which higher-order interactions result in
 complex intervention dynamics. Though not currently captured by the KBS model, our
-findings from the comparison of conservative and liberal belief systems suggest this may
+comparison of the conservative and liberal belief systems suggests this may
 be a worthwhile extension. Relatedly, although we have only considered interventions
 targeting belief and attitude _states_, there is evidence to suggest that amplifying
-certain associations between pre-existing beliefs (rather than trying to change them
+certain _associations_ between pre-existing beliefs (rather than trying to change them
 directly) may be effective in the context of vaccination
 @brewerIncreasingVaccinationPutting2017. Finally,
 - Maybe empirical validation and within-person
