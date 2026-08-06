@@ -97,30 +97,72 @@ beliefs may depend on the specific state of a third (in this case, political ide
 Returning to the primary topic of our investigation, our findings support
 the existence of asymmetric relations between beliefs and attitudes about climate change.
 Crucially, we have also demonstrated that this _matters_, both for studies concerning
-belief system structure, and those concerning belief system dynamics.
-When true relations are asymmetric, the use of symmetric models amounts to
-misspecification. This can cause incorrect assessments of relation
-existence and strength, which are frequently used to assess belief/attitude
-importance via node centrality indices. Moreover, this has immediate and obvious dynamic
-implications, since variables deemed
-non-influential in the symmetric model may simply be non-influentia#emph[ble]
-in reality---this was the case for political alignment/ideology in our experiments.
+belief system structure, and those concerning belief system dynamics. When true relations
+are asymmetric, the use of symmetric models amounts to misspecification. This can cause
+incorrect assessments of relation existence and strength, which are frequently used to
+assess belief/attitude importance via node centrality indices. Moreover, this has
+immediate and obvious dynamic implications, since variables deemed non-influential in the
+symmetric model may simply be non-influentia#emph[ble] in reality---this was the case for
+political alignment/ideology in our experiments.
+
+As we draw to a close, our findings invite continued investigation in several respects.
+Firstly, though we have used the KBS model here to identify asymmetric influence, it is
+equally amenible to testing pre-existing hypotheses about beliefs or attitudes which are
+more (or less) influential than they are subject to influence. Secondly, in the previous
+chapter we discussed a hypothetical example in which higher-order interactions result in
+complex intervention dynamics. Though not currently captured by the KBS model, our
+findings from the comparison of conservative and liberal belief systems suggest this may
+be a worthwhile extension. Relatedly, although we have only considered interventions
+targeting belief and attitude _states_, there is evidence to suggest that amplifying
+certain associations between pre-existing beliefs (rather than trying to change them
+directly) may be effective in the context of vaccination
+@brewerIncreasingVaccinationPutting2017. Finally,
+- Maybe empirical validation and within-person
+- Or maybe just within-person
+
+
+
+// NOTE:
+// While our results are promising, several questions remain. First and foremost, additional
+// work is required to establish the extent to which the inferred belief systems (and hence,
+// our findings regarding symmetry) reflect within-person associations as opposed to
+// between-person associations. Our study is not unique in this respect; disentangling these
+// effects has received increased attention in recent years @brandtBetweenpersonMethodsProvide2022
+// @brandtMeasuringBeliefSystem2022, yet remains difficult without substantial
+// individual-level data. As methods progress in this area we consider addressing this
+// question highly important. Secondly, our findings have suggested several hypotheses
+// regarding intervention effectiveness (e.g., "_which_ interventions are most effective
+// when targeting attitudes toward climate action?"). At present, these results serve to
+// demonstrate dynamic differences between symmetric and asymmetric models.
+// Empirical validation through a controlled intervention study would lend weight to this
+// result, in addition to establishing the degree to which the model dynamics reflect
+// actual behaviour. Thirdly, in @sec:discussion we discussed a hypothetical scenario in
+// which higher-order interactions result in complex intervention dynamics. We found
+// evidence of such interactions during our comparison of conservative and liberal belief
+// systems, suggesting that, while higher-order interactions are not presently captured by
+// the KBS model, this may be a worthwhile extension. Similarly, while we only considered
+// interventions targeting beliefs and attitudes, we expect that interventions targeting
+// interactions _between_ beliefs would be an interesting progression.
+
+
+// KBS model invites research:
+// - Testing hypotheses about the existence of specific asymmetric relations
+// -
 
 
 
 
 
-
-#emph-block[
-  An issue that was not addressed in this
-  investigation was the disentangling of within-person from between-person effects. As such
-  we cannot say whether the observed asymmetric relations are features of individual belief
-  dynamics or population-level variation. Our study is not unique in this limitation;
-  disentangling these effects has received increased attention in recent years
-  @brandtBetweenpersonMethodsProvide2022 @brandtMeasuringBeliefSystem2022, yet remains
-  difficult without substantial individual-level data. As methods
-  progress in this area we consider addressing this limitation highly important.
-]
+// #emph-block[
+//   An issue that was not addressed in this
+//   investigation was the disentangling of within-person from between-person effects. As such
+//   we cannot say whether the observed asymmetric relations are features of individual belief
+//   dynamics or population-level variation. Our study is not unique in this limitation;
+//   disentangling these effects has received increased attention in recent years
+//   @brandtBetweenpersonMethodsProvide2022 @brandtMeasuringBeliefSystem2022, yet remains
+//   difficult without substantial individual-level data. As methods
+//   progress in this area we consider addressing this limitation highly important.
+// ]
 
 // #emph-block[
 //   We attribute the
@@ -130,13 +172,13 @@ in reality---this was the case for political alignment/ideology in our experimen
 //   excluding interaction effects.
 // ]
 
-#emph-block[
-  In @sec:discussion we
-  demonstrated a hypothetical scenario in which such higher-order interactions
-  result in complex intervention dynamics. As such, while these are not presently
-  captured by the KBS model, our findings here suggest that this may be a worthwhile
-  extension.
-]
+// #emph-block[
+//   In @sec:discussion we
+//   demonstrated a hypothetical scenario in which such higher-order interactions
+//   result in complex intervention dynamics. As such, while these are not presently
+//   captured by the KBS model, our findings here suggest that this may be a worthwhile
+//   extension.
+// ]
 
 #line(length: 100%)
 
