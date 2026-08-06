@@ -39,15 +39,14 @@ analysis of the calibrated models, and investigated the consequences of asymmetr
 intervention dynamics by comparing simulated outcomes with those of an analogous
 symmetric model using common random numbers.
 
-
-Our investigation identified several apparent cases of asymmetry. Among these,
-political ideology/alignment and climate-related worry were consistently identified as
-having excess influence on other variables. This suggests that asymmetry
-is likely to exist within belief systems, and may be better characterised in terms of
-the difference between a given belief's influence and influentiability in general, than
-as a property of particular relations. Most relations were
-not conclusively asymmetric, indicating that asymmetry may be the exception as opposed
-to the norm. An issue that was not addressed in this
+Our investigation identified several cases of asymmetry, among which political
+views and cliamte-related worry consistently displayed excess influence over other
+variables. These findings provide evidence for the existence of asymmetric influence
+in belief systems, and suggest that this may be better characterised in terms
+of differences between a belief's influence and influentiability in general, than as
+a property of pairwise relations. Furthermore, the results indicate that asymmetry
+may be the exception as opposed to the norm.
+An issue that was not addressed in this
 investigation was the disentangling of within-person from between-person effects. As such
 we cannot say whether the observed asymmetric relations are features of individual belief
 dynamics or population-level variation. Our study is not unique in this limitation;
@@ -56,20 +55,40 @@ disentangling these effects has received increased attention in recent years
 difficult without substantial individual-level data. As methods
 progress in this area we consider addressing this limitation highly important.
 
-// Asymmetry was found to significantly impact simulated intervention dynamics, particularly
-// when targeting or intervening on asymmetric beliefs or attitudes. with both
-// of the previously-identified 'high influence' attitudes demonstrating increased overall
-// effectiveness as points-of-intervention in the asymmetric model.
-We found that assumptions regarding belief system symmetry or asymmetry can significantly
-impact model dynamics in intervention scenarios.  Both of the 'high-influence' attitudes
-identified in our initial investigation demonstrated increased overall effectiveness as
-points-of-intervention in asymmetric models. The evidence from these experiments suggests
-that asymmetry can meaningfully impact belief system dynamics, and assumptions of
-symmetry can, in some cases, change simulation-based conclusions about intervention
-strategy. We attribute the difference between the symmetric and asymmetric model dynamics
-to misspecification under the symmetric model when true relations are symmetric, showing
-that this can lead to underestimating, overestimating, falsely including, or falsely
+// Our investigation identified several apparent cases of asymmetry. Among these,
+// political ideology/alignment and climate-related worry were consistently identified as
+// having excess influence on other variables. This suggests that asymmetry
+// is likely to exist within belief systems, and may be better characterised in terms of
+// the difference between a given belief's influence and influentiability in general, than
+// as a property of particular relations. Most relations were
+// not conclusively asymmetric, indicating that asymmetry may be the exception as opposed
+// to the norm. An issue that was not addressed in this
+// investigation was the disentangling of within-person from between-person effects. As such
+// we cannot say whether the observed asymmetric relations are features of individual belief
+// dynamics or population-level variation. Our study is not unique in this limitation;
+// disentangling these effects has received increased attention in recent years
+// @brandtBetweenpersonMethodsProvide2022 @brandtMeasuringBeliefSystem2022, yet remains
+// difficult without substantial individual-level data. As methods
+// progress in this area we consider addressing this limitation highly important.
+
+Asymmetry was found to significantly impact simulated intervention dynamics, particularly
+when targeting or intervening on asymmetric beliefs or attitudes. These findings suggest
+that asymmetry can meaningfully impact belief system dynamics, and that assumptions of
+symmetry can, in some cases, change strategic intervention decisions. We attribute the
+difference in dynamics between the symmetric and asymmetric models to misspecification
+under the symmetric model when true relations are asymmetric, showing that this can
+result in underestimating, overestimating, falsely including, or falsely
 excluding interaction effects.
+// We found that assumptions regarding belief system symmetry or asymmetry can significantly
+// impact model dynamics in intervention scenarios.  Both of the 'high-influence' attitudes
+// identified in our initial investigation demonstrated increased overall effectiveness as
+// points-of-intervention in asymmetric models. The evidence from these experiments suggests
+// that asymmetry can meaningfully impact belief system dynamics, and assumptions of
+// symmetry can, in some cases, change simulation-based conclusions about intervention
+// strategy. We attribute the difference between the symmetric and asymmetric model dynamics
+// to misspecification under the symmetric model when true relations are symmetric, showing
+// that this can lead to underestimating, overestimating, falsely including, or falsely
+// excluding interaction effects.
 
 // #emph-block[
 //   Turning to our secondary aims, we found that variations in intervention effectiveness
