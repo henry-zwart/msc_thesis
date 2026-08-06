@@ -13,10 +13,11 @@
 //   - RQ3: That interventions can only be effective when the target and the
 //     point-of-intervention are both low.
 
-#emph-block[
-  Understanding exogenous influences on belief systems and attitudes
-  @coppockBeliefSystemsExhibit2022
-]
+// NOTE:
+// #emph-block[
+//   Understanding exogenous influences on belief systems and attitudes
+//   @coppockBeliefSystemsExhibit2022
+// ]
 
 // #emph-block[
 //   Richness of _perceptions_ of others beliefs:
