@@ -7,7 +7,6 @@
 #show: show-theorion
 
 *TODO:*
-- Discuss how all interaction terms are positive.
 - Discuss differences in baseline activations.
 
 Before proceeding, let's take a moment to calibrate
@@ -40,16 +39,27 @@ the models explain the data?').
 for each model. We only display the upper triangular portion of the symmetric model's
 matrix, since each pair of spins in this model has a single, bidirectional relation.
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
-with respect to the modelled timescale#timescale-footnote (they are 'sticky'). This is
-particularly true for `Politics`, and less so for `CC Others Worry` and `CC Impact`.
+with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
+is consistent with prior studies looking at the rate of change for beliefs/attitudes
+@greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.
+This is particularly true for `Politics`, and less so for `CC Others Worry` and
+`CC Impact`.
 
-#emph-block[
-  Stability of belief dynamics:
-  - @osborneDoesOpennessExperience2020
-  - @kileyMeasuringStabilityChange2020
-    - Most observed change in beliefs and behaviours is short-term (or measurement error)
-    - This is consistent with the cognitive dissonance theory
-]
+Observe that all interaction effects are non-negative. This is by design; we have
+re-coded the dataset variables such that this is the case. The fact that such
+a re-coding exists implies that it is possible, within this belief system, to hold
+a set of beliefs and attitudes which are internally consistent, i.e., with no cognitive
+dissonance. We provide a formal proof of this statement in @sec:appendix-derivations.
+
+
+
+// #emph-block[
+//   Stability of belief dynamics:
+//   - @osborneDoesOpennessExperience2020
+//   - @kileyMeasuringStabilityChange2020
+//     - Most observed change in beliefs and behaviours is short-term (or measurement error)
+//     - This is consistent with the cognitive dissonance theory
+// ]
 
 
 #figure(

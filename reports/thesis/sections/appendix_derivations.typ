@@ -1,6 +1,11 @@
 = Derivations <sec:appendix-derivations>
 
 
+== Model
+
+=== Positive edges implying consistency possible
+
+
 == Parameter estimation
 
 === Log-likelihood
