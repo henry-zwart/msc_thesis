@@ -44,7 +44,7 @@ def main(df: pl.DataFrame, labels: list[str]):
     mask_contemporaneous = np.triu(np.ones_like(var_contemporaneous, dtype=np.bool))
     fig, axes = plt.subplots(
         ncols=2,
-        figsize=(5.77, 3.5),
+        figsize=(5.77, 5),
         constrained_layout=True,
         sharey=True,
         gridspec_kw=dict(
@@ -56,6 +56,7 @@ def main(df: pl.DataFrame, labels: list[str]):
     )
     cbar_ax_contemp = axes[0].inset_axes([0.75, 1.05, 0.25, 0.03])
     cbar_ax_contemp.tick_params(labelsize=7, length=2)
+    mask_contemporaneous[np.abs(var_contemporaneous) < 0.05] = 1
     sns.heatmap(
         var_contemporaneous[:, :-1],
         mask=mask_contemporaneous[:, :-1],
@@ -81,6 +82,7 @@ def main(df: pl.DataFrame, labels: list[str]):
     cbar_ax_temporal = axes[1].inset_axes([0.75, 1.05, 0.25, 0.03])
     cbar_ax_temporal.tick_params(labelsize=7, length=2)
     mask_temporal = np.zeros_like(var_temporal, dtype=np.bool)
+    mask_temporal[np.abs(var_temporal) < 0.05] = 1
     sns.heatmap(
         var_temporal,
         mask=mask_temporal,
@@ -107,24 +109,25 @@ def main(df: pl.DataFrame, labels: list[str]):
     cbar_ax_temporal.set_xticks([-0.4, 0.0, 0.4])
 
     for ax in axes:
-        ax.tick_params(axis="both", labelsize=7, length=0)
+        ax.tick_params(axis="both", labelsize=7.5, length=0)
 
     axes[0].set_xticks(
         np.arange(len(labels_contemp) - 1) + 0.5,
         labels_contemp[:-1],
-        rotation=50,
-        horizontalalignment="right",
+        rotation=90,
     )
     axes[1].set_xticks(
         np.arange(len(labels_temporal)) + 0.5,
         labels_temporal,
-        rotation=50,
-        horizontalalignment="right",
+        rotation=90,
     )
     axes[0].set_yticks(np.arange(len(labels_contemp)) + 0.5, labels_contemp, rotation=0)
     # axes[1].set_yticks(
     #     np.arange(len(labels_temporal) - 1) + 1.5, labels_temporal[1:], rotation=0
     # )
+
+    axes[0].set_title("Contemporaneous")
+    axes[1].set_title("Temporal")
     fig.savefig(
         "reports/thesis/results/figures/dataset/full_subset_var.pdf",
         bbox_inches="tight",

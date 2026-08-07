@@ -56,6 +56,7 @@
 
 #let derivation-appendix = include "sections/appendix_derivations.typ"
 #let extra-results-appendix = include "sections/appendix_extra_results.typ"
+#let dataset-appendix = include "sections/appendix_dataset.typ"
 
 #show: thesis.with(
   title: title,
@@ -72,7 +73,7 @@
   references: bibliography("references.bib", style: "apa"),
   additional-frontmatter: (),
   signature: signature,
-  appendices: (derivation-appendix, extra-results-appendix),
+  appendices: (derivation-appendix, extra-results-appendix, dataset-appendix),
 )
 
 // = Notes (things to remember, to-dos)
