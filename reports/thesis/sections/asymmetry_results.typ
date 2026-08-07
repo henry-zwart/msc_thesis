@@ -170,6 +170,10 @@ $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
 $#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$; the only pair with a single
 directional interaction is $#raw("Politics") -> #raw("CC Real")$.
 
+Comparing directional strength and degree centrality indices for `CC Worry` and
+`Politics` across bootstrapped models, we find significant differences ($p < 0.05$) for
+strength centrality on `CC Worry`, and both strength and degree centrality on `Politics`.
+
 Most directional differentials display substantial uncertainty (confidence
 interval width $> 0.1$ on average), reflecting the parameter accuracy discussed in the
 previous chapter (@fig:calibration-edge-accuracy). This results in several inconclusive
@@ -217,16 +221,16 @@ it is asymmetrically _influenced_ by `Politics`.
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
 
-*TODO:*
-- Discuss how the observed effects of intervening on politics are _in spite of_
-  the high inertia on this variable. i.e., high inertia lowers the pre-intervention
-  $h_"eff"$, making it harder to intervene (higher barrier to surpass).
-- Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
-  lower for the asymmetric model. Since all outbound interactions are similar (or
-  better) than `Politics`, with the exception of `CC Action`, indicates that
-  the added difficulty of overcoming the barrier on politics is outweighed by
-  the greater influence on the target. Also perhaps due to the fact that the
-  inertia works in favour of the intervention once politics flips.
+// *TODO:*
+// - Discuss how the observed effects of intervening on politics are _in spite of_
+//   the high inertia on this variable. i.e., high inertia lowers the pre-intervention
+//   $h_"eff"$, making it harder to intervene (higher barrier to surpass).
+// - Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
+//   lower for the asymmetric model. Since all outbound interactions are similar (or
+//   better) than `Politics`, with the exception of `CC Action`, indicates that
+//   the added difficulty of overcoming the barrier on politics is outweighed by
+//   the greater influence on the target. Also perhaps due to the fact that the
+//   inertia works in favour of the intervention once politics flips.
 // - $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
 //   intervention differs between symmetric and asymmetric models calibrated to the
 //   climate beliefs dataset. _Re-state the corresponding research question_.
