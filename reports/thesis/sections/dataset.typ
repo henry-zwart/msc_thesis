@@ -6,8 +6,6 @@
 #show: show-theorion
 
 
-#let full-dataset-name = [*placeholder dataset*]
-#let dataset-name = [climate beliefs dataset]
 
 *TODO:*
 - Create table describing climate beliefs dataset variables
@@ -85,22 +83,21 @@ targeted dataset used for model calibration (@sec:methods).
 While many empirical studies on belief systems rely on cross-sectional data
 @leeVariationsClimateChange2025 @vannoordNatureStructureEuropean2025
 @powellModelingLeveragingIntuitive2023, longitudinal data is necessary to capture
-changes in individuals' internal cognitive states over time. In fact, repeated
-per-individual observations are essential to our adopted method for model calibration.
-We are fortunate, in this study, to have had access to a longitudinal dataset on
-climate beliefs and attitudes in USA as our primary data resource.
-
-The longitudinal study (*CITE*) comprises six waves of responses from individuals
-residing in the United States, collected between
+changes in individuals' internal cognitive states over time. In this study we are
+fortunate to have had access to data from the *Longitudinal Panel of Perceptions About
+Climate Change and Covid* (*CCCV*), a representative longitudinal survey comprising six
+waves of responses from individuals residing in the United States, collected between
 #survey_start_date.display("[month repr:long] [year]") and
-#survey_end_date.display("[month repr:long] [year]"). The assessed dimensions include
-general demographic information (e.g., age, gender, education, and financial status),
-beliefs, attitudes, and experiences relating to concurrently-salient topics such as
-COVID-19, climate change, or the 2020 US presidential election, and support for
-hypothetical policies. In addition to a wide-form table of survey response data, the
-dataset includes a codebook which specifies, for each survey item, the question text,
-occurrence in survey waves, and conditional display logic where applicable. At present,
-the codebook is limited to Waves 1---5, i.e., excluding the sixth (final) wave.
+#survey_end_date.display("[month repr:long] [year]")
+(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose")). The assessed
+dimensions include general demographic information (e.g., age, gender, education, and
+financial status), beliefs, attitudes, and experiences relating to concurrently-salient
+topics such as COVID-19, climate change, or the 2020 US presidential election, and
+support for hypothetical policies. In addition to a wide-form table of survey response
+data, the dataset includes a codebook which specifies, for each survey item, the
+question text, occurrence in survey waves, and conditional display logic where
+applicable. At present, the codebook is limited to Waves 1---5, i.e., excluding the
+sixth (final) wave.
 
 However, the dataset is not without complexities. Survey participation varies, with
 each participant responding to a (possibly non-contiguous) subset of waves.
@@ -113,10 +110,11 @@ Waves 1 and 2, and only \~1900 of these individuals also responded to Wave 3.
 #figure(
   image("../results/figures/dataset/participation.pdf"),
   caption: caption(
-    short: [Survey participation counts],
+    short: [CCCV survey participation],
     long: [
-      Number of repeat participants for different wave combinations. Combinations with
-      total responses below 1500 have been removed.
+      Number of repeat participants for different wave combinations in the Longitudinal
+      Panel of Perceptions About Climate Change and Covid dataset, prior to dataset
+      cleaning. Excludes combinations with fewer than 1500 responses.
     ],
   ),
 ) <fig:dataset-survey-participation>
@@ -157,15 +155,19 @@ closer than others. For instance, notice that:
       1 and 2.
   ]
 }
-This poses a potential problem for model calibration, since the non-equilibrium
-belief model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
+This poses a potential problem for model calibration, since the Kinetic Belief System
+model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
 samples are equispaced.
 
 #figure(
   image("../results/figures/dataset/response_eventplot.pdf"),
   caption: caption(
-    short: [Longitudinal survey response dates per-wave],
-    long: [*TODO*],
+    short: [CCCV survey response dates],
+    long: [
+      Per-wave survey response dates for the Longitudinal Panel of Perceptions About
+      Climate Change and Covid dataset (prior to dataset cleaning). Annotations
+      illustrate differences in intervals spanned by/between survey waves.
+    ],
   ),
 ) <fig:dataset-longitudinal-response-eventplot>
 
@@ -175,7 +177,15 @@ responses for different participants.
 
 #figure(
   image("../results/figures/dataset/interresponse_times.pdf"),
-  caption: [Between-response time distribution],
+  caption: caption(
+    short: [CCCV survey inter-response time distribution],
+    long: [
+      Inter-response time distribution between each pair of consecutive waves in the
+      Longitudinal Panel of Perceptions About Climate Change and Covid dataset (prior to
+      dataset cleaning). The inter-response time between two waves is calculated,
+      for individuals present in both waves, as the number of days between their responses.
+    ],
+  ),
 ) <fig:dataset-longitudinal-interresponse-times>
 
 
@@ -184,8 +194,8 @@ several notable events which could reasonably be expected to influence --- and
 confound --- the dynamics of beliefs and attitudes in myriad contexts. These
 include the COVID-19 pandemic, which arrived in the US only three months prior to the
 first survey wave @holshueFirstCase20192020, the 2020 US Presidential Election which
-occurred during Wave 3, the January 6 United States Capitol Attack, which occurred
-between Waves 3 and 4, ...
+occurred during Wave 3, and the January 6 United States Capitol Attack, which occurred
+between Waves 3 and 4.
 
 == Data Validation <sec:dataset-validation>
 
@@ -221,11 +231,18 @@ For instance, categorical multiple-choice responses are represented using a
 response column comprises ```python list```'s, and (ii) that all list elements belong to
 the set of values defined by the ```python Enum```.
 
+//#set table(stroke: (x, y) => (y: if y in (0,1) { 0.5pt } else { 0pt }))
+// #set table(
+//   inset: (x: 6pt, y: 4pt),
+// )
+#show table: set text(size: 10pt)
 #figure(
   table(
     columns: (auto, auto, auto),
-    align: (center, center, center),
-    [Response schema], [Raw type], [Coerced type],
+    align: (left, center, center),
+    stroke: none,
+    table.header[Response format][Raw type][Coerced type],
+    table.hline(stroke: 0.5pt),
     [Text], [```python str```], [```python str```],
     [Single response (ordinal)], [```python int```], [```python int```],
     [Single response (categorical)], [```python int```], [```python Enum```],
@@ -234,8 +251,11 @@ the set of values defined by the ```python Enum```.
   ),
   placement: auto,
   caption: caption(
-    short: [Dataset type coercion mapping],
-    long: [*TODO*],
+    short: [CCCV survey type coercion mapping],
+    long: [
+      Data type coercion mapping for different question types in the Longitudinal Panel
+      of Perceptions About Climate Change and Covid survey.
+    ],
   ),
 ) <tab:dataset-types>
 
@@ -329,12 +349,8 @@ of the data from Wave 6, and exclude this wave from the present study.
 
 All type-level and response-value validation checks succeed, providing a strong
 guarantee that the data schema matches our expectations per the codebook. We do,
-however, encounter several problems during null-value validation.
-
-#emph-block[
-  Acknowledge Sara and team for help diagnosing the errors, per the declaration
-  of authorship.
-]
+however, encounter several problems during null-value validation. Sara Constantino's
+guidance was instrumental in the process of diagnosing these problems.
 
 In some cases, these were due to errors in the codebook itself. These errors are
 relatively straightforward to identify from the null-value validation results, since
@@ -350,20 +366,26 @@ the population (in this case, the individuals in a particular treatment class).
 // Possible that this is actually a codebook error or something.
 In other cases we identify contradictions which are due to errors in the survey
 process, which caused certain survey questions to be displayed to some individuals
-in conditions which did not satisfy the specified survey logic. Some such cases
-were systematic, affecting all individuals until the survey process was updated;
-however, in other cases we have not been able to identify the source of the error.
+in conditions which did not satisfy the specified survey logic.
+@fig:dataset-validation-null-value-switchpoints shows examples observed in Waves
+2 and 3. Some cases were systematic, affecting all individuals until the survey process
+was updated (_left_); however, in other cases we have not been able to identify the
+source of the error (_right_).
+We exclude all responses which fail the null-value validation from further analysis in
+the data cleaning stage (@subsec:dataset-preprocessing-cleaning).
 
 #figure(
   image("../results/figures/dataset/validation_switchpoints.pdf"),
   caption: caption(
-    short: [Null-value validation],
-    long: [*TODO*],
+    short: [CCCV survey null-value validation errors],
+    long: [
+      Systematic (_left_) and unresolved (_right_) null-value validation errors
+      identified in Waves 2 and 3 of the Longitudinal Panel of Perceptions About
+      Climate Change and Covid survey.
+    ],
   ),
 ) <fig:dataset-validation-null-value-switchpoints>
 
-We exclude all responses which fail the null-value validation from further analysis in
-the data cleaning stage (@subsec:dataset-preprocessing-cleaning).
 
 The described validation process is primarily concerned with ensuring that the data
 schema --- comprising types and values --- aligns with our expectations as per the
@@ -566,10 +588,11 @@ codebook) with survey response data.
   caption: caption(
     short: [Constructed survey database diagram],
     long: [
-      The survey database comprises tables for survey items (underlying
+      The constructed survey database comprises tables for survey items (underlying
       concepts assessed in the survey), survey questions (the particular mode in which
       an item is assessed in a given wave or treatment condition), survey responses,
-      and participants.
+      and participants. Arrows denote data hierarchy, e.g., each response belongs to
+      a participant, and is associated with a particular survey question.
     ],
   ),
 ) <fig:dataset-preprocessing-transformations-database-diagram>
@@ -585,8 +608,9 @@ question as well as a _survey participant_. We include a separate table for part
 which records wave participation as well as the initial wave in which a participant has
 responded.
 
-The database is stored on disk as a collection of parquet files @Parquet, which
-preserve complex data type information and are supported in both R (e.g., using
+The database is stored on disk as a collection of parquet files, which
+preserve complex data type information, including those in @tab:dataset-types, and are
+supported in both R (e.g., using
 #link("https://arrow.apache.org/docs/r/reference/read_parquet.html")[Arrow]) and Python
 (e.g., using
 #link("https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html")[Pandas]
@@ -624,11 +648,11 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 
 #set text(fill: luma(120))
 
-In light of the complexities and breadth of content of the #full-dataset-name, we
+In light of the complexities and breadth of content of the CCCV, we
 construct a smaller, targeted dataset of beliefs and attitudes relating to climate
 change, which we expect -- on theoretical grounds -- to exhibit interdependent
-behaviour. We will refer to this targeted dataset as the #strong[#dataset-name]. The
-primary motivator for constructing this dataset is the calibration of the
+behaviour. We will refer to this targeted dataset as the *climate beliefs dataset*.
+The primary motivator for constructing this dataset is the calibration of the
 non-equilibrium belief system model (@subsec:methods-parameter-estimation).
 
 We aim for 7--10 variables in the final set, so as to keep both the number of model

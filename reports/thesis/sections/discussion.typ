@@ -262,6 +262,12 @@ support for climate policy and related attitudes @grometPoliticalIdeologyAffects
 
 #show-rq(4, RQ4) <discussion-rq4>
 
+*Note:*
+Variation in belief systems between individuals:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
 conservative and liberal subpopulations; however, given the smaller sample sizes used

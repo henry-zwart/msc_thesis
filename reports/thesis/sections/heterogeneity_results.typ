@@ -425,15 +425,7 @@ so long as they do not already have a positive attitude toward climate action.
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
 *To-do:*
-- Include directional differential figure per-ideology (as in
-  @fig:asymmetry-results-existence-ranked-differentials).
 - Discuss differences in baseline activations.
-
-*Note:*
-Variation in belief systems between individuals:
-- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
-  time, and political contexts", "Although ... belief systems are at the individuals level,
-  this does not mean that structure is not shared"
 
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs and attitudes are inherently

@@ -4,8 +4,13 @@
 #import cosmos.fancy: *
 #show: show-theorion
 
+
 A collection of notes, to-do items, discussion points, and snippets taken from old
 drafts. This section is temporary, and for my own benefit :)
+
+== Questions for Vítor
+
+Is it correct to acknowledge Sara directly in the dataset validation section?
 
 == Politics --> Policy narrative
 
