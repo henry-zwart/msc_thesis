@@ -7,10 +7,6 @@
 
 
 
-*TODO:*
-- Create table describing climate beliefs dataset variables
-- Discuss how we create the index variables
-
 // == Plan
 //
 // + Introduce and motivate:
@@ -791,45 +787,45 @@ climate beliefs dataset.
   placement: auto,
 ) <fig:dataset-reduced-var>
 
+#let climate-beliefs-variable-table = table(
+  columns: 3,
+  stroke: none,
+  align: (left, center, left),
+  table.header[Item][Index][Interpretation],
+  table.hline(stroke: 0.5pt),
+  [CC Real], [No], [Belief that climate change is/is not real.],
+
+  [CC Human],
+  [No],
+  [Belief that climate is/is not caused (at least in-part) by human activities.],
+
+  [CC Worry],
+  [No],
+  [Level of worry about current and future climate change.],
+
+  [CC Others Worry],
+  [No],
+  [Belief regarding _others'_ level of worry about current and future climate change.],
+
+  [Weather Worry],
+  [No],
+  [Level of worry about possible near-term extreme weather events or natural disasters.],
+
+  [Politics],
+  [Yes],
+  [Political views, as a combination of partisan alignment and political ideology.],
+
+  [CC Impact],
+  [Yes],
+  [Belief regarding the degree of current climate change impacts, in general.],
+
+  [CC Action],
+  [Yes],
+  [General attitude toward action on climate change.],
+)
+
 #figure(
-  {
-    table(
-      columns: 3,
-      stroke: none,
-      align: (left, center, left),
-      table.header[Item][Index][Interpretation],
-      table.hline(stroke: 0.5pt),
-      [CC Real], [No], [Belief that climate change is/is not real.],
-
-      [CC Human],
-      [No],
-      [Belief that climate is/is not caused (at least in-part) by human activities.],
-
-      [CC Worry],
-      [No],
-      [Level of worry about current and future climate change.],
-
-      [CC Others Worry],
-      [No],
-      [Belief regarding _others'_ level of worry about current and future climate change.],
-
-      [Weather Worry],
-      [No],
-      [Level of worry about possible near-term extreme weather events or natural disasters.],
-
-      [Politics],
-      [Yes],
-      [Political views, as a combination of partisan alignment and political ideology.],
-
-      [CC Impact],
-      [Yes],
-      [Belief regarding the degree of current climate change impacts, in general.],
-
-      [CC Action],
-      [Yes],
-      [General attitude toward action on climate change.],
-    )
-  },
+  climate-beliefs-variable-table,
   gap: 1em,
   caption: caption(
     short: [Climate beliefs dataset variables],

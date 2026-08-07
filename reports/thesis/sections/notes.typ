@@ -10,7 +10,8 @@ drafts. This section is temporary, and for my own benefit :)
 
 == Questions for Vítor
 
-Is it correct to acknowledge Sara directly in the dataset validation section?
+- Is it correct to acknowledge Sara directly in the dataset validation section?
+- How much do I need to say about the climate beliefs dataset in the calibration section?
 
 == Additional things to maybe discuss somewhere
 

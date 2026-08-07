@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./dataset.typ": climate-beliefs-variable-table
 
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
@@ -6,8 +7,54 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
+// #let full-details-footnote = footnote[
+//   Full details regarding the validation, cleaning, and construction of the climate
+//   beliefs dataset are provided in @sec:dataset.
+// ]
+
 *TODO:*
 - Discuss differences in baseline activations.
+
+The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
+and attitudes relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
+extracted from the CCCV survey
+(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose"). The dataset
+includes responses from 1693 repeating participants, measured during waves 3 and 4 of
+the survey. We map the maximum and minimum (possible) values for each variable to $+1$
+and $-1$ respectively, such that these reflect the two spin states in the KBS model.
+
+
+
+#figure(
+  {
+    show table: set text(size: 10pt)
+    climate-beliefs-variable-table
+  },
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables (replicated)],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$. Note that this table is identical to
+      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+    ],
+  ),
+) <tab:calibration-climate-beliefs-dataset-items>
+
+#figure(
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions (replicated)],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+      is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+    ],
+  ),
+  placement: auto,
+) <fig:calibration-marginal-distributions>
+
 
 Before proceeding, let's take a moment to calibrate
 and evaluate the models which will be used in the upcoming experiments. Using the
