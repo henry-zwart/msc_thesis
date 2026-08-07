@@ -151,12 +151,19 @@ possible future states.
 *TODO:*
 - Builds on the CAN model, also known as the 'Ising model of attitudes'
   @vandermaasPolarizationIndividualsHierarchical2020
-- Self-interaction term. Has two roles:
-  + Captures the timescale of the data; how quickly/slowly beliefs change
-  + Allows beliefs to be persistent in and of themselves. Consider that without
-    self-interactions, a node with only outbound edges would be entirely set be
-    its baseline activation. Self-interactions allow beliefs to be sticky, independently
-    of others.
+  - Also @brandtEvaluatingBeliefSystem2021
+- Points of contrast:
+  - Asymmetric interactions
+  - Self-interactions
+- @brandtEvaluatingBeliefSystem2021 also uses transition probabilities like ours
+  - Also @haslbeckInterpretingIsingModel2021
+
+// - Self-interaction term. Has two roles:
+//   + Captures the timescale of the data; how quickly/slowly beliefs change
+//   + Allows beliefs to be persistent in and of themselves. Consider that without
+//     self-interactions, a node with only outbound edges would be entirely set be
+//     its baseline activation. Self-interactions allow beliefs to be sticky, independently
+//     of others.
 
 *NOTE:*
 Self-interaction effects:
@@ -215,12 +222,12 @@ Other spins influence $S_i$'s state through alignment or opposition relations. F
 a spin $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
 $i$'_). When $J_(i j)$ is positive or negative, $S_i$ is influenced to adopt the state
 $S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
-to $J_(i i)$ as a _self-influence_ effect. Positive self-influence effects reflect
-the inertia of $S_i$, i.e., the tendency to sustain a particular belief or attitude
-irrespective of other beliefs and attitudes. Negative self-influence effects are not
-clearly interpretable. The inclusion of self-influence effects allows us to capture
-the timescales of different beliefs or attitudes independently.
-
+to $J_(i i)$ as a _self-influence_ of _self-interaction_ effect. Positive self-influence
+effects reflect the inertia of $S_i$, i.e., the tendency to sustain a particular belief
+or attitude irrespective of other beliefs and attitudes. Negative self-influence effects
+are not clearly interpretable. In addition to modelling differences in inertia, the
+inclusion of self-interaction effects allows us to capture the timescale at which
+the system, as a whole, evolves.
 
 The energy experienced by $S_i$ for a particular spin state $s in {-1,+1}$ is then the
 result of $s$ in combination with the baseline activation and influence effects from

@@ -762,15 +762,12 @@ general attitude toward climate action.
   placement: auto,
 ) <fig:dataset-marginal-distributions>
 
-We construct the index variables by first re-scaling each constituent item to the interval
-$[-1, 1]$ and then taking the average. The final dataset comprises eight variables,
-described in @tab:climate-beliefs-dataset-items. Figures
-@fig:dataset-marginal-distributions[] and @fig:dataset-reduced-var show the marginal
-distributions, and the contemporaneous and temporal networks, respectively, for the
-climate beliefs dataset.
-
-
-
+We construct the index variables by first re-scaling each constituent item to the
+interval $[-1, 1]$ and then taking the average. All other variables are also re-scaled
+in the same way. The final dataset comprises eight variables, described in
+@tab:climate-beliefs-dataset-items. Figures @fig:dataset-marginal-distributions[] and
+@fig:dataset-reduced-var show the marginal distributions, and the contemporaneous and
+temporal networks, respectively, for the climate beliefs dataset.
 
 #figure(
   image("../results/figures/dataset/reduced_subset_var.pdf"),

@@ -14,6 +14,7 @@
 
 *TODO:*
 - Discuss differences in baseline activations.
+  - Exogenous influences, and unmeasured beliefs
 
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
 and attitudes relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
