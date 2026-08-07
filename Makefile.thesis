@@ -74,6 +74,7 @@ THESIS_FIGURES_DATASET := \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_contemporaneous.pdf \
 		$(THESIS_DIR)/results/figures/dataset/reduced_subset_temporal.pdf \
+		$(THESIS_DIR)/results/figures/dataset/reduced_subset_var.pdf \
 		$(THESIS_DIR)/results/figures/dataset/marginal_distributions.pdf \
 		$(THESIS_DIR)/results/figures/dataset/likert_7_binarisation_probability.pdf \
 		$(THESIS_DIR)/results/figures/dataset/transition_probability.pdf
@@ -628,6 +629,13 @@ $(THESIS_DIR)/results/figures/dataset/reduced_subset_partial_corr.pdf: \
 			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
 			| $(THESIS_DIR)/results/figures/dataset
 	@uv run $<
+
+$(THESIS_DIR)/results/figures/dataset/reduced_subset_var.pdf: \
+			$(THESIS_DIR)/scripts/sec-dataset/var_reduced.py \
+			${CA_BUILT_ASSETS}/reduced_no_imputation/metadata.json \
+			| $(THESIS_DIR)/results/figures/dataset
+	@uv run $<
+
 
 $(THESIS_DIR)/results/figures/dataset/reduced_subset_contemporaneous.pdf: \
 			$(THESIS_DIR)/scripts/sec-dataset/contemporaneous_reduced.py \

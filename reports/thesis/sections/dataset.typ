@@ -652,10 +652,10 @@ with approximately equispaced observations per-individual, and with no null valu
 We additionally constrain the dataset to include three specific variables of interest:
 
 #let cc-human-footnote = footnote[
-  In the CCCV survey, the item `CC Human` actually has four possible (categorical) 
-  responses, reflecting all combinations of 'human activities' and 'natural causes' as 
-  the causes of climate change. We re-map these values to 'human-caused' and 
-  'not human-caused', such that the variable is instead binary, and thus both amenible 
+  In the CCCV survey, the item `CC Human` actually has four possible (categorical)
+  responses, reflecting all combinations of 'human activities' and 'natural causes' as
+  the causes of climate change. We re-map these values to 'human-caused' and
+  'not human-caused', such that the variable is instead binary, and thus both amenible
   to the analysis described below and interpretable in the kinetic belief system model in
   @sec:calibration.
 ]
@@ -754,11 +754,43 @@ climate change, and the role of scientists in guiding the climate change respons
 We combine these into a third cluster, which we interpret as reflecting an individual's
 general attitude toward climate action.
 
+#figure(
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:climate-beliefs-dataset-items).
+    ],
+  ),
+  placement: auto,
+) <fig:dataset-marginal-distributions>
+
 We construct the index variables by first re-scaling each constituent item to the interval
 $[-1, 1]$ and then taking the average. The final dataset comprises eight variables,
-described in @tab:dataset-dataset-final-items. 
+described in @tab:climate-beliefs-dataset-items. Figures
+@fig:dataset-marginal-distributions[] and @fig:dataset-reduced-var show the marginal
+distributions, and the contemporaneous and temporal networks, respectively, for the
+climate beliefs dataset.
 
-//#show table.cell.where(y: 0): set text(weight: "bold")
+
+
+
+#figure(
+  image("../results/figures/dataset/reduced_subset_var.pdf"),
+  caption: caption(
+    short: [Temporal network: reduced dataset],
+    long: [
+      Contemporaneous and temporal network matrices for the climate beliefs dataset.
+      Entries in row $i$ of the temporal matrix are
+      the regression predictors for the subsequent value of variable $X_i$. Rows and
+      columns are ordered using hierarchical clustering on the temporal matrix:
+      $d_bold(K) (X,Y) = 1 - abs(bold(K))$.
+    ],
+  ),
+  placement: auto,
+) <fig:dataset-reduced-var>
+
 #figure(
   {
     table(
@@ -798,15 +830,16 @@ described in @tab:dataset-dataset-final-items.
       [General attitude toward action on climate change.],
     )
   },
+  gap: 1em,
   caption: caption(
     short: [Climate beliefs dataset variables],
     long: [
       Variables included in the climate beliefs dataset. Index variables are constructed
-      by taking the average of their constituent columns, after re-scaling to the 
-    interval $[-1, 1]$.
-  ],
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$.
+    ],
   ),
-) <tab:dataset-dataset-final-items>
+) <tab:climate-beliefs-dataset-items>
 
 
 
@@ -817,9 +850,7 @@ described in @tab:dataset-dataset-final-items.
 
 
 
-#line(length: 100%)
 
-#set text(fill: luma(120))
 
 // In light of the complexities and breadth of content of the CCCV, we
 // construct a smaller, targeted dataset of beliefs and attitudes relating to climate
@@ -1137,28 +1168,28 @@ described in @tab:dataset-dataset-final-items.
 //   placement: auto,
 // ) //<fig:dataset-full-subset-var>
 
-We observe some apparent commonalities between the partial correlation and VAR
-networks. First, the _CC Impact_ variables exhibit relatively strong
-internal relations. External relations with variables outside this set are
-typically weaker, with the exception of _CC Impact (world)_, which has several
-non-trivial partial correlations with other variables, including other climate-related
-beliefs. All variables in this group, except _CC Impact (wealthy)_, also have
-non-trivial partial correlations with _CC Worry_ --- one of our
-variables-of-interest. Second, the policy variables, as well as _CC Responsibility_
-and _CC Scientists_, also exhibit substantial connectivity in the partial correlation
-network. This is diminished in the contemporaneous VAR network, but visible in the
-clustering of the temporal network. The similarities among these variables in the
-rows and columns of the temporal matrix indicate that they fill similar roles as
-predictors, and are also predicted similarly. Thirdly, _Political affiliation_ and
-_Political ideology_ are highly related in the partial correlation matrix, and
-also exhibit similar behaviour in the temporal network.
+// We observe some apparent commonalities between the partial correlation and VAR
+// networks. First, the _CC Impact_ variables exhibit relatively strong
+// internal relations. External relations with variables outside this set are
+// typically weaker, with the exception of _CC Impact (world)_, which has several
+// non-trivial partial correlations with other variables, including other climate-related
+// beliefs. All variables in this group, except _CC Impact (wealthy)_, also have
+// non-trivial partial correlations with _CC Worry_ --- one of our
+// variables-of-interest. Second, the policy variables, as well as _CC Responsibility_
+// and _CC Scientists_, also exhibit substantial connectivity in the partial correlation
+// network. This is diminished in the contemporaneous VAR network, but visible in the
+// clustering of the temporal network. The similarities among these variables in the
+// rows and columns of the temporal matrix indicate that they fill similar roles as
+// predictors, and are also predicted similarly. Thirdly, _Political affiliation_ and
+// _Political ideology_ are highly related in the partial correlation matrix, and
+// also exhibit similar behaviour in the temporal network.
 
 // *TODO:* PCA/EFA plot.
 
-Based on these observations, we construct three index variables: (i) _CC Impact_,
-comprising the four climate impact beliefs, (ii) _Politics_, comprising the measures
-of political affiliation and ideology, and (iii) _CC Action_, comprising the four
-policy variables, as well as _CC Responsibility_ and _CC Scientists_.
+// Based on these observations, we construct three index variables: (i) _CC Impact_,
+// comprising the four climate impact beliefs, (ii) _Politics_, comprising the measures
+// of political affiliation and ideology, and (iii) _CC Action_, comprising the four
+// policy variables, as well as _CC Responsibility_ and _CC Scientists_.
 
 
 // #figure(
@@ -1169,34 +1200,6 @@ policy variables, as well as _CC Responsibility_ and _CC Scientists_.
 //   ),
 //   placement: auto,
 // )
-#figure(
-  image("../results/figures/dataset/reduced_subset_temporal.pdf"),
-  caption: caption(
-    short: [Temporal network: reduced dataset],
-    long: [Temporal],
-  ),
-  placement: auto,
-)
 
-#figure(
-  image("../results/figures/dataset/reduced_subset_contemporaneous.pdf"),
-  caption: caption(
-    short: [Contemporaneous network: reduced dataset],
-    long: [Contemporaneous],
-  ),
-  placement: auto,
-)
-
-
-#figure(
-  image("../results/figures/dataset/marginal_distributions.pdf"),
-  caption: caption(
-    short: [Marginal distributions: reduced dataset],
-    long: [*TODO*],
-  ),
-  placement: auto,
-) <fig:dataset-marginal-distributions>
-
-#set text(fill: black)
 
 
