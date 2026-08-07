@@ -355,12 +355,12 @@ modelling belief systems with asymmetric influence relations, and estimating suc
 from time-series data. In the second half, we then use this framework to address the
 research questions listed above.
 
-In @sec:asymmetric-belief-systems we introduce the *non-equilibrium belief system* model
-(NEBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
+In @sec:asymmetric-belief-systems we introduce the *Kinetic Belief System* model
+(KBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984 of the Causal Attitude Network (CAN) model
 @dalegeFormalizedAccountAttitudes2016.
-NEBS represents directed belief influences using distinct parameters, so is well-suited
-for studying asymmetry in belief systems. NEBS' dynamics are explicitly time-dependent,
+KBS represents directed belief influences using distinct parameters, so is well-suited
+for studying asymmetry in belief systems. KBS' dynamics are explicitly time-dependent,
 enabling straightforward analysis of belief system dynamics, including
 post-intervention behaviour, on an _individual_ basis. This contrasts past studies that
 analyse intervention effects via simulation on the CAN model
@@ -368,11 +368,11 @@ analyse intervention effects via simulation on the CAN model
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
 or GGM models @wuSimulatingNodeManipulations2026, which do
 consider neither individuals' pre-intervention belief states, nor the time-scale of
-model dynamics. @sec:methods then outlines a parameter estimation method for NEBS based
+model dynamics. @sec:methods then outlines a parameter estimation method for KBS based
 on maximum likelihood estimation. The proposed method uses knowledge of
 a pre-defined soft binarisation function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-We use this method to calibrate the NEBS model to a two-wave longitudinal
+We use this method to calibrate the KBS model to a two-wave longitudinal
 dataset comprising beliefs and attitudes relating to climate change (see below).
 
 // ---the calibrated model is
