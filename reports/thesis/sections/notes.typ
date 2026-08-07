@@ -12,6 +12,27 @@ drafts. This section is temporary, and for my own benefit :)
 
 Is it correct to acknowledge Sara directly in the dataset validation section?
 
+== Additional things to maybe discuss somewhere
+
+#emph-block[
+  Individual belief dynamics are important to understanding behavioural influences
+  between individuals: @rodriguezCollectiveDynamicsBelief2016
+  @aiyappaEmergenceSimpleComplex2024
+  - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+]
+
+
+To include in discussion on RQ4?:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
+#emph-block[
+  Practical considerations for designing empirical studies for psychological networks.
+  Discusses limitations of cross-sectional studies for teasing apart within-person and
+  between-person effects @chambonNetworkPsychometricsPractice2026.
+]
+
 == Politics --> Policy narrative
 
 Issue support on climate policies in US driven by political identification and climate

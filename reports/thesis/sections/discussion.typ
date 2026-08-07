@@ -15,15 +15,6 @@
   link(label, arrow)
 }
 
-#emph-block[
-  Individual belief dynamics are important to understanding behavioural influences
-  between individuals: @rodriguezCollectiveDynamicsBelief2016
-  @aiyappaEmergenceSimpleComplex2024
-  - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
-
-  *To-do:* Discuss node centrality findings.
-]
-
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
 discuss their place in the broader context of belief system dynamics. We then
@@ -279,11 +270,6 @@ support for climate policy and related attitudes @grometPoliticalIdeologyAffects
 
 #show-rq(4, RQ4) <discussion-rq4>
 
-*Note:*
-Variation in belief systems between individuals:
-- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
-  time, and political contexts", "Although ... belief systems are at the individuals level,
-  this does not mean that structure is not shared"
 
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
@@ -335,11 +321,6 @@ from the time-lagged interaction parameters used in the present study.
 
 == Limitations
 
-#emph-block[
-  Practical considerations for designing empirical studies for psychological networks.
-  Discusses limitations of cross-sectional studies for teasing apart within-person and
-  between-person effects @chambonNetworkPsychometricsPractice2026.
-]
 
 #metadata[] <within-person-discussion>
 When beliefs and attitudes are fairly stable---as in the climate beliefs
