@@ -965,11 +965,28 @@ of political affiliation and ideology, and (iii) _CC Action_, comprising the fou
 policy variables, as well as _CC Responsibility_ and _CC Scientists_.
 
 
+// #figure(
+//   image("../results/figures/dataset/reduced_subset_partial_corr.pdf"),
+//   caption: caption(
+//     short: [Pairwise partial correlation: reduced dataset],
+//     long: [*TODO*],
+//   ),
+//   placement: auto,
+// )
 #figure(
-  image("../results/figures/dataset/reduced_subset_partial_corr.pdf"),
+  image("../results/figures/dataset/reduced_subset_temporal.pdf"),
   caption: caption(
-    short: [Pairwise partial correlation: reduced dataset],
-    long: [*TODO*],
+    short: [Temporal network: reduced dataset],
+    long: [Temporal],
+  ),
+  placement: auto,
+)
+
+#figure(
+  image("../results/figures/dataset/reduced_subset_contemporaneous.pdf"),
+  caption: caption(
+    short: [Contemporaneous network: reduced dataset],
+    long: [Contemporaneous],
   ),
   placement: auto,
 )

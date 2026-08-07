@@ -35,6 +35,7 @@
 
 #let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
 #let title = [Interventions in Asymmetric#linebreak() Belief Systems]
+#let title = [Asymmetric Influence and Interventions in #linebreak() Climate Change Belief Systems]
 
 #let abstract = include "sections/abstract.typ"
 
@@ -77,8 +78,8 @@
 // = Notes (things to remember, to-dos)
 // #include "sections/notes.typ"
 
-= Terminology and notation <sec:notation>
-#include "sections/notation.typ"
+// = Terminology and notation <sec:notation>
+// #include "sections/notation.typ"
 
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
@@ -101,15 +102,14 @@
 = Discussion <sec:discussion>
 #include "sections/discussion.typ"
 
-= Climate beliefs dataset <sec:dataset>
-#include "sections/dataset.typ"
-
 // = Related work <sec:related-work>
 // #include "sections/literature_review.typ"
 
-
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
+
+= Climate beliefs dataset <sec:dataset>
+#include "sections/dataset.typ"
 
 = Ethics and Data Management
 A new requirement for the thesis is that there must be a short section in which you

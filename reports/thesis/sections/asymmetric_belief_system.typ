@@ -8,6 +8,11 @@
 
 // TODO: Discussion on interpreting asymmetric relations in terms of the
 // mathematical/conceptual models
+//
+*TODO:* "The DT-VAR model suffers from the problem of time-interval
+dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
+- Ours does not(?) because we use temporal data, and include self-interaction
+  effects which set timescale.
 
 
 // - Interdependent beliefs and attitudes; state of one affects the state of another:
@@ -40,9 +45,11 @@ not.
 // For instance, they  sensitive to context (e.g., being in a certain location or
 // talking to a specific person), physical state (e.g., tiredness), or
 // such as
+*TODO: Make clear that when we say attitude we mean evaluative state, not precise
+definition used in @dalegeFormalizedAccountAttitudes2016*.
 
 #important-block[
-  The terms *belief* and *attitude* are presently ambiguous. On one hand, they can refer
+  The terms *belief* and *attitude* are presently ambiguous. They can refer
   to generic concepts (e.g. belief regarding the contents of a box, or attitude toward
   ...) or specific instances of those concepts (e.g., 'I believe that the box is empty',
   or '...').
@@ -140,6 +147,23 @@ possible future states.
 
 
 == Non-equilibrium belief system model <subsec:theory-nonequilibrium-belief-system-model>
+
+*TODO:*
+- Builds on the CAN model, also known as the 'Ising model of attitudes'
+  @vandermaasPolarizationIndividualsHierarchical2020
+- Self-interaction term. Has two roles:
+  + Captures the timescale of the data; how quickly/slowly beliefs change
+  + Allows beliefs to be persistent in and of themselves. Consider that without
+    self-interactions, a node with only outbound edges would be entirely set be
+    its baseline activation. Self-interactions allow beliefs to be sticky, independently
+    of others.
+
+*NOTE:*
+Self-interaction effects:
+- @brandtEvaluatingBeliefSystem2021[p.~22]: "we made the simplifying assumption that a node
+  does not affect itself".
+
+
 
 // - Why we can't use the boltzmann distribution and Hamiltonian, like in the symmetric
 //   Ising model:
@@ -288,6 +312,20 @@ interval.
   system via an interaction term to the belief about that state. Our approach is
   analogous. The exogenous change affects our belief (say, about the state of climate
   change) via an interaction term.
+
+Other intervention studies:
+- Simulation-based approaches that mirror ours:
+  - @dalegeNetworkAnalysisAttitudes2017
+  - @schlicht-schmalzleAttitudeNetworkAnalysis2018
+  - @lunanskyInterveningPsychopathologyNetworks2022
+  - @berteroConsolidationChangeExploring2025
+  - @wuSimulatingNodeManipulations2026
+  All use symmetric models. AFAIK none use glauber dynamics, i.e., assume equilibrium
+  right after intervention. So don't account for temporal dynamics, belief stability,
+  individual effects, etc.
+- Control theory approach @henryControlPsychologicalNetworks2022
+- Continuous-time approach (avoids the discrete time problem) @ryanTimeInterveneContinuousTime2022
+
 
 
 We now outline our approach to modelling interventions in the asymmetric belief

@@ -14,6 +14,8 @@ locale = "en-gb"
 Vitor = "Vítor"
 
 [default.extend-identifiers]
+fonseca2018analisis = "fonseca2018analisis"
+epskampQgraphNetworkVisualizations2012 = "epskampQgraphNetworkVisualizations2012"
 mccrightPoliticizationClimateChange2011 = "mccrightPoliticizationClimateChange2011"
 masonIdeologuesIssuesPolarizing2018 = "masonIdeologuesIssuesPolarizing2018"
 powellModelingLeveragingIntuitive2023 = "powellModelingLeveragingIntuitive2023"

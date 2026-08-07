@@ -1,3 +1,4 @@
+#import "./introduction.typ": RQ1, RQ2, RQ3, RQ4
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
 #show: show-theorion
@@ -14,6 +15,14 @@
   link(label, arrow)
 }
 
+#emph-block[
+  Individual belief dynamics are important to understanding behavioural influences
+  between individuals: @rodriguezCollectiveDynamicsBelief2016
+  @aiyappaEmergenceSimpleComplex2024
+  - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+
+  *To-do:* Discuss node centrality findings.
+]
 
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
@@ -25,10 +34,7 @@ belief-level interventions.
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
 
 
-#show-rq(1)[
-  To what extent are causal relations _symmetric_ or _asymmetric_, in models
-  of climate change belief systems inferred from the climate beliefs dataset?
-] <discussion-rq1>
+#show-rq(1, RQ1) <discussion-rq1>
 
 On the question of existence, @subsec:asymmetry-results-existence demonstrated
 asymmetric relations between several pairs of beliefs and attitudes, while also
@@ -123,11 +129,7 @@ may promote information-seeking behaviour, leading to changes in climate-related
 
 // *NOTE:* Doesn't mention #cite(<eganIdentityDependentVariable2020>, form: "prose")
 
-#show-rq(2)[
-  How do asymmetric and symmetric beliefs systems differ with regards to
-  intervention strategy and effectiveness, in models inferred from the climate
-  beliefs dataset?
-] <discussion-rq2>
+#show-rq(2, RQ2) <discussion-rq2>
 
 The consequences of asymmetry for belief system dynamics were subsequently reflected in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
@@ -140,6 +142,9 @@ Interestingly, while interventions on climate-related concerns typically
 outperformed those on political ideology/alignment in terms of absolute effect of
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
+
+*TODO:* Refer back to @chambonTailoredInterventionsBroad2022, who found most effects
+were direct.
 
 For the measurement timescale used in these experiments (approximately 2.5 years),
 interventions appeared to act primarily through direct interactions, though smaller
@@ -174,23 +179,27 @@ beliefs, cases where the asymmetric model specifies an interaction in only one
 direction necessarily lead to differences in model behaviour.
 This draws attention to a broader issue regarding relational symmetry assumptions.
 
-One
-of the symmetric model's key strengths is its small(er) parameter count. With fewer
+One of the symmetric model's key strengths is its small(er) parameter count. With fewer
 degrees of freedom than the asymmetric model, it can achieve more accurate parameter
 estimates when calibrated to the same dataset (i.e., smaller confidence intervals in
 @fig:calibration-edge-accuracy). However, this comes at the cost of model
-misspecification when a subset of the true relations are asymmetric. In the symmetric
-model, inferred strengths generally lie between the corresponding directional
-interaction strengths in the asymmetric model. For beliefs or attitudes with asymmetric
-relations we found that this can result in substantial differences in influentiality
-and influentiability between the two models.
+misspecification when a subset of the true relations are asymmetric. We might expect
+the inferred symmetric influence relations to be similar to the average of the
+corresponding directed effects, yet this reasoning turns out to be flawed for at least
+two reasons. Firstly, interaction effects are not estimated in isolation, but jointly
+with all other parameters which influencing the same spin (or _both_ spins in the
+symmetric case). Hence, when one interaction parameter changes---for instance, if we
+replace a pair of asymmetric interactions by their average---the rest are likely to
+change as well. Secondly, regularisation is often used to obtain sparse network
+representations and reduce overfitting, and distorts parameter values non-linearly
+in the process. In reality we find that while most symmetric interactions lie between
+their asymmetric analogues, this is not always the case, and those that are do not
+fall predictably near the middle. As observed in the case of political
+ideology/alignment, the symmetric model may also exclude pairwise interactions
+altogether, or create a (bi-)directional interaction where influence actually
+flows unidirectionally.
 
-
-#show-rq(3)[
-  How do intervention outcome and effectiveness vary between individuals with
-  different initial conditions in asymmetric belief systems inferred from the
-  climate beliefs dataset?
-] <discussion-rq3>
+#show-rq(3, RQ3) <discussion-rq3>
 
 In @sec:heterogeneity-results-intervention-effects we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
@@ -251,10 +260,7 @@ support for climate policy and related attitudes @grometPoliticalIdeologyAffects
 @unsworthItsPoliticalHow2014 @allcottSocialNormsEnergy2011
 @vanvalkengoedSelectEffectiveInterventions2022.
 
-#show-rq(4)[
-  How do asymmetric belief systems inferred from the climate beliefs dataset
-  vary between conservative and liberal individuals?
-] <discussion-rq4>
+#show-rq(4, RQ4) <discussion-rq4>
 
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
@@ -305,6 +311,12 @@ association using cross-sectional correlational measures, which may differ consi
 from the time-lagged interaction parameters used in the present study.
 
 == Limitations
+
+#emph-block[
+  Practical considerations for designing empirical studies for psychological networks.
+  Discusses limitations of cross-sectional studies for teasing apart within-person and
+  between-person effects @chambonNetworkPsychometricsPractice2026.
+]
 
 #metadata[] <within-person-discussion>
 When beliefs and attitudes are fairly stable---as in the climate beliefs
@@ -366,16 +378,18 @@ study.
 Our present focus on endogenous dynamics also does not discount the substantial
 role of social interaction in belief and attitude change
 @karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
-@degrootReachingConsensus1974a or stability @prenticePluralisticIgnorancePerpetuation1996
-@brownMeasurementPartisanSorting2021, including in intervention contexts
+@degrootReachingConsensus1974a @converseNatureBeliefSystems2006 or stability
+@prenticePluralisticIgnorancePerpetuation1996 @brownMeasurementPartisanSorting2021,
+including in intervention contexts
 @brewerIncreasingVaccinationPutting2017. Rather, this decision reflects the fact that
 the dataset used in this study did not include social network information. The matter
 of integrating social and cognitive forces in similar belief system models has been
 explored in several accounts @rodriguezCollectiveDynamicsBelief2016
-@aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025, generally
-assuming dual objectives of cognitive consistency and social coherence
-@festingerCognitiveDissonance1962 @heiderAttitudesCognitiveOrganization1946
-@gawronskiCognitiveConsistencyFundamental2012. The Networks of Belief theory, proposed by
+@aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025
+@vandermaasPolarizationIndividualsHierarchical2020, generally assuming individuals have
+dual objectives of cognitive consistency and social coherence @festingerCognitiveDissonance1962
+@heiderAttitudesCognitiveOrganization1946 @gawronskiCognitiveConsistencyFundamental2012.
+The Networks of Belief theory, proposed by
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose"), builds on the Causal
 Attitude Network model which also serves as the foundation for our proposed model. Since
 our work is mostly orthogonal to theirs, we anticipate that it would be straightforward
@@ -473,7 +487,7 @@ Finally, while the present model assumes that interaction effects in asymmetric 
 systems are independent of the 'influencing' variable's state, we argue that there is
 reason to think that this may not always be true. Consider two variables:
 
-- *Happening:* The belief that climate change is happening, and
+- *Happening:* The belief that climate change is happening.
 
 - *Action:* General attitude toward climate action.
 
@@ -484,7 +498,7 @@ who _do_ believe in climate change may nonetheless oppose climate action for oth
 reasons (e.g., cost or prioritisation), suggesting that *Action* may be less
 constrained when *Happening* is high than when it is low.
 
-*I have other limitations to discuss, but judged these as the most critical*
+//*I have other limitations to discuss, but judged these as the most critical*
 // // NOTE:
 // - _How we think about interventions:_
 //   - *A:* We have assumed that interventions can act directly, and with equal effect on
@@ -624,13 +638,13 @@ influentiability (how much its own state is affected by other beliefs).
 
 
 Despite the promising results of this study, several questions remain. The limited
-number of waves in the climate beliefs dataset prohibits us from confidently
-distinguishing between within-person and between-person effects, which is required
+number of waves in the climate beliefs dataset prohibits us from
+distinguishing within-person and between-person effects, which is required
 to make strong claims regarding causal influences. We note that the broader
 climate attitudes survey does contain several additional waves, which are usable if we
 drop our requirements regarding the number of variables and inclusion of specific
-beliefs/attitudes. However, this raises a separate issue regarding the intervals between
-measurements, as inter-response times between different pairs of waves can differ
+beliefs/attitudes. However, this presents a separate issue regarding the intervals
+between measurements, as inter-response times between different pairs of waves can differ
 significantly, violating the model requirements. Further consideration is required to
 determine whether, for instance, the additional waves can be used _only_ to estimate
 individual baselines, while evenly-spaced observations are used to estimate interaction
@@ -698,6 +712,8 @@ namely the interface between belief systems belonging to different individuals, 
 peer influence as indirect, via social beliefs which may only be indicative of the true
 external state.
 
+*TODO:* Discuss interventions on edges. Changing the structure of the network.
+Supported by @aggarwalWiredCoherenceNetwork2026 (keyword intervention).
 
 // Future directions suggested by our findings:
 // + How asymmetry arises:
