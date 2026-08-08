@@ -85,7 +85,7 @@
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
 
-= Non-equilibrium belief systems <sec:asymmetric-belief-systems>
+= The Kinetic Belief System model <sec:asymmetric-belief-systems>
 #include "sections/asymmetric_belief_system.typ"
 
 = Methods <sec:methods>

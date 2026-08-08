@@ -12,6 +12,11 @@ drafts. This section is temporary, and for my own benefit :)
 
 - Is it correct to acknowledge Sara directly in the dataset validation section?
 - How much do I need to say about the climate beliefs dataset in the calibration section?
+- Do I need to include the quantitative explanation of the difference in intervention
+  effects (in terms of where the derivative is maximum)? Or is the conceptual explanation
+  sufficient?
+- Justifying the multiple of 2 in the logistic model formulation, without going from the
+  Hamiltonian?
 
 == Additional things to maybe discuss somewhere
 
@@ -22,6 +27,10 @@ drafts. This section is temporary, and for my own benefit :)
   - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
 ]
 
+Other intervention modelling approaches:
+- Control theory @henryControlPsychologicalNetworks2022
+- Continuous-time approach (maybe mention in the DT-VAR problem bit)
+  @ryanTimeInterveneContinuousTime2022
 
 To include in discussion on RQ4?:
 - @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
