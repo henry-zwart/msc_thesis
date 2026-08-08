@@ -336,7 +336,7 @@ parameters for similar models @nguyenInverseStatisticalProblems2017
 @leeStatisticalMechanicsUS2015, we should be cautious, for two reasons, of applying this method naïvely
 in the present study.
 
-Firstly, the model defined in @eqn:methods-model-conditional-prob-definition assumes
+Firstly, the model defined in @eqn:model-kbs-dynamics assumes
 binary spin states $s in {-1, +1}$. The climate attitudes dataset does not satisfy this
 assumption and must be binarised for MLE to be applicable. However, we have no
 guarantee that the parameterisation inferred for any specific binarisation is a

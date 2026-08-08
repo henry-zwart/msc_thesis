@@ -255,6 +255,7 @@ are not clearly interpretable. In addition to modelling differences in inertia, 
 inclusion of self-interaction effects allows us to capture the timescale at which
 the system, as a whole, evolves.
 
+
 In contrast with the CAN model, we define the KBS model's dynamics explicitly using the
 conditional distribution $P(bold(sigma)^(t+1) | bold(sigma)^t)$. There are (at least)
 two reasons for this. First, critically, unlike in the CAN model, we cannot
@@ -290,7 +291,7 @@ $
   P(sigma_i^(t+1) = +1 | bold(sigma)^t = bold(s)) = op("logistic")(2 h_i^"eff" (bold(s)))
 $ <eqn:model-activation-probability>
 
-From which we obtain the probability that $S_i$ takes on the value $-1$ directly via
+We obtain the probability that $S_i$ takes on the value $-1$ directly via
 the complement.
 
 Notice that the behaviour of @eqn:model-activation-probability is
@@ -300,9 +301,9 @@ baseline activation, $h_i$, through positive (reinforcing) influences from
 beliefs with state $+1$ or negative (opposing) influences from beliefs with state $-1$,
 and when $S_i$ previously had the state $+1$.
 
-Then, using Relation @eqn:methods-belief-system-dynamics-belief-system-markov-process[],
-we describe the dynamics of the complete KBS model in terms of the full conditional
-transition probability:
+Finally, using Relation @eqn:methods-belief-system-dynamics-belief-system-markov-process[],
+we can now describe the complete conditional transition probability for the KBS model
+in terms of those belonging to the individual beliefs:
 
 $
   P(bold(sigma)^(t+1) = bold(s)^(t+1) | bold(sigma)^t = bold(s)^t) = product_(i=1)^N P(bold(sigma)_i^(t+1) = s_i^(t+1) | bold(sigma)^t = bold(s)^t)
@@ -311,223 +312,57 @@ $ <eqn:model-kbs-dynamics>
 Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
 
 
-// we will instead
-// define the dynamics of a single (arbitrary) belief, $S_i in bold(S)$, with respect to
-// its baseline activation and the instantaneous states of all other beliefs, and then
-// use  to stitch
-// the
-//
-// Rather than defining the complete state transition probability function directly, we
-// will make use of Relation
-// @eqn:methods-belief-system-dynamics-belief-system-markov-process[], instead considering
-// the behaviour of a single belief, $S_i in bold(S)$, with respect to its baseline
-// activation and the instantaneous states of all other beliefs at time $t$.
-//
-//
-//
-// On account of the asymmetric interaction effects, the KBS model does not necessarily
-// satisfy detailed balance, so is not guaranteed to exhibit equilibrium dynamics
-// @nguyenInverseStatisticalProblems2017. Therefore, in contrast with the CAN model, we
-// define the KBS model's dynamics explicitly using the conditional distribution
-// $P(bold(sigma)^(t+1) | bold(sigma)^t)$. Relation
-// @eqn:methods-belief-system-dynamics-belief-system-markov-process[] allows us to define
-// this in terms of the transition probability functions associated with the individual
-// beliefs, i.e., describing how each belief responds to the states of all other beliefs,
-// as well as its own current state.
-// #cite(<haslbeckInterpretingIsingModel2021>, form: "prose") and
-// #cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") use a similar approach to
-// model dynamic behaviour in belief system models with bi-directional edges (similar to
-// the CAN model).
-//
-// Letting $bold(s) in {-1,+1}^N$ describe the states of all beliefs at time $t$, we
-// define the *effective baseline activation* for a belief $S_i in bold(S)$ at time $t$
-// as the combined pressure for $S_i$ to take on the value $+1$, given its baseline
-// activation and interaction effects received from all other beliefs:
-
-
-// We then define the conditional probability that $S_i$ takes on the value $+1$ at
-// time $t+1$ as the logistic transform of the effective baseline activation:
-//
-// $
-//   P(sigma_i^(t+1) = +1 | bold(sigma)^t = bold(s)) = op("logistic")(2 h_i^"eff" (bold(s)))
-// $ <eqn:model-activation-probability>
-//
-// From which we obtain the probability that $S_i$ takes on the value $-1$ directly via
-// the complement.
-//
-// Notice that the behaviour of @eqn:model-activation-probability is
-// consistent with our earlier interpretations of the baseline activation and interaction
-// effects; the probability that $S_i$ adopts the value $+1$ increases with the
-// baseline activation, $h_i$, through positive (reinforcing) influences from
-// beliefs with state $+1$ or negative (opposing) influences from beliefs with state $-1$,
-// and when $S_i$ previously had the state $+1$.
-
-// Then, using Relation @eqn:methods-belief-system-dynamics-belief-system-markov-process[],
-// we describe the dynamics of the complete KBS model in terms of the full conditional
-// transition probability:
-//
-// $
-//   P(bold(sigma)^(t+1) = bold(s)^(t+1) | bold(sigma)^t = bold(s)^t) = product_(i=1)^N P(bold(sigma)_i^(t+1) = s_i^(t+1) | bold(sigma)^t = bold(s)^t)
-// $ <eqn:model-kbs-dynamics>
-//
-// Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
-
-
-
-
-
-
-
-#line(length: 100%)
-
-
-
-// When studying the _symmetric_ Ising model it is common to assume that the model is
-// at equilibrium, such that the transition probability is stationary and given by the
-// Boltzmann distribution @christensenComplexityCriticality2005
-// @cardyScalingRenormalizationStatistical1996.
-
-For the purposes of this study, however, we are interested in intervention dynamics, which are
-inherently non-equilibrium. To see why this is the case, notice that the purpose of
-intervention is to change the distribution of observed states. This is true both
-interventions intended to change the dominant state (e.g., to promote a sustainable
-alternative to a typical unsustainable behaviour) or reinforce it. Any belief system
-model intended for studying intervention dynamics therefore _cannot_ assume equilibrium,
-and _cannot_ define model dynamics using the Boltzmann distribution.
-
-
-
-
-
-For a set of $N in NN$ beliefs (and/or
-attitudes), we represent a corresponding KBS model as a directed network whose vertices
-denote the distinct beliefs, and edges describe directed influence relations.
-As in the CAN model, each belief has an associated *baseline activation* which defines
-the tendency for that belief to take
-the probability distribution over possible belief states in the absence of interactions
-with
-tendency for that belief to take on the value $+1$ in the absence
-
-The KBS model comprises a set of
-$N in NN$ beliefs and/or attitudes arranged in a directed network with self-loops.
-Formally, In
-contrast with the CAN model, KBS does not assume equilibrium, but instead defines the
-conditional distribution
-
-We instead define the conditional distribution $P(bold(S)^(t+1) = bold(s) | bold(S)^t)$
-explicitly. Recall that the states of each pair of spins $S_i, S_j$ at time $t$ are
-conditionally independent random variables, given knowledge of the previous
-configuration $bold(S)^t$. It therefore
-suffices for us to describe the distribution over spin states for an individual spin
-$S_i$ at time $t+1$, as conditional on $bold(S)^t$.
-
-As in the CAN model, we will assume that belief systems typically evolve in the direction
-of lower energy; however, rather than defining the energy at the level of the model using
-the Hamilonian, we consider the energy experienced by $S_i$ as a result of its baseline
-activation (also known as a _local field effect_), and interactions with other spins.
-#cite(<haslbeckInterpretingIsingModel2021>, form: "prose") and
-#cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") also use this approach to
-model dynamic behaviour in belief system models with bi-directional edges, similar to
-the CAN model.
-
-
-The baseline activation $h_i in RR$ describes the tendency for $S_i$ to take on the
-value $+1$ in the absence of interactions with other spins, or, more generally, when
-pairwise spin interactions have a net-effect of zero. $S_i$ tends to adopt the value
-$+1$ under these circumstances, iff, $h_i > 0$, and $-1$ iff $h_i < 0$. This tendency
-increases with the magnitude of $h_i$.
-
-Other spins influence $S_i$'s state through alignment or opposition relations. For
-a spin $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
-$i$'_). When $J_(i j)$ is positive or negative, $S_i$ is influenced to adopt the state
-$S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
-to $J_(i i)$ as a _self-influence_ of _self-interaction_ effect. Positive self-influence
-effects reflect the inertia of $S_i$, i.e., the tendency to sustain a particular belief
-or attitude irrespective of other beliefs and attitudes. Negative self-influence effects
-are not clearly interpretable. In addition to modelling differences in inertia, the
-inclusion of self-interaction effects allows us to capture the timescale at which
-the system, as a whole, evolves.
-
-The energy experienced by $S_i$ for a particular spin state $s in {-1,+1}$ is then the
-result of $s$ in combination with the baseline activation and influence effects from
-all spins with edges to $S_i$:
-
-$
-  H_i (s | bold(s)^t) = h_i dot s + sum_(j) A_(j i) J_(j i) s_j^t dot s
-$ <eqn:methods-model-local-energy>
-
-where $bold(A) in {0,1}^(n times n)$ is a pairwise adjacency matrix, with $A_(j i) = 1$,
-iff, $S_j$ influences $S_i$. Dividing the common factor of $s$, we can equivalently
-write @eqn:methods-model-local-energy as
-
-$
-  H_i (s | bold(s)^t) = s dot h_i^"eff" (bold(s)^t)
-$ <eqn:methods-model-local-energy-eff-field>
-
-where $h_i^"eff" (bold(s)^t) = h_i + sum_j A_(j i) J_(j i) s_j^t$ is the
-effective baseline activation experienced by $S_i$ at time $t$. We then define the
-probability that $S_i$ adopts the state $s$ at time $t$ as:
-
-$
-  P(S_i^(t+1) = s | bold(S)^t = bold(s)) &= e^(1/T H_i (s | bold(s)))/(sum_(s' in {0,1}) e^(1/T H_i (s' | bold(s)))) \
-  &= e^(1/T H_i (s | bold(s)))/(e^(1/T H_i (s | bold(s))) + e^(-1/T H_i (-s | bold(s)))) \
-  &= e^(1/T s dot h_i^"eff" (bold(s)))/(e^(1/T s dot h_i^"eff" (bold(s))) + e^(-1/T s dot h_i^"eff" (bold(s))))
-$
-
-For $s = +1$, this reduces to the logistic function:
-
-$
-  p_i^bold(s) := P(S_i^(t+1) = +1 | bold(S)^t = bold(s)) &= e^(1/T dot h_i^"eff" (bold(s)))/(e^(1/T dot h_i^"eff" (bold(s))) + e^(-1/T dot h_i^"eff" (bold(s)))) \
-  &= 1/(1 + e^(-2 dot 1/T dot h_i^"eff" (bold(s)))) \
-  &= op("logistic")(2 h_i^"eff" (bold(s))\/T )
-$ <eqn:methods-model-logistic-probability>
-
-Therefore the complete conditional distribution is given by:
-
-$
-  P(bold(S)^(t+1) = bold(s)^(t+1) | bold(S)^t = bold(s)^t) &= product_(i=1)^n P(S_i^(t+1) = s_i | bold(S)^t = bold(s)^t) \
-  &= product_(i=1)^n [((1 + s_i)/2) p_i^bold(s)^t + ((1 - s_i)/2) (1 - p_i^bold(s)^t)]
-$ <eqn:methods-model-conditional-prob-definition>
-
-Where the initial distribution $P(bold(S)^0)$ is specified explicitly.
-
 == Symmetric and asymmetric belief systems
 
-Let $cal(M)$ be a belief system model defined as in the preceding section, comprising
-$N in NN$ beliefs or attitudes, with adjacency matrix $bold(A) in {0,1}^(N times N)$,
-interaction effect matrix $bold(J) in RR^(N times N)$, and baseline activations
-$bold(h) in RR^N$.
+In the special case when $bold(J)$ is symmetric, we say that the kinetic belief system
+model is *symmetric*, and otherwise that it is *asymmetric*. In an asymmetric KBS model,
+for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may be the case that an
+influence relation exists in only one direction, or that the directed relations differ
+in sign and/or magnitude. On the other hand, all influence relations in a symmetric KBS
+model are directionally-equivalent.
 
-When each entry in $bold(J)$ is independent of all others, we say
-that $cal(M)$ is an *asymmetric belief system*. The term _asymmetric_ here refers to the
-directed relations between a pair of nodes. In an asymmetric belief system, for any pair
-of distinct nodes $S_i != S_j$, it may be the case that an influence relation exists
-only in one direction, or that the directed relations differ in magnitude.
+The symmetric KBS model can be considered a simple extension of the symmetric Ising model
+with self-interaction effects and temporal dynamics. As such, the symmetric model _does_
+satisfy detailed balance, so tends toward an equilibrium steady state.
 
-In the special case where we constrain $A_(i j) = A_(j i)$ and $J_(i j) = J_(j i)$ for
-all $i, j in [1, N]$, we instead say that $cal(M)$ is a *symmetric belief system*. In
-a symmetric belief system all interactions are directionally-equivalent. This can be
-considered a simple extension of the symmetric Ising model with (i) self-interaction
-terms and (ii) temporal dynamics, thus the symmetric belief system model tends toward
-an equilibrium steady state.
+// Let $cal(M)$ be a kinetic belief system model defined as in the preceding section.
+//
+// with
+// parameters $$, comprising
+// $N in NN$ beliefs or attitudes, with adjacency matrix $bold(A) in {0,1}^(N times N)$,
+// interaction effect matrix $bold(J) in RR^(N times N)$, and baseline activations
+// $bold(h) in RR^N$.
+//
+// When each entry in $bold(J)$ is independent of all others, we say
+// that $cal(M)$ is an *asymmetric belief system*. The term _asymmetric_ here refers to the
+// directed relations between a pair of nodes. In an asymmetric belief system, for any pair
+// of distinct nodes $S_i != S_j$, it may be the case that an influence relation exists
+// only in one direction, or that the directed relations differ in magnitude.
+
+// In the special case where we constrain $A_(i j) = A_(j i)$ and $J_(i j) = J_(j i)$ for
+// all $i, j in [1, N]$, we instead say that $cal(M)$ is a *symmetric belief system*. In
+// a symmetric belief system all interactions are directionally-equivalent. This can be
+// considered a simple extension of the symmetric Ising model with (i) self-interaction
+// terms and (ii) temporal dynamics, thus the symmetric belief system model tends toward
+// an equilibrium steady state.
 
 == Simulation via Glauber dynamics <subsec:methods-glauber-dynamics>
 
 It is straightforward to draw samples from a belief system model using Glauber
 dynamics, given the conditional probability distribution defined in
-@eqn:methods-model-conditional-prob-definition.
+@eqn:model-kbs-dynamics.
 
-Given an initial state $bold(s)^0 in {-1, +1}^N$, we sample a sequence of $T in NN$
+Given an initial state $bold(s)^1 in {-1, +1}^N$, we sample a sequence of $T in NN$
 subsequent configurations:
 
 $
-  {bold(s)^t}_(t=0)^T, quad "where each" bold(s)^(t+1) ~ P(bold(S)^(t+1) | bold(S)^t)
+  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^(t+1) ~ P(bold(S)^(t+1) | bold(S)^t)
 $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
 Each belief or attitude has the opportunity to update during every time interval. This
 update routine is referred to as _synchronous_ Glauber dynamics, contrasting
 _asynchronous_ Glauber dynamics, in which only one spin can update during a given
-interval.
+interval @glauberTimeDependentStatisticsIsing1963 @nguyenInverseStatisticalProblems2017.
 
 == Modelling interventions <subsec:asymmetric-belief-system-modelling-interventions>
 
@@ -567,7 +402,7 @@ value and outgoing edges toward a subset of beliefs and attitudes:
 
 The intervention node $I$ exerts influence on the belief system nodes $A$ and $B$. Let
 us consider the effective baseline activation at node $A$ and time $t+1$, as defined in
-@eqn:methods-model-local-energy, given a previous configuration $bold(s)^t$:
+@eqn:model-effective-activation, given a previous configuration $bold(s)^t$:
 
 $
   h_A^"eff" (bold(s)^t) = h_A + sum_("node" j) A_(j A) J_(j A) s^t_j
@@ -638,7 +473,7 @@ belief about what the other person believes).
 
 == Intervention strength
 @fig:methods-intervention-strengths-probability illustrates how the probability of
-activation for the intervention spin (@eqn:methods-model-logistic-probability) changes
+activation for the intervention spin (@eqn:model-activation-probability) changes
 for different intervention scenarios. Recall that a spin's activation probability is
 a function of it's effective local field. Since interventions constitute offsets to the
 effective local field, they are reflected as horizontal shifts in the logistic curve.
@@ -650,7 +485,7 @@ effective local field, they are reflected as horizontal shifts in the logistic c
     long: [
       Impact of different intervention strengths ($delta_h in {0, 0.5, 1.5, 2.5}$) on
       activation probability for the intervention spin. Activation probability is
-      calculated using @eqn:methods-model-logistic-probability.
+      calculated using @eqn:model-activation-probability.
     ],
   ),
 ) <fig:methods-intervention-strengths-probability>
