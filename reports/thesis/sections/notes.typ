@@ -20,9 +20,6 @@ drafts. This section is temporary, and for my own benefit :)
 
 == To add if I have time
 
-- Discussion in Chapter 2 about how we assume that attitudes are stateful.
-  Alternative approaches. This is worth coming back to, since Johan asked about it
-  in the interview.
 
 == Additional things to maybe discuss somewhere
 
