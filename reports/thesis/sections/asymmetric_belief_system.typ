@@ -47,13 +47,13 @@ KBS model using Glauber dynamics.
 Our theory of belief system dynamics rests on three main assumptions. First, we assume
 that beliefs and attitudes can be represented as discrete random variables. This allows
 us to consider beliefs and attitudes as entities characterised by an instantaneous
-state. In particular, this assumption contrasts alternative views that beliefs and
-attitudes are dispositional or the result of interactions with the environment, with no
-associated state of their own (*CITATIONS*).
+state. In particular, this assumption is not compatible with the perspective that beliefs
+and attitudes are contextual, with no singular internal state of their own
+@bendanaFragmentationBelief2021 @riemerPreferencesDontHave2014.
 
 Second, we assume that the state
-distribution for any given belief or attitude is conditional on the previous states
-of all others, formalising the idea that past beliefs and attitudes influence present
+distribution for any given belief or attitude (potentially) depends on the previous
+states of all others, formalising the idea that past beliefs and attitudes influence present
 ones. Finally, we assume that these conditional distributions are time-invariant. While
 belief and attitude _states_ may change over time, the dynamics by which this happens do
 not.
@@ -139,6 +139,11 @@ conceptualisation, the task of modelling a belief system reduces to describing h
 instantaneous configuration of belief and attitude states affects the distribution over
 possible future states.
 
+// NOTE:
+// Although the above definitions do not specify the duration of a single timestep, in
+// practice this time between ,While the above definition does not specify a time-scale,   In practice, the time For the purposes of
+
+
 *TODO:* "The DT-VAR model suffers from the problem of time-interval
 dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
 - Ours does not(?) because we use temporal data, and include self-interaction
@@ -217,7 +222,8 @@ dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
 The Causal Attitude Network (CAN) model considers an *attitude* (what we call a
 _belief system_) as represented by an Ising-style network of beliefs, feelings, opinions
 which are related via bi-directional edges reflecting reinforcing ($+$) or cognitive
-dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016.
+dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016. Each node, or _spin_,
+in the network takes on values in the domain ${-1, +1}$, representing two opposing states.
 Since the underlying
 Ising model contains only symmetric edges, the CAN model satisfies detailed balance, so
 is an equilibrium model of belief system dynamics @christensenComplexityCriticality2005
