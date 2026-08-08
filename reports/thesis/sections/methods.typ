@@ -5,6 +5,12 @@
 #import algorithmic: algorithm-figure, style-algorithm
 #show: style-algorithm
 
+#import "@preview/theorion:0.6.0": *
+#import cosmos.simple: *
+//#import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 // TODO:
 // - Parameter estimation: Discussion on why we can't estimate from cross-sectional data,
 //   even when excluding self-loops.
@@ -379,19 +385,32 @@ where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisat
 $D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
 return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood.
 
-*TODO:* Intuition for the effect of using the expectation.
-- Inferred model reflects ambiguity in states close to zero.
-- The likelihood contribution of each data value is the expectation over possible
-  spin states.
-- Values close to zero contribute a comparable weighting from each binary state.
-- When the likelihood given one binary state would be significantly higher than for the
-  other, this is downweighted to account for the probability that the value does not
-  obtain this state.
-- Therefore the expectation prevents overconfident optimisation toward any specific
-  binarisation --- the inferred model is required to explain the binarised dataset
-  _in expectation_.
-- In other words, if a data value may be binarised to $-1$ or $+1$ with equal
-  probability, then both cases should be reasonably explained by the parameterisation.
+// *TODO:* Intuition for the effect of using the expectation.
+// - When the likelihood given one binary state would be significantly higher than for the
+//   other, this is downweighted to account for the probability that the value does not
+//   obtain this state.
+// - Therefore the expectation prevents overconfident optimisation toward any specific
+//   binarisation --- the inferred model is required to explain the binarised dataset
+//   _in expectation_.
+// Also:
+// - What does it mean at the extremes (hard thresholding, fully-random thresholding)?
+// - What does it imply for values near zero in soft thresholding?
+// - How does it compare to MLE with hard or soft thresholding?
+
+
+
+By using the expected likelihood in place of the likelihood, the inferred model reflects
+the level of certainty or ambiguity present in the dataset. Consider that when using MLE,
+a neutral survey response (with value $0$) must first be binarised to either $+1$ or $-1$.
+Supposing (without loss of generality) that the response is
+mapped to $+1$, this erases information which may be important, since this observation
+is now no longer distinguishable from those which are truly positive. When using the
+expected likelihood, however, each observation's contribution to the objective function
+is an expectation over the possible binarisations. Values close to zero contribute
+comparable weightings from each binary state. Consequently, for values which may be
+binarised to $-1$ _and_ $+1$ with non-trivial probability, both cases should be
+reasonably explained by the inferred model.
+
 
 The second term is a smooth variant of L1 regularisation
 @tibshiraniRegressionShrinkageSelection1996. This has the effect of penalising
