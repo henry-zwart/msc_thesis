@@ -512,29 +512,51 @@ The values for both are summarised in @tab:methods-hyperparameter-values.
   placement: auto,
 ) <tab:methods-hyperparameter-values>
 
+We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and
+take #box[$epsilon = 10^(-8)$] such that $sqrt(epsilon)$ is significantly smaller than this
+threshold. This choice of $epsilon$ ensures that the smooth regularisation remains a
+good approximation to L1 regularisation, i.e.,
+
+$
+  sqrt(theta^2 + epsilon) approx |theta|
+$ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
+
 
 We use the Extended Bayesian Information Criterion (EBIC)
 @chenExtendedBayesianInformation2008 to select $lambda$,
 as recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"):
 
+// $
+//   op("EBIC")(bold(theta)^*) = k dot [ln(M(T-1)) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
+// $ <eqn:methods-ebic>
+
 $
-  op("EBIC")(bold(theta)^*) = k dot [ln(M(T-1)) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
+  op("EBIC")(bold(theta)^*) = overbracket(k ln q - 2 cal(L)_D (bold(theta)^*), op("BIC")(bold(theta)^*)) + 2 k dot gamma ln p
 $ <eqn:methods-ebic>
 
-The variable $k$ denotes the number of nonzero parameters in the optimised model, where
-a parameter $theta$ is considered nonzero if $|theta| > 10^(-2)$. We take
-$gamma = 0.25$, which has been shown to work well in general for network
-inference in the inverse Ising problem @barberHighdimensionalIsingModel2015.
+#let ebic-footnote = footnote[
+  Note that this is different from the prior used in the BIC, which is uniform over
+  the entire space of models. The prior in the EBIC, for $gamma = 1$, is uniform only
+  within each class of models containing $k$ parameters.
+]
 
-*TODO:* Argue this better. Explain what the EBIC does (induces prior). Say that they
-show even a slight bias toward sparser networks is effective.
+The variable $k$ denotes the number of (effectively) nonzero parameters in the optimised
+model. The point of difference between the EBIC and the standard Bayesian Information
+Criterion (BIC) is in their assumed priors over the space of possible models. While the
+BIC assumes a uniform prior, the EBIC penalises values of $k$ which permit a large number
+of models @foygelExtendedBayesianInformation2010 @barberHighdimensionalIsingModel2015.
+For instance, the class of models comprising eight spins (i.e., with 72 parameters)
+contains considerably fewer models with 10 parameters ($5.4 times 10^11$) than models
+with 36 parameters ($4.4 times 10^20$). In this scenario, by assuming a uniform prior,
+the BIC implicitly penalises models which are too sparse, or too dense. The parameter
+$gamma >= 0$ specifies the degree to which the EBIC penalises such classes of models,
+with $gamma = 1$ corresponding to a uniform prior over models with $k$
+parameters#ebic-footnote, for each $k in 0...p$.
 
-
-The EBIC is an evaluative criterion for model selection, which balances maximisation of
-the log-likelihood with model complexity, as measured by the number of parameters.
-Compared to the original Bayesian Information Criterion, EBIC tends to be more
-conservative when the number of parameters and observatons are comparable
-@foygelExtendedBayesianInformation2010. We select $lambda$ which minimises the
+#cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,
+nonzero choices of $gamma$ are sufficient to improve the accuracy of Ising model
+structural inference in various contexts. We take $gamma = 0.25$, which is the minimum
+value considered in their study. We select $lambda$ which minimises the
 EBIC for the symmetric and asymmetric models (independently), the results of which
 are displayed in @fig:methods-regularisation-ebic.
 
@@ -555,14 +577,6 @@ are displayed in @fig:methods-regularisation-ebic.
   placement: auto,
 ) <fig:methods-regularisation-ebic>
 
-We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and
-take $epsilon = 10^(-8)$ such that $sqrt(epsilon)$ is significantly smaller than this
-threshold. This choice of $epsilon$ ensures that the smooth regularisation remains a
-good approximation to L1 regularisation, i.e.,
-
-$
-  sqrt(theta^2 + epsilon) approx |theta|
-$ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
 
 
 === Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
