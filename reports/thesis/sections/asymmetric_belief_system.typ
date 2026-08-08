@@ -362,7 +362,7 @@ Given an initial state $bold(s)^1 in {-1, +1}^N$, we sample a sequence of $T in 
 subsequent configurations:
 
 $
-  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^(t+1) ~ P(bold(S)^(t+1) | bold(S)^t)
+  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^(t+1) ~ P(bold(sigma)^(t+1) | bold(sigma)^t)
 $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
 Each belief or attitude has the opportunity to update during every time interval. This
