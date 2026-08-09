@@ -348,7 +348,6 @@ are fixed across waves and account for some of the effects of stable traits. How
 at least three waves of data are required for the random intercept model to be
 identifiable#identifiability-footnote, while the climate beliefs dataset comprises only
 two waves.
-
 In unreported experiments we tried a similar approach, modelling baseline activations
 as linear functions of demographic factors (e.g., age, education, rural/urban status),
 which requires only two waves to be identifiable. While the resulting baseline
@@ -378,7 +377,6 @@ beliefs. The fact that we do not see this reflected may suggest minimal
 exogenous impacts, more generally, on the beliefs considered in this
 study.
 
-
 Our present focus on endogenous dynamics also does not discount the substantial
 role of social interaction in belief change
 @karashialiQualitativeStudyExploring2023 @galesicHumanSocialSensing2021
@@ -399,6 +397,97 @@ Attitude Network model which also serves as the foundation for our proposed mode
 our work is mostly orthogonal to theirs, we anticipate that it would be straightforward
 to incorporate such social influences in our model.
 
+#let aspirin-footnote = footnote[
+  In their original paper, #cite(<gollobTakingAccountTime1987>, form: "prose")
+  illustrate this with respect to the effects of aspirin over time. See
+  #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") for extended discussion
+  on this example.
+]
+To ensure computational tractability and model simplicity we have defined the
+KBS model dynamics as progressing via discrete timesteps. However, this means that
+the model parameters inferred during calibration are a function of the time between
+observations, known as the _time-interval dependency problem_
+@gollobTakingAccountTime1987. #cite(<gollobTakingAccountTime1987>, form: "prose")
+demonstrate that in certain contexts, inferred effect size, sign, and existence can
+be sensitive to interval duration. This is particularly evident in cases where the
+true dynamics play out at a much faster timescale than the measurements#aspirin-footnote.
+Furthermore, #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") argue that
+when several state updates can occur between observations, the inferred effects should
+be treated as _total effects_ rather than _direct effects_. This is potentially critical
+for the present study, which fundamentally assumes that the interaction effects relating
+beliefs are direct effects.
+<time-interval-dependency-problem>
+
+However, we do not expect these problems to be especially consequential in the context
+considered in this study. In particular, per the results of previous studies
+@greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020
+@marlonChangeUSStatelevel2022, we expect most of the examined beliefs to be quite stable
+over the measurement timeframe (six months). As such, we do not expect any given belief
+to exhibit multiple significant changes in state between observations. We may, however,
+fail to detect causal dynamics between beliefs which play out on a quick timescale. For
+instance, suppose that following natural disasters, individuals typically become
+increasingly concerned about impending extreme weather, causing potentially rapid shifts
+in their beliefs regarding climate change. If both changes occur between measurements,
+our calibration method will attempt to explain both transitions with respect to
+individuals' belief states prior to the natural disaster, thereby missing the fast causal
+influence of extreme weather concerns on climate-related beliefs.
+
+// #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") suggest the use of
+// continuous-time models to cope with the described issues; however, since, as argued, we
+// do not expect belief systems to be particularly vulnerable to
+
+// In other words, we expect that the belief system dynamics to play out at a slower
+// timescale than is captured by the model. This, of course, poses a separate issue,
+// as the stability of beliefs over this timeframe means the observations provide
+// limited information on belief dynamics.
+
+
+
+
+
+// only the effect _size_, but also sign
+// and existence are
+// can be
+// #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") suggest two possible
+// implications, respectively, for our calibrated model. First, that when
+//
+// - Inferred effect size and sign may depend on the interval duration. Aspirin example. @gollobTakingAccountTime1987
+// - Since several states may change in the time between measurements,
+//   #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") argue that effects inferred
+//   for discrete-time autoregressive models should be treated as total effects rather than
+//   direct effects.
+//
+// , and has several
+// implications for our results.
+// - Several beliefs can change between observations -->
+//   #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") argue that this implies
+//   effects should be treated as total, rather than direct, effects.
+// - Inferred effect depends on time interval. e.g., aspirin example. May judge as different
+//   effect, sign, or direction depending on the interval length.
+//   - We do not expect this to be particularly consequential in the current study, on
+//     account of the observed belief stability. Beliefs are, in general, unlikely to
+//     change multiple times during the time between responses.
+//   - We may, however, miss causal dynamics which happen at a quick timescale. For
+//     instance, consider an individual who, after experiencing an extreme weather event
+//     becomes concerned about future events, and soon after adopts belief in the reality
+//     of climate change. If both changes occur between measurements, we will attempt to
+//     attribute both to the pre-extreme-weather state, thereby missing the fast causal
+//     influence of extreme weather concerns on belief in climate change.
+//   - As in the aspirin example, we may find that effect sizes are smaller than those
+//     obtained for longer intervals (e.g., if beliefs change a bit, from neutral to weakly
+//     support, during six months). However, given the stability of beliefs, we are unlikely
+//     to see the extreme case where zero-effect is measured at 24h. Particularly for
+//     political beliefs, which are highly stable over short timeframes. Maybe an issue for
+//     other beliefs with lower inertia, such as beliefs about climate impacts.
+// - In response to the time-interval problem,
+//   #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") suggest the use of
+//   continuous-time models.
+//
+//
+// *TODO:* "The DT-VAR model suffers from the problem of time-interval
+// dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
+// - Ours does not(?) because we use temporal data, and include self-interaction
+//   effects which set timescale.
 
 // - Previous work integrating cognitive and social forces in belief system models:
 //   - Based on the assumption that individuals tend to strive for both cognitive
@@ -648,12 +737,20 @@ to make strong claims regarding causal influences. We note that the broader
 CCCV survey from which the climate beliefs dataset used for calibration in
 this study does contain several additional waves, which are usable if we
 drop our requirements regarding the number of variables and inclusion of specific
-beliefs. However, this presents a separate issue regarding the intervals
+beliefs.
+
+However, this presents a separate issue regarding the intervals
 between measurements, as inter-response times between different pairs of waves can differ
-significantly, violating the model requirements. Further consideration is required to
+significantly, violating the model requirements.
+Further consideration is required to
 determine whether, for instance, the additional waves can be used _only_ to estimate
 individual baselines, while evenly-spaced observations are used to estimate interaction
 effects.
+#cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") propose continuous-time
+models as an alternative solution, enabling calibration with heterogeneous
+inter-response times, while also reducing the potential issues associated with the
+_time-interval dependency problem_ (discussed under Limitations,
+#internal-link(<time-interval-dependency-problem>)).
 
 As discussed above, the regression decision tree approach to modelling the effect
 characterisation function can produce incomplete descriptions when important

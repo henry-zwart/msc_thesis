@@ -17,6 +17,8 @@ drafts. This section is temporary, and for my own benefit :)
   sufficient?
 - Justifying the multiple of 2 in the logistic model formulation, without going from the
   Hamiltonian?
+- In discussion, do I need to talk about how @ryanTimeInterveneContinuousTime2022 use
+  continuous models, and why I don't think that is necessary?
 
 == To add if I have time
 

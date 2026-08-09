@@ -146,10 +146,6 @@ possible future states.
 // practice this time between ,While the above definition does not specify a time-scale,   In practice, the time For the purposes of
 
 
-*TODO:* "The DT-VAR model suffers from the problem of time-interval
-dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
-- Ours does not(?) because we use temporal data, and include self-interaction
-  effects which set timescale.
 
 
 // Consider a belief or attitude $S_i$ with domain $Omega_(S_i)$. The state of $S_i$
@@ -221,18 +217,16 @@ dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
 //
 // - *A:* CAN model as theory of belief systems; assumes equilibrium dynamics
 
-*TODO: Some duplication here with the start of the chapter*
-
-The Causal Attitude Network (CAN) model considers an *attitude* (what we call a
-_belief system_) as represented by an Ising-style network of beliefs, feelings, opinions
+The Causal Attitude Network (CAN) model considers an attitude as represented by an
+Ising-style network of beliefs (in the inclusive sense defined above)
 which are related via bi-directional edges reflecting reinforcing ($+$) or cognitive
 dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016. Each node, or _spin_,
 in the network takes on values in the domain ${-1, +1}$, representing two opposing states.
-Since the underlying
-Ising model contains only symmetric edges, the CAN model satisfies detailed balance, so
-is an equilibrium model of belief system dynamics @christensenComplexityCriticality2005
-@cardyScalingRenormalizationStatistical1996. As such, it's associated transition
-probability is stationary and is described by the Boltzmann distribution (ibid.).
+Since the underlying Ising model contains only symmetric edges, the CAN model satisfies
+detailed balance, so is an equilibrium model of belief system dynamics
+@christensenComplexityCriticality2005 @cardyScalingRenormalizationStatistical1996. As
+such, it's associated transition probability is stationary and is described by the
+Boltzmann distribution (ibid.).
 
 We define the *Kinetic Belief System* model (*KBS*) as a variation on the Causal Attitude
 Network, based on the kinetic Ising model @glauberTimeDependentStatisticsIsing1963
