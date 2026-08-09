@@ -27,7 +27,7 @@ def plot_errors(responses: list[list[datetime]], ax: Axes):
 
 def main(data: pl.DataFrame):
     fig, axes = plt.subplots(
-        ncols=2, figsize=(5, 1.2), sharey=True, constrained_layout=True
+        ncols=2, figsize=(5, 1.4), sharey=True, constrained_layout=True
     )
 
     w2_repeating = data.filter(wave=2, participant_type="repeating")
@@ -87,6 +87,9 @@ def main(data: pl.DataFrame):
     for ax in axes.flatten():
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
+
+    axes[0].set_title("Wave 2")
+    axes[1].set_title("Wave 3")
 
     fig.savefig(
         "reports/thesis/results/figures/dataset/validation_switchpoints.png",

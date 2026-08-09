@@ -6,12 +6,6 @@
 #show: show-theorion
 
 
-#let full-dataset-name = [*placeholder dataset*]
-#let dataset-name = [climate beliefs dataset]
-
-*TODO:*
-- Create table describing climate beliefs dataset variables
-- Discuss how we create the index variables
 
 // == Plan
 //
@@ -85,22 +79,21 @@ targeted dataset used for model calibration (@sec:methods).
 While many empirical studies on belief systems rely on cross-sectional data
 @leeVariationsClimateChange2025 @vannoordNatureStructureEuropean2025
 @powellModelingLeveragingIntuitive2023, longitudinal data is necessary to capture
-changes in individuals' internal cognitive states over time. In fact, repeated
-per-individual observations are essential to our adopted method for model calibration.
-We are fortunate, in this study, to have had access to a longitudinal dataset on
-climate beliefs and attitudes in USA as our primary data resource.
-
-The longitudinal study (*CITE*) comprises six waves of responses from individuals
-residing in the United States, collected between
+changes in individuals' internal cognitive states over time. In this study we are
+fortunate to have had access to data from the *Longitudinal Panel of Perceptions About
+Climate Change and Covid* (*CCCV*), a representative longitudinal survey comprising six
+waves of responses from individuals residing in the United States, collected between
 #survey_start_date.display("[month repr:long] [year]") and
-#survey_end_date.display("[month repr:long] [year]"). The assessed dimensions include
-general demographic information (e.g., age, gender, education, and financial status),
-beliefs, attitudes, and experiences relating to concurrently-salient topics such as
-COVID-19, climate change, or the 2020 US presidential election, and support for
-hypothetical policies. In addition to a wide-form table of survey response data, the
-dataset includes a codebook which specifies, for each survey item, the question text,
-occurrence in survey waves, and conditional display logic where applicable. At present,
-the codebook is limited to Waves 1---5, i.e., excluding the sixth (final) wave.
+#survey_end_date.display("[month repr:long] [year]")
+(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose")). The assessed
+dimensions include general demographic information (e.g., age, gender, education, and
+financial status), beliefs, attitudes, and experiences relating to concurrently-salient
+topics such as COVID-19, climate change, or the 2020 US presidential election, and
+support for hypothetical policies. In addition to a wide-form table of survey response
+data, the dataset includes a codebook which specifies, for each survey item, the
+question text, occurrence in survey waves, and conditional display logic where
+applicable. At present, the codebook is limited to Waves 1---5, i.e., excluding the
+sixth (final) wave.
 
 However, the dataset is not without complexities. Survey participation varies, with
 each participant responding to a (possibly non-contiguous) subset of waves.
@@ -113,10 +106,11 @@ Waves 1 and 2, and only \~1900 of these individuals also responded to Wave 3.
 #figure(
   image("../results/figures/dataset/participation.pdf"),
   caption: caption(
-    short: [Survey participation counts],
+    short: [CCCV survey participation],
     long: [
-      Number of repeat participants for different wave combinations. Combinations with
-      total responses below 1500 have been removed.
+      Number of repeat participants for different wave combinations in the Longitudinal
+      Panel of Perceptions About Climate Change and Covid dataset, prior to dataset
+      cleaning. Excludes combinations with fewer than 1500 responses.
     ],
   ),
 ) <fig:dataset-survey-participation>
@@ -157,15 +151,19 @@ closer than others. For instance, notice that:
       1 and 2.
   ]
 }
-This poses a potential problem for model calibration, since the non-equilibrium
-belief model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
+This poses a potential problem for model calibration, since the Kinetic Belief System
+model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
 samples are equispaced.
 
 #figure(
   image("../results/figures/dataset/response_eventplot.pdf"),
   caption: caption(
-    short: [Longitudinal survey response dates per-wave],
-    long: [*TODO*],
+    short: [CCCV survey response dates],
+    long: [
+      Per-wave survey response dates for the Longitudinal Panel of Perceptions About
+      Climate Change and Covid dataset (prior to dataset cleaning). Annotations
+      illustrate differences in intervals spanned by/between survey waves.
+    ],
   ),
 ) <fig:dataset-longitudinal-response-eventplot>
 
@@ -175,21 +173,29 @@ responses for different participants.
 
 #figure(
   image("../results/figures/dataset/interresponse_times.pdf"),
-  caption: [Between-response time distribution],
+  caption: caption(
+    short: [CCCV survey inter-response time distribution],
+    long: [
+      Inter-response time distribution between each pair of consecutive waves in the
+      Longitudinal Panel of Perceptions About Climate Change and Covid dataset (prior to
+      dataset cleaning). The inter-response time between two waves is calculated,
+      for individuals present in both waves, as the number of days between their responses.
+    ],
+  ),
 ) <fig:dataset-longitudinal-interresponse-times>
 
 
 Finally, we note that the time interval spanned by the longitudinal dataset includes
-several notable events which could reasonably be expected to influence --- and
-confound --- the dynamics of beliefs and attitudes in myriad contexts. These
+several notable events which could reasonably be expected to influence---and
+confound---the dynamics of beliefs in myriad contexts. These
 include the COVID-19 pandemic, which arrived in the US only three months prior to the
 first survey wave @holshueFirstCase20192020, the 2020 US Presidential Election which
-occurred during Wave 3, the January 6 United States Capitol Attack, which occurred
-between Waves 3 and 4, ...
+occurred during Wave 3, and the January 6 United States Capitol Attack, which occurred
+between Waves 3 and 4.
 
 == Data Validation <sec:dataset-validation>
 
-The complexity of the climate attitudes survey, as outlined above, necessitates a
+The complexity of the CCCV survey, as outlined above, necessitates a
 rigorous approach to data validation, both to identify errors in the expected schema
 and to ensure that the data matches our expectations.
 
@@ -221,11 +227,18 @@ For instance, categorical multiple-choice responses are represented using a
 response column comprises ```python list```'s, and (ii) that all list elements belong to
 the set of values defined by the ```python Enum```.
 
+//#set table(stroke: (x, y) => (y: if y in (0,1) { 0.5pt } else { 0pt }))
+// #set table(
+//   inset: (x: 6pt, y: 4pt),
+// )
+#show table: set text(size: 10pt)
 #figure(
   table(
     columns: (auto, auto, auto),
-    align: (center, center, center),
-    [Response schema], [Raw type], [Coerced type],
+    align: (left, center, center),
+    stroke: none,
+    table.header[Response format][Raw type][Coerced type],
+    table.hline(stroke: 0.5pt),
     [Text], [```python str```], [```python str```],
     [Single response (ordinal)], [```python int```], [```python int```],
     [Single response (categorical)], [```python int```], [```python Enum```],
@@ -234,8 +247,11 @@ the set of values defined by the ```python Enum```.
   ),
   placement: auto,
   caption: caption(
-    short: [Dataset type coercion mapping],
-    long: [*TODO*],
+    short: [CCCV survey type coercion mapping],
+    long: [
+      Data type coercion mapping for different question types in the Longitudinal Panel
+      of Perceptions About Climate Change and Covid survey.
+    ],
   ),
 ) <tab:dataset-types>
 
@@ -329,12 +345,8 @@ of the data from Wave 6, and exclude this wave from the present study.
 
 All type-level and response-value validation checks succeed, providing a strong
 guarantee that the data schema matches our expectations per the codebook. We do,
-however, encounter several problems during null-value validation.
-
-#emph-block[
-  Acknowledge Sara and team for help diagnosing the errors, per the declaration
-  of authorship.
-]
+however, encounter several problems during null-value validation. Sara Constantino's
+guidance was instrumental in the process of diagnosing these problems.
 
 In some cases, these were due to errors in the codebook itself. These errors are
 relatively straightforward to identify from the null-value validation results, since
@@ -350,20 +362,26 @@ the population (in this case, the individuals in a particular treatment class).
 // Possible that this is actually a codebook error or something.
 In other cases we identify contradictions which are due to errors in the survey
 process, which caused certain survey questions to be displayed to some individuals
-in conditions which did not satisfy the specified survey logic. Some such cases
-were systematic, affecting all individuals until the survey process was updated;
-however, in other cases we have not been able to identify the source of the error.
+in conditions which did not satisfy the specified survey logic.
+@fig:dataset-validation-null-value-switchpoints shows examples observed in Waves
+2 and 3. Some cases were systematic, affecting all individuals until the survey process
+was updated (_left_); however, in other cases we have not been able to identify the
+source of the error (_right_).
+We exclude all responses which fail the null-value validation from further analysis in
+the data cleaning stage (@subsec:dataset-preprocessing-cleaning).
 
 #figure(
   image("../results/figures/dataset/validation_switchpoints.pdf"),
   caption: caption(
-    short: [Null-value validation],
-    long: [*TODO*],
+    short: [CCCV survey null-value validation errors],
+    long: [
+      Systematic (_left_) and unresolved (_right_) null-value validation errors
+      identified in Waves 2 and 3 of the Longitudinal Panel of Perceptions About
+      Climate Change and Covid survey.
+    ],
   ),
 ) <fig:dataset-validation-null-value-switchpoints>
 
-We exclude all responses which fail the null-value validation from further analysis in
-the data cleaning stage (@subsec:dataset-preprocessing-cleaning).
 
 The described validation process is primarily concerned with ensuring that the data
 schema --- comprising types and values --- aligns with our expectations as per the
@@ -566,10 +584,11 @@ codebook) with survey response data.
   caption: caption(
     short: [Constructed survey database diagram],
     long: [
-      The survey database comprises tables for survey items (underlying
+      The constructed survey database comprises tables for survey items (underlying
       concepts assessed in the survey), survey questions (the particular mode in which
       an item is assessed in a given wave or treatment condition), survey responses,
-      and participants.
+      and participants. Arrows denote data hierarchy, e.g., each response belongs to
+      a participant, and is associated with a particular survey question.
     ],
   ),
 ) <fig:dataset-preprocessing-transformations-database-diagram>
@@ -585,8 +604,9 @@ question as well as a _survey participant_. We include a separate table for part
 which records wave participation as well as the initial wave in which a participant has
 responded.
 
-The database is stored on disk as a collection of parquet files @Parquet, which
-preserve complex data type information and are supported in both R (e.g., using
+The database is stored on disk as a collection of parquet files, which
+preserve complex data type information, including those in @tab:dataset-types, and are
+supported in both R (e.g., using
 #link("https://arrow.apache.org/docs/r/reference/read_parquet.html")[Arrow]) and Python
 (e.g., using
 #link("https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html")[Pandas]
@@ -611,64 +631,266 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 
 == Climate beliefs dataset <subsec:dataset-dataset-construction>
 
-// *TODO:*
-// - We exclude sixth wave due to no codebook
+In light of the discussed complexities and breadth of content of the CCCV survey, we
+construct a smaller, targeted dataset of beliefs relating to climate
+change, which we expect---on theoretical grounds---to exhibit interdependent
+behaviour. This serves as the calibration dataset for the experiments described
+in this study. We will refer to this targeted dataset as the *climate beliefs dataset*.
 
+We aim for 7--10 variables in the final set, to keep both the number of model
+parameters and parameter uncertainty acceptably small. We first filter the survey
+items to consider only those which assess beliefs (in the inclusive sense described by
+#cite(<galesicIntegratingSocialCognitive2021>, form: "prose"), which includes both
+epistemic positions about states of affairs, as well as views, opinions, and preferences),
+and which either relate directly to climate change, or which are expected to influence
+climate-related beliefs (e.g., political alignment). The parameter
+estimation method (outlined in *TODO*) imposes several additional requirements on the
+constructed dataset, in particular, the dataset should comprise at least two waves,
+with approximately equispaced observations per-individual, and with no null values.
+We additionally constrain the dataset to include three specific variables of interest:
 
-#emph-block[
-  *Note:* Take the content of this subsection with a grain of salt. I drafted this
-  a while back, and need to tidy it up. The variable selection description is
-  also incomplete, and we currently don't describe how the index variables are
-  constructed (we take their mean).
+#let cc-human-footnote = footnote[
+  In the CCCV survey, the item `CC Human` actually has four possible (categorical)
+  responses, reflecting all combinations of 'human activities' and 'natural causes' as
+  the causes of climate change. We re-map these values to 'human-caused' and
+  'not human-caused', such that the variable is instead binary, and thus both amenible
+  to the analysis described below and interpretable in the kinetic belief system model in
+  @sec:calibration.
 ]
 
-#set text(fill: luma(120))
++ *CC Worry*: Level of worry regarding current and future climate change.
 
-In light of the complexities and breadth of content of the #full-dataset-name, we
-construct a smaller, targeted dataset of beliefs and attitudes relating to climate
-change, which we expect -- on theoretical grounds -- to exhibit interdependent
-behaviour. We will refer to this targeted dataset as the #strong[#dataset-name]. The
-primary motivator for constructing this dataset is the calibration of the
-non-equilibrium belief system model (@subsec:methods-parameter-estimation).
++ *CC Others Worry*: Belief about how worried _others_ are about climate change.
 
-We aim for 7--10 variables in the final set, so as to keep both the number of model
-parameters and parameter uncertainty sufficiently small. We first filter the survey
-items to consider only those which assess cognitive states (e.g., beliefs, attitudes,
-opinions, stances). We further restrict our attention to items which either relate
-directly to climate change, or which are expected to influence climate-related
-cognitive states (e.g., political alignment).
++ *CC Human*: Belief that climate change is caused by human activities.#cc-human-footnote
 
-Within this restricted set of survey items our intention is to select a collection
-of variables which: (i) exhibit related behaviour, (ii) maximise the number of
-observations, and (iii) satisfy the requirements of the parameter estimation method
-used for model calibration. We will discuss the latter two requirements now, and return
-to the first shortly. We require at least two waves of responses from each participant,
-as the model is defined by a time-dependent Markov process, and thus parameter
-estimation involves fitting a conditional probability distribution where each
-belief state depends on the previous one. Moreover, each participant's responses should
-be equispaced, with spacing being consistent across individuals, and the dataset must
-contain no missing values. In addition to these requirements, we prioritise including
-several variables of interest:
+Climate-related worry is generally considered an influential factor for other
+beliefs relating to climate change, including support for climate policy
+@meadInformationSeekingGlobal2012 @whitmarshClimateAnxietyWhat2022a
+@goldbergIdentifyingMostImportant2021 @boumanWhenWorryClimate2020
+@bumannWhatAreDeterminants2021, and is expected to be
+influenced by beliefs others' level of worry, as a descriptive norm
+@gavriletsModellingSocialNorms2024. The third variable serves to provide a more complex
+view of individuals' beliefs about the nature of climate change; while most
+Americans believe in the existence of climate change, there is greater variation in
+beliefs about its causes @hamiltonTrackingPublicBeliefs2015.
 
-+ *CC Worry*: Concern about current and future climate change
-+ *CC Others Worry*: Belief regarding _others'_ level of worry about
-  climate change
-+ *CC Human*: Belief that climate change is caused by human activities
+To satisfy these requirements while maximising the number of observations (for model
+calibration purposes), we limit the climate beliefs dataset to waves 3 and 4, which
+contain 1693 repeat observations, excluding survey errors. After removing items
+with no substantial correlations, and small groups with no substantial external
+correlations, we identify 17 relevant survey items (see @apdx:dataset for the full set
+of items).
 
-The first is generally considered influential in shifting related attitudes, while
-the second is expected to be influential on the first, as a perceived descriptive norm.
-Finally, while most inividuals in the USA believe in the _existence_ of climate change,
-there is relatively greater variation in beliefs about it's _causes_. Hence the third
-item is an interesting target for intervention studies. (*TODO*)
-// TODO: Citations
+However, this set of items still exceeds our target range of 7--10. We therefore proceed
+to identify groups of similar or redundant variables which may be removed or combined
+into interpretable index variables. Note that cross-sectional methods should not be used
+for this analysis, as they fail to capture temporal relatonships, which are fundamental
+to the kinetic belief system model (defined in @sec:asymmetric-belief-systems). Instead,
+we examine the temporal and contemporaneous networks obtained using lag-1 vector
+autoregression (VAR).
+These networks are derived
+from the solution to the following regression problem, described in
+#cite(<epskampGaussianGraphicalModel2018>, form: "prose"):
 
-Given the above requirements and the objective to maximise the number of observations,
-we identify Waves 3 & 4 as suitable candidates. These waves include 1693 repeat
-observations (excluding survey errors as described in the previous subsection). After
-removing items with no substantial correlations, and small groups of items which exhibit
-only internal correlations, we identify 17 relevant survey items, comprising both
-beliefs (epistemic positions, @tab:dataset-dataset-beliefs) and attitudes (qualitative
-evaluations, @tab:dataset-dataset-attitudes).
+$
+  bold(y)^t & = bold(B)bold(y)^(t-1) + epsilon^(t) \
+  epsilon^t & ~ cal(N)(bold(0), bold(Theta))
+$ <eqn:dataset-var-regression-problem>
+
+Where $bold(y)^t$ is the vector of observed variable values for each individual at time
+$t$. The _temporal network_ matrix $bold(B)$ comprises linear next-state predictors, while
+the _contemporaneous network_ matrix $bold(K) = Theta^(-1)$ describes the pairwise
+conditional correlations which remain after accounting for temporal effects. The
+entries of $bold(K)$ are analogous to partial correlations, constituting the conditional
+correlation between $X$ and $Y$ given the remaining variables.
+
+#let re-coded-footnote = footnote[
+  We have re-coded the survey items such that the matrix values are predominantly
+  positive.
+]
+@fig:dataset-full-subset-var displays the contemporaneous and temporal networks for the
+filtered set of 17 candidate variables#re-coded-footnote, with rows and columns ordered
+using hierarchical clustering on the temporal matrix to highlight groups of related
+items. Values with magnitude less than 0.05 are excluded, as is the (symmetric) upper
+triangle of the contemporaneous network. The values in each row of the temporal matrix
+are the regression predictors for that row's variable. Therefore we interpret row $i$ as
+describing the variables which _influence_ item $i$, and column $i$ as describing the
+variables which are influenced _by_ item $i$.
+
+#figure(
+  image("../results/figures/dataset/full_subset_var.pdf"),
+  caption: caption(
+    short: [Pairwise vector autoregression: full subset],
+    long: [
+      Contemporaneous (left) and temporal (right) network matrices for the filtered
+      candidate set. Entries in row $i$ of the temporal matrix are
+      the regression predictors for the subsequent value of variable $X_i$. Rows and
+      columns are ordered using hierarchical clustering on the temporal matrix:
+      $d_bold(K) (X,Y) = 1 - abs(bold(K))$.
+    ],
+  ),
+  placement: auto,
+) <fig:dataset-full-subset-var>
+
+We note three apparent clusters of variables: (i) political views, (ii) beliefs about
+climate change impacts, and (iii) positions on climate policy, and other beliefs
+relating to climate action. In the first case, political affiliation (partisan identity)
+and ideology (conservative $<-->$ liberal) cluster together in both networks, yet
+appear to have minimal external associations. We retain this group on theoretical
+grounds, since political beliefs are often key determinants for climate-related
+beliefs and policy positions @palmWhatCausesPeople2017 @bumannWhatAreDeterminants2021.
+Secondly, beliefs regarding the impact of climate change on different population groups,
+`CC Impact (X)`, exhibit strong internal contemporaneous associations, relatively
+weaker temporal associations. We choose here to combine these into an index variable,
+although an alternative strategy would be to retain only `CC Impact (World)` and/or
+`CC Impact (Wealthy)`, noting that these variables each have several (and distinct)
+temporal associations. Finally, the right-most six variables form clear clusters in
+both networks. Four of these relate directly to climate policy, while the remaining
+two assess participants views on the importance of individual action in managing
+climate change, and the role of scientists in guiding the climate change response.
+We combine these into a third cluster, which we interpret as reflecting an individual's
+general attitude toward climate action.
+
+#figure(
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:climate-beliefs-dataset-items).
+    ],
+  ),
+  placement: auto,
+) <fig:dataset-marginal-distributions>
+
+We construct the index variables by first re-scaling each constituent item to the
+interval $[-1, 1]$ and then taking the average. All other variables are also re-scaled
+in the same way. The final dataset comprises eight variables, described in
+@tab:climate-beliefs-dataset-items. Figures @fig:dataset-marginal-distributions[] and
+@fig:dataset-reduced-var show the marginal distributions, and the contemporaneous and
+temporal networks, respectively, for the climate beliefs dataset.
+
+#figure(
+  image("../results/figures/dataset/reduced_subset_var.pdf"),
+  caption: caption(
+    short: [Temporal network: reduced dataset],
+    long: [
+      Contemporaneous and temporal network matrices for the climate beliefs dataset.
+      Entries in row $i$ of the temporal matrix are
+      the regression predictors for the subsequent value of variable $X_i$. Rows and
+      columns are ordered using hierarchical clustering on the temporal matrix:
+      $d_bold(K) (X,Y) = 1 - abs(bold(K))$.
+    ],
+  ),
+  placement: auto,
+) <fig:dataset-reduced-var>
+
+#let climate-beliefs-variable-table = table(
+  columns: 3,
+  stroke: none,
+  align: (left, center, left),
+  table.header[Item][Index][Interpretation],
+  table.hline(stroke: 0.5pt),
+  [CC Real], [No], [Belief that climate change is/is not real.],
+
+  [CC Human],
+  [No],
+  [Belief that climate is/is not caused (at least in-part) by human activities.],
+
+  [CC Worry],
+  [No],
+  [Level of worry about current and future climate change.],
+
+  [CC Others Worry],
+  [No],
+  [Belief regarding _others'_ level of worry about current and future climate change.],
+
+  [Weather Worry],
+  [No],
+  [Level of worry about possible near-term extreme weather events or natural disasters.],
+
+  [Politics],
+  [Yes],
+  [Political views, as a combination of partisan alignment and political ideology.],
+
+  [CC Impact],
+  [Yes],
+  [Belief regarding the degree of current climate change impacts, in general.],
+
+  [CC Action],
+  [Yes],
+  [General attitude toward action on climate change.],
+)
+
+#figure(
+  climate-beliefs-variable-table,
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$.
+    ],
+  ),
+) <tab:climate-beliefs-dataset-items>
+
+
+
+
+
+
+
+
+
+
+
+
+// In light of the complexities and breadth of content of the CCCV, we
+// construct a smaller, targeted dataset of beliefs and attitudes relating to climate
+// change, which we expect -- on theoretical grounds -- to exhibit interdependent
+// behaviour. We will refer to this targeted dataset as the *climate beliefs dataset*.
+// The primary motivator for constructing this dataset is the calibration of the
+// non-equilibrium belief system model (@subsec:methods-parameter-estimation).
+//
+// We aim for 7--10 variables in the final set, so as to keep both the number of model
+// parameters and parameter uncertainty sufficiently small. We first filter the survey
+// items to consider only those which assess cognitive states (e.g., beliefs, attitudes,
+// opinions, stances). We further restrict our attention to items which either relate
+// directly to climate change, or which are expected to influence climate-related
+// cognitive states (e.g., political alignment).
+//
+// Within this restricted set of survey items our intention is to select a collection
+// of variables which: (i) exhibit related behaviour, (ii) maximise the number of
+// observations, and (iii) satisfy the requirements of the parameter estimation method
+// used for model calibration. We will discuss the latter two requirements now, and return
+// to the first shortly. We require at least two waves of responses from each participant,
+// as the model is defined by a time-dependent Markov process, and thus parameter
+// estimation involves fitting a conditional probability distribution where each
+// belief state depends on the previous one. Moreover, each participant's responses should
+// be equispaced, with spacing being consistent across individuals, and the dataset must
+// contain no missing values. In addition to these requirements, we prioritise including
+// several variables of interest:
+//
+// + *CC Worry*: Concern about current and future climate change
+// + *CC Others Worry*: Belief regarding _others'_ level of worry about
+//   climate change
+// + *CC Human*: Belief that climate change is caused by human activities
+//
+// The first is generally considered influential in shifting related attitudes, while
+// the second is expected to be influential on the first, as a perceived descriptive norm.
+// Finally, while most inividuals in the USA believe in the _existence_ of climate change,
+// there is relatively greater variation in beliefs about it's _causes_. Hence the third
+// item is an interesting target for intervention studies. (*TODO*)
+
+// Given the above requirements and the objective to maximise the number of observations,
+// we identify Waves 3 & 4 as suitable candidates. These waves include 1693 repeat
+// observations (excluding survey errors as described in the previous subsection). After
+// removing items with no substantial correlations, and small groups of items which exhibit
+// only internal correlations, we identify 17 relevant survey items, comprising both
+// beliefs (epistemic positions, @tab:dataset-dataset-beliefs) and attitudes (qualitative
+// evaluations, @tab:dataset-dataset-attitudes).
 
 //#{
 //  set par(spacing: 1em)
@@ -696,107 +918,108 @@ evaluations, @tab:dataset-dataset-attitudes).
 //}
 
 // Item name | Category | Question | Response schema | Notes
-#set table(stroke: (x, y) => (y: if y == 1 { 0.5pt } else { 0pt }))
+
+
 //#show table.cell.where(y: 0): set text(weight: "bold")
-#figure(
-  {
-    set text(size: 9pt)
-    table(
-      columns: 3,
-      align: (right, left, left),
-      table.header[Item][Question text][Response schema],
-      [CC Real], [Do you think that climate change is happening?], [#list[Yes][No][Don't know]],
-
-      [CC Human (\*)],
-      [Do you think rising temperatures are a result of human activities, natural causes, or both?],
-      [#list[Not happening][Natural causes][Human activities][Both]],
-
-      [CC Impact (world)],
-      [How much do you think climate change is currently harming the world in general?],
-      [#list[Not at all][Only a little][A moderate amount][A great deal]],
-
-      [CC Impact (wealthy)],
-      [How much do you think climate change is currently harming wealthy communities within the United States?],
-      [#list[Not at all][Only a little][A moderate amount][A great deal]],
-
-      [CC Impact (poor)],
-      [How much do you think climate change is currently harming poor communities within the United States?],
-      [#list[Not at all][Only a little][A moderate amount][A great deal]],
-
-      [CC Impact (comm)],
-      [How much do you think climate change is currently harming your local community?],
-      [#list[Not at all][Only a little][A moderate amount][A great deal]],
-
-      [CC Others Worry],
-      [How worried do you think most Americans are about global warming/climate change these days?],
-      [#list[Not at all worried][Not very worried][Somewhat worried][Very worried]],
-    )
-  },
-  caption: caption(
-    short: [],
-    long: [
-      \* Re-mapped to: includes/does not include human activities
-    ],
-  ),
-) <tab:dataset-dataset-beliefs>
-
-#figure(
-  {
-    set text(size: 9pt)
-    table(
-      columns: 3,
-      align: (right, left, left),
-      table.header[Item][Question text][Response schema],
-      [CC Worry],
-      [How worried are you about current and future global warming/climate change?],
-      [#list[Not at all worried][Not very worried][Somewhat worried][Very worried]],
-
-      [Weather Worry],
-      [How worried are you about an extreme weather event or natural disaster happening to you personally in the next year?],
-      [#list[Not at all][Only a little][A moderate amount][A great deal]],
-
-      [CC Responsibility],
-      [It is important that individuals take action on issues of climate change.],
-      [5-point Likert agreement scale],
-
-      [CC Scientists],
-      [Scientists with appropriate expertise should guide how we respond to climate change],
-      [5-point Likert agreement scale],
-
-      [Policy: ICA (\*)],
-      [Do you favour an international agreement committing the USA and other countries to reduce their carbon emissions?],
-      [#list[Yes and legally binding)][Yes but _not_ legally binding)][No]],
-
-      [Policy: Tax fuel],
-      [How much do you support/oppose a tax on the production/distribution of carbon-based fuelds?],
-      [5-point Likert support scale],
-
-      [Policy: Auto],
-      [How much do you support/oppose stronger carbon emissions standard for car manufacturers?],
-      [5-point Likert support scale],
-
-      [Policy: Env. Reg.],
-      [Which statement comes closer to your views?],
-      [#list[Stricter environmental regulations cost too many jobs and hurt the economy][Stricter environmental regulations are worth the cost]],
-
-      [Political affiliation (\*\*)],
-      [In politics today, do you consider yourself a:],
-      [#list[Republican][Leaning Republican][Independent][Leaning Democrat][Democrat]],
-
-      [Political ideology],
-      [What is your political ideology?],
-      [#list[Very conservative][Conservative][Moderate][Liberal][Very liberal]],
-    )
-  },
-  caption: caption(
-    short: [],
-    long: [
-      \* Re-mapped to: Yes/No
-
-      \*\* Constructed from separate items for identification and leaning
-    ],
-  ),
-) <tab:dataset-dataset-attitudes>
+// #figure(
+//   {
+//     set text(size: 9pt)
+//     table(
+//       columns: 3,
+//       align: (right, left, left),
+//       table.header[Item][Question text][Response schema],
+//       [CC Real], [Do you think that climate change is happening?], [#list[Yes][No][Don't know]],
+//
+//       [CC Human (\*)],
+//       [Do you think rising temperatures are a result of human activities, natural causes, or both?],
+//       [#list[Not happening][Natural causes][Human activities][Both]],
+//
+//       [CC Impact (world)],
+//       [How much do you think climate change is currently harming the world in general?],
+//       [#list[Not at all][Only a little][A moderate amount][A great deal]],
+//
+//       [CC Impact (wealthy)],
+//       [How much do you think climate change is currently harming wealthy communities within the United States?],
+//       [#list[Not at all][Only a little][A moderate amount][A great deal]],
+//
+//       [CC Impact (poor)],
+//       [How much do you think climate change is currently harming poor communities within the United States?],
+//       [#list[Not at all][Only a little][A moderate amount][A great deal]],
+//
+//       [CC Impact (comm)],
+//       [How much do you think climate change is currently harming your local community?],
+//       [#list[Not at all][Only a little][A moderate amount][A great deal]],
+//
+//       [CC Others Worry],
+//       [How worried do you think most Americans are about global warming/climate change these days?],
+//       [#list[Not at all worried][Not very worried][Somewhat worried][Very worried]],
+//     )
+//   },
+//   caption: caption(
+//     short: [],
+//     long: [
+//       \* Re-mapped to: includes/does not include human activities
+//     ],
+//   ),
+// ) <tab:dataset-dataset-beliefs>
+//
+// #figure(
+//   {
+//     set text(size: 9pt)
+//     table(
+//       columns: 3,
+//       align: (right, left, left),
+//       table.header[Item][Question text][Response schema],
+//       [CC Worry],
+//       [How worried are you about current and future global warming/climate change?],
+//       [#list[Not at all worried][Not very worried][Somewhat worried][Very worried]],
+//
+//       [Weather Worry],
+//       [How worried are you about an extreme weather event or natural disaster happening to you personally in the next year?],
+//       [#list[Not at all][Only a little][A moderate amount][A great deal]],
+//
+//       [CC Responsibility],
+//       [It is important that individuals take action on issues of climate change.],
+//       [5-point Likert agreement scale],
+//
+//       [CC Scientists],
+//       [Scientists with appropriate expertise should guide how we respond to climate change],
+//       [5-point Likert agreement scale],
+//
+//       [Policy: ICA (\*)],
+//       [Do you favour an international agreement committing the USA and other countries to reduce their carbon emissions?],
+//       [#list[Yes and legally binding)][Yes but _not_ legally binding)][No]],
+//
+//       [Policy: Tax fuel],
+//       [How much do you support/oppose a tax on the production/distribution of carbon-based fuelds?],
+//       [5-point Likert support scale],
+//
+//       [Policy: Auto],
+//       [How much do you support/oppose stronger carbon emissions standard for car manufacturers?],
+//       [5-point Likert support scale],
+//
+//       [Policy: Env. Reg.],
+//       [Which statement comes closer to your views?],
+//       [#list[Stricter environmental regulations cost too many jobs and hurt the economy][Stricter environmental regulations are worth the cost]],
+//
+//       [Political affiliation (\*\*)],
+//       [In politics today, do you consider yourself a:],
+//       [#list[Republican][Leaning Republican][Independent][Leaning Democrat][Democrat]],
+//
+//       [Political ideology],
+//       [What is your political ideology?],
+//       [#list[Very conservative][Conservative][Moderate][Liberal][Very liberal]],
+//     )
+//   },
+//   caption: caption(
+//     short: [],
+//     long: [
+//       \* Re-mapped to: Yes/No
+//
+//       \*\* Constructed from separate items for identification and leaning
+//     ],
+//   ),
+// ) <tab:dataset-dataset-attitudes>
 
 //Decisions regarding dataset size, variable selection, and
 //transformation are non-trivial on account of the scope of the #full-dataset-name,
@@ -860,109 +1083,108 @@ evaluations, @tab:dataset-dataset-attitudes).
 //observations.
 //
 
-To reduce the set of candidate variables to the target range of 7--10, we proceed to
-identify groups of similar or redundant variables which may be removed or combined into
-interpretable index variables. We use two primary measures to investigate similarity:
-pairwise partial correlation, and vector autoregression
-@epskampPersonalizedNetworkModeling2018   @epskampGaussianGraphicalModel2018.
+// To reduce the set of candidate variables to the target range of 7--10, we proceed to
+// identify groups of similar or redundant variables which may be removed or combined into
+// interpretable index variables. We use two primary measures to investigate similarity:
+// pairwise partial correlation, and vector autoregression
+// @epskampPersonalizedNetworkModeling2018   @epskampGaussianGraphicalModel2018.
+//
+// Partial correlation measures the correlation between a pair of variables $X$ and $Y$
+// after conditioning on all remaining variables $Z$:
+//
+// $
+//   rho(X, Y) = op("Corr")(X,Y | Z)
+// $ <eqn:dataset-partial-correlation>
+//
+// In particular, $|rho(X, Y)|$ is non-zero if $X$ and $Y$ exhibit _linear_
+// correlation which is not shared with the remaining variables in $Z$. For instance,
+// consider the fork structure $X <- A -> Y$ where $X$ and $Y$ are probabilistic linear
+// functions of $A$. If the value of $A$ is unknown, then $X$ and $Y$ are dependent.
+// However, once $A$ is known, the dependency structure is broken. Thus $op("Corr")(X,Y)$
+// is nonzero, while $rho(X, Y) = 0$.
+//
+// @fig:dataset-full-subset-partial-correlations displays the pairwise partial correlation
+// between each pair of variables in the filtered set. Note that we have coded all
+// variables such that the partial correlation matrix entries are predominantly positive.
+// Cells with magnitude below $0.05$ have been masked for visual clarity. Rows and columns
+// are ordered using hierarchical clustering.
+//
+// #figure(
+//   image("../results/figures/dataset/full_subset_partial_corr.pdf"),
+//   caption: caption(
+//     short: [Pairwise partial correlation: full subset],
+//     long: [
+//       Pairwise partial correlation for the filtered candidate set
+//       . Cells with
+//       $|rho(X, Y)| < 0.05$ are masked for visual clarity. Rows and columns are
+//       ordered using hierarchical clustering over the distance
+//       matrix: $d_rho (X,Y) = 1 - |rho(X, Y)|$.
+//     ],
+//   ),
+//   placement: auto,
+// ) <fig:dataset-full-subset-partial-correlations>
+//
+// Partial correlations are limited, however, in that they capture only instantaneous
+// (or 'contemporaneous') relations between variables, while the non-equilibrium belief
+// system model is concerned with temporal relationships. Therefore we also examine the
+// temporal and contemporaneous networks obtained using vector autoregression (VAR)
+// with a #box[$delta t = 1$] time lag @brandtMultipleTimeSeries2007. These networks are derived
+// from the solution to the following regression problem, described in
+// #cite(<epskampGaussianGraphicalModel2018>, form: "prose"):
+//
+// $
+//   bold(y)^t & = bold(B)bold(y)^(t-1) + epsilon^(t) \
+//   epsilon^t & ~ cal(N)(bold(0), bold(Theta))
+// $ //<eqn:dataset-var-regression-problem>
+//
+// Where $bold(y)^t$ is the vector of observed variable values for each individual at time
+// $t$. The _temporal network_ matrix $bold(B)$ comprises linear next-state predictors, while
+// the _contemporaneous network_ matrix $bold(K) = Theta^(-1)$ describes the pairwise
+// conditional correlations which remain after accounting for temporal effects. The
+// entries of $bold(K)$ are analogous to partial correlations, constituting the conditional
+// correlation between $X$ and $Y$ given the remaining variables.
+//
+// @fig:dataset-full-subset-var shows the contemporaneous and temporal network matrices
+// for the filtered set of candidate variables. The contemporaneous matrix is symmetric,
+// thus the upper triangle is not shown.
+//
+// #figure(
+//   image("../results/figures/dataset/full_subset_var.pdf"),
+//   caption: caption(
+//     short: [Pairwise vector autoregression: full subset],
+//     long: [
+//       Contemporaneous (left) and temporal (right) network matrices for the filtered
+//       candidate set. Entries in row $i$ of the temporal matrix are
+//       the regression predictors for the subsequent value of variable $X_i$. Rows and
+//       columns are ordered using hierarchical clustering on the distance matrix:
+//       $d_bold(K) (X,Y) = 1 - abs(bold(K))$.
+//     ],
+//   ),
+//   placement: auto,
+// ) //<fig:dataset-full-subset-var>
 
-Partial correlation measures the correlation between a pair of variables $X$ and $Y$
-after conditioning on all remaining variables $Z$:
-
-$
-  rho(X, Y) = op("Corr")(X,Y | Z)
-$ <eqn:dataset-partial-correlation>
-
-In particular, $|rho(X, Y)|$ is non-zero if $X$ and $Y$ exhibit _linear_
-correlation which is not shared with the remaining variables in $Z$. For instance,
-consider the fork structure $X <- A -> Y$ where $X$ and $Y$ are probabilistic linear
-functions of $A$. If the value of $A$ is unknown, then $X$ and $Y$ are dependent.
-However, once $A$ is known, the dependency structure is broken. Thus $op("Corr")(X,Y)$
-is nonzero, while $rho(X, Y) = 0$.
-
-@fig:dataset-full-subset-partial-correlations displays the pairwise partial correlation
-between each pair of variables in the filtered set. Note that we have coded all
-variables such that the partial correlation matrix entries are predominantly positive.
-Cells with magnitude below $0.05$ have been masked for visual clarity. Rows and columns
-are ordered using hierarchical clustering.
-
-#figure(
-  image("../results/figures/dataset/full_subset_partial_corr.pdf"),
-  caption: caption(
-    short: [Pairwise partial correlation: full subset],
-    long: [
-      Pairwise partial correlation for the filtered candidate set
-      (@tab:dataset-dataset-beliefs, @tab:dataset-dataset-attitudes). Cells with
-      $|rho(X, Y)| < 0.05$ are masked for visual clarity. Rows and columns are
-      ordered using hierarchical clustering over the distance
-      matrix: $d_rho (X,Y) = 1 - |rho(X, Y)|$.
-    ],
-  ),
-  placement: auto,
-) <fig:dataset-full-subset-partial-correlations>
-
-Partial correlations are limited, however, in that they capture only instantaneous
-(or 'contemporaneous') relations between variables, while the non-equilibrium belief
-system model is concerned with temporal relationships. Therefore we also examine the
-temporal and contemporaneous networks obtained using vector autoregression (VAR)
-with a #box[$delta t = 1$] time lag @brandtMultipleTimeSeries2007. These networks are derived
-from the solution to the following regression problem, described in
-#cite(<epskampGaussianGraphicalModel2018>, form: "prose"):
-
-$
-  bold(y)^t & = bold(B)bold(y)^(t-1) + epsilon^(t) \
-  epsilon^t & ~ cal(N)(bold(0), bold(Theta))
-$ <eqn:dataset-var-regression-problem>
-
-Where $bold(y)^t$ is the vector of observed variable values for each individual at time
-$t$. The _temporal network_ matrix $bold(B)$ comprises linear next-state predictors, while
-the _contemporaneous network_ matrix $bold(K) = Theta^(-1)$ describes the pairwise
-conditional correlations which remain after accounting for temporal effects. The
-entries of $bold(K)$ are analogous to partial correlations, constituting the conditional
-correlation between $X$ and $Y$ given the remaining variables.
-
-@fig:dataset-full-subset-var shows the contemporaneous and temporal network matrices
-for the filtered set of candidate variables. The contemporaneous matrix is symmetric,
-thus the upper triangle is not shown.
-
-#figure(
-  image("../results/figures/dataset/full_subset_var.pdf"),
-  caption: caption(
-    short: [Pairwise vector autoregression: full subset],
-    long: [
-      Contemporaneous (left) and temporal (right) network matrices for the filtered
-      candidate set (@tab:dataset-dataset-beliefs
-      @tab:dataset-dataset-attitudes). Entries in row $i$ of the temporal matrix are
-      the regression predictors for the subsequent value of variable $X_i$. Rows and
-      columns are ordered using hierarchical clustering on the distance matrix:
-      $d_bold(K) (X,Y) = 1 - abs(bold(K))$.
-    ],
-  ),
-  placement: auto,
-) <fig:dataset-full-subset-var>
-
-We observe some apparent commonalities between the partial correlation and VAR
-networks. First, the _CC Impact_ variables exhibit relatively strong
-internal relations. External relations with variables outside this set are
-typically weaker, with the exception of _CC Impact (world)_, which has several
-non-trivial partial correlations with other variables, including other climate-related
-beliefs. All variables in this group, except _CC Impact (wealthy)_, also have
-non-trivial partial correlations with _CC Worry_ --- one of our
-variables-of-interest. Second, the policy variables, as well as _CC Responsibility_
-and _CC Scientists_, also exhibit substantial connectivity in the partial correlation
-network. This is diminished in the contemporaneous VAR network, but visible in the
-clustering of the temporal network. The similarities among these variables in the
-rows and columns of the temporal matrix indicate that they fill similar roles as
-predictors, and are also predicted similarly. Thirdly, _Political affiliation_ and
-_Political ideology_ are highly related in the partial correlation matrix, and
-also exhibit similar behaviour in the temporal network.
+// We observe some apparent commonalities between the partial correlation and VAR
+// networks. First, the _CC Impact_ variables exhibit relatively strong
+// internal relations. External relations with variables outside this set are
+// typically weaker, with the exception of _CC Impact (world)_, which has several
+// non-trivial partial correlations with other variables, including other climate-related
+// beliefs. All variables in this group, except _CC Impact (wealthy)_, also have
+// non-trivial partial correlations with _CC Worry_ --- one of our
+// variables-of-interest. Second, the policy variables, as well as _CC Responsibility_
+// and _CC Scientists_, also exhibit substantial connectivity in the partial correlation
+// network. This is diminished in the contemporaneous VAR network, but visible in the
+// clustering of the temporal network. The similarities among these variables in the
+// rows and columns of the temporal matrix indicate that they fill similar roles as
+// predictors, and are also predicted similarly. Thirdly, _Political affiliation_ and
+// _Political ideology_ are highly related in the partial correlation matrix, and
+// also exhibit similar behaviour in the temporal network.
 
 // *TODO:* PCA/EFA plot.
 
-Based on these observations, we construct three index variables: (i) _CC Impact_,
-comprising the four climate impact beliefs, (ii) _Politics_, comprising the measures
-of political affiliation and ideology, and (iii) _CC Action_, comprising the four
-policy variables, as well as _CC Responsibility_ and _CC Scientists_.
+// Based on these observations, we construct three index variables: (i) _CC Impact_,
+// comprising the four climate impact beliefs, (ii) _Politics_, comprising the measures
+// of political affiliation and ideology, and (iii) _CC Action_, comprising the four
+// policy variables, as well as _CC Responsibility_ and _CC Scientists_.
 
 
 // #figure(
@@ -973,34 +1195,6 @@ policy variables, as well as _CC Responsibility_ and _CC Scientists_.
 //   ),
 //   placement: auto,
 // )
-#figure(
-  image("../results/figures/dataset/reduced_subset_temporal.pdf"),
-  caption: caption(
-    short: [Temporal network: reduced dataset],
-    long: [Temporal],
-  ),
-  placement: auto,
-)
 
-#figure(
-  image("../results/figures/dataset/reduced_subset_contemporaneous.pdf"),
-  caption: caption(
-    short: [Contemporaneous network: reduced dataset],
-    long: [Contemporaneous],
-  ),
-  placement: auto,
-)
-
-
-#figure(
-  image("../results/figures/dataset/marginal_distributions.pdf"),
-  caption: caption(
-    short: [Marginal distributions: reduced dataset],
-    long: [*TODO*],
-  ),
-  placement: auto,
-) <fig:dataset-marginal-distributions>
-
-#set text(fill: black)
 
 

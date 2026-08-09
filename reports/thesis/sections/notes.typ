@@ -4,8 +4,49 @@
 #import cosmos.fancy: *
 #show: show-theorion
 
+
 A collection of notes, to-do items, discussion points, and snippets taken from old
 drafts. This section is temporary, and for my own benefit :)
+
+== Questions for Vítor
+
+- Is it correct to acknowledge Sara directly in the dataset validation section?
+- How much do I need to say about the climate beliefs dataset in the calibration section?
+- Do I need to include the quantitative explanation of the difference in intervention
+  effects (in terms of where the derivative is maximum)? Or is the conceptual explanation
+  sufficient?
+- Justifying the multiple of 2 in the logistic model formulation, without going from the
+  Hamiltonian?
+- In discussion, do I need to talk about how @ryanTimeInterveneContinuousTime2022 use
+  continuous models, and why I don't think that is necessary?
+
+== To add if I have time
+
+
+== Additional things to maybe discuss somewhere
+
+#emph-block[
+  Individual belief dynamics are important to understanding behavioural influences
+  between individuals: @rodriguezCollectiveDynamicsBelief2016
+  @aiyappaEmergenceSimpleComplex2024
+  - "Models of internal belief networks generally disregard external social networks, although a number of classic social-cognitive theories recognise the importance of social environments in changing individual beliefs and behaviours (Ajzen, 1991; Cialdini & Trost, 1998; Festinger, 1954; Fishbein & Ajzen, 1975; Petty & Cacioppo, 1986)" @dalegeNetworksBeliefsIntegrative2025
+]
+
+Other intervention modelling approaches:
+- Control theory @henryControlPsychologicalNetworks2022
+- Continuous-time approach (maybe mention in the DT-VAR problem bit)
+  @ryanTimeInterveneContinuousTime2022
+
+To include in discussion on RQ4?:
+- @brandtEvaluatingBeliefSystem2021[p.~4,20] "connections will likely vary between people,
+  time, and political contexts", "Although ... belief systems are at the individuals level,
+  this does not mean that structure is not shared"
+
+#emph-block[
+  Practical considerations for designing empirical studies for psychological networks.
+  Discusses limitations of cross-sectional studies for teasing apart within-person and
+  between-person effects @chambonNetworkPsychometricsPractice2026.
+]
 
 == Politics --> Policy narrative
 

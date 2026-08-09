@@ -24,7 +24,7 @@ Belief system models based on the Ising model, inspired by the cognitive dissona
 theory of belief system dynamics, demonstrate impressive descriptive and explanatory
 capacities for various observed cognitive phenomena at both individual and collective
 scales. The currently prevalent view within the modelling community is that influence
-relations between beliefs or attitudes are symmetric --- the pressure for $X$ to align
+relations between beliefs are symmetric --- the pressure for $X$ to align
 with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
 this assumption on trial.
 
@@ -170,6 +170,10 @@ $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
 $#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$; the only pair with a single
 directional interaction is $#raw("Politics") -> #raw("CC Real")$.
 
+Comparing directional strength and degree centrality indices for `CC Worry` and
+`Politics` across bootstrapped models, we find significant differences ($p < 0.05$) for
+strength centrality on `CC Worry`, and both strength and degree centrality on `Politics`.
+
 Most directional differentials display substantial uncertainty (confidence
 interval width $> 0.1$ on average), reflecting the parameter accuracy discussed in the
 previous chapter (@fig:calibration-edge-accuracy). This results in several inconclusive
@@ -217,16 +221,16 @@ it is asymmetrically _influenced_ by `Politics`.
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
 
-*TODO:*
-- Discuss how the observed effects of intervening on politics are _in spite of_
-  the high inertia on this variable. i.e., high inertia lowers the pre-intervention
-  $h_"eff"$, making it harder to intervene (higher barrier to surpass).
-- Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
-  lower for the asymmetric model. Since all outbound interactions are similar (or
-  better) than `Politics`, with the exception of `CC Action`, indicates that
-  the added difficulty of overcoming the barrier on politics is outweighed by
-  the greater influence on the target. Also perhaps due to the fact that the
-  inertia works in favour of the intervention once politics flips.
+// *TODO:*
+// - Discuss how the observed effects of intervening on politics are _in spite of_
+//   the high inertia on this variable. i.e., high inertia lowers the pre-intervention
+//   $h_"eff"$, making it harder to intervene (higher barrier to surpass).
+// - Comparatively, `CC Impact` is easier to intervene on (lower inertia), but ranks
+//   lower for the asymmetric model. Since all outbound interactions are similar (or
+//   better) than `Politics`, with the exception of `CC Action`, indicates that
+//   the added difficulty of overcoming the barrier on politics is outweighed by
+//   the greater influence on the target. Also perhaps due to the fact that the
+//   inertia works in favour of the intervention once politics flips.
 // - $checkmark$ *Overall goal of these experiments:* understand how belief system behaviour under
 //   intervention differs between symmetric and asymmetric models calibrated to the
 //   climate beliefs dataset. _Re-state the corresponding research question_.
@@ -271,11 +275,11 @@ chapter (@sec:heterogeneity-results-intervention-effects).
 
 We consider both *outbound* and *inbound* interventions, illustrated below. Outbound
 intervention experiments (left) examine how interventions on a particular spin propagate
-to other beliefs and attitudes. On the other hand, inbound intervention experiments
-(right) consider a single belief or attitude as the intervention target and examine the
+to other beliefs. On the other hand, inbound intervention experiments
+(right) consider a single belief as the intervention target and examine the
 differences in effects on this spin when intervening elsewhere in the network. We refer
-to the belief or attitude on which an intervention is applied as the
-*point-of-intervention* and the belief or attitude whose resulting state is measured as
+to the belief on which an intervention is applied as the
+*point-of-intervention* and the belief whose resulting state is measured as
 the *target*.
 
 #{

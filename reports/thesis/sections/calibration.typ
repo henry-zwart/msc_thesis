@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./dataset.typ": climate-beliefs-variable-table
 
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
@@ -6,9 +7,55 @@
 // #import cosmos.clouds: *
 #show: show-theorion
 
+// #let full-details-footnote = footnote[
+//   Full details regarding the validation, cleaning, and construction of the climate
+//   beliefs dataset are provided in @sec:dataset.
+// ]
+
 *TODO:*
-- Discuss how all interaction terms are positive.
 - Discuss differences in baseline activations.
+  - Exogenous influences, and unmeasured beliefs
+
+The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
+relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
+extracted from the CCCV survey
+(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose"). The dataset
+includes responses from 1693 repeating participants, measured during waves 3 and 4 of
+the survey. We map the maximum and minimum (possible) values for each variable to $+1$
+and $-1$ respectively, such that these reflect the two spin states in the KBS model.
+
+
+
+#figure(
+  {
+    show table: set text(size: 10pt)
+    climate-beliefs-variable-table
+  },
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables (replicated)],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$. Note that this table is identical to
+      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+    ],
+  ),
+) <tab:calibration-climate-beliefs-dataset-items>
+
+#figure(
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions (replicated)],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+      is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+    ],
+  ),
+  placement: auto,
+) <fig:calibration-marginal-distributions>
+
 
 Before proceeding, let's take a moment to calibrate
 and evaluate the models which will be used in the upcoming experiments. Using the
@@ -40,16 +87,27 @@ the models explain the data?').
 for each model. We only display the upper triangular portion of the symmetric model's
 matrix, since each pair of spins in this model has a single, bidirectional relation.
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
-with respect to the modelled timescale#timescale-footnote (they are 'sticky'). This is
-particularly true for `Politics`, and less so for `CC Others Worry` and `CC Impact`.
+with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
+is consistent with prior studies looking at the rate of change for beliefs
+@greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.
+This is particularly true for `Politics`, and less so for `CC Others Worry` and
+`CC Impact`.
 
-#emph-block[
-  Stability of belief dynamics:
-  - @osborneDoesOpennessExperience2020
-  - @kileyMeasuringStabilityChange2020
-    - Most observed change in beliefs and behaviours is short-term (or measurement error)
-    - This is consistent with the cognitive dissonance theory
-]
+Observe that all interaction effects are non-negative. This is by design; we have
+re-coded the dataset variables such that this is the case. The fact that such
+a re-coding exists implies that it is possible, within this belief system, to hold
+a set of beliefs which are internally consistent, i.e., with no cognitive
+dissonance. We provide a formal proof of this statement in @sec:appendix-derivations.
+
+
+
+// #emph-block[
+//   Stability of belief dynamics:
+//   - @osborneDoesOpennessExperience2020
+//   - @kileyMeasuringStabilityChange2020
+//     - Most observed change in beliefs and behaviours is short-term (or measurement error)
+//     - This is consistent with the cognitive dissonance theory
+// ]
 
 
 #figure(
@@ -91,7 +149,7 @@ $
 
 where $p in NN$ is the number of model parameters, and we take the adjacency matrix
 $bold(A)$ as fully-connected, permitting influence relations to be inferred between
-each pair of beliefs or attitudes.
+each pair of beliefs.
 
 
 // @fig:calibration-edge-accuracy shows the
