@@ -21,6 +21,8 @@ drafts. This section is temporary, and for my own benefit :)
   continuous models, and why I don't think that is necessary?
 - In chapter 2, on simulation with Glauber dynamics. Do I need to discuss why async
   models are harder to calibrate?
+- In parameter estimation, how to reword optimisation problem to depend on $lambda$
+  and $epsilon$ compactly?
 
 === Resolving feedback
 - Page 9:
@@ -46,6 +48,72 @@ drafts. This section is temporary, and for my own benefit :)
 - Page 14:
   + Done.
   + Noted.
+- Page 18: *TO DO*
+- Page 20:
+  + (*Ask*) How to re-word this
+  + (*Check*) Discussed already
+- Page 22:
+  + (*Ask*) Do I need to make this clearer?
+  + (*Defer*) This requires some thought. Suggestion isn't correct. We need to count both
+    directions. Can't multiply by 2 either, since the directional contributions still
+    come from distinct observations.
+- Page 23:
+  + I've now backed this up with proper reasoning haha.
+  + This is no longer included.
+- Page 24:
+  + Resolved.
+- Page 32:
+  + (Deferred until after restructure)
+  + (Deferred until after restructure)
+  + (Deferred until after restructure)
+  + Resolved
+  + (*Ask*) I've described this now in the calibration section. Is this sufficient?
+    (see above question)
+- Page 33:
+  + Resolved
+- Page 34:
+  + (Deferred as requires recreating figure)
+- Page 36:
+  + Resolved/reworded.
+  + Done/reworded.
+  + (*Ask*) I think these suggestions misrepresent the intention.
+  + (*Ask*) I think these suggestions misrepresent the intention.
+  + (*Defer*) Requires some effort.
+  + (*Ask*) I think I understand, but a little unclear. May be that I've omitted for
+    visual clarity. I can add a comment to this effect perhaps?
+- Page 37:
+  + Done.
+  + (*Deferred until after restructure*)
+  + Clarified by making this a footnote. (It was previously in the following sentence,
+    but the page was cluttered).
+- Page 38:
+  + (*Deferred/maybe ask*) These are two different things.
+- Page 39:
+  + Resolved.
+- Page 40:
+  + (*Check*) I've changed this to 'nonzero'. Positive is not important. The important
+    part is that there is a small, but nonzero, effect on these beliefs.
+  + Done.
+- Page 41:
+  + Reworded paragraph.
+  + Removed this sentence altogether.
+  + Clarified in a footnote.
+- Page 45:
+  + Resolved, added forward references.
+- Page 46: *Deferred*
+- Page 47:
+  + *Deferred* until I've rewritten figure caption.
+  + Done.
+  + Done.
+  + *Ask:* Should this just be a discussion point? Or perhaps leave it as a footnote, but
+    reference the corresponding place in the discussion?
+- Page 49:
+  + *Check:* I think I've answered this now.
+  + Done.
+
+
+
+
 
 == To add if I have time
 

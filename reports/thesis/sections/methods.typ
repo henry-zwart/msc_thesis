@@ -229,13 +229,14 @@ difference between the observed outcomes.
 // the causal directionality on this relationship is incorrect (support for climate policies
 // can reinforce other spins, but is fundamentally a result of these).
 
-== Binarisation <subsec:dataset-binarisation>
+== Soft Binarisation <subsec:dataset-binarisation>
 
 Prior to model fitting, we binarise all variables, mapping data values to the
 domain ${-1, +1}$. Before binarising, we shift each variable such that the _survey
 midpoint_ (e.g., '3' on a 5-point Likert scale) aligns with 0, and rescale each
 variable such that the minimum and maximum possible values map to $-1$ and $+1$
-respectively. For variables with no well-defined midpoint, such as those with an even
+respectively.
+For variables with no well-defined midpoint, such as those with an even
 number of possible responses, we shift such that the minimal and maximal values are at
 equal distance from 0.
 
@@ -359,7 +360,7 @@ model parameters is similar to the number of observations
 beliefs in this study ($N in {7,8}$), the number of parameters $p$ grows
 rapidly, with $p in O(N^2)$ for both the symmetric and asymmetric model variants. In
 combination with sampling error, we expect the number of parameters to negatively
-impact the robustness of the inferred parameters --- given an alternative dataset of
+impact the robustness of the inferred parameters---given an alternative dataset of
 the same size, we would expect significant variation in parameters.
 
 We mitigate these respective issues in our parameter estimation scheme by
@@ -480,7 +481,7 @@ this is derived analogously to
 @eqn:methods-parameter-estimation-derivative-baseline-activation as:
 
 $
-  partial/(partial J_(j i)) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) A_(j i) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
+  partial/(partial J_(j i)) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
 $ <eqn:methods-parameter-estimation-derivative-interaction-effect-asym>
 
 In the symmetric belief system model, since we require that $bold(J) = bold(J)^T$, we
@@ -575,7 +576,7 @@ parameters#ebic-footnote, for each $k in 0...p$.
 #cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,
 nonzero choices of $gamma$ are sufficient to improve the accuracy of Ising model
 structural inference in various contexts. We take $gamma = 0.25$, which is the minimum
-value considered in their study. We select $lambda$ which minimises the
+value considered in their study. We then select $lambda >= 0$ which minimises the
 EBIC for the symmetric and asymmetric models (independently), the results of which
 are displayed in @fig:methods-regularisation-ebic.
 

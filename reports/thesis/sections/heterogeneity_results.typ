@@ -11,8 +11,9 @@ While the previous chapter was primarily concerned with the _collective_ effects
 intervention, the distribution of expected effect of intervention across individuals
 for inbound interventions targeting 'Climate Action' shows substantial variation between
 survey participants (@fig:heterogeneity-results-cc-action-distribution). We begin this
-chapter with an investigation into the conditions under which different interventions
-targeting beliefs about climate action are likely to be effective.
+chapter, in @sec:heterogeneity-results-intervention-effects, by investigating the
+conditions under which different interventions targeting beliefs about climate action are
+likely to be effective.
 
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
@@ -26,15 +27,15 @@ targeting beliefs about climate action are likely to be effective.
   ),
 ) <fig:heterogeneity-results-cc-action-distribution>
 
-We then consider how inferred belief system structure varies between individuals, or
-subgroups in a population. In the previous chapter we identified political ideology as
-a particularly influential belief, both through asymmetric interactions with
-other variables
-(@subsec:asymmetry-results-existence) and as an effective point-of-intervention for
-interventions targeting attitudes toward climate action (@subsec:asymmetry-results-impact).
-Here, we investigate whether this influence extends beyond pairwise interactions with
-other variables by comparing asymmetric belief systems calibrated to the (self-reported)
-liberal and conservative subpopulations within the climate beliefs dataset.
+In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+structure varies between subgroups in a population. In the previous chapter we identified
+political ideology as a particularly influential belief, both through asymmetric
+interactions with other variables (@subsec:asymmetry-results-existence) and as an
+effective point-of-intervention for interventions targeting attitudes toward climate
+action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+extends beyond pairwise interactions with other variables by comparing asymmetric belief
+systems calibrated to the (self-reported) liberal and conservative subpopulations within
+the climate beliefs dataset.
 
 
 == Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
@@ -87,17 +88,18 @@ _personas_.
     short: [Characterisation of responsiveness to intervention],
     long: [
       Characterisation of initial states ('personas'; middle panel) which yield
-      effective interventions when targeting `CC Action` using different
-      points-of-intervention (rows). Intervention effect is measured as the difference
-      in `CC Action` activation probability between intervention ($delta_h = 2.5$) and
-      null (no-intervention) models at $t=5$, for the asymmetric belief model calibrated
-      to the climate beliefs dataset. Differences in the population upper quartile are
-      'high-effect'. (*Left*) Distribution of intervention effect
-      across survey participants. (*Centre*) Typical high-effect personas estimated
-      using a depth-3 regression decision tree. Rows are distinct personas. Cells
-      correspond to intervals of initial state dimensions ($L = [-1, 0]$, $H = [0, +1]$).
-      (*Right*) Prevalence of each persona in the high-effect and low-effect
-      subpopulations.
+      effective interventions (within the population upper quartile)w hen targeting
+      `CC Action` using different points-of-intervention (rows). Intervention effect is
+      measured as the difference in `CC Action` activation probability between
+      intervention ($delta_h = 2.5$) and null (no-intervention) models at $t=5$, for the
+      asymmetric kinetic belief model calibrated to the climate beliefs dataset.
+      Differences in the population upper quartile are 'high-effect'. (*Left*)
+      Distribution of intervention effect across survey participants. (*Centre*) Typical
+      high-effect personas estimated using a depth-3 regression decision tree. Rows are
+      distinct personas. Cells correspond to intervals of initial state dimensions
+      ($L = [-1, 0]$, $H = [0, +1]$). (*Right*) Prevalence of each persona within the
+      subpopulations of individuals with intervention effects below (_low-effect_) or
+      above (_high-effect_) the population upper quartile.
     ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
@@ -154,13 +156,16 @@ The expected difference in activation probabilities between the intervention and
 models exhibits a clear bimodal distribution across survey
 participants for each scenario, with the higher mode contained within the upper quartile
 (indicated by the darker shaded regions). For each point-of-intervention we observe a
-small set of personas. In each case these exhibit high prevelence among individuals with
-high intervention effects, and considerably lower prevalence for other individuals,
-indicating that the identified personas effectively characterise the conditions for
-effective interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+small set of personas. In each case these personas exhibit high prevelence among
+individuals with high intervention effects, and considerably lower prevalence for other
+individuals, indicating that the identified personas effectively characterise the
+conditions for effective
+interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
 While prevalence among the high-effect individuals is generally high, this does vary
-across points-of-intervention (e.g., 20% of effective interventions on beliefs about
-climate impacts are not captured).
+across points-of-intervention. For instance, 20% of individuals predicted to be in
+the high-effect category for interventions on `CC Worry` are not represented by the
+identified persona, while for interventions on `Politics` only 3% of high-effect
+individuals are not represented.
 
 // Recall that the effect of intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
@@ -452,12 +457,12 @@ far from representative of the differences between individuals
 general trends for these subpopulations. Using the parameter estimation approach
 described in Chapters @subsec:methods-parameter-estimation[] and @sec:calibration,
 we calibrate separate asymmetric belief systems to the subsets of the climate beliefs
-dataset which consistently (i.e., in both waves) self-report conservative ($n=#ncons$)
-and liberal #box[($n=#nlib$)] political ideologies#smaller-dataset-footnote.
-We exclude the `Politics` variable
-from the model, since this is captured by the partitioned datasets. The hyperparameters
-used for regularisation strength and smoothing are listed in
-@tab:methods-hyperparameter-values.
+dataset comprising individuals who consistently (i.e., in both waves) self-report their
+political ideology as being either 'conservative' or 'very conservative' ($n=#ncons$)
+or 'liberal' or 'very liberal' #box[($n=#nlib$)].#smaller-dataset-footnote We exclude
+the `Politics` variable from the model, since this is captured by the partitioned
+datasets. The hyperparameters used for regularisation strength and smoothing are listed
+in @tab:methods-hyperparameter-values.
 
 Figures related to model calibration can be found in @sec:appendix-extra-results. The
 estimated parameters exhibit considerably higher uncertainty than in the model
@@ -520,7 +525,7 @@ of conservative interactions which are also in the liberal model.
 
 The conservative model displays broad (yet mostly weak) reinforcing interactions
 between climate-related concerns, beliefs and others' concerns, and climate-impact
-beliefs. This contrasts the liberal model, in which only `CC Worry` and `CC Impact`
+beliefs. This contrasts with the liberal model, in which only `CC Worry` and `CC Impact`
 are non-trivially related. Moreover, we observe that `CC Others Worry` and
 `Weather Worry` in fact have _no_ incoming cross-interactions.
 
