@@ -12,7 +12,7 @@ intervention, the distribution of expected effect of intervention across individ
 for inbound interventions targeting 'Climate Action' shows substantial variation between
 survey participants (@fig:heterogeneity-results-cc-action-distribution). We begin this
 chapter with an investigation into the conditions under which different interventions
-targeting attitudes on climate action are likely to be effective.
+targeting beliefs about climate action are likely to be effective.
 
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
@@ -28,10 +28,10 @@ targeting attitudes on climate action are likely to be effective.
 
 We then consider how inferred belief system structure varies between individuals, or
 subgroups in a population. In the previous chapter we identified political ideology as
-a particularly influential attitude dimension, both through asymmetric interactions with
+a particularly influential belief, both through asymmetric interactions with
 other variables
 (@subsec:asymmetry-results-existence) and as an effective point-of-intervention for
-interventions targeting attitudes on climate action (@subsec:asymmetry-results-impact).
+interventions targeting attitudes toward climate action (@subsec:asymmetry-results-impact).
 Here, we investigate whether this influence extends beyond pairwise interactions with
 other variables by comparing asymmetric belief systems calibrated to the (self-reported)
 liberal and conservative subpopulations within the climate beliefs dataset.
@@ -123,7 +123,7 @@ Each row in the figure corresponds to a different point-of-intervention (specifi
 the right). The left-hand column shows the distribution of differences in activation
 probabilities across individuals. The central column shows the personas which yield
 intervention effects within the upper quartile. Each row is a separate persona, and the
-columns refer to different dimensions (beliefs/attitudes) of the initial state. The
+columns refer to different dimensions (beliefs) in the initial state. The
 personas themselves are specified using a compressed
 representation#rounding-footnote: $"L" mapsto [-1, 0]$ and $"H" mapsto [0, +1]$. The
 right-hand column displays the prevalence of each persona within/outside the upper
@@ -428,7 +428,7 @@ so long as they do not already have a positive attitude toward climate action.
 - Discuss differences in baseline activations.
 
 Until this point, we have considered belief systems as common to a population of
-individuals. However, the relations between beliefs and attitudes are inherently
+individuals. However, the relations between beliefs are inherently
 individual in nature. The existence, direction, and degree of relation between
 two beliefs is dependent on an individual's own beliefs regarding their relatedness.
 

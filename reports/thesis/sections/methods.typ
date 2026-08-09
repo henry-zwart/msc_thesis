@@ -29,23 +29,23 @@
 
 == Counterfactual interventions <sec:methods-counterfactual-interventions>
 
-Individuals have different belief systems. Influence relations between beliefs and
-attitudes reflect heterogeneity in individual experiences and perception. Often these
+Individuals have different belief systems. Influence relations between beliefs reflect
+heterogeneity in individual experiences and perception. Often these
 relations can themselves be considered beliefs --- whether or not support for climate
 change mitigation leads to support for any specific policy depends in-part on an
 individual's belief regarding the policy's relevance. An individual's
 baseline activations, in turn, reflect a culmination of factors which determine their
-tendency toward certain beliefs or attitudes.
+tendency toward certain beliefs.
 
 Our approach to parameter estimation, however, fundamentally assumes that the inferred
 belief system is shared by all individuals in the dataset from which the model is
 estimated. We note that this is not strictly a limitation of the parameter estimation
 method, nor of the model itself. Rather this assumption is imposed by data limitations.
 Fitting individual models requires substantial data from each individual, which is not
-available in the climate attitudes dataset. Moreover, even with substantial
+available in the climate beliefs dataset. Moreover, even with substantial
 observational data, we are unlikely to observe all state transitions necessary to
 understand the _potential_ dynamics of an individual system, owing to the relatively
-slow-moving nature of beliefs and attitudes.
+slow-moving nature of beliefs.
 
 For any given individual, the inferred models may thus not accurately reflect the
 stability of belief system states. A configuration which is stable in a given
@@ -309,14 +309,14 @@ a 'weakly oppose' response to a 7-point Likert scale
 
 For the purposes of the experiments in the following sections, we perform parameter
 estimation to calibrate the belief system model described in
-@subsec:theory-nonequilibrium-belief-system-model to the climate attitudes dataset
+@subsec:theory-nonequilibrium-belief-system-model to the climate beliefs dataset
 (@sec:dataset). We first outline the context of the parameter estimation problem,
 and then present our approach. We omit derivation details in this section;
 however, the curious reader can find these in Appendix A (*TODO*).
 
 Consider a population of
 $M in NN$ individuals with a shared belief system $cal(M)$ comprising $N in NN$
-beliefs or attitudes with pre-defined adjacency matrix $bold(A) in {0,1}^(N times N)$,
+beliefs with pre-defined adjacency matrix $bold(A) in {0,1}^(N times N)$,
 for which the parameters (i.e., the baseline activations and interaction effects) are
 unknown. Suppose that for each individual $m in [1, M]$ we have observed a series of
 measurements, reflecting that individual's belief system state at each of $t in [1, T]$
@@ -337,7 +337,7 @@ parameters for similar models @nguyenInverseStatisticalProblems2017
 in the present study.
 
 Firstly, the model defined in @eqn:model-kbs-dynamics assumes
-binary spin states $s in {-1, +1}$. The climate attitudes dataset does not satisfy this
+binary spin states $s in {-1, +1}$. The climate beliefs dataset does not satisfy this
 assumption and must be binarised for MLE to be applicable. However, we have no
 guarantee that the parameterisation inferred for any specific binarisation is a
 reasonable explanation for the non-binarised dataset, nor for any other possible
@@ -356,7 +356,7 @@ the one described in @subsec:dataset-binarisation).
 Secondly, maximum likelihood estimation is prone to overfitting when the number of
 model parameters is similar to the number of observations
 @epskampEstimatingPsychologicalNetworks2018. While we consider only a small number of
-beliefs and attitudes in this study ($N in {7,8}$), the number of parameters $p$ grows
+beliefs in this study ($N in {7,8}$), the number of parameters $p$ grows
 rapidly, with $p in O(N^2)$ for both the symmetric and asymmetric model variants. In
 combination with sampling error, we expect the number of parameters to negatively
 impact the robustness of the inferred parameters --- given an alternative dataset of
@@ -524,7 +524,7 @@ The values for both are summarised in @tab:methods-hyperparameter-values.
     long: [
       Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
       hyperparameters. Regularisation strength model- and dataset-specific;
-      _Conservative_ and _Liberal_ refer to subsets of the climate attitudes dataset
+      _Conservative_ and _Liberal_ refer to subsets of the climate beliefs dataset
       comprising individuals with the specified ideology (@sec:dataset).
     ],
   ),
@@ -588,7 +588,7 @@ are displayed in @fig:methods-regularisation-ebic.
     long: [
       Effect of regularisation strength $lambda$ on Extended Bayesian Information
       Criterion for symmetric and asymmetric belief system models optimised to the
-      climate attitudes dataset using
+      climate beliefs dataset using
       @eqn:methods-parameter-estimation-optimisation-problem. The vertical axis measures
       the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
     ],

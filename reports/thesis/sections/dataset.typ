@@ -186,8 +186,8 @@ responses for different participants.
 
 
 Finally, we note that the time interval spanned by the longitudinal dataset includes
-several notable events which could reasonably be expected to influence --- and
-confound --- the dynamics of beliefs and attitudes in myriad contexts. These
+several notable events which could reasonably be expected to influence---and
+confound---the dynamics of beliefs in myriad contexts. These
 include the COVID-19 pandemic, which arrived in the US only three months prior to the
 first survey wave @holshueFirstCase20192020, the 2020 US Presidential Election which
 occurred during Wave 3, and the January 6 United States Capitol Attack, which occurred
@@ -195,7 +195,7 @@ between Waves 3 and 4.
 
 == Data Validation <sec:dataset-validation>
 
-The complexity of the climate attitudes survey, as outlined above, necessitates a
+The complexity of the CCCV survey, as outlined above, necessitates a
 rigorous approach to data validation, both to identify errors in the expected schema
 and to ensure that the data matches our expectations.
 
@@ -632,16 +632,18 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 == Climate beliefs dataset <subsec:dataset-dataset-construction>
 
 In light of the discussed complexities and breadth of content of the CCCV survey, we
-construct a smaller, targeted dataset of beliefs and attitudes relating to climate
+construct a smaller, targeted dataset of beliefs relating to climate
 change, which we expect---on theoretical grounds---to exhibit interdependent
 behaviour. This serves as the calibration dataset for the experiments described
 in this study. We will refer to this targeted dataset as the *climate beliefs dataset*.
 
 We aim for 7--10 variables in the final set, to keep both the number of model
 parameters and parameter uncertainty acceptably small. We first filter the survey
-items to consider only those which assess cognitive states (e.g., beliefs, attitudes,
-opinions, stances), and which either relate directly to climate change, or which are
-expected to influence climate-related items (e.g., political alignment). The parameter
+items to consider only those which assess beliefs (in the inclusive sense described by
+#cite(<galesicIntegratingSocialCognitive2021>, form: "prose"), which includes both
+epistemic positions about states of affairs, as well as views, opinions, and preferences),
+and which either relate directly to climate change, or which are expected to influence
+climate-related beliefs (e.g., political alignment). The parameter
 estimation method (outlined in *TODO*) imposes several additional requirements on the
 constructed dataset, in particular, the dataset should comprise at least two waves,
 with approximately equispaced observations per-individual, and with no null values.
@@ -663,7 +665,7 @@ We additionally constrain the dataset to include three specific variables of int
 + *CC Human*: Belief that climate change is caused by human activities.#cc-human-footnote
 
 Climate-related worry is generally considered an influential factor for other
-attitudes relating to climate change, including support for climate policy
+beliefs relating to climate change, including support for climate policy
 @meadInformationSeekingGlobal2012 @whitmarshClimateAnxietyWhat2022a
 @goldbergIdentifyingMostImportant2021 @boumanWhenWorryClimate2020
 @bumannWhatAreDeterminants2021, and is expected to be
@@ -677,8 +679,8 @@ To satisfy these requirements while maximising the number of observations (for m
 calibration purposes), we limit the climate beliefs dataset to waves 3 and 4, which
 contain 1693 repeat observations, excluding survey errors. After removing items
 with no substantial correlations, and small groups with no substantial external
-correlations, we identify 17 relevant survey items, comprising both beliefs and
-attitudes (see @apdx:dataset for the full set of items).
+correlations, we identify 17 relevant survey items (see @apdx:dataset for the full set
+of items).
 
 However, this set of items still exceeds our target range of 7--10. We therefore proceed
 to identify groups of similar or redundant variables which may be removed or combined
@@ -732,12 +734,12 @@ variables which are influenced _by_ item $i$.
 ) <fig:dataset-full-subset-var>
 
 We note three apparent clusters of variables: (i) political views, (ii) beliefs about
-climate change impacts, and (iii) positions on climate policy, and other attitudes
+climate change impacts, and (iii) positions on climate policy, and other beliefs
 relating to climate action. In the first case, political affiliation (partisan identity)
 and ideology (conservative $<-->$ liberal) cluster together in both networks, yet
 appear to have minimal external associations. We retain this group on theoretical
-grounds, since political attitudes are often key determinants for climate-related
-attitudes and policy positions @palmWhatCausesPeople2017 @bumannWhatAreDeterminants2021.
+grounds, since political beliefs are often key determinants for climate-related
+beliefs and policy positions @palmWhatCausesPeople2017 @bumannWhatAreDeterminants2021.
 Secondly, beliefs regarding the impact of climate change on different population groups,
 `CC Impact (X)`, exhibit strong internal contemporaneous associations, relatively
 weaker temporal associations. We choose here to combine these into an index variable,

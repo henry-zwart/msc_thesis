@@ -24,7 +24,7 @@ Belief system models based on the Ising model, inspired by the cognitive dissona
 theory of belief system dynamics, demonstrate impressive descriptive and explanatory
 capacities for various observed cognitive phenomena at both individual and collective
 scales. The currently prevalent view within the modelling community is that influence
-relations between beliefs or attitudes are symmetric --- the pressure for $X$ to align
+relations between beliefs are symmetric --- the pressure for $X$ to align
 with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
 this assumption on trial.
 
@@ -275,11 +275,11 @@ chapter (@sec:heterogeneity-results-intervention-effects).
 
 We consider both *outbound* and *inbound* interventions, illustrated below. Outbound
 intervention experiments (left) examine how interventions on a particular spin propagate
-to other beliefs and attitudes. On the other hand, inbound intervention experiments
-(right) consider a single belief or attitude as the intervention target and examine the
+to other beliefs. On the other hand, inbound intervention experiments
+(right) consider a single belief as the intervention target and examine the
 differences in effects on this spin when intervening elsewhere in the network. We refer
-to the belief or attitude on which an intervention is applied as the
-*point-of-intervention* and the belief or attitude whose resulting state is measured as
+to the belief on which an intervention is applied as the
+*point-of-intervention* and the belief whose resulting state is measured as
 the *target*.
 
 #{

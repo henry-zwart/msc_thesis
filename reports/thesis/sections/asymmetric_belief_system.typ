@@ -8,7 +8,7 @@
 
 In this chapter, we define the *Kinetic Belief System* model (*KBS*) as a model of
 belief system dynamics which supports (but does not assume) asymmetric influence
-relations between beliefs and attitudes.
+relations between beliefs.
 
 The KBS model builds on the Causal Attitude Network (CAN) model
 by #cite(<dalegeFormalizedAccountAttitudes2016>, form: "prose"), extending their
@@ -45,17 +45,17 @@ KBS model using Glauber dynamics.
 == Modelling belief system dynamics
 
 Our theory of belief system dynamics rests on three main assumptions. First, we assume
-that beliefs and attitudes can be represented as discrete random variables. This allows
-us to consider beliefs and attitudes as entities characterised by an instantaneous
+that beliefs can be represented as discrete random variables. This allows
+us to consider beliefs as entities characterised by an instantaneous
 state. In particular, this assumption is not compatible with the perspective that beliefs
-and attitudes are contextual, with no singular internal state of their own
+are contextual, with no singular internal state of their own
 @bendanaFragmentationBelief2021 @riemerPreferencesDontHave2014.
 
 Second, we assume that the state
-distribution for any given belief or attitude (potentially) depends on the previous
-states of all others, formalising the idea that past beliefs and attitudes influence present
+distribution for any given belief (potentially) depends on the previous
+states of all others, formalising the idea that past beliefs influence present
 ones. Finally, we assume that these conditional distributions are time-invariant. While
-belief and attitude _states_ may change over time, the dynamics by which this happens do
+belief _states_ may change over time, the dynamics by which this happens do
 not.
 
 // For instance, they  sensitive to context (e.g., being in a certain location or
@@ -65,18 +65,13 @@ not.
 definition used in @dalegeFormalizedAccountAttitudes2016*.
 
 #important-block[
-  The terms *belief* and *attitude* are presently ambiguous. They can refer
-  to generic concepts (e.g. belief regarding the contents of a box, or attitude toward
-  ...) or specific instances of those concepts (e.g., 'I believe that the box is empty',
-  or '...').
+  The term *belief* is presently ambiguous. It can refer
+  to generic concepts (e.g. belief regarding the contents of a box) or specific instances
+  of those concepts (e.g., 'I believe that the box is empty').
 
   For the remainder of this thesis, unless stated otherwise, we adopt the
   _generic_ sense. That is to say that we use the term 'belief' without assuming any
-  particular epistemic state, and 'attitudes' without assuming any particular
-  disposition.
-
-  For simplicity, we will also typically use the term *belief* to refer to both beliefs
-  and attitudes, except when the distinction is important.
+  particular epistemic state, view, evaluation, or preference.
 ]
 
 
@@ -108,8 +103,8 @@ definition used in @dalegeFormalizedAccountAttitudes2016*.
 //   states beyond the previous second.
 
 Consider a set of beliefs $bold(S) = {S_1, S_2, ..., S_N}$.
-Given the above assumptions, we can describe the trajectory of a belief or
-attitude $S_i$ with domain $Omega_i$ as a sequence of states
+Given the above assumptions, we can describe the trajectory of a belief $S_i$ with domain
+$Omega_i$ as a sequence of states
 $
   {s_i^t}_(t=1)^infinity quad "where" quad s_i^t in Omega_i
 $ <eqn:methods-belief-system-dynamics-belief-markov-process>
@@ -117,10 +112,10 @@ characterised by the family of conditional distributions $P(sigma_i^(t+1) | bold
 $1 < t in NN$ and an initial state $P(sigma_i^1)$.
 
 Noting that the state of a belief $S_i$ depends only on the previous states of all other
-beliefs and attitudes, it follows that any pair of beliefs or attitudes $S_i$ and $S_j$
-are conditionally independent at a given timestep given all previous belief and attitude
+beliefs, it follows that any pair of beliefs $S_i$ and $S_j$
+are conditionally independent at a given timestep given all previous belief
 states. In particular, this means we can describe the evolution of the complete set
-of beliefs and attitudes as a Markov process:
+of beliefs as a Markov process:
 
 $
   {bold(s)^t}_(t=1)^infinity quad "where" bold(s)^t in Omega_1 times dots.c times Omega_N
@@ -131,12 +126,12 @@ $P(bold(sigma)^(t+1) | bold(sigma)^t) = product_i^N P(sigma_i^(t+1) | bold(sigma
 $1 < t in NN$ and initial state probability
 $P(bold(sigma)^1) = product_(i=1)^N P(sigma_i^1)$.
 
-We use the term *belief system* to refer to the combination of a collection of attitudes
+We use the term *belief system* to refer to the combination of a collection of beliefs
 $bold(S)$ and its associated transition probability distribution
 $P(bold(sigma)^(t+1) | bold(sigma)^t)$.
 In this
 conceptualisation, the task of modelling a belief system reduces to describing how the
-instantaneous configuration of belief and attitude states affects the distribution over
+instantaneous configuration of belief states affects the distribution over
 possible future states.
 
 // NOTE:
@@ -219,6 +214,8 @@ dependency @gollobTakingAccountTime1987" @ryanTimeInterveneContinuousTime2022
 //
 // - *A:* CAN model as theory of belief systems; assumes equilibrium dynamics
 
+*TODO: Some duplication here with the start of the chapter*
+
 The Causal Attitude Network (CAN) model considers an *attitude* (what we call a
 _belief system_) as represented by an Ising-style network of beliefs, feelings, opinions
 which are related via bi-directional edges reflecting reinforcing ($+$) or cognitive
@@ -237,8 +234,8 @@ in two key respects: (i) interaction effects between a given pair of beliefs are
 necessarily bi-directional or equal in strength, and (ii) self-interaction effects are
 permitted.
 
-Formally, letting $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs and/or
-attitudes, a kinetic belief system model for $bold(S)$ is described by parameters
+Formally, letting $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs, a kinetic
+belief system model for $bold(S)$ is described by parameters
 $bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
 is a weighted adjacency matrix of directed _interaction effects_ (or _influence effects_), and
 $bold(h) in RR^N$ is a vector of _baseline activation_ effects for the elements of
@@ -256,7 +253,7 @@ $i$'_). When $J_(j i)$ is positive or negative, $S_i$ is influenced to adopt the
 $S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
 to $J_(i i)$ as a _self-influence_ of _self-interaction_ effect. Positive self-influence
 effects reflect the inertia of $S_i$, i.e., the tendency to sustain a particular belief
-or attitude irrespective of other beliefs and attitudes. Negative self-influence effects
+irrespective of other beliefs. Negative self-influence effects
 are not clearly interpretable. In addition to modelling differences in inertia, the
 inclusion of self-interaction effects allows us to capture the timescale at which
 the system, as a whole, evolves.
@@ -269,7 +266,7 @@ assume that the KBS model will exhibit equilibrium dynamics, as asymmetric inter
 effects violate detailed balance, so the state transition probability is not necessarily
 stationary @nguyenInverseStatisticalProblems2017. Second, by describing the model
 dynamics explicitly we are forced to consider how each variable in the belief system
-system responds to the states of all other beliefs and attitudes (including itself). As
+system responds to the states of all other beliefs (including itself). As
 such, temporal dynamics are 'baked into' the KBS model, making it straightforward to
 simulate forward in time to investigate potential model dynamics. We make extensive use
 of this property during our simulated intervention experiments in the second half of
@@ -365,7 +362,7 @@ $
   {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^(t+1) ~ P(bold(sigma)^(t+1) | bold(sigma)^t)
 $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
-Each belief or attitude has the opportunity to update during every time interval. This
+Each belief has the opportunity to update during every time interval. This
 update routine is referred to as _synchronous_ Glauber dynamics, contrasting
 _asynchronous_ Glauber dynamics, in which only one spin can update during a given
 interval @glauberTimeDependentStatisticsIsing1963 @nguyenInverseStatisticalProblems2017.
@@ -384,15 +381,14 @@ We now outline our approach to modelling interventions in the asymmetric belief
 system model. In this study we consider interventions which affect the _state_ of a
 belief system. Notably, this excludes interventions intended to influence the structure
 of a belief system, for instance, by changing the existence, sign, direction, or
-effect size of influence relations between beliefs and
-attitudes#structural-intervention-footnote.
+effect size of influence relations between beliefs#structural-intervention-footnote.
 
 
 Let $cal(M)$ be a belief system model with parameters
 $chevron bold(A), bold(J), bold(h) chevron.r$.
 We can consider an intervention as an
 auxiliary node, $I$, in the belief system network, with state fixed at a particular
-value and outgoing edges toward a subset of beliefs and attitudes:
+value and outgoing edges toward a subset of beliefs:
 
 // #figure(
 //   image("../diagrams/modelling_interventions/belief_system.svg", width: 30%),
@@ -424,7 +420,7 @@ $
 $
 
 It follows then that we can model interventions more simply as an adjustment to the
-baseline activation of certain beliefs and attitudes:
+baseline activation of certain beliefs:
 
 #figure(
   outlined: false,

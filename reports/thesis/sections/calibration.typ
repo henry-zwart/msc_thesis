@@ -17,7 +17,7 @@
   - Exogenous influences, and unmeasured beliefs
 
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
-and attitudes relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
+relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
 extracted from the CCCV survey
 (cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose"). The dataset
 includes responses from 1693 repeating participants, measured during waves 3 and 4 of
@@ -88,7 +88,7 @@ for each model. We only display the upper triangular portion of the symmetric mo
 matrix, since each pair of spins in this model has a single, bidirectional relation.
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
 with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
-is consistent with prior studies looking at the rate of change for beliefs/attitudes
+is consistent with prior studies looking at the rate of change for beliefs
 @greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.
 This is particularly true for `Politics`, and less so for `CC Others Worry` and
 `CC Impact`.
@@ -96,7 +96,7 @@ This is particularly true for `Politics`, and less so for `CC Others Worry` and
 Observe that all interaction effects are non-negative. This is by design; we have
 re-coded the dataset variables such that this is the case. The fact that such
 a re-coding exists implies that it is possible, within this belief system, to hold
-a set of beliefs and attitudes which are internally consistent, i.e., with no cognitive
+a set of beliefs which are internally consistent, i.e., with no cognitive
 dissonance. We provide a formal proof of this statement in @sec:appendix-derivations.
 
 
@@ -149,7 +149,7 @@ $
 
 where $p in NN$ is the number of model parameters, and we take the adjacency matrix
 $bold(A)$ as fully-connected, permitting influence relations to be inferred between
-each pair of beliefs or attitudes.
+each pair of beliefs.
 
 
 // @fig:calibration-edge-accuracy shows the
