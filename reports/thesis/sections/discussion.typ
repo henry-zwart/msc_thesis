@@ -319,7 +319,7 @@ differences in climate belief systems including related variables. Second, both 
 association using cross-sectional correlational measures, which may differ considerably
 from the time-lagged interaction parameters used in the present study.
 
-== Limitations
+== Limitations <sec:discussion-limitations>
 
 
 #metadata[] <within-person-discussion>
@@ -431,6 +431,7 @@ in their beliefs regarding climate change. If both changes occur between measure
 our calibration method will attempt to explain both transitions with respect to
 individuals' belief states prior to the natural disaster, thereby missing the fast causal
 influence of extreme weather concerns on climate-related beliefs.
+<fast-causal-influence-example>
 
 // #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") suggest the use of
 // continuous-time models to cope with the described issues; however, since, as argued, we

@@ -19,6 +19,33 @@ drafts. This section is temporary, and for my own benefit :)
   Hamiltonian?
 - In discussion, do I need to talk about how @ryanTimeInterveneContinuousTime2022 use
   continuous models, and why I don't think that is necessary?
+- In chapter 2, on simulation with Glauber dynamics. Do I need to discuss why async
+  models are harder to calibrate?
+
+=== Resolving feedback
+- Page 9:
+  + Changed to distinct.
+  + Yes. Updated to be more explicit.
+  + Removed. Made clearer.
+  + In new version, reads as 'beliefs are entities with instantaneous state'. Don't
+    mention 'single' state variable. We don't actually require this.
+- Page 10:
+  + (*Check*) Referred to as a Relation
+  + Now specified.
+  + This part has been removed.
+- Page 11:
+  + (*Check*) I do include this suggestion now, but not directly after.
+- Page 12:
+  + $bold(J)$ is now defined, and I have omitted $bold(A)$.
+  + (*Check*) Done. But unsure on justification for multiple of 2 (as in questions above).
+  + Done. No longer re-defined.
+- Page 13:
+  + Done.
+  + Done.
+  + Done.
+- Page 14:
+  + Done.
+  + Noted.
 
 == To add if I have time
 
