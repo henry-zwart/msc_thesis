@@ -10,6 +10,7 @@ In this chapter, we define the *Kinetic Belief System* model (*KBS*) as a model 
 belief system dynamics which supports (but does not assume) asymmetric influence
 relations between beliefs.
 
+
 The KBS model builds on the Causal Attitude Network (CAN) model
 by #cite(<dalegeFormalizedAccountAttitudes2016>, form: "prose"), extending their
 formulation of an _attitude network_ (which we call a _belief system_) to a kinetic
@@ -20,10 +21,19 @@ in the KBS model mirrors the approach used by
 #cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") to model belief dynamics
 in symmetric belief system models (similar to the CAN model).
 
+
 We begin the chapter by formalising belief system _dynamics_ as a modelling problem,
 after which we present the KBS model as a solution to this problem which permits
 asymmetric influence relations. Finally, we outline one approach to simulating the
 KBS model using Glauber dynamics.
+
+#note-block[
+  In this study, we use the inclusive definition of beliefs
+  proposed by #cite(<galesicIntegratingSocialCognitive2021>, form: "prose"), also
+  adopted by #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose"). This includes
+  "beliefs as assumptions about states of the world, ... views on moral and political
+  issues, ... evaluations or cognitive aspects of attitudes or as own preferences".
+]
 
 // TODO: Discussion on interpreting asymmetric relations in terms of the
 // mathematical/conceptual models
@@ -61,9 +71,6 @@ not.
 // For instance, they  sensitive to context (e.g., being in a certain location or
 // talking to a specific person), physical state (e.g., tiredness), or
 // such as
-*TODO: Make clear that when we say attitude we mean evaluative state, not precise
-definition used in @dalegeFormalizedAccountAttitudes2016*.
-
 #important-block[
   The term *belief* is presently ambiguous. It can refer
   to generic concepts (e.g. belief regarding the contents of a box) or specific instances
