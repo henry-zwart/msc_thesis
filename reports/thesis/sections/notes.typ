@@ -110,6 +110,26 @@ drafts. This section is temporary, and for my own benefit :)
 - Page 49:
   + *Check:* I think I've answered this now.
   + Done.
+- Page 52:
+  + Done.
+  + Done.
+  + Done.
+- Page 53:
+  + Sure.
+- Page 54:
+  + Kept, but turned into an arrow link
+- Page 55:
+  + Kept as a backward reference.
+  + *Deferred:* I had thoughts on this, which I can't remember. But don't have time yet.
+- Page 56:
+  + Reworded :)
+
+
+
+
+
+
+
 
 
 

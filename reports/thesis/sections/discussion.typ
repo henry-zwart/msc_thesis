@@ -17,8 +17,8 @@
 
 In this chapter we review the research questions posed back in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
-discuss their place in the broader context of belief system dynamics. We then
-conclude the chapter with a discussion on the limitations
+we discuss their place in the broader context of belief system dynamics. We then
+conclude the chapter by discussing limitations
 of our findings and implications for future work on belief system dynamics and
 belief-level interventions.
 
@@ -131,7 +131,7 @@ involved in several asymmetric relations.
 
 #show-rq(2, RQ2) <discussion-rq2>
 
-The consequences of asymmetry for belief system dynamics were subsequently reflected in
+The consequences of asymmetry for belief system dynamics were subsequently addressed in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
 in the asymmetric model were found to be almost universally more effective than in the
 symmetric model. Moreover, for interventions targeting attitudes toward climate action,
@@ -161,7 +161,7 @@ Additional experiments included in
 intervention effects. The presence of indirect effects is broadly expected given the
 pre-defined model dynamics; however, the observed magnitudes suggest that while state
 changes may propagate beyond direct connections, this process is typically slow. We
-return to this point shortly in our discussion of *RQ3*
+return to this point shortly in our discussion on *RQ3*
 (#internal-link(<discussion-rq3-indirect-effects>)), which finds that some indirect
 propagation may nonetheless be instrumental to achieving effective interventions at
 an individual level. <discussion-rq2-indirect-effects>
@@ -256,7 +256,7 @@ this was omitted due to high correlation between this variable and beliefs regar
 causes of climate change.
 <rq3-highly-correlated-features>
 
-As a final point, the findings from this experiment must be interpreted in the context
+Importantly, the findings from this experiment must be interpreted in the context
 of the belief system model calibrated to the complete dataset. Individual differences
 in belief systems (as discussed in a moment) are likely to result in heterogeneous
 responses to interventions beyond those characterised here. Potentially influential
