@@ -175,7 +175,7 @@ more desirable states than would be observed given no intervention.
 With this in mind, we now consider several specific features of interest in the
 identified personas. Firstly, we observe that all personas require a low initial
 state for `CC Worry`. This may result from this variable's low inertia
-and high connectivity --- in particular, its large outbound interaction effect
+and high connectivity---in particular, its large outbound interaction effect
 toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
 These factors result in `CC Worry` being relatively influential
 and influentia#emph[ble], and therefore an effective indirect pathway for

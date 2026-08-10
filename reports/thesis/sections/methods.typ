@@ -309,7 +309,7 @@ not immediately interpretable. For our purposes, we are less interested in the
 _specific_ states that yield a given intervention effect, but more so in a
 _concise description_ of that set of states.
 
-=== Regression decision tree approach <subsec:methods-effect-characterisation-function-decision-tree>
+=== Method: Shallow regression decision tree <subsec:methods-effect-characterisation-function-decision-tree>
 
 Regression decision tree models can provide such descriptions, using inequality bounds
 to partition the initial state space into regions, each of which is assigned a

@@ -94,7 +94,7 @@ the relative effectiveness of interventions.
 differential (defined in @sec:methods-directional-differential) for each pair of spins
 in the asymmetric model, in decreasing order.
 The 90% confidence intervals are calculated as the 5th and 95th percentiles across
-bootstrap samples of the directional differential matrix
+bootstrap samples ($n=500$) of the directional differential matrix
 elements#edge-comparison-footnote. For each pair of spins we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
@@ -249,7 +249,7 @@ chapter to understand who is most affected for interventions targeting attitudes
 climate action.
 
 We consider both outbound and inbound interventions (defined in
-@sec:methods-inbound-outbound), respectively, to examine differences in how interventions
+@sec:methods-inbound-outbound) to examine differences in how interventions
 propagate in general between the symmetric and asymmetric models, and to investigate
 how intervention strategy differs between the two models. For outbound intervention
 experiments we examine the effects of intervening on the following spins:
@@ -333,6 +333,8 @@ each intervention.
   see @sec:methods-modelling-interventions.
 ]
 
+*TODO: Reword this*
+
 We first consider the impact of intervention strength on effect of intervention. The
 strength of an intervention affects the degree to which the intervention changes the
 state of the point-of-intervention. However, this is also sensitive to the pre-existing
@@ -405,10 +407,11 @@ shifting the behaviour at the point-of-intervention.
 
 
 Figures @fig:asymmetry-results-outbound-effect[] and
-@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the outbound mean effects of
-intervention and asymmetry, respectively, across individuals, for the points of
-intervention listed above. The confidence intervals show two standard deviations around
-the mean values, as calculated across repeats.
+@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the mean effects of
+intervention (@def:asymmetry-results-effect-of-intervention) and asymmetry
+(@def:asymmetry-results-effect-of-asymmetry), respectively, across individuals, for the
+points-of-intervention listed above. The confidence intervals show two standard deviations
+around the mean values, as calculated across repeats.
 
 We observe, in @fig:asymmetry-results-outbound-effect, that different targets exhibit
 different effects of intervention. The effect generally decreases with the magnitude of
@@ -545,12 +548,12 @@ all tied spins the minimum rank which would have been assigned to the group, had
 been distinct#tiebreak-footnote.
 
 As with the outbound case, we find that the effect of intervention on `CC Action` varies
-depending on where we intervene. Points-of-intervention (along the x-axes) are sorted in
-decreasing order of mean values. We observe identical orderings between the effect of
-intervention and ranking plots, showing good correspondence between the two measures.
-We observe a clear inversion in this ordering for the asymmetric model, with `Politics`
-exhibiting the second-highest rank, and (at least) second-highest mean effect of
-intervention ($p < 0.05$).
+depending on where we intervene. Points-of-intervention (along the horizontal axes) are
+sorted in decreasing order of mean values. We observe identical orderings between the
+effect of intervention and ranking plots, showing good correspondence between the two
+measures. We observe a clear inversion in this ordering for the asymmetric model, with
+`Politics` exhibiting the second-highest rank, and (at least) second-highest mean effect
+of intervention ($p < 0.05$).
 
 Unlike with the outbound effects, the order of effect sizes does not align well with the
 corresponding strengths of direct interactions strengths into the target variable. For
