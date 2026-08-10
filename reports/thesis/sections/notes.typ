@@ -23,6 +23,8 @@ drafts. This section is temporary, and for my own benefit :)
   models are harder to calibrate?
 - In parameter estimation, how to reword optimisation problem to depend on $lambda$
   and $epsilon$ compactly?
+- When splitting methods and results, what should go where? Specifically for the effect
+  characterisation part.
 
 === Resolving feedback
 - Page 9:
@@ -48,13 +50,13 @@ drafts. This section is temporary, and for my own benefit :)
 - Page 14:
   + Done.
   + Noted.
-- Page 18: *TO DO*
+- Page 18: *Deferred until after restructure* (See github issue)
 - Page 20:
   + (*Ask*) How to re-word this
   + (*Check*) Discussed already
 - Page 22:
   + (*Ask*) Do I need to make this clearer?
-  + (*Defer*) This requires some thought. Suggestion isn't correct. We need to count both
+  + (*Maybe discuss*) This requires some thought. Suggestion isn't correct. We need to count both
     directions. Can't multiply by 2 either, since the directional contributions still
     come from distinct observations.
 - Page 23:
@@ -102,9 +104,12 @@ drafts. This section is temporary, and for my own benefit :)
   + Clarified in a footnote.
 - Page 45:
   + Resolved, added forward references.
-- Page 46: *Deferred*
+- Page 46: *Somewhat resolved, but questions remain about how this content should be split
+  between methods and results*
 - Page 47:
-  + *Deferred* until I've rewritten figure caption.
+  + *Check (question above about methods/results split)*: I've removed this paragraph and
+    rewritten the caption. I also rewrote the paragraph prior, but it is still very long,
+    and potentially somewhat methodsy.
   + Done.
   + Done.
   + *Ask:* Should this just be a discussion point? Or perhaps leave it as a footnote, but
@@ -138,6 +143,10 @@ drafts. This section is temporary, and for my own benefit :)
 
 
 == To add if I have time
+
+- In model calibration or model section, can discuss how baseline activations capture
+  things not in the interactions. May be effects of unmeasured beliefs, or exogenous
+  influences.
 
 
 == Additional things to maybe discuss somewhere

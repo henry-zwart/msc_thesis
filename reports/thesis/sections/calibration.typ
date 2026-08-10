@@ -12,9 +12,9 @@
 //   beliefs dataset are provided in @sec:dataset.
 // ]
 
-*TODO:*
-- Discuss differences in baseline activations.
-  - Exogenous influences, and unmeasured beliefs
+// *TODO:*
+// - Discuss differences in baseline activations.
+//   - Exogenous influences, and unmeasured beliefs
 
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
 relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
@@ -118,15 +118,15 @@ where $p in NN$ is the number of model parameters.
 ]
 @fig:calibration-interaction-matrices shows the baseline activation parameters, $bold(h)$,
 and interaction effect matrix, $bold(J)$,
-for each model. We only display the upper triangular portion of the symmetric model's
-matrix, since each pair of spins in this model has a single, bidirectional relation.
+for each model. Note that we only display the upper triangular elements of the symmetric
+model's interaction matrix, since the matrix is symmetric.
 The two models exhibit very similar baseline activations. The observed values indicate
 that after accounting for interaction effects, (i) belief in the existence and
 human-causes of climate change tend to be high, (ii) concern about extreme weather tends
 to be low, and (iii) people mostly believe that other individuals are not particularly
-worried about climate change. Some values (e.g., worry about climate change) have been
-pushed to zero due to regularisation, indicating that the dataset provides limited
-evidence that these tend to be either positive or negative.
+worried about climate change. Regularisation has pushed some values (e.g., worry about
+climate change) to zero, indicating that the dataset provides limited evidence that these
+tend to be either positive or negative.
 
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
 with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
