@@ -87,19 +87,19 @@ _personas_.
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
     long: [
-      Characterisation of initial states ('personas'; middle panel) which yield
-      effective interventions (within the population upper quartile)w hen targeting
-      `CC Action` using different points-of-intervention (rows). Intervention effect is
-      measured as the difference in `CC Action` activation probability between
-      intervention ($delta_h = 2.5$) and null (no-intervention) models at $t=5$, for the
-      asymmetric kinetic belief model calibrated to the climate beliefs dataset.
-      Differences in the population upper quartile are 'high-effect'. (*Left*)
-      Distribution of intervention effect across survey participants. (*Centre*) Typical
-      high-effect personas estimated using a depth-3 regression decision tree. Rows are
-      distinct personas. Cells correspond to intervals of initial state dimensions
-      ($L = [-1, 0]$, $H = [0, +1]$). (*Right*) Prevalence of each persona within the
-      subpopulations of individuals with intervention effects below (_low-effect_) or
-      above (_high-effect_) the population upper quartile.
+      Pre-intervention states ('personas') for which interventions on different beliefs
+      (rows) are most effective for changing attitudes toward climate action in the
+      asymmetric KBS model calibrated to the climate beliefs dataset. The *left* panel
+      shows the distribution of changes in activation probability for the `CC Action`
+      belief at $t=5$ (approximately two and a half years) using a strong intervention
+      ($delta_h = 2.5$), with respect to the no-intervention scenario. The *center* panel
+      shows the personas corresponding to those individuals in the upper quartile of
+      effects (shaded region in the left panel), identified using a depth-3 regression
+      decision tree. Rows are distinct personas. Cells correspond to intervals in
+      the initial state space dimensions, i.e., the different beliefs, with
+      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows the prevalence of each
+      persona within the upper quartile ('High-effect') and below the upper quartile
+      ('Low-effect') of measured effects.
     ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
