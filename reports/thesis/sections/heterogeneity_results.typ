@@ -40,46 +40,44 @@ the climate beliefs dataset.
 
 == Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
 
-In the intervention simulations described in the previous chapter, the only
-distinguishing factor between survey participants is their binarised initial state
-derived from the final wave of the climate beliefs dataset. It follows
-that any difference in belief system dynamics between distinct individuals---after
-accounting for simulation stochasticity---is the result of their different initial
-states. To identify the conditions under which an intervention is effective,
-it then suffices to characterise the set of _initial states_ which yield effective
-interventions, and distinguish them from those that do not.
+// In the intervention simulations described in the previous chapter, the only
+// distinguishing factor between survey participants is their binarised initial state
+// derived from the final wave of the climate beliefs dataset. It follows
+// that any difference in belief system dynamics between distinct individuals---after
+// accounting for simulation stochasticity---is the result of their different initial
+// states. To identify the conditions under which an intervention is effective,
+// it then suffices to characterise the set of _initial states_ which yield effective
+// interventions, and distinguish them from those that do not.
 
-// This fundamentally boils down to a regression problem. To make this clear, let's reframe
-// the above task.
-Our goal is to find a function which maps from an intervention effect to
-sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
-#box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
+// Our goal is to find a function which maps from an intervention effect to
+// sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
+// #box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
+//
+// Consider a function which does the opposite, mapping initial states to a measure of
+// intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
+// construct the corresponding effect characterisation function as:
+//
+// $
+//   g: y mapsto {x in plus.minus 1^N subset RR^N | f(x) = y}
+// $ <eqn:heterogeneity-results-effect-characterisation-function>
+//
+// However, while technically satisfying the definition of the effect
+// characterisation function, such a function would be useless for qualitatively
+// determining the kinds of initial states which yield effective interventions.
+// The elements of the codomain have (potentially) infinite cardinality, and are
+// not immediately interpretable. For our purposes, we are less interested in the
+// _specific_ states that yield a given intervention effect, but more so in a
+// _concise description_ of that set of states.
 
-Consider a function which does the opposite, mapping initial states to a measure of
-intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
-construct the corresponding effect characterisation function as:
-
-$
-  g: y mapsto {x in plus.minus 1^N subset RR^N | f(x) = y}
-$ <eqn:heterogeneity-results-effect-characterisation-function>
-
-However, while technically satisfying the definition of the effect
-characterisation function, such a function would be useless for qualitatively
-determining the kinds of initial states which yield effective interventions.
-The elements of the codomain have (potentially) infinite cardinality, and are
-not immediately interpretable. For our purposes, we are less interested in the
-_specific_ states that yield a given intervention effect, but more so in a
-_concise description_ of that set of states.
-
-Regression decision tree models can provide such descriptions, using inequality bounds
-to partition the initial state space into regions, each of which is assigned a
-predicted effect. Given a parameterised regression decision tree, we
-may construct a concise effect characterisation function by identifying, for each
-predicted effect, the combination of inequalities which define the corresponding
-infinite set of initial states. When the parameter estimation algorithm is restricted
-to shallow trees (e.g., depth 3 or 4, referring to the number of inequality bounds
-defining each region), these combinations can also be interpretable as rules or
-_personas_.
+// Regression decision tree models can provide such descriptions, using inequality bounds
+// to partition the initial state space into regions, each of which is assigned a
+// predicted effect. Given a parameterised regression decision tree, we
+// may construct a concise effect characterisation function by identifying, for each
+// predicted effect, the combination of inequalities which define the corresponding
+// infinite set of initial states. When the parameter estimation algorithm is restricted
+// to shallow trees (e.g., depth 3 or 4, referring to the number of inequality bounds
+// defining each region), these combinations can also be interpretable as rules or
+// _personas_.
 
 
 #figure(
@@ -107,7 +105,7 @@ _personas_.
 We now investigate the conditions under which different targeting attitudes toward
 climate action are expected to be effective. We use a depth-3 regression decision
 tree to approximate the characterisation effect function
-(*TODO: reference position in the methods.*) for the KBS model
+(@subsec:methods-effect-characterisation-function-decision-tree) for the KBS model
 calibrated to the complete climate beliefs dataset (see @sec:calibration for calibration
 details). The response
 variable is the expected change in activation probability for `CC Action` at $t=5$
@@ -124,12 +122,9 @@ quartile is below 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), i.e.
 exhibit no meaningfully effective interventions. The identified conditions, or _personas_,
 are displayed in @fig:heterogeneity-results-interventions-personas.
 
-Since the regression decision tree produces a full tree, all personas have size 3
-by default. However, these can often be compressed. When two personas differ only
-along one feature dimension, split at the same value, and both predict high-effect
-interventions, we combine them into a single persona which omits that feature (i.e.,
-spans the entire feature dimension). This is observed, for instance, in the persona
-for interventions on `CC Worry`.
+// NOTE: Not mentioned, because we moved the paragraph to methods
+//  This is observed, for instance, in the persona
+// for interventions on `CC Worry`.
 
 
 // TODO: FOOTNOTE NOT INCLUDED
@@ -198,7 +193,7 @@ a necessary condition for high effect is that the initial state of point of inte
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of
 interventions with respect to pre-intervention state
-(see @subsec:asymmetric-belief-system-modelling-interventions).
+(see @sec:methods-modelling-interventions).
 
 
 // With the exception of `CC Real`, the personas for each point-of-intervention require that

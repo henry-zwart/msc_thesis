@@ -86,13 +86,16 @@
 #include "sections/introduction.typ"
 
 = The Kinetic Belief System model <sec:asymmetric-belief-systems>
-#include "sections/asymmetric_belief_system.typ"
+#include "sections/kinetic_belief_system.typ"
+
+= Parameter estimation <chp:parameter-estimation>
+#include "sections/parameter_estimation.typ"
 
 = Methods <sec:methods>
 #include "sections/methods.typ"
 
-= Model Calibration <sec:calibration>
-#include "sections/calibration.typ"
+// = Model Calibration <sec:calibration>
+// #include "sections/calibration.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
 #include "sections/asymmetry_results.typ"
