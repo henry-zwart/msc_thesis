@@ -130,7 +130,7 @@ Question format, text, and response schemas also occasionally change between sur
 waves. Changes in response schema are less common, however, and typically affect items
 with categorical responses. With a view to constructing the calibration dataset for our
 experiments, we note that most response schemas are not binary and therefore require
-binarisation (see @sec:parameter-estimation-soft-binarisation).
+binarisation (see *REFERENCE BINARISATION SECTION*).
 
 Casting our attention to the survey timing, we examine the survey response dates for
 each wave (@fig:dataset-longitudinal-response-eventplot) and the distribution of

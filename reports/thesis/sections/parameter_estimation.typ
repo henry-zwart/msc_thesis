@@ -59,6 +59,7 @@ We can improve on this using *soft thresholding*, in which each data value $x in
 is perturbed by an independent noise term $epsilon ~ cal(N)(0, sigma)$ prior to this
 mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
 and given choice of $sigma in RR_+$.
+<sec:parameter-estimation-soft-binarisation>
 
 #figure(
   image(
@@ -85,6 +86,8 @@ $
   P(x mapsto +1) = Phi(x/sigma)
 $ <eqn:methods-dataset-binarisation-probability-map-to-1>
 
+where $Phi$ is the standardised normal cumulative distribution function. This
+probability is small when $x$ has large magnitude, or when $sigma$ is small.
 With soft thresholding, small-magnitude values are mapped to $-1$ and $+1$ with
 nontrivial probability, while the binarisation of large values is effectively
 deterministic.
@@ -98,10 +101,12 @@ thresholding, namely that _any_ form of binarisation necessarily erases informat
 the magnitude of the original data. For instance, consider a survey question which
 assesses an individual's attitude toward a particular policy using a Likert-7
 scale.#likert7-footnote After binarisation, we can no longer distinguish between weak
-and strong support for the policy, or neutrality which has been mapped to $+1$. In short,
-since we obtain a single binary output for each observation, MLE is not capable of
-representing ambiguity or neutrality, and instead requires that such cases are made
-unambiguous or non-neutral through binarisation.
+and strong support for the policy, or neutrality which has been mapped to $+1$.
+
+In short, since it uses a single binary output for each observation, MLE is not capable
+of representing ambiguity or neutrality, and instead requires that such cases are made
+unambiguous or non-neutral through binarisation. We now introduce a variation on maximum
+likelihood estimation which resolves this issue by avoiding binarisation altogether.
 
 // where 'Neutral' (i.e., zero) values may be mapped which
 // may be unnatural for values with very small magnitude---should a positive  . with
@@ -156,80 +161,75 @@ unambiguous or non-neutral through binarisation.
 // the one described in @sec:parameter-estimation-soft-binarisation).
 
 
-== Soft Binarisation <sec:parameter-estimation-soft-binarisation>
+// == Soft Binarisation <sec:parameter-estimation-soft-binarisation>
+//
+// Prior to model fitting, we binarise all variables, mapping data values to the
+// domain ${-1, +1}$. Before binarising, we shift each variable such that the _survey
+// midpoint_ (e.g., '3' on a 5-point Likert scale) aligns with 0, and rescale each
+// variable such that the minimum and maximum possible values map to $-1$ and $+1$
+// respectively.
+// For variables with no well-defined midpoint, such as those with an even
+// number of possible responses, we shift such that the minimal and maximal values are at
+// equal distance from 0.
+//
+// We use a smooth binarisation process to robustly handle data points which are zero, or
+// close to zero. This involves perturbing each data value $x in RR$ by an independent
+// noise term $epsilon ~ cal(N)(0, sigma)$ before thresholding. @fig:methods-binarisation
+// illustrates this process for a negative value of $x$ and given choice of $sigma$.
+//
+// #figure(
+//   image(
+//     "../results/figures/methods/binarisation/distribution.pdf",
+//   ),
+//   caption: caption(
+//     short: [Binarisation using gaussian noise with thresholding],
+//     long: [
+//       $x in RR$ is smoothly binarised to ${-1, +1}$ by
+//       thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
+//       are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
+//       increases with $sigma$ and $|x|^(-1)$.
+//     ],
+//   ),
+//   placement: auto,
+// )// <fig:methods-binarisation>
+//
+// Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
+// such that $x + epsilon > 0$ (region A), or equivalently when $epsilon < x$ (region B).
+// The probability that $x$ is mapped to $+1$ is then
+//
+// $
+//   P(x mapsto +1) = Phi(x/sigma)
+// $ //<eqn:methods-dataset-binarisation-probability-map-to-1>
+//
+// where $Phi$ is the standardised normal cumulative distribution function. This
+// probability is small when $x$ has large magnitude, or when $sigma$ is small.
 
-Prior to model fitting, we binarise all variables, mapping data values to the
-domain ${-1, +1}$. Before binarising, we shift each variable such that the _survey
-midpoint_ (e.g., '3' on a 5-point Likert scale) aligns with 0, and rescale each
-variable such that the minimum and maximum possible values map to $-1$ and $+1$
-respectively.
-For variables with no well-defined midpoint, such as those with an even
-number of possible responses, we shift such that the minimal and maximal values are at
-equal distance from 0.
-
-We use a smooth binarisation process to robustly handle data points which are zero, or
-close to zero. This involves perturbing each data value $x in RR$ by an independent
-noise term $epsilon ~ cal(N)(0, sigma)$ before thresholding. @fig:methods-binarisation
-illustrates this process for a negative value of $x$ and given choice of $sigma$.
-
-#figure(
-  image(
-    "../results/figures/methods/binarisation/distribution.pdf",
-  ),
-  caption: caption(
-    short: [Binarisation using gaussian noise with thresholding],
-    long: [
-      $x in RR$ is smoothly binarised to ${-1, +1}$ by
-      thresholding #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative values
-      are mapped to $+1$ with probability #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which
-      increases with $sigma$ and $|x|^(-1)$.
-    ],
-  ),
-  placement: auto,
-)// <fig:methods-binarisation>
-
-Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
-such that $x + epsilon > 0$ (region A), or equivalently when $epsilon < x$ (region B).
-The probability that $x$ is mapped to $+1$ is then
-
-$
-  P(x mapsto +1) = Phi(x/sigma)
-$ //<eqn:methods-dataset-binarisation-probability-map-to-1>
-
-#let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
-where $Phi$ is the standardised normal cumulative distribution function. This
-probability is small when $x$ has large magnitude, or when $sigma$ is small.
-For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
-a 'weakly oppose' response to a 7-point Likert scale
-#footnote[
-  The oppose/support 7-point Likert scale has possible responses: strongly oppose,
-  oppose, weakly oppose, neutral, weakly support, support, strongly support.
-] <fn:likert-7-scale-responses>
-(value $1\/3$) is mapped to $+1$ with probability 0.05.
-
-#figure(
-  image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
-  placement: auto,
-  caption: caption(
-    short: [Likert-7 binarisation distribution],
-    long: [
-      The probability of binarisation to $+1$ for each possible response to a Likert-7
-      scale survey question@fn:likert-7-scale-responses, given
-      $sigma approx #calc.round(binarisation_sigma, digits: 1)$.
-    ],
-  ),
-)
+// #let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
+// For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
+// a 'weakly oppose' response to a 7-point Likert scale
+// #footnote[
+//   The oppose/support 7-point Likert scale has possible responses: strongly oppose,
+//   oppose, weakly oppose, neutral, weakly support, support, strongly support.
+// ] <fn:likert-7-scale-responses>
+// (value $1\/3$) is mapped to $+1$ with probability 0.05.
+//
+// #figure(
+//   image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+//   placement: auto,
+//   caption: caption(
+//     short: [Likert-7 binarisation distribution],
+//     long: [
+//       The probability of binarisation to $+1$ for each possible response to a Likert-7
+//       scale survey question@fn:likert-7-scale-responses, given
+//       $sigma approx #calc.round(binarisation_sigma, digits: 1)$.
+//     ],
+//   ),
+// )
 
 
 
 == Parameter estimation using the expected likelihood <subsec:methods-parameter-estimation>
 
-We now describe a parameter estimation method which mitigates the two issues discussed
-directly above. We address
-We now describe a parameter estimation method which mitigates the two issues discussed
-above. To address the problem of overfitting, we apply regularisation during calibration,
-which has the effect of penalising
-sele
 // For the purposes of the experiments in the following sections, we perform parameter
 // estimation to calibrate the belief system model described in
 // @subsec:theory-nonequilibrium-belief-system-model to the climate beliefs dataset
@@ -237,14 +237,12 @@ sele
 // and then present our approach. We omit derivation details in this section;
 // however, the curious reader can find these in Appendix A (*TODO*).
 
-Consider a population of
-$M in NN$ individuals with a shared belief system $cal(M)$ comprising $N in NN$
-beliefs with pre-defined adjacency matrix $bold(A) in {0,1}^(N times N)$,
-for which the parameters (i.e., the baseline activations and interaction effects) are
-unknown. Suppose that for each individual $m in [1, M]$ we have observed a series of
-measurements, reflecting that individual's belief system state at each of $t in [1, T]$
-uniformly spaced timesteps:
-
+Consider a population of $M in NN$ individuals with a shared belief system $cal(M)$
+comprising $N in NN$ beliefs.
+// for which the parameters (i.e., the baseline activations and interaction effects) are
+// unknown.
+Suppose that we have measured the belief system state of each individual, $m in [M]$,
+at each of $T in NN$ uniformly spaced timepoints:
 $
   {bold(x)_((m))^t}_(t=1)^T, quad "where each" bold(x)_((m))^t in RR^N
 $
@@ -253,6 +251,14 @@ The measurements need not be binary, but are assumed to be real. The collection 
 measurements across all individuals forms a dataset $D$, which is the particular
 observed value of the random variable $cal(D)$ representing possible datasets.
 
+*NOTE: * An alternative approach here is to not mention the regularisation yet. Have
+this be a short section on the expected MLE. Then have the following section be on the
+specific form used in this study.
+
++ Introduce optimisation problem
++ High-level, what are the two terms
++ Go in-depth into the first one. Explain why it resolves the above problem.
++ Touch on the second one.
 
 While maximum likelihood estimation (MLE) is often used to infer
 parameters for similar models @nguyenInverseStatisticalProblems2017
@@ -265,7 +271,7 @@ assumption and must be binarised for MLE to be applicable. However, we have no
 guarantee that the parameterisation inferred for any specific binarisation is a
 reasonable explanation for the non-binarised dataset, nor for any other possible
 binarisation in the case where a probabilistic binarisation scheme is used (such as
-the one described in @sec:parameter-estimation-soft-binarisation).
+the one described in *reference soft binarisation*).
 
 Secondly, maximum likelihood estimation is prone to overfitting when the number of
 model parameters is similar to the number of observations
@@ -407,6 +413,29 @@ $
 $ <eqn:methods-parameter-estimation-derivative-interaction-effect-sym>
 
 === Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
+
+// TODO: Incorporate
+#let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
+For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
+a 'weakly oppose' response to a 7-point Likert scale
+#footnote[
+  The oppose/support 7-point Likert scale has possible responses: strongly oppose,
+  oppose, weakly oppose, neutral, weakly support, support, strongly support.
+] <fn:likert-7-scale-responses>
+(value $1\/3$) is mapped to $+1$ with probability 0.05.
+
+#figure(
+  image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+  placement: auto,
+  caption: caption(
+    short: [Likert-7 binarisation distribution],
+    long: [
+      The probability of binarisation to $+1$ for each possible response to a Likert-7
+      scale survey question@fn:likert-7-scale-responses, given
+      $sigma approx #calc.round(binarisation_sigma, digits: 1)$.
+    ],
+  ),
+)
 
 The optimisation problem in @eqn:methods-parameter-estimation-optimisation-problem
 has two hyperparameters which must be specified prior to parameter estimation: the
