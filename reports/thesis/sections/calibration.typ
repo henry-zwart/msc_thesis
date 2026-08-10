@@ -12,9 +12,9 @@
 //   beliefs dataset are provided in @sec:dataset.
 // ]
 
-*TODO:*
-- Discuss differences in baseline activations.
-  - Exogenous influences, and unmeasured beliefs
+// *TODO:*
+// - Discuss differences in baseline activations.
+//   - Exogenous influences, and unmeasured beliefs
 
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
 relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
@@ -26,44 +26,74 @@ and $-1$ respectively, such that these reflect the two spin states in the KBS mo
 
 
 
-#figure(
-  {
-    show table: set text(size: 10pt)
-    climate-beliefs-variable-table
-  },
-  gap: 1em,
-  caption: caption(
-    short: [Climate beliefs dataset variables (replicated)],
-    long: [
-      Variables included in the climate beliefs dataset. Index variables are constructed
-      by taking the average of their constituent columns, after re-scaling to the
-      interval $[-1, 1]$. Note that this table is identical to
-      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
-    ],
-  ),
-) <tab:calibration-climate-beliefs-dataset-items>
 
 #figure(
-  image("../results/figures/dataset/marginal_distributions.pdf"),
-  caption: caption(
-    short: [Climate beliefs dataset marginal distributions (replicated)],
-    long: [
-      Marginal distribution for each of the eight variables in the climate beliefs
-      dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
-      is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
-    ],
-  ),
-  placement: auto,
-) <fig:calibration-marginal-distributions>
+  block(height: 100%, breakable: false)[
+
+    #figure(
+      image("../results/figures/dataset/marginal_distributions.pdf"),
+      caption: caption(
+        short: [Climate beliefs dataset marginal distributions (replicated)],
+        long: [
+          Marginal distribution for each of the eight variables in the climate beliefs
+          dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+          is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+        ],
+      ),
+    ) <fig:calibration-marginal-distributions>
+    #figure(
+      {
+        show table: set text(size: 10pt)
+        climate-beliefs-variable-table
+      },
+      gap: 1em,
+      caption: caption(
+        short: [Climate beliefs dataset variables (replicated)],
+        long: [
+          Variables included in the climate beliefs dataset. Index variables are constructed
+          by taking the average of their constituent columns, after re-scaling to the
+          interval $[-1, 1]$. Note that this table is identical to
+          @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+        ],
+      ),
+    ) <tab:calibration-climate-beliefs-dataset-items>
+
+  ],
+)
 
 
-Before proceeding, let's take a moment to calibrate
-and evaluate the models which will be used in the upcoming experiments. Using the
+Using the
 parameter estimation method outlined in the previous chapter, we calibrate the
 symmetric and asymmetric belief system models to the climate beliefs dataset (see
 @sec:dataset). We will evaluate the calibrated models on both structural accuracy
 ('how accurate are the parameter estimates?') and predictive capacity ('how well do
 the models explain the data?').
+
+#let bootstrap-footnote = footnote[
+  Each bootstrap sample comprises a set of survey participants, such that each sampled
+  dataset either contains all, or none, of the observations from any given individual.
+]
+#let dataset-size-footnote = footnote[
+  In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
+]
+
+As recommended in #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"),
+we evaluate interaction parameter accuracy by examining the bootstrapped confidence
+intervals around each parameter estimate.
+We use bootstrapping to estimate the uncertainty in our parameter estimates due to
+sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
+$M$, $T$, and $N$ denote the number of participants, observations, and spins
+respectively#dataset-size-footnote. We construct 500 bootstrapped
+datasets by sampling rows (participants) with replacement from $bold(D)$,
+such that each bootstrapped dataset has the same shape as the complete dataset.
+
+For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
+with parameters
+$
+  chevron bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
+$
+
+where $p in NN$ is the number of model parameters.
 
 // TODO: Consider adding squares/indicators for elements which are zero
 
@@ -72,9 +102,12 @@ the models explain the data?').
   caption: caption(
     short: [Calibrated model interaction matrix],
     long: [
-      Interaction effect matrices ($bold(J)$) for the symmetric and asymmetric belief
+      (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices,
+      $bold(J)$, for the symmetric and asymmetric belief
       system model variants, calibrated to the climate beliefs dataset (@sec:dataset)
       using the parameter estimation method in @subsec:methods-parameter-estimation.
+      Error bars on the baseline activations display 95% confidence intervals, calculated
+      over bootstrapped models ($n=500$) using the percentile method.
     ],
   ),
 ) <fig:calibration-interaction-matrices>
@@ -83,9 +116,18 @@ the models explain the data?').
   The models' timescales are set by the duration between survey responses, in this case
   approximately six months (@sec:dataset).
 ]
-@fig:calibration-interaction-matrices shows the interaction effect matrix, $bold(J)$,
-for each model. We only display the upper triangular portion of the symmetric model's
-matrix, since each pair of spins in this model has a single, bidirectional relation.
+@fig:calibration-interaction-matrices shows the baseline activation parameters, $bold(h)$,
+and interaction effect matrix, $bold(J)$,
+for each model. Note that we only display the upper triangular elements of the symmetric
+model's interaction matrix, since the matrix is symmetric.
+The two models exhibit very similar baseline activations. The observed values indicate
+that after accounting for interaction effects, (i) belief in the existence and
+human-causes of climate change tend to be high, (ii) concern about extreme weather tends
+to be low, and (iii) people mostly believe that other individuals are not particularly
+worried about climate change. Regularisation has pushed some values (e.g., worry about
+climate change) to zero, indicating that the dataset provides limited evidence that these
+tend to be either positive or negative.
+
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
 with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
 is consistent with prior studies looking at the rate of change for beliefs
@@ -123,33 +165,6 @@ dissonance. We provide a formal proof of this statement in @sec:appendix-derivat
   ),
 ) <fig:calibration-edge-accuracy>
 
-#let bootstrap-footnote = footnote[
-  Each bootstrap sample comprises a set of survey participants, such that each sampled
-  dataset either contains all, or none, of the observations from any given individual.
-]
-#let dataset-size-footnote = footnote[
-  In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
-]
-
-As recommended in #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"),
-we evaluate interaction parameter accuracy by examining the bootstrapped confidence
-intervals around each parameter estimate.
-We use bootstrapping to estimate the uncertainty in our parameter estimates due to
-sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
-$M$, $T$, and $N$ denote the number of participants, observations, and spins
-respectively#dataset-size-footnote. We construct 500 bootstrapped
-datasets by sampling rows (participants) with replacement from $bold(D)$,
-such that each bootstrapped dataset has the same shape as the complete dataset.
-
-For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
-with parameters
-$
-  chevron bold(A), bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
-$
-
-where $p in NN$ is the number of model parameters, and we take the adjacency matrix
-$bold(A)$ as fully-connected, permitting influence relations to be inferred between
-each pair of beliefs.
 
 
 // @fig:calibration-edge-accuracy shows the

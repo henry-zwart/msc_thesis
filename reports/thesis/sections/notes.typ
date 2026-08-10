@@ -19,8 +19,134 @@ drafts. This section is temporary, and for my own benefit :)
   Hamiltonian?
 - In discussion, do I need to talk about how @ryanTimeInterveneContinuousTime2022 use
   continuous models, and why I don't think that is necessary?
+- In chapter 2, on simulation with Glauber dynamics. Do I need to discuss why async
+  models are harder to calibrate?
+- In parameter estimation, how to reword optimisation problem to depend on $lambda$
+  and $epsilon$ compactly?
+- When splitting methods and results, what should go where? Specifically for the effect
+  characterisation part.
+
+=== Resolving feedback
+- Page 9:
+  + Changed to distinct.
+  + Yes. Updated to be more explicit.
+  + Removed. Made clearer.
+  + In new version, reads as 'beliefs are entities with instantaneous state'. Don't
+    mention 'single' state variable. We don't actually require this.
+- Page 10:
+  + (*Check*) Referred to as a Relation
+  + Now specified.
+  + This part has been removed.
+- Page 11:
+  + (*Check*) I do include this suggestion now, but not directly after.
+- Page 12:
+  + $bold(J)$ is now defined, and I have omitted $bold(A)$.
+  + (*Check*) Done. But unsure on justification for multiple of 2 (as in questions above).
+  + Done. No longer re-defined.
+- Page 13:
+  + Done.
+  + Done.
+  + Done.
+- Page 14:
+  + Done.
+  + Noted.
+- Page 18: *Deferred until after restructure* (See github issue)
+- Page 20:
+  + (*Ask*) How to re-word this
+  + (*Check*) Discussed already
+- Page 22:
+  + (*Ask*) Do I need to make this clearer?
+  + (*Maybe discuss*) This requires some thought. Suggestion isn't correct. We need to count both
+    directions. Can't multiply by 2 either, since the directional contributions still
+    come from distinct observations.
+- Page 23:
+  + I've now backed this up with proper reasoning haha.
+  + This is no longer included.
+- Page 24:
+  + Resolved.
+- Page 32:
+  + (Deferred until after restructure)
+  + (Deferred until after restructure)
+  + (Deferred until after restructure)
+  + Resolved
+  + (*Ask*) I've described this now in the calibration section. Is this sufficient?
+    (see above question)
+- Page 33:
+  + Resolved
+- Page 34:
+  + *Check:* I've added the baseline activations to the earlier figure (in the
+    calibration chapter). I don't think we need the baseline activations here since we
+    are just using the interaction matrix to compare inbound/outbound effects.
+- Page 36:
+  + Resolved/reworded.
+  + Done/reworded.
+  + (*Ask*) I think these suggestions misrepresent the intention.
+  + (*Ask*) I think these suggestions misrepresent the intention.
+  + Done.
+  + (*Ask*) I think I understand, but a little unclear. May be that I've omitted for
+    visual clarity. I can add a comment to this effect perhaps?
+- Page 37:
+  + Done.
+  + (*Deferred until after restructure*)
+  + Clarified by making this a footnote. (It was previously in the following sentence,
+    but the page was cluttered).
+- Page 38:
+  + (*Deferred/maybe ask*) These are two different things.
+- Page 39:
+  + Resolved.
+- Page 40:
+  + (*Check*) I've changed this to 'nonzero'. Positive is not important. The important
+    part is that there is a small, but nonzero, effect on these beliefs.
+  + Done.
+- Page 41:
+  + Reworded paragraph.
+  + Removed this sentence altogether.
+  + Clarified in a footnote.
+- Page 45:
+  + Resolved, added forward references.
+- Page 46: *Somewhat resolved, but questions remain about how this content should be split
+  between methods and results*
+- Page 47:
+  + *Check (question above about methods/results split)*: I've removed this paragraph and
+    rewritten the caption. I also rewrote the paragraph prior, but it is still very long,
+    and potentially somewhat methodsy.
+  + Done.
+  + Done.
+  + *Ask:* Should this just be a discussion point? Or perhaps leave it as a footnote, but
+    reference the corresponding place in the discussion?
+- Page 49:
+  + *Check:* I think I've answered this now.
+  + Done.
+- Page 52:
+  + Done.
+  + Done.
+  + Done.
+- Page 53:
+  + Sure.
+- Page 54:
+  + Kept, but turned into an arrow link
+- Page 55:
+  + Kept as a backward reference.
+  + *Deferred:* I had thoughts on this, which I can't remember. But don't have time yet.
+- Page 56:
+  + Reworded :)
+
+
+
+
+
+
+
+
+
+
+
 
 == To add if I have time
+
+- In model calibration or model section, can discuss how baseline activations capture
+  things not in the interactions. May be effects of unmeasured beliefs, or exogenous
+  influences.
 
 
 == Additional things to maybe discuss somewhere

@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     fig, axes = plt.subplots(
         ncols=2,
-        figsize=(5, 3.5),
+        figsize=(5.77, 3.5),
         constrained_layout=True,
         gridspec_kw=dict(wspace=0.075),
     )
@@ -73,10 +73,16 @@ if __name__ == "__main__":
     axes[1].set_xticks(np.arange(8) + 0.5, labels, rotation=90, fontsize=9)
     axes[0].set_yticks(np.arange(8) + 0.5, labels, rotation=0, fontsize=9)
     axes[1].set_yticks([])
-    axes[0].set_title("Symmetric")
-    axes[1].set_title("Asymmetric")
-    fig.supylabel("From", y=0.6)
-    fig.supxlabel("To", x=0.625)
+    axes[0].set_title("Symmetric model")
+    axes[1].set_title("Asymmetric model")
+    axes[1].yaxis.set_label_position("right")
+    axes[1].set_ylabel("Interaction source", rotation=270, labelpad=20)
+    axes[0].set_xlabel("Interaction source")
+    axes[1].set_xlabel("Interaction recipient")
+
+    for ax in axes:
+        for spine in ax.spines:
+            ax.spines[spine].set_visible(True)
 
     for ext in ("png", "pdf"):
         fig.savefig(

@@ -11,8 +11,9 @@ While the previous chapter was primarily concerned with the _collective_ effects
 intervention, the distribution of expected effect of intervention across individuals
 for inbound interventions targeting 'Climate Action' shows substantial variation between
 survey participants (@fig:heterogeneity-results-cc-action-distribution). We begin this
-chapter with an investigation into the conditions under which different interventions
-targeting beliefs about climate action are likely to be effective.
+chapter, in @sec:heterogeneity-results-intervention-effects, by investigating the
+conditions under which different interventions targeting beliefs about climate action are
+likely to be effective.
 
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
@@ -26,15 +27,15 @@ targeting beliefs about climate action are likely to be effective.
   ),
 ) <fig:heterogeneity-results-cc-action-distribution>
 
-We then consider how inferred belief system structure varies between individuals, or
-subgroups in a population. In the previous chapter we identified political ideology as
-a particularly influential belief, both through asymmetric interactions with
-other variables
-(@subsec:asymmetry-results-existence) and as an effective point-of-intervention for
-interventions targeting attitudes toward climate action (@subsec:asymmetry-results-impact).
-Here, we investigate whether this influence extends beyond pairwise interactions with
-other variables by comparing asymmetric belief systems calibrated to the (self-reported)
-liberal and conservative subpopulations within the climate beliefs dataset.
+In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+structure varies between subgroups in a population. In the previous chapter we identified
+political ideology as a particularly influential belief, both through asymmetric
+interactions with other variables (@subsec:asymmetry-results-existence) and as an
+effective point-of-intervention for interventions targeting attitudes toward climate
+action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+extends beyond pairwise interactions with other variables by comparing asymmetric belief
+systems calibrated to the (self-reported) liberal and conservative subpopulations within
+the climate beliefs dataset.
 
 
 == Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
@@ -86,52 +87,42 @@ _personas_.
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
     long: [
-      Characterisation of initial states ('personas'; middle panel) which yield
-      effective interventions when targeting `CC Action` using different
-      points-of-intervention (rows). Intervention effect is measured as the difference
-      in `CC Action` activation probability between intervention ($delta_h = 2.5$) and
-      null (no-intervention) models at $t=5$, for the asymmetric belief model calibrated
-      to the climate beliefs dataset. Differences in the population upper quartile are
-      'high-effect'. (*Left*) Distribution of intervention effect
-      across survey participants. (*Centre*) Typical high-effect personas estimated
-      using a depth-3 regression decision tree. Rows are distinct personas. Cells
-      correspond to intervals of initial state dimensions ($L = [-1, 0]$, $H = [0, +1]$).
-      (*Right*) Prevalence of each persona in the high-effect and low-effect
-      subpopulations.
+      Pre-intervention states ('personas') for which interventions on different beliefs
+      (rows) are most effective for changing attitudes toward climate action in the
+      asymmetric KBS model calibrated to the climate beliefs dataset. The *left* panel
+      shows the distribution of changes in activation probability for the `CC Action`
+      belief at $t=5$ (approximately two and a half years) using a strong intervention
+      ($delta_h = 2.5$), with respect to the no-intervention scenario. The *center* panel
+      shows the personas corresponding to those individuals in the upper quartile of
+      effects (shaded region in the left panel), identified using a depth-3 regression
+      decision tree. Rows are distinct personas. Cells correspond to intervals in
+      the initial state space dimensions, i.e., the different beliefs, with
+      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows the prevalence of each
+      persona within the upper quartile ('High-effect') and below the upper quartile
+      ('Low-effect') of measured effects.
     ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
 
-@fig:heterogeneity-results-interventions-personas shows the effect characterisation
-functions for different interventions targeting `CC Action`, obtained from shallow
-regression decision trees with depth 3. The response variable is the expected
-difference between the activation probabilities for `CC Action` at $t=5$, in the
-intervention and null models, estimated per-individual using the average probabilities
-across 500 repeated simulations. Each model is calibrated to the full climate beliefs
-dataset (see @sec:calibration for calibration details). As in the previous chapter, we
+We now investigate the conditions under which different targeting attitudes toward
+climate action are expected to be effective. We use a depth-3 regression decision
+tree to approximate the characterisation effect function
+(*TODO: reference position in the methods.*) for the KBS model
+calibrated to the complete climate beliefs dataset (see @sec:calibration for calibration
+details). The response
+variable is the expected change in activation probability for `CC Action` at $t=5$
+(approximately two and a half years in the calibrated model) with respect to the
+no-intervention scenario. This is estimated using the average probability across 500
+repeated simulations. As in the previous chapter, we
 use a fixed intervention strength of $delta_h = 2.5$. The decision trees are fit using
-a mean-squared error objective function, and each achieve $R^2$ values of at least $0.9$
-(estimated using 10-fold cross-validation).
-
-#let rounding-footnote = footnote[
-  As our intention is to capture coarse patterns, we round the original `f64` values
-  describing the interval boundaries extracted from the model to the nearest multiple
-  of 0.5.
-]
-
-Each row in the figure corresponds to a different point-of-intervention (specified on
-the right). The left-hand column shows the distribution of differences in activation
-probabilities across individuals. The central column shows the personas which yield
-intervention effects within the upper quartile. Each row is a separate persona, and the
-columns refer to different dimensions (beliefs) in the initial state. The
-personas themselves are specified using a compressed
-representation#rounding-footnote: $"L" mapsto [-1, 0]$ and $"H" mapsto [0, +1]$. The
-right-hand column displays the prevalence of each persona within/outside the upper
-quartile of individuals, showing the proportional make-up of the high-effect population.
-We exclude points-of-intervention with no sufficiently high-effect observations (e.g.,
-`CC Others Worry` in @fig:heterogeneity-results-cc-action-distribution), classified as
-an upper quartile less than 0.1 (`CC Human`, `CC Others Worry`, `Weather Worry`).
-//We only include personas with at least 15% prevalence in the observed upper quartile.
+a mean-squared error objective function, and each achieve $R^2$ values of at least $0.9$,
+estimated using 10-fold cross-validation. We characterise an intervention for a given
+individual as being 'effective' if the change in activation probabilities is within
+the population upper quartile. Since this threshold depends on the effect distribution
+specific to each point-of-intervention, we exclude points-of-intervention whose upper
+quartile is below 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), i.e., which
+exhibit no meaningfully effective interventions. The identified conditions, or _personas_,
+are displayed in @fig:heterogeneity-results-interventions-personas.
 
 Since the regression decision tree produces a full tree, all personas have size 3
 by default. However, these can often be compressed. When two personas differ only
@@ -139,6 +130,16 @@ along one feature dimension, split at the same value, and both predict high-effe
 interventions, we combine them into a single persona which omits that feature (i.e.,
 spans the entire feature dimension). This is observed, for instance, in the persona
 for interventions on `CC Worry`.
+
+
+// TODO: FOOTNOTE NOT INCLUDED
+#let rounding-footnote = footnote[
+  As our intention is to capture coarse patterns, we round the original `f64` values
+  describing the interval boundaries extracted from the model to the nearest multiple
+  of 0.5.
+]
+
+
 
 // TODO: Consider making this part of the text, since we refer to it in the discussion
 #let incomplete-descriptions-footnote = footnote[
@@ -154,13 +155,16 @@ The expected difference in activation probabilities between the intervention and
 models exhibits a clear bimodal distribution across survey
 participants for each scenario, with the higher mode contained within the upper quartile
 (indicated by the darker shaded regions). For each point-of-intervention we observe a
-small set of personas. In each case these exhibit high prevelence among individuals with
-high intervention effects, and considerably lower prevalence for other individuals,
-indicating that the identified personas effectively characterise the conditions for
-effective interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+small set of personas. In each case these personas exhibit high prevelence among
+individuals with high intervention effects, and considerably lower prevalence for other
+individuals, indicating that the identified personas effectively characterise the
+conditions for effective
+interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
 While prevalence among the high-effect individuals is generally high, this does vary
-across points-of-intervention (e.g., 20% of effective interventions on beliefs about
-climate impacts are not captured).
+across points-of-intervention. For instance, 20% of individuals predicted to be in
+the high-effect category for interventions on `CC Worry` are not represented by the
+identified persona, while for interventions on `Politics` only 3% of high-effect
+individuals are not represented.
 
 // Recall that the effect of intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
@@ -215,217 +219,9 @@ change is human-caused#negative-cc-human-footnote. In the case where an individu
 believe that climate change is human-caused, this intervention may still be effective,
 so long as they do not already have a positive attitude toward climate action.
 
-// *Observations*
-// - General observations
-//   - Left panel:
-//     - Effect of intervention is bimodal for all of the considered points of intervention
-//     - The upper quartile captures the higher mode in each case
-//   - Centre and right panels:
-//     - High prevalence with a small number of personas.
-// - Low `CC Worry` is a necessary condition for all interventions to be successful.
-//   - `CC Worry` has inbound and outbound interactions with all other variables.
-//   - Several of the outbound interaction effects are large ($J_(i,j) approx 0.2$)
-//   - Also has the highest interaction effect toward `CC Action` ($J_(i,j) = 0.25$)
-//   - `CC Worry` also has lower inertia than some other variables. e.g., `Politics` is also
-//     well-connected but has high inertia---harder to change.
-//   - Therefore, if `CC Worry` is low, it negatively influences many other variables, but
-//     since it is also influenced by many variables, if an intervention can change its
-//     state, this provides positive influence to other variables.
-// - With the exception of `CC Real`, a low initial state on the point-of-intervention is
-//   necessary for effective interventions.
-//   - The potential impact of an intervention on the behaviour of a point-of-intervention
-//     decreases when the initial is high (decreases monotonically for values above 0)
-//     (@subsec:asymmetric-belief-system-modelling-interventions). i.e., the theoretical
-//     limit on the effect of intervention is lower when the initial state is higher.
-//   - One interpretation of the `CC Real` personas is that we require low `CC Worry` and
-//     `CC Human` (in which case the intervention on `CC Real` propagates to these
-//     variables, which then lend greater influence to the target), and if we don't have
-//     this, i.e., if `CC Human` is high, then we also require that `CC Action` is low,
-//     such that the potential effect of intervention is higher.
-//     - Transition matrix analysis shows that this finding is due to the influence of
-//       `CC Human` on `CC Real`. If `CC Human` is high, then this places pressure on
-//       `CC Real` to be high, irrespective of the intervention, i.e., we also see a
-//       positive shift in the null model. Supposing that `CC Human` is high, we actually
-//       observe a higher absolute activation probability for `CC Action` when `CC Action`
-//       is _not_ initially low. If `CC Action` is initially low, then the absolute
-//       activation following the intervention is lower; however, the difference compared
-//       to the _null model_ is larger.
-//     - Why is this? Possibly because when `CC Action` is
-//       low, it provides reinforcing negative influence on the other spins, negating
-//       some of the upward pressure from `CC Human`, whereas if an intervention is applied
-//       then the additional upward pressure from `CC Real` helps to offset this.
-//       In comparison, if `CC Action` is not low, then `CC Human` being high provides
-//       sufficient upward pressure in the null model as well.
-//   - Key takeaway is that it is important to recall that the effect of intervention is
-//     always measured with reference to the no-intervention scenario, and in particular,
-//     the no-intervention scenario is not necessarily stable.
-// - A subset of the POIs also require low `CC Action`
-
-
-
-// We worked with a similar function in the definition of the effect of intervention
-// itself (@def:asymmetry-results-effect-of-intervention), which accepts a _binarised_
-// state and returns the effect of intervention after simulation on the belief system
-// model. If we include the binarisation procedure, we obtain a function $f$ with the
-// correct form.
-
-
-// - *Overall goal of these experiments:* Characterise the groups of individuals in the
-//   climate beliefs dataset for whom the interventions (targeting 'Climate Action') are
-//   most effective.
-//
-// - *In broad strokes, how do we test this?*
-//   - After running intervention simulations, we fit a decision-tree regression model for
-//     the effect of intervention (for each point-of-intervention), using the
-//     non-binarised initial state variables as predictors.
-//   - We extract the decision paths to high-effect leaves as descriptors of the groups of
-//     individuals for whom the intervention was effective.
-//
-// - *Specific experimental details:*
-//   - We say that an intervention is highly effect when the effect of intervention is in
-//     the upper quartile for the population. Note that this does not capture 'absolute
-//     effectiveness', i.e., the upper quartile for a particular point-of-intervention may
-//     be very low compared to others.
-//   - We only consider decision rules with a prevalence of at least 15% in the high-effect
-//     population.
-//   - We exclude points-of-intervention with upper quartile of intervention effects lower
-//     than 0.075, i.e., where almost all interventions are low-effect.
-//   - We only consider weak and strong intervention scenarios, $delta_h in {0.5, 2.5}$.
-//   - We fit the decision tree with a maximum depth of 4, corresponding to four decision
-//     points between the root and the leaves.
-//
-// - *Results & figures:*
-//   - Rules heatmap
-//   - (*Maybe*) intervention rankings per-individual. i.e., we estimate the expected
-//     effect of intervention per-individual, for each point-of-intervention, by taking
-//     the average across repeats. We then rank the points of intervention, and show the
-//     _population_ mean and CIs. Contrasts the rankings in the previous section, where
-//     rankings were calculated over population-level average effect.
-
-// In this section we investigate the conditions under which interventions targeting the
-// 'Climate Action' attitude are likely to be successful, in asymmetric non-equilibrium
-// models calibrated to the climate beliefs dataset.
-//
-// The intervention simulation procedure is identical to that described in the previous
-// chapter. For each survey participant and point-of-intervention, we collect 500 repeated
-// samples of the 'Climate Action' spin state at $t=5$. We simulate both _weak_ and
-// _strong_ intervention scenarios, $delta_h in {0.5, 2.5}$.
-//
-// We first examine variation in the rankings over points of intervention between different
-// individuals. For each participant, we estimate the expected effect of intervention by
-// taking the average across repeated samples for each point-of-intervention and scenario.
-// We then rank the points of intervention by expected effect, such that for each
-// participant and scenario, we obtain a ranking over possible points of intervention.
-// @fig:heterogeneity-results-interventions-ranking-variability shows the average rank
-// across individuals for each possible point-of-intervention and scenario. The whiskers
-// denote one standard deviation around the average.
-//
-// #figure(
-//   image("../results/figures/model/intervention_individual_ranking/cc_action.pdf"),
-//   caption: caption(
-//     short: ['Climate Action' intervention rank variability],
-//     long: [
-//       Variability in point-of-intervention ranks across climate attitudes survey
-//       participants, for interventions targeting 'Climate Action'. Bar height describes
-//       mean rank across individuals; whiskers denote one standard deviation
-//       around the mean. Bar colours indicate strong ($delta_h = 2.5$) and weak
-//       ($delta_h = 0.5$) intervention scenarios.
-//     ],
-//   ),
-// ) <fig:heterogeneity-results-interventions-ranking-variability>
-//
-// *TODO: Observations*
-//
-// We now proceed to characterise the conditions under which each intervention is
-// effective. Recall that the model's initial state is the only distinguishing factor
-// between survey participants in the intervention simulations. It follows, therefore,
-// that any difference in intervention effectiveness between participants results from
-// differences in their initial states. To characterise the conditions for successful
-// intervention, it then suffices to characterise the set of _initial states_ which lead
-// to effective interventions, and distinguish them from those that do not.
-//
-// We fit a shallow decision tree regression model for each
-// point-of-intervention, taking the expected intervention effect for each survey
-// participant as the response variable, and the non-binarised measurements from the final
-// wave of the climate beliefs dataset as features. The parameterised model partitions the
-// space of possible initial states, assigning a prediction value to each region, such that
-// the mean-squared error with respect to the observed intervention effects is minimal.
-// We characterise the _personas_ which lead to effective interventions using the rules
-// which define high-effect regions of the initial state space.
-//
-// #let treedepth-footnote = footnote[
-//   A tree with depth $n in NN$ partitions the initial state space into $2^n$ regions,
-//   each described using $n$ feature rules.
-// ]
-// For this experiment, we use a tree depth of 3 so as to generate short
-// rules#treedepth-footnote, and classify intervention effects within the upper quartile
-// of observed values as 'high effect'. We only consider personas which are sufficiently
-// prevalent in the observed data ($>= 15%$).
-//
-// @fig:heterogeneity-results-interventions-personas shows the high-effect personas for
-// each intervention scenario and point-of-intervention, excluding points of intervention
-// for which there are no sufficiently high-effect observations, where the upper quartile
-// is below 0.1. Each row describes the results for a distinct point-of-intervention,
-// indicated at the right of the figure. Let us step through the remaining columns:
-//
-// - The left-most column displays intervention effect
-//   distribution for the strong intervention scenario, with upper quartile regions
-//   indicated.
-//
-// - The central column describes the set of personas predicted to be most
-//   susceptible to the given intervention. Each row describes a distinct persona. Each
-//   cell described a subinterval of the range of possible feature values,
-//   $I subset.eq [-1, 1]$, with 'L' referring to 'Low' and 'H' to 'High'. The modifiers
-//   'V' and 'S' (not present) refer to 'Very' and 'Slightly', respectively. Entries with
-//   the for '~$X$' refer to the complement of the interval named by $X$. The specific
-//   interval mappings are defined in *REFERENCE TABLE*.
-//
-// - The rightmost column describes the prevalence of each persona within the 'high-effect'
-//   population. Cell values are the proportion of individuals within the upper quartile
-//   for each scenario who satisfy the persona. Missing entries indicate that a persona
-//   was either not identified for the given scenario, or had prevalence below 15%.
-//
-//
-// *TODO: Observations*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #figure(
-//   image("../results/figures/model/intervention_individual_ranking/05_cc_action.pdf"),
-//   caption: caption(
-//     short: [Ranked intervention effects per-individual, weak, targeting climate action],
-//     long: [Ranked intervention effects per-individual, weak, targeting climate action],
-//   ),
-// )
-//
-// #figure(
-//   image("../results/figures/model/intervention_individual_ranking/25_cc_action.pdf"),
-//   caption: caption(
-//     short: [Ranked intervention effects per-individual, strong, targeting climate policy],
-//     long: [Ranked intervention effects per-individual, strong, targeting climate policy],
-//   ),
-// )
-//
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
 
-*To-do:*
-- Discuss differences in baseline activations.
 
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs are inherently
@@ -452,12 +248,12 @@ far from representative of the differences between individuals
 general trends for these subpopulations. Using the parameter estimation approach
 described in Chapters @subsec:methods-parameter-estimation[] and @sec:calibration,
 we calibrate separate asymmetric belief systems to the subsets of the climate beliefs
-dataset which consistently (i.e., in both waves) self-report conservative ($n=#ncons$)
-and liberal #box[($n=#nlib$)] political ideologies#smaller-dataset-footnote.
-We exclude the `Politics` variable
-from the model, since this is captured by the partitioned datasets. The hyperparameters
-used for regularisation strength and smoothing are listed in
-@tab:methods-hyperparameter-values.
+dataset comprising individuals who consistently (i.e., in both waves) self-report their
+political ideology as being either 'conservative' or 'very conservative' ($n=#ncons$)
+or 'liberal' or 'very liberal' #box[($n=#nlib$)].#smaller-dataset-footnote We exclude
+the `Politics` variable from the model, since this is captured by the partitioned
+datasets. The hyperparameters used for regularisation strength and smoothing are listed
+in @tab:methods-hyperparameter-values.
 
 Figures related to model calibration can be found in @sec:appendix-extra-results. The
 estimated parameters exhibit considerably higher uncertainty than in the model
@@ -475,24 +271,35 @@ are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-di
   caption: caption(
     short: [Conservative and liberal belief system interaction matrices],
     long: [
-      Interaction effect matrices ($bold(J)$) for asymmetric belief
-      systems calibrated to the conservative and liberal subsets of the climate beliefs
-      dataset (@sec:dataset) using the parameter estimation method in
-      @subsec:methods-parameter-estimation.
+      (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices
+      ($bold(J)$) for asymmetric belief systems calibrated to the conservative ($n=507$)
+      and liberal ($n=375$) subsets of the climate beliefs dataset (@sec:dataset) using
+      the parameter estimation method in @subsec:methods-parameter-estimation.
     ],
   ),
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
 
-@fig:heterogeneity-results-ideology-interaction-matrices shows the interaction effect
-matrices, $bold(J)$, for the conservative and liberal subpopulations. We observe several
-differences between the two models, as well as with comparison to the model calibrated
-on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notably, the
-model calibrated to the liberal subpopulation has higher sparsity
-(proportion of missing cross-interaction edges) and mean interaction effect over
-cross-interactions than either the conservative model or the complete model
-(@tab:heterogeneity-results-belief-systems-properties). Among the interactions present
-in the liberal model, 82% also occur in the conservative model, contrasting the 54%
-of conservative interactions which are also in the liberal model.
+@fig:heterogeneity-results-ideology-interaction-matrices shows the baseline activation
+parameters, $bold(h)$, and interaction effect matrices, $bold(J)$, for the conservative
+and liberal subpopulations. The model calibrated to the liberal subpopulation exhibits
+much higher uncertainty in the estimated baseline activations for belief in the existence
+and human-causes of climate change than the conservative subpopulation model; however,
+in the liberal model these are reliably positive. The conservative model shows negative
+baseline activations for worry about climate change and extreme weather, beliefs about
+others' worry, and beliefs about the general impacts of climate change. While these
+are generally low-magnitude, in several cases their sizes are comparable with the
+interaction effects influencing these variables (e.g., for `CC Worry Others` and
+`Weather Worry`).
+
+We observe several structural differences between the two models, as well as with
+comparison to the model calibrated on the full dataset
+(@fig:asymmetry-results-existence-interaction-matrix). Notably, the model calibrated to
+the liberal subpopulation has higher sparsity (proportion of missing cross-interaction
+edges) and mean interaction effect over cross-interactions than either the conservative
+model or the complete model (@tab:heterogeneity-results-belief-systems-properties).
+Among the interactions present in the liberal model, 82% also occur in the conservative
+model, contrasting the 54% of conservative interactions which are also in the liberal
+model.
 
 #figure(
   table(
@@ -520,7 +327,7 @@ of conservative interactions which are also in the liberal model.
 
 The conservative model displays broad (yet mostly weak) reinforcing interactions
 between climate-related concerns, beliefs and others' concerns, and climate-impact
-beliefs. This contrasts the liberal model, in which only `CC Worry` and `CC Impact`
+beliefs. This contrasts with the liberal model, in which only `CC Worry` and `CC Impact`
 are non-trivially related. Moreover, we observe that `CC Others Worry` and
 `Weather Worry` in fact have _no_ incoming cross-interactions.
 

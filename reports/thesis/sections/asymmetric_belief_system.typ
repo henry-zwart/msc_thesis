@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./discussion.typ": internal-link
 
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
@@ -52,21 +53,20 @@ KBS model using Glauber dynamics.
 //   - Broader Markov process describes the state of the belief system as a whole
 //
 
-== Modelling belief system dynamics
+== Modelling belief system dynamics <sec:model-modelling-belief-system-dynamics>
 
 Our theory of belief system dynamics rests on three main assumptions. First, we assume
-that beliefs can be represented as discrete random variables. This allows
+that beliefs can be represented by distinct random variables. This allows
 us to consider beliefs as entities characterised by an instantaneous
 state. In particular, this assumption is not compatible with the perspective that beliefs
 are contextual, with no singular internal state of their own
 @bendanaFragmentationBelief2021 @riemerPreferencesDontHave2014.
 
-Second, we assume that the state
-distribution for any given belief (potentially) depends on the previous
-states of all others, formalising the idea that past beliefs influence present
-ones. Finally, we assume that these conditional distributions are time-invariant. While
-belief _states_ may change over time, the dynamics by which this happens do
-not.
+Second, we assume that the state transition probability for a given belief (potentially)
+depends on the previous states of all beliefs, including itself, formalising the idea
+that past beliefs influence present ones. Finally, we assume that these conditional
+distributions are time-invariant. While belief _states_ may change over time, the
+dynamics by which this happens do not.
 
 // For instance, they  sensitive to context (e.g., being in a certain location or
 // talking to a specific person), physical state (e.g., tiredness), or
@@ -128,9 +128,14 @@ $
   {bold(s)^t}_(t=1)^infinity quad "where" bold(s)^t in Omega_1 times dots.c times Omega_N
 $ <eqn:methods-belief-system-dynamics-belief-system-markov-process>
 
-with transition probability
-$P(bold(sigma)^(t+1) | bold(sigma)^t) = product_i^N P(sigma_i^(t+1) | bold(sigma)^t)$ for
-$1 < t in NN$ and initial state probability
+with transition probability given by the product of the individual beliefs' transition
+probabilities:
+
+$
+  P(bold(sigma)^(t+1) | bold(sigma)^t) = product_i^N P(sigma_i^(t+1) | bold(sigma)^t)
+$ <eqn:methods-belief-system-dynamics-parts-whole-relation>
+
+and a pre-specified initial state probability
 $P(bold(sigma)^1) = product_(i=1)^N P(sigma_i^1)$.
 
 We use the term *belief system* to refer to the combination of a collection of beliefs
@@ -238,8 +243,8 @@ permitted.
 Formally, letting $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs, a kinetic
 belief system model for $bold(S)$ is described by parameters
 $bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
-is a weighted adjacency matrix of directed _interaction effects_ (or _influence effects_), and
-$bold(h) in RR^N$ is a vector of _baseline activation_ effects for the elements of
+is a weighted adjacency matrix of directed *interaction effects* (or *influence effects*), and
+$bold(h) in RR^N$ is a vector of *baseline activation* effects for the elements of
 $bold(S)$.
 
 A baseline activation effect, $h_i in RR$, describes the tendency for the belief $S_i$ to
@@ -276,7 +281,7 @@ this study.
 The conditional distribution $P(bold(sigma)^(t+1) | bold(sigma)^t)$ describes the
 dynamics of the entire KBS model; however, rather than defining this directly, we will
 instead stitch it together from the dynamics of the individual beliefs using
-Relation @eqn:methods-belief-system-dynamics-belief-system-markov-process[].
+Relation @eqn:methods-belief-system-dynamics-parts-whole-relation[].
 
 Let $S_i in bold(S)$ be an arbitrary belief, and let $bold(s) in {-1, +1}^N$
 describe the states of all beliefs in $bold(S)$ at time $t$. We define the *effective
@@ -305,7 +310,7 @@ baseline activation, $h_i$, through positive (reinforcing) influences from
 beliefs with state $+1$ or negative (opposing) influences from beliefs with state $-1$,
 and when $S_i$ previously had the state $+1$.
 
-Finally, using Relation @eqn:methods-belief-system-dynamics-belief-system-markov-process[],
+Finally, using Relation @eqn:methods-belief-system-dynamics-parts-whole-relation[],
 we can now describe the complete conditional transition probability for the KBS model
 in terms of those belonging to the individual beliefs:
 
@@ -319,15 +324,17 @@ Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
 == Symmetric and asymmetric belief systems
 
 In the special case when $bold(J)$ is symmetric, we say that the kinetic belief system
-model is *symmetric*, and otherwise that it is *asymmetric*. In an asymmetric KBS model,
-for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may be the case that an
-influence relation exists in only one direction, or that the directed relations differ
-in sign and/or magnitude. On the other hand, all influence relations in a symmetric KBS
-model are directionally-equivalent.
+model is *symmetric*, and otherwise that the kinetic belief system is *asymmetric*. In
+an asymmetric KBS model, for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may
+be the case that an influence relation exists in only one direction, or that the directed
+relations differ in sign and/or magnitude. On the other hand, all influence relations in
+a symmetric KBS model are directionally-equivalent.
 
 The symmetric KBS model can be considered a simple extension of the symmetric Ising model
-with self-interaction effects and temporal dynamics. As such, the symmetric model _does_
-satisfy detailed balance, so tends toward an equilibrium steady state.
+with self-interaction effects and temporal dynamics. However, on account of the
+self-interaction effects, the symmetric KBS model still does not satisfy detailed balance,
+and therefore is not guaranteed to tend toward an equilibrium steady state
+@nguyenInverseStatisticalProblems2017.
 
 // Let $cal(M)$ be a kinetic belief system model defined as in the preceding section.
 //
@@ -352,21 +359,32 @@ satisfy detailed balance, so tends toward an equilibrium steady state.
 
 == Simulation via Glauber dynamics <subsec:methods-glauber-dynamics>
 
-It is straightforward to draw samples from a belief system model using Glauber
-dynamics, given the conditional probability distribution defined in
-@eqn:model-kbs-dynamics.
-
-Given an initial state $bold(s)^1 in {-1, +1}^N$, we sample a sequence of $T in NN$
-subsequent configurations:
+We can use Glauber dynamics to sample trajectories from the KBS model
+@glauberTimeDependentStatisticsIsing1963. Given an initial state $bold(s)^1 in {-1, +1}^N$,
+we sample a trajectory of length #box[$T in NN$] by drawing consecutive samples using the
+KBS transition probability defined in @eqn:model-kbs-dynamics:
 
 $
-  {bold(s)^t}_(t=1)^T, quad "where each" bold(s)^(t+1) ~ P(bold(sigma)^(t+1) | bold(sigma)^t)
+  {bold(s)^t}_(t=1)^T, quad "where" bold(s)^t ~ P(bold(sigma)^t | bold(sigma)^(t-1) = bold(s)^(t-1)) "for" t in {2, ..., T}
 $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
 Each belief has the opportunity to update during every time interval. This
-update routine is referred to as _synchronous_ Glauber dynamics, contrasting
-_asynchronous_ Glauber dynamics, in which only one spin can update during a given
+update routine is referred to as *synchronous Glauber dynamics*, contrasting
+*asynchronous Glauber dynamics*, in which only one spin can update during a given
 interval @glauberTimeDependentStatisticsIsing1963 @nguyenInverseStatisticalProblems2017.
+
+Asynchronous models are often more realistic, particularly for phenomena which evolve
+continuously in time, i.e., where the synchronicity assumption is invalid---we discuss
+this further in @sec:discussion-limitations (#internal-link(<fast-causal-influence-example>)).
+However, from a parameter estimation perspective, models which assume synchronous
+dynamics are comparatively simpler to calibrate, e.g., using maximum likelihood
+estimation. For extended discussion on this matter, we refer the reader to
+#cite(<nguyenInverseStatisticalProblems2017>, form: "prose", supplement: [p.~34]).
+
+We note that while an asynchronous formulation of the KBS model is possible, this would
+require a different formulation of the belief system dynamics modelling problem defined
+in @sec:model-modelling-belief-system-dynamics, to prohibit multiple beliefs
+from updating at once.
 
 == Modelling interventions <subsec:asymmetric-belief-system-modelling-interventions>
 
@@ -403,25 +421,26 @@ value and outgoing edges toward a subset of beliefs:
   image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
 )
 
-The intervention node $I$ exerts influence on the belief system nodes $A$ and $B$. Let
-us consider the effective baseline activation at node $A$ and time $t+1$, as defined in
-@eqn:model-effective-activation, given a previous configuration $bold(s)^t$:
+In the diagram above, the intervention node $I$ exerts influence on the beliefs
+$A$ and $B$. Consider the effective baseline activation for belief $A$ at
+time $t+1$, as defined in @eqn:model-effective-activation, given a previous configuration
+$bold(s)^t$:
 
 $
-  h_A^"eff" (bold(s)^t) = h_A + sum_("node" j) A_(j A) J_(j A) s^t_j
+  h_A^"eff" (bold(s)^t) = h_A + sum_("node" j) J_(j A) s^t_j
 $ <eqn:asymmetric-belief-system-int-example-eff-baseline>
 
 Since the state of $I$ is fixed (in this case, at $+1$), the contribution of the
-intervention node to $A$'s effective activation baseline is constant. We can then
-re-write @eqn:asymmetric-belief-system-int-example-eff-baseline, interpreting the
+intervention node to $A$'s effective activation baseline is simply $J_(I A)$.
+We can then re-write @eqn:asymmetric-belief-system-int-example-eff-baseline, interpreting the
 intervention effect as an adjustment to the baseline activation $h_A$:
 
 $
-  h_A^"eff" (bold(s)^t) = (h_A + J_(I A)) + sum_("node" j != I) A_(j A) J_(j A) s^t_j
+  h_A^"eff" (bold(s)^t) = (h_A + J_(I A)) + sum_("node" j != I) J_(j A) s^t_j
 $
 
-It follows then that we can model interventions more simply as an adjustment to the
-baseline activation of certain beliefs:
+It follows that we can then equivalently model interventions more simply as an adjustment
+to the baseline activation of certain beliefs:
 
 #figure(
   outlined: false,
