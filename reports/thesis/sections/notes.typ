@@ -25,6 +25,7 @@ drafts. This section is temporary, and for my own benefit :)
   and $epsilon$ compactly?
 - When splitting methods and results, what should go where? Specifically for the effect
   characterisation part.
+- When introducing MLE, should I be more precise about $bold(theta)^* in Theta subset.eq RR^p$?
 
 === Resolving feedback
 - Page 9:

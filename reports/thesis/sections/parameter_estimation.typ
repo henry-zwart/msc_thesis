@@ -13,6 +13,149 @@
 //   - If we could, this would simplify dataset. Wouldn't need to rely on repeating
 //     participants.
 
+In the previous chapter we introduced the Kinetic Belief System (KBS) as a model of
+belief system structure and dynamics which allows for asymmetric influence relations.
+While the KBS model is theoretically interesting, its _empirical_ value hinges on
+being able to infer the model from observational data.
+
+In this chapter we provide a method for doing just this, based on maximum likelihood
+estimation---this turns out to be not-so-straightforward, due to the mismatch between the
+binary representation of beliefs assumed by the KBS model and typical approaches for
+assessing beliefs in surveys. We then use this method to calibrate symmetric and
+asymmetric KBS model to a longitudinal dataset comprising beliefs about climate
+change. These models are used for the experiments in the second half of this study.
+
+We omit derivation details in this chapter; however, the curious reader can find these
+in @sec:appendix-derivations.
+
+== The problem with maximum likelihood estimation <sec:parameter-estimation-two-problems>
+
+Given a dataset $D$ and a parameterisable model with $p in NN$ parameters, maximum
+likelihood estimation (MLE) seeks the parameterisation $bold(theta)^* in RR^p$ which
+maximises the probability of observing $D$ under the model, also known as the likelihood:
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(theta) in RR^p) P(D | bold(theta))
+$ <eqn:parameter-estimation-mle>
+
+MLE is often used for parameter estimation in similar modelling situations
+@nguyenInverseStatisticalProblems2017 @leeStatisticalMechanicsUS2015. It has a
+significant drawback, however, in that it assumes that the observations in the
+dataset $D$ are representable within the model. This poses a problem when calibrating
+binary belief system models---such as the KBS model---using survey data, which often
+assess belief states using multi-valued (e.g., Likert) scales. In order to use
+MLE in such situations, we must first binarise observations to the set ${-1, +1}$.
+
+There are several approaches for binarising continuous values, the simplest of which,
+which we will call *sign-thresholding*, is to map values to ${-1, +1}$ in accordance
+with their sign. Zero must be handled separately, for instance using a deterministic
+rule (e.g., $0 mapsto +1$) or a Bernoulli random variable. This produces discontinuous
+behaviour around the zero point, which may be unrealistic in this setting. If we are
+treating zero as an ambiguous or neutral belief state that can be mapped to either $-1$
+or $+1$, one could argue that we should treat small-magnitude positive or negative values
+similarly.
+
+We can improve on this using *soft thresholding*, in which each data value $x in RR$
+is perturbed by an independent noise term $epsilon ~ cal(N)(0, sigma)$ prior to this
+mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
+and given choice of $sigma in RR_+$.
+
+#figure(
+  image(
+    "../results/figures/methods/binarisation/distribution.pdf",
+  ),
+  caption: caption(
+    short: [Soft thresholding],
+    long: [
+      Soft thresholding maps $x in RR$ to ${-1, +1}$ by sign-thresholding
+      #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative
+      values are mapped to $+1$ with probability
+      #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which increases with $sigma$ and
+      $|x|^(-1)$.
+    ],
+  ),
+  placement: none,
+) <fig:methods-binarisation>
+
+Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
+such that #box[$x + epsilon > 0$] (region A), or equivalently when $epsilon < x$ (region B).
+The probability that $x$ is mapped to $+1$ is then
+
+$
+  P(x mapsto +1) = Phi(x/sigma)
+$ <eqn:methods-dataset-binarisation-probability-map-to-1>
+
+With soft thresholding, small-magnitude values are mapped to $-1$ and $+1$ with
+nontrivial probability, while the binarisation of large values is effectively
+deterministic.
+
+#let likert7-footnote = footnote[
+  In this case, the Likert-7 scale has response options: $"strongly oppose" prec "oppose" prec "weakly oppose" prec "neither support nor oppose" prec "weakly support" prec "support" prec "strongly support"$.
+]
+
+However, there remains a deeper issue with binarisation which is not resolved by soft
+thresholding, namely that _any_ form of binarisation necessarily erases information about
+the magnitude of the original data. For instance, consider a survey question which
+assesses an individual's attitude toward a particular policy using a Likert-7
+scale.#likert7-footnote After binarisation, we can no longer distinguish between weak
+and strong support for the policy, or neutrality which has been mapped to $+1$. In short,
+since we obtain a single binary output for each observation, MLE is not capable of
+representing ambiguity or neutrality, and instead requires that such cases are made
+unambiguous or non-neutral through binarisation.
+
+// where 'Neutral' (i.e., zero) values may be mapped which
+// may be unnatural for values with very small magnitude---should a positive  . with
+// small negative values being mapped to $-1$ and nearby small positive values being mapped
+// negative values are mapped to $-1$,
+//
+// However, this approach
+// has two main problems. First, it erases all information regarding the magnitude of the
+// original data. For instance, in a Likert-7 scale, both 'Weakly support' and 'Strongly
+// support' are mapped to $+1$. Hence by using Zero values
+// are handled separately, for instance using a deterministic rule or a Bernoulli random
+// variable. This approach is
+//
+// This approach leads to somewhat   to stranand handle zero using
+// either a deterministic mapping or via a Bernoulli random variable. However, this
+// approach exhibits sharp behaviour around zero
+// approach erases all information regarding the magnitude of the original data, and
+// behaves sharply around
+//
+// - Can threshold
+//
+// - However, it makes sense to assess questions like this. May be important to
+//   distinguish between Strong Support and Weak Support.
+//
+//
+//
+//
+// While maximum likelihood estimation (MLE) is often used to infer
+// parameters for similar models @nguyenInverseStatisticalProblems2017
+// @leeStatisticalMechanicsUS2015, we should be cautious, for two reasons, of applying this
+// method naïvely in the present study.
+//
+// Firstly, maximum likelihood estimation is prone to overfitting when the number of
+// model parameters is similar to the number of observations
+// @epskampEstimatingPsychologicalNetworks2018.
+// While we consider only a small number of
+// beliefs in this study ($N in {7,8}$), the number of parameters $p$ grows
+// rapidly, with $p in O(N^2)$ for both the symmetric and asymmetric model variants. In
+// combination with sampling error, we expect the number of parameters to negatively
+// impact the robustness of the inferred parameters---given an alternative dataset of
+// the same size, we would expect significant variation in parameters.
+//
+// More importantly, however, while the KBS model assumes binary belief states, surveys
+// often assess belief states at a more granular level (e.g., using Likert scales, or
+// ordinal responses with several options)#footnote[This is the case for the survey dataset
+//   used in the present study (@sec:dataset).]. In order to use MLE for model calibration, we
+// must first binarise the original data.
+// However, we have no
+// guarantee that the parameterisation inferred for any specific binarisation is a
+// reasonable explanation for the _non-binarised_ dataset, nor for any other possible
+// binarisation in the case where a probabilistic binarisation scheme is used (such as
+// the one described in @sec:parameter-estimation-soft-binarisation).
+
+
 == Soft Binarisation <sec:parameter-estimation-soft-binarisation>
 
 Prior to model fitting, we binarise all variables, mapping data values to the
@@ -43,7 +186,7 @@ illustrates this process for a negative value of $x$ and given choice of $sigma$
     ],
   ),
   placement: auto,
-) <fig:methods-binarisation>
+)// <fig:methods-binarisation>
 
 Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
 such that $x + epsilon > 0$ (region A), or equivalently when $epsilon < x$ (region B).
@@ -51,7 +194,7 @@ The probability that $x$ is mapped to $+1$ is then
 
 $
   P(x mapsto +1) = Phi(x/sigma)
-$ <eqn:methods-dataset-binarisation-probability-map-to-1>
+$ //<eqn:methods-dataset-binarisation-probability-map-to-1>
 
 #let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
 where $Phi$ is the standardised normal cumulative distribution function. This
@@ -79,14 +222,20 @@ a 'weakly oppose' response to a 7-point Likert scale
 
 
 
-== Parameter estimation <subsec:methods-parameter-estimation>
+== Parameter estimation using the expected likelihood <subsec:methods-parameter-estimation>
 
-For the purposes of the experiments in the following sections, we perform parameter
-estimation to calibrate the belief system model described in
-@subsec:theory-nonequilibrium-belief-system-model to the climate beliefs dataset
-(@sec:dataset). We first outline the context of the parameter estimation problem,
-and then present our approach. We omit derivation details in this section;
-however, the curious reader can find these in Appendix A (*TODO*).
+We now describe a parameter estimation method which mitigates the two issues discussed
+directly above. We address
+We now describe a parameter estimation method which mitigates the two issues discussed
+above. To address the problem of overfitting, we apply regularisation during calibration,
+which has the effect of penalising
+sele
+// For the purposes of the experiments in the following sections, we perform parameter
+// estimation to calibrate the belief system model described in
+// @subsec:theory-nonequilibrium-belief-system-model to the climate beliefs dataset
+// (@sec:dataset). We first outline the context of the parameter estimation problem,
+// and then present our approach. We omit derivation details in this section;
+// however, the curious reader can find these in Appendix A (*TODO*).
 
 Consider a population of
 $M in NN$ individuals with a shared belief system $cal(M)$ comprising $N in NN$
