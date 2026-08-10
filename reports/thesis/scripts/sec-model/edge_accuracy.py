@@ -54,8 +54,8 @@ if __name__ == "__main__":
     plot_cis(asym_data["params"][:, 8:], axes[1])
     axes[0].set_ylabel(r"Edge $\{i,j\}$")
     axes[1].set_ylabel(r"Edge $(i,j)$")
-    axes[0].set_title("Symmetric")
-    axes[1].set_title("Asymmetric")
+    axes[0].set_title("Symmetric model")
+    axes[1].set_title("Asymmetric model")
     axes[1].legend()
     #     loc="lower center",
     #     bbox_to_anchor=(0.75, 1.1),

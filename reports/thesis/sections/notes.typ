@@ -72,13 +72,15 @@ drafts. This section is temporary, and for my own benefit :)
 - Page 33:
   + Resolved
 - Page 34:
-  + (Deferred as requires recreating figure)
+  + *Check:* I've added the baseline activations to the earlier figure (in the
+    calibration chapter). I don't think we need the baseline activations here since we
+    are just using the interaction matrix to compare inbound/outbound effects.
 - Page 36:
   + Resolved/reworded.
   + Done/reworded.
   + (*Ask*) I think these suggestions misrepresent the intention.
   + (*Ask*) I think these suggestions misrepresent the intention.
-  + (*Defer*) Requires some effort.
+  + Done.
   + (*Ask*) I think I understand, but a little unclear. May be that I've omitted for
     visual clarity. I can add a comment to this effect perhaps?
 - Page 37:

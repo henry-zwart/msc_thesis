@@ -53,8 +53,8 @@ if __name__ == "__main__":
     plot_cis(con_data["params"][:, 7:], axes[0])
     plot_cis(lib_data["params"][:, 7:], axes[1])
     fig.supylabel(r"Edge $\{i,j\}$")
-    axes[0].set_title("Conservative")
-    axes[1].set_title("Liberal")
+    axes[0].set_title("Conservative model")
+    axes[1].set_title("Liberal model")
     axes[1].legend()
     #     loc="lower center",
     #     bbox_to_anchor=(0.75, 1.1),

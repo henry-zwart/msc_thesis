@@ -164,12 +164,12 @@ a small number of asymmetric relations.
 We can partition the asymmetric relations into two groups, according to whether
 directional interactions exist in only one direction, indicated using orange confidence
 intervals, or both directions with different strengths, indicated with blue confidence
-intervals (see @fig:asymmetry-results-existence-interaction-matrix, identical to the
-interaction matrix shown in @fig:calibration-interaction-matrices of the previous
-chapter). Pairs with two nonzero interactions comprise
-$#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
-$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$; the only pair with a single
-directional interaction is $#raw("Politics") -> #raw("CC Real")$.
+intervals (see the interaction matrix in @fig:asymmetry-results-existence-interaction-matrix;
+note that this is identical to the asymmetric matrix shown in
+@fig:calibration-interaction-matrices of the previous chapter). Pairs with two nonzero
+interactions comprise $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
+#box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]; the only pair with a
+unidirectional interaction is $#raw("Politics") -> #raw("CC Real")$.
 
 Comparing directional strength and degree centrality indices for `CC Worry` and
 `Politics` across bootstrapped models, we find significant differences ($p < 0.05$) for
@@ -285,8 +285,8 @@ intervention experiments (left) examine how interventions on a particular spin p
 to other beliefs. On the other hand, inbound intervention experiments
 (right) consider how a focal belief's behaviour is differently affected by interventions
 elsewhere in the network. We refer to the belief on which an intervention is applied as
-the *point-of-intervention* and the belief whose resulting state is measured as
-the *target*.
+the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
+resulting state is measured as the *target* (marked 'T' in the diagram).
 
 #{
   set text(size: 12pt)

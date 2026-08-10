@@ -81,7 +81,8 @@ class InteractionHeatmapPlotCommand(BaseCommand):
             vmin=-vlim,
             vmax=vlim,
             ax=ax,
-            cbar_kws=dict(fraction=0.05, pad=0.04),
+            cbar=None,
+            # cbar_kws=dict(fraction=0.05, pad=0.04),
         )
         ax.set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0)
         ax.set_xticks(
@@ -90,8 +91,9 @@ class InteractionHeatmapPlotCommand(BaseCommand):
             rotation=90,
             # horizontalalignment="right",
         )
-        fig.supylabel("From", y=0.65)
-        fig.supxlabel("To", x=0.6)
+        ax.set_xlabel("Interaction recipient")
+        ax.yaxis.set_label_position("right")
+        ax.set_ylabel("Interaction source", rotation=270, labelpad=20)
 
         # ax.legend(
         #     ncol=2,

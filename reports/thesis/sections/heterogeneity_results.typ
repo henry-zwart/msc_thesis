@@ -480,24 +480,35 @@ are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-di
   caption: caption(
     short: [Conservative and liberal belief system interaction matrices],
     long: [
-      Interaction effect matrices ($bold(J)$) for asymmetric belief
-      systems calibrated to the conservative and liberal subsets of the climate beliefs
-      dataset (@sec:dataset) using the parameter estimation method in
-      @subsec:methods-parameter-estimation.
+      (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices
+      ($bold(J)$) for asymmetric belief systems calibrated to the conservative ($n=507$)
+      and liberal ($n=375$) subsets of the climate beliefs dataset (@sec:dataset) using
+      the parameter estimation method in @subsec:methods-parameter-estimation.
     ],
   ),
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
 
-@fig:heterogeneity-results-ideology-interaction-matrices shows the interaction effect
-matrices, $bold(J)$, for the conservative and liberal subpopulations. We observe several
-differences between the two models, as well as with comparison to the model calibrated
-on the full dataset (@fig:asymmetry-results-existence-interaction-matrix). Notably, the
-model calibrated to the liberal subpopulation has higher sparsity
-(proportion of missing cross-interaction edges) and mean interaction effect over
-cross-interactions than either the conservative model or the complete model
-(@tab:heterogeneity-results-belief-systems-properties). Among the interactions present
-in the liberal model, 82% also occur in the conservative model, contrasting the 54%
-of conservative interactions which are also in the liberal model.
+@fig:heterogeneity-results-ideology-interaction-matrices shows the baseline activation
+parameters, $bold(h)$, and interaction effect matrices, $bold(J)$, for the conservative
+and liberal subpopulations. The model calibrated to the liberal subpopulation exhibits
+much higher uncertainty in the estimated baseline activations for belief in the existence
+and human-causes of climate change than the conservative subpopulation model; however,
+in the liberal model these are reliably positive. The conservative model shows negative
+baseline activations for worry about climate change and extreme weather, beliefs about
+others' worry, and beliefs about the general impacts of climate change. While these
+are generally low-magnitude, in several cases their sizes are comparable with the
+interaction effects influencing these variables (e.g., for `CC Worry Others` and
+`Weather Worry`).
+
+We observe several structural differences between the two models, as well as with
+comparison to the model calibrated on the full dataset
+(@fig:asymmetry-results-existence-interaction-matrix). Notably, the model calibrated to
+the liberal subpopulation has higher sparsity (proportion of missing cross-interaction
+edges) and mean interaction effect over cross-interactions than either the conservative
+model or the complete model (@tab:heterogeneity-results-belief-systems-properties).
+Among the interactions present in the liberal model, 82% also occur in the conservative
+model, contrasting the 54% of conservative interactions which are also in the liberal
+model.
 
 #figure(
   table(
