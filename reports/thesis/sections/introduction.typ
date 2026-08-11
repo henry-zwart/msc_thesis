@@ -362,7 +362,7 @@ modelling belief systems with asymmetric influence relations, and estimating suc
 from time-series data. In the second half, we then use this framework to address the
 research questions listed above.
 
-In @sec:asymmetric-belief-systems we introduce the *Kinetic Belief System* model
+In @chp:kinetic-belief-system we introduce the *Kinetic Belief System* model
 (KBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984 of the Causal Attitude Network (CAN) model
 @dalegeFormalizedAccountAttitudes2016.
@@ -375,12 +375,12 @@ analyse intervention effects via simulation on the CAN model
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
 or GGM models @wuSimulatingNodeManipulations2026, which do
 consider neither individuals' pre-intervention belief states, nor the time-scale of
-model dynamics. @sec:methods then outlines a parameter estimation method for KBS based
-on maximum likelihood estimation. The proposed method uses knowledge of
-a pre-defined soft binarisation function to robustly estimate binary model parameters
+model dynamics. @chp:parameter-estimation then outlines a parameter estimation method for
+the KBS model based on maximum likelihood estimation. The proposed method uses knowledge
+of a pre-defined soft thresholding function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-We use this method to calibrate the KBS model to a two-wave longitudinal
-dataset comprising beliefs relating to climate change (see below).
+We then use this method to calibrate the KBS model to a two-wave longitudinal
+dataset comprising beliefs relating to climate change.
 
 // ---the calibrated model is
 // subsequently used to address our research questions in the second half of this study.
@@ -405,7 +405,6 @@ validating this dataset and constructing the targeted dataset of beliefs
 relating to climate change used in our experiments constituted substantial components of
 this investigation, and contribute to future use of the CCCV dataset. We detail both
 processes in @sec:dataset.
-
 
 In its totality, this study presents a theory-driven approach to studying the structure
 and dynamics of asymmetric belief systems. We apply this to investigate the existence and

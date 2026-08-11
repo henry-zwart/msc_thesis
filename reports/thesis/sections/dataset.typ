@@ -152,7 +152,7 @@ closer than others. For instance, notice that:
   ]
 }
 This poses a potential problem for model calibration, since the Kinetic Belief System
-model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
+model (defined in @chp:kinetic-belief-system) operates on the assumption that
 samples are equispaced.
 
 #figure(
@@ -686,7 +686,7 @@ However, this set of items still exceeds our target range of 7--10. We therefore
 to identify groups of similar or redundant variables which may be removed or combined
 into interpretable index variables. Note that cross-sectional methods should not be used
 for this analysis, as they fail to capture temporal relatonships, which are fundamental
-to the kinetic belief system model (defined in @sec:asymmetric-belief-systems). Instead,
+to the kinetic belief system model (defined in @chp:kinetic-belief-system). Instead,
 we examine the temporal and contemporaneous networks obtained using lag-1 vector
 autoregression (VAR).
 These networks are derived

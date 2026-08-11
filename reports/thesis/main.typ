@@ -85,7 +85,7 @@
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
 
-= The Kinetic Belief System model <sec:asymmetric-belief-systems>
+= The Kinetic Belief System model <chp:kinetic-belief-system>
 #include "sections/kinetic_belief_system.typ"
 
 = Parameter estimation <chp:parameter-estimation>

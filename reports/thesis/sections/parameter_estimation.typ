@@ -228,7 +228,7 @@ likelihood estimation which resolves this issue by avoiding binarisation altoget
 
 
 
-== Parameter estimation using the expected likelihood <subsec:methods-parameter-estimation>
+== Maximising the _expected_ likelihood <subsec:methods-parameter-estimation>
 
 // For the purposes of the experiments in the following sections, we perform parameter
 // estimation to calibrate the belief system model described in

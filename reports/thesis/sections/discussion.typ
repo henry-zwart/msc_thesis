@@ -43,7 +43,7 @@ influence over several other beliefs.
 How should we interpret these asymmetric relations? Recall that relations in the
 non-equilibrium belief system model reflect temporal influence---how much one belief
 constrains#within-person-footnote the future state of another
-(@sec:asymmetric-belief-systems). An asymmetric relation reflects a constraint
+(@chp:kinetic-belief-system). An asymmetric relation reflects a constraint
 differential, where one belief has greater influence on the other than vice
 versa. More generally, the asymmetric model distinguishes between two forces: influence
 and influentiability. Influence (the strength of outbound interactions) determines how
