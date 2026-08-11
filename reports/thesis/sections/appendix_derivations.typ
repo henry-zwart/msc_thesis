@@ -34,9 +34,9 @@ Part 1:
 @eqn:methods-parameter-estimation-log-likelihood
 
 === Expected log-likelihood
-@eqn:methods-parameter-estimation-expected-ll-explicit
+@eqn:parameter-estimation-expected-ll-explicit
 
-=== Partial derivatives of expected log-likelihood
+=== Partial derivatives of expected log-likelihood <derivation:partial-derivatives>
 
 
 == Dataset

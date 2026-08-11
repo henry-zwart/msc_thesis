@@ -56,19 +56,19 @@ treating zero as an ambivalent or neutral belief state that can be mapped to eit
 or $+1$, one could argue that we should treat small-magnitude positive or negative values
 similarly.
 
-#let sigma-choice-footnote = footnote[
-  The specific choice of $sigma$ is important. As $sigma -> 0^+$, the soft thresholding
+#let scale-choice-footnote = footnote[
+  The specific choice of $xi$ is important. As $xi -> 0^+$, the soft thresholding
   function converges to the simple ('hard') thresholding function where zero is mapped
   using a $op("Bernoulli")(0.5)$ random variable. As
-  $sigma -> infinity$, we approach a function which maps _all_ values randomly in this
+  $xi -> infinity$, we approach a function which maps _all_ values randomly in this
   way. Appropriate values are context-dependent, based on the
   range of values which are considered 'near-neutral'.
 ]
 
 We can improve on this using *soft thresholding*, in which each data value $x in RR$
-is perturbed by an independent noise term $epsilon ~ cal(N)(0, sigma)$ prior to this
+is perturbed by an independent noise term $epsilon ~ cal(N)(0, xi)$ prior to this
 mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
-and given choice#sigma-choice-footnote <sigma-choice-footnote> of $sigma in RR_+$.
+and given choice#scale-choice-footnote <scale-choice-footnote> of $xi in RR_+$.
 <sec:parameter-estimation-soft-binarisation>
 
 #figure(
@@ -79,9 +79,9 @@ and given choice#sigma-choice-footnote <sigma-choice-footnote> of $sigma in RR_+
     short: [Soft thresholding],
     long: [
       Soft thresholding maps $x in RR$ to ${-1, +1}$ by sign-thresholding
-      #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, sigma)$. Negative
+      #box[$x' = (x + epsilon)$] where $(x + epsilon) ~ cal(N)(x, xi)$. Negative
       values are mapped to $+1$ with probability
-      #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which increases with $sigma$ and
+      #box[$P(x' > 0) = "A" = "B" = P(epsilon < x)$], which increases with $xi$ and
       $|x|^(-1)$.
     ],
   ),
@@ -93,11 +93,11 @@ such that #box[$x + epsilon > 0$] (region A), or equivalently when $epsilon < x$
 The probability that $x$ is mapped to $+1$ is then
 
 $
-  P(x mapsto +1) = Phi(x/sigma)
+  P(x mapsto +1) = Phi(x/xi)
 $ <eqn:methods-dataset-binarisation-probability-map-to-1>
 
 where $Phi$ is the standardised normal cumulative distribution function. This
-probability is small when $x$ has large magnitude, or when $sigma$ is small.
+probability is small when $x$ has large magnitude, or when $xi$ is small.
 With soft thresholding, small-magnitude values are mapped to $-1$ and $+1$ with
 nontrivial probability, while the binarisation of large values is effectively
 deterministic.
@@ -267,9 +267,9 @@ equivalent to the MLE problem defined in @eqn:parameter-estimation-mle. But when
 is a (non-constant) probabilistic binarisation function, @eqn:parameter-estimation-mele
 uses information regarding both binarisation possibilities.
 
-Consider the case where $b := b_sigma$ is the soft thresholding function, defined in the
-above section, for some choice of $sigma in RR_+$. If $sigma$ is chosen
-appropriately@sigma-choice-footnote then data values which are considered somewhat
+Consider the case where $b := b_xi$ is the soft thresholding function, defined in the
+above section, for some choice of $xi in RR_+$. If $xi$ is chosen
+appropriately@scale-choice-footnote then data values which are considered somewhat
 neutral or ambivalent are mapped to both $-1$ and $+1$ with nontrivial probability.
 When using @eqn:parameter-estimation-mele, such values contribute an expectation over
 these possible binarisations to the objective function. As such, we obtain a
@@ -301,7 +301,7 @@ observed value of the random variable $cal(D)$ representing possible datasets.
 
 To calibrate the (symmetric or asymmetric) KBS model, we identify the parameterisation
 which maximises the expected likelihood, marginalising over possible binarisations using
-a soft thresholding function, $b_sigma$, as defined above.
+a soft thresholding function, $b_xi$, as defined above.
 Following #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we also
 use regularisation to reduce the risk of overfitting. This arises due to the combination
 of a quadratically scaling number of parameters with a small sample size.
@@ -318,19 +318,130 @@ $bold(theta) in RR^p$, where $p in NN$ is the number of model parameters in the
 (symmetric or asymmetric) KBS model:#log-likelihood-equivalence
 
 $
-  exp(cal(L)_D (bold(theta))) := EE[P(b_sigma (D)|bold(theta))]
-  = sum_(D_B) P(D_B|bold(theta)) dot P(b_sigma (D) = D_B)
+  cal(L)_D (bold(theta)) := EE[log P(b_xi (D)|bold(theta))]
+  = sum_(D_B) P(b_xi (D) = D_B) dot log P(D_B|bold(theta))
 $ <eqn:parameter-estimation-expected-ll-generic>
 
-We select the parameterisation $bold(theta)^*$ which is the solution to the following
+We select the parameterisation $bold(theta)^*$ which solves the following
 optimisation problem:
 
 $
   bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
   f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
-$ <eqn:methods-parameter-estimation-optimisation-problem>
+$ <eqn:parameter-estimation-optimisation-problem>
 
-The second term is a smooth variant of L1 regularisation
+where the second term is a smooth variant of L1 regularisation
+@tibshiraniRegressionShrinkageSelection1996, which penalises nonzero parameters that do
+not meaningfully contribute to the expected likelihood. The smoothing hyperparameter,
+$epsilon in RR_(>0)$, and regularisation strength, #box[$lambda in RR_(>= 0)$], are determined
+beforehand. We will discuss both the regularisation term and methods for selecting these
+hyperparameters in @subsec:parameter-estimation-regularisation.
+
+
+We now give explicit forms for the expected log-likelihood and the partial
+derivatives of the objective function with respect to the model parameters for the
+(symmetric and asymmetric) KBS model.
+The asymmetric and symmetric variants of the KBS model differ only in
+the partial derivatives with respect to the interaction parameters.
+We omit derivation details here, but these can be found in @sec:appendix-derivations.
+
+Let $p_bold(s) (bold(x))$ denote the probability that an observation $bold(x) in RR^N$
+is binarised to the state $bold(s) in {-1, +1}^N$ under the binarisation function
+$b_xi$,
+
+$
+  p_bold(s) (bold(x)) = P(b_xi (bold(x)) = bold(s))
+$
+
+#let log-likelihood-derivation = footnote[
+  See log-likelihood derivation in @sec:appendix-derivations
+  (#internal-link(<derivation:log-likelihood>)).
+]
+and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
+denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
+log-likelihood is then derived as:#log-likelihood-derivation
+
+// $
+//   cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) p_bold(s) (bold(x_((m))^t)) dot EE[bold(sigma)_((m))^(t+1)]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
+// $ <eqn:parameter-estimation-expected-ll-explicit>
+
+$
+  cal(L)_D (bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[bold(sigma)_((m))^(t+1)]^T EE[h^"eff" (bold(sigma)_((m))^t)])) - Z(D; bold(theta))
+$ <eqn:parameter-estimation-expected-ll-explicit>
+
+where the vector $h^"eff" (bold(s))$ contains the effective baseline activation
+(@eqn:model-effective-activation) for each spin given the previous state $bold(s)$, and
+$Z$ is the expected log partition function, summed across observations:
+
+$
+  Z(D; bold(theta)) = sum_(bold(s)) sum_(m=1)^M sum_(t=1)^(T - 1) p_bold(s) (bold(x)_((m))^t) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
+$ <eqn:parameter-estimation-expected-partition-function>
+
+#let partial-derivatives-derivation = footnote[
+  See the partial derivative derivations in @sec:appendix-derivations
+  (#internal-link(<derivation:partial-derivatives>)).
+]
+
+For the parameterisation $bold(theta)^*$ which solves
+@eqn:parameter-estimation-optimisation-problem, the partial derivatives of the objective
+function with respect to each parameter evaluate to zero, i.e.,
+#box[$(partial f)/(partial theta) = 0$] for every parameter $theta in bold(theta)^*$.
+
+#let tanh-footnote = footnote[
+  We abbreviate $tanh$ to $op("th")$.
+]
+The partial derivative of $f$ with respect to an arbitrary baseline activation, $h_i$,
+for #box[$i in [N]$], is derived for both the symmetric and asymmetric variants
+as:#partial-derivatives-derivation#tanh-footnote
+
+#{
+  //show math.equation: set align(left)
+  [
+    $
+      partial/(partial h_i) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)])) - (lambda h_i)/sqrt(h_i^2 + epsilon)
+    $ <eqn:parameter-estimation-derivative-baseline-activation>
+  ]
+}
+
+For $i,j in [N]$, the partial derivative of $f$ with respect to the directed interaction
+parameter $J_(j i)$ in the asymmetric variant (i.e., the influence of $j$ on $i$), is:
+
+#{
+  //show math.equation: set align(left)
+  [
+    $
+      partial/(partial J_(j i)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)]EE[sigma_((m),j)^t])) &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon) quad quad
+    $ <eqn:parameter-estimation-derivative-interaction-effect-asym>
+  ]
+}
+
+In the symmetric model, since all interactions are bi-directional, the interaction
+parameter, $J_(i j)$, contributes to the behaviour of both $S_i$ and $S_j$, and as such
+we must count both contributions to the partial derivative. Let $alpha_(m,t) (i,j)$ denote
+the inner summand in @eqn:parameter-estimation-derivative-interaction-effect-asym:
+
+$
+  alpha_(m,t) (i,j) := EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)]EE[sigma_((m),j)^t]
+$
+
+Then the partial derivative of $f$ with respect to the bi-directional interaction
+parameter $J_(i j)$ in the symmetric variant is:
+
+#{
+  //show math.equation: set align(left)
+  [
+    $
+      partial/(partial J_(i j)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) alpha_(m,t) (i,j) + alpha_(m,t) (j,i))) &- (lambda J_(i j))/sqrt(J_(i j)^2 + epsilon)
+    $ <eqn:parameter-estimation-derivative-interaction-effect-sym>
+  ]
+}
+
+*MUST HANDLE SELF-INTERACTIONS*
+
+
+=== Smooth L1 regularisation <subsec:parameter-estimation-regularisation>
+
+where the second term is a smooth variant of L1 regularisation
 @tibshiraniRegressionShrinkageSelection1996, which penalises nonzero parameters that do
 not meaningfully contribute to the expected likelihood.
 Parameters instead must reflect relationships which are sufficiently prevalent in the
@@ -342,41 +453,6 @@ Unlike the standard formulation, when $epsilon > 0$ the first-derivative of this
 exists for all $bold(theta) in RR^p$, so is amenible to gradient-based optimisation.
 We discuss the choice of values for $lambda$ and $epsilon$ in
 @subsubsec:methods-parameter-estimation-hyperparameters.
-
-We now outline the explicit forms of the expected log-likelihood and the partial
-derivatives of the objective function for the (symmetric and asymmetric) KBS model.
-Derivations are omitted, but can be found in @sec:appendix-derivations.
-
-Let $p_bold(s) (bold(x))$ denote the probability that an observation $bold(x) in RR^N$
-is binarised to the state $bold(s) in {-1, +1}^N$ under the binarisation function
-$b_sigma$,
-
-$
-  p_bold(s) (bold(x)) = P(b_sigma (bold(x)) = bold(s))
-$
-
-#let log-likelihood-derivation = footnote[
-  See log-likelihood derivation in @sec:appendix-derivations
-  (#internal-link(<derivation:log-likelihood>)).
-]
-and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
-denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
-log-likelihood is then derived as:#log-likelihood-derivation
-
-$
-  cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) p_bold(s) (bold(x_((m))^t)) dot EE[bold(S)_((m))^(t+1)]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
-$ <eqn:methods-parameter-estimation-expected-ll-explicit>
-
-
-where the vector $h^"eff" (bold(s))$ contains the effective baseline activation
-(@eqn:model-effective-activation) for each spin given the previous state $bold(s)$, and
-$Z$ is the expected log partition function, summed across observations:
-
-$
-  Z(D; bold(theta)) = sum_(bold(s)) sum_(m=1)^M sum_(t=1)^(T - 1) p_bold(s) (bold(x)_((m))^t) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
-$ <eqn:methods-parameter-estimation-expected-partition-function>
-
-This form is identical for the symmetric and asymmetric variants of the KBS model.
 
 
 #line(length: 100%)
@@ -521,7 +597,7 @@ $
 $ //<eqn:methods-parameter-estimation-expected-partition-function>
 
 Per the optimisation problem defined in
-@eqn:methods-parameter-estimation-optimisation-problem, we choose the parameterisation
+@eqn:parameter-estimation-optimisation-problem, we choose the parameterisation
 $bold(theta)^*$ which maximises the regularised expected log-likelihood, which occurs
 when #box[$(partial f)/(partial theta) = 0$] for every parameter $theta in bold(theta)^*$.
 The partial derivative with respect to a given baseline activation parameter $h_i$, for
@@ -529,7 +605,7 @@ $i in [1,N]$, is given by:
 
 $
   partial/(partial h_i) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda h_i)/sqrt(h_i^2 + epsilon)
-$ <eqn:methods-parameter-estimation-derivative-baseline-activation>
+$ //<eqn:methods-parameter-estimation-derivative-baseline-activation>
 
 
 Note that the expressions for $cal(L)_D (bold(theta))$ and
@@ -537,11 +613,11 @@ $partial/(partial h_i) f(D; bold(theta))$ are applicable to both the asymmetric 
 symmetric belief system models. This property does not hold for the partial derivatives
 with respect to interaction effects. In the asymmetric model, for $i, j in [1, N]$,
 this is derived analogously to
-@eqn:methods-parameter-estimation-derivative-baseline-activation as:
+@eqn:parameter-estimation-derivative-baseline-activation as:
 
 $
   partial/(partial J_(j i)) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
-$ <eqn:methods-parameter-estimation-derivative-interaction-effect-asym>
+$// <eqn:methods-parameter-estimation-derivative-interaction-effect-asym>
 
 In the symmetric belief system model, since we require that $bold(J) = bold(J)^T$, we
 estimate a single interaction parameter $J_(j i) = J_(i j) = beta_({i,j})$ for each
@@ -550,7 +626,7 @@ once for each direction:
 
 $
   partial/(partial beta_({i,j})) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_((i',j') in {i, j}) A_(j' i') s_(j') lr([EE[S_(i', (m))^(t+1) | D] - tanh(h_(i')^"eff" (bold(s)))]) \ &- (lambda beta_({i,j}))/sqrt(beta_({i, j})^2 + epsilon)
-$ <eqn:methods-parameter-estimation-derivative-interaction-effect-sym>
+$// <eqn:methods-parameter-estimation-derivative-interaction-effect-sym>
 
 === Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
 
@@ -577,7 +653,7 @@ a 'weakly oppose' response to a 7-point Likert scale
   ),
 )
 
-The optimisation problem in @eqn:methods-parameter-estimation-optimisation-problem
+The optimisation problem in @eqn:parameter-estimation-optimisation-problem
 has two hyperparameters which must be specified prior to parameter estimation: the
 regularisation strength $lambda in RR^+$, and the smoothing parameter $epsilon in RR^+$.
 The values for both are summarised in @tab:methods-hyperparameter-values.
@@ -672,7 +748,7 @@ are displayed in @fig:methods-regularisation-ebic.
       Effect of regularisation strength $lambda$ on Extended Bayesian Information
       Criterion for symmetric and asymmetric belief system models optimised to the
       climate beliefs dataset using
-      @eqn:methods-parameter-estimation-optimisation-problem. The vertical axis measures
+      @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
       the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
     ],
   ),
