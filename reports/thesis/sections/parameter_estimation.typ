@@ -267,13 +267,13 @@ equivalent to the MLE problem defined in @eqn:parameter-estimation-mle. But when
 is a (non-constant) probabilistic binarisation function, @eqn:parameter-estimation-mele
 uses information regarding both binarisation possibilities.
 
-Consider the case where $b := b_xi$ is the soft thresholding function, defined in the
+Consider the case where $b := b_xi$ is the soft thresholding function defined in the
 above section, for some choice of $xi in RR_+$. If $xi$ is chosen
 appropriately@scale-choice-footnote then data values which are considered somewhat
 neutral or ambivalent are mapped to both $-1$ and $+1$ with nontrivial probability.
 When using @eqn:parameter-estimation-mele, such values contribute an expectation over
 these possible binarisations to the objective function. As such, we obtain a
-parameterised model which explains both possibilities, in accordance with their
+parameterised model which explains both possibilities in accordance with their
 probability. Therefore, by avoiding explicit binarisation, using
 @eqn:parameter-estimation-mele we can obtain binary models which incorporate the
 neutrality and varying degrees of certainty present in the original data.
@@ -303,8 +303,9 @@ To calibrate the (symmetric or asymmetric) KBS model, we identify the parameteri
 which maximises the expected likelihood, marginalising over possible binarisations using
 a soft thresholding function, $b_xi$, as defined above.
 Following #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we also
-use regularisation to reduce the risk of overfitting. This arises due to the combination
-of a quadratically scaling number of parameters with a small sample size.
+use regularisation to reduce the risk of overfitting.
+// This arises due to the combination
+// of a quadratically scaling number of parameters with a small sample size.
 
 #let log-likelihood-equivalence = footnote[
   For numerical stability we typically maximise the log-likelihood instead of the
@@ -322,7 +323,7 @@ $
   = sum_(D_B) P(b_xi (D) = D_B) dot log P(D_B|bold(theta))
 $ <eqn:parameter-estimation-expected-ll-generic>
 
-We select the parameterisation $bold(theta)^*$ which solves the following
+We select the parameterisation $bold(theta)^* in RR^p$ which solves the following
 optimisation problem:
 
 $
@@ -359,7 +360,9 @@ $
 ]
 and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
 denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
-log-likelihood is then derived as:#log-likelihood-derivation
+log-likelihood for a KBS model parameterisation,
+$bold(theta) = chevron bold(J), bold(h) chevron.r$,
+is then derived as:#log-likelihood-derivation
 
 // $
 //   cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) p_bold(s) (bold(x_((m))^t)) dot EE[bold(sigma)_((m))^(t+1)]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
@@ -387,12 +390,9 @@ For the parameterisation $bold(theta)^*$ which solves
 function with respect to each parameter evaluate to zero, i.e.,
 #box[$(partial f)/(partial theta) = 0$] for every parameter $theta in bold(theta)^*$.
 
-#let tanh-footnote = footnote[
-  We abbreviate $tanh$ to $op("th")$.
-]
 The partial derivative of $f$ with respect to an arbitrary baseline activation, $h_i$,
 for #box[$i in [N]$], is derived for both the symmetric and asymmetric variants
-as:#partial-derivatives-derivation#tanh-footnote
+as:#partial-derivatives-derivation
 
 #{
   //show math.equation: set align(left)
@@ -441,19 +441,128 @@ parameter $J_(i j)$, for $i < j$, in the symmetric variant is:
 
 === Smooth L1 regularisation <subsec:parameter-estimation-regularisation>
 
-where the second term is a smooth variant of L1 regularisation
-@tibshiraniRegressionShrinkageSelection1996, which penalises nonzero parameters that do
-not meaningfully contribute to the expected likelihood.
-Parameters instead must reflect relationships which are sufficiently prevalent in the
-data, reducing the sample-size robustness issues described above. The hyperparameter
-$lambda in RR^+$ controls regularisation strength,
-with higher values resulting in sparser models. As $epsilon -> 0^+$ the second term
-converges to the standard formulation of L1 regularisation (i.e., the absolute value).
-Unlike the standard formulation, when $epsilon > 0$ the first-derivative of this term
-exists for all $bold(theta) in RR^p$, so is amenible to gradient-based optimisation.
-We discuss the choice of values for $lambda$ and $epsilon$ in
-@subsubsec:methods-parameter-estimation-hyperparameters.
+Since the number of parameters in the KBS model scales quadratically with the
+number of modelled beliefs, parameter estimation is prone to overfitting---even
+for relatively small sets of beliefs---on account of the typically small size
+of psychological datasets. Following
+#cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we apply a
+smooth variant of L1 regularisation (the second term in
+@eqn:parameter-estimation-optimisation-problem)
+during parameter estimation. This has the effect of penalising nonzero parameters
+that do not meaningfully contribute to the expected likelihood, instead requiring
+that parameters reflect relationships which are sufficiently prevalent in the
+data.
 
+
+
+This regularisation term has two hyperparameters: a smoothing constant,
+$epsilon in RR_(>0)$, and a regularisation strength parameter, $lambda in RR_(>= 0)$.
+For the objective function ($f$ in @eqn:parameter-estimation-optimisation-problem) to
+be differentiable, the smoothing constant must be positive. The value of $epsilon$ should
+be chosen such that the smooth regularisation term is a reasonable approximation to the
+standard formulation of L1 regularisation , i.e., such that
+
+// As $epsilon -> 0^+$ the second term
+// converges to the standard formulation of L1 regularisation (i.e., the absolute value).
+// Unlike the standard formulation, when $epsilon > 0$ the first-derivative of this term
+// exists for all $bold(theta) in RR^p$, so is amenible to gradient-based optimisation.
+
+
+$
+  sqrt(theta^2 + epsilon) approx |theta|
+$ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
+
+It is not possible to obtain a good approximation for the full range of parameter
+values due to finite precision. Rather, one should choose $epsilon$ such that this
+approximation holds for parameter values $|theta| > tau$, where
+$tau in RR_(>0)$ is the minimum parameter considered 'effectively nonzero'. As a rule
+of thumb, we may take $epsilon$ to be at least two orders of magnitude smaller than
+$tau^2$.
+
+
+The hyperparameter $lambda in RR^+$ controls regularisation strength, with higher values
+resulting in sparser models.
+#cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose") suggest choosing
+$lambda$ which minimises the Extended Bayesian Information Criterion (EBIC)
+@chenExtendedBayesianInformation2008:
+
+
+// $
+//   lambda = op("argmin", limits: #true)_(hat(lambda) in RR_(>= 0)) op("EBIC") (bold(theta)^* (hat(lambda)))
+// $
+
+
+// where $bold(theta)^* (hat(lambda))$ is the solution to the optimisation problem defined
+// in @eqn:parameter-estimation-optimisation-problem for a given regularisation strength,
+// $hat(lambda)$, and the EBIC is defined as:
+
+$
+  op("EBIC")(lambda) = overbracket(k ln q - 2 cal(L)_D (bold(theta)^* (lambda)), op("BIC")(lambda)) + 2 k dot gamma ln p
+$ <eqn:methods-ebic>
+
+
+where $bold(theta)^* (lambda)$ denotes the solution to the optimisation problem defined
+in @eqn:parameter-estimation-optimisation-problem for regularisation strength $lambda$,
+$q in NN$ is the number of observations in the dataset, $p in NN$ is the number of model
+parameters, and $k$ is the number of (effectively) nonzero parameters with
+$|theta| < tau$ in the parameterisation $bold(theta)^* (lambda)$. Notice that $lambda$
+is both a parameter in the optimisation problem defined in
+@eqn:parameter-estimation-optimisation-problem, and is itself chosen using the solution
+to this problem.
+
+
+#let ebic-footnote = footnote[
+  Note that this is different from the prior used in the BIC, which is uniform over
+  the entire space of models. The prior in the EBIC, for $gamma = 1$, is uniform only
+  within each class of models containing $k$ parameters.
+]
+The point of difference between the EBIC and the standard Bayesian Information
+Criterion (BIC) is in their assumed priors over the space of possible models. While the
+BIC assumes a uniform prior, the EBIC penalises values of $k$ which permit a large number
+of models @foygelExtendedBayesianInformation2010 @barberHighdimensionalIsingModel2015.
+For instance, the class of models comprising eight spins (i.e., with 72 parameters)
+contains considerably fewer models with 10 parameters ($5.4 times 10^11$) than models
+with 36 parameters ($4.4 times 10^20$). In this scenario, by assuming a uniform prior,
+the BIC implicitly penalises models which are too sparse, or too dense. The parameter
+$gamma >= 0$ specifies the degree to which the EBIC penalises such classes of models,
+with $gamma = 1$ corresponding to a uniform prior over models with $k$
+parameters#ebic-footnote, for each $k in 0...p$.
+
+#cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,
+nonzero choices of $gamma$ are sufficient to improve the accuracy of Ising model
+structural inference in various contexts. In this study, we take $gamma = 0.25$, which
+is the minimum value considered in their study. We then select $lambda >= 0$ which
+minimises the EBIC for the symmetric and asymmetric models (independently), the results
+of which are displayed in @fig:methods-regularisation-ebic.
+
+#figure(
+  image(
+    "../results/figures/model_fit/regularisation_ebic.pdf",
+  ),
+  caption: caption(
+    short: [Regularisation strength EBIC],
+    long: [
+      Effect of regularisation strength $lambda$ on Extended Bayesian Information
+      Criterion for symmetric and asymmetric belief system models optimised to the
+      climate beliefs dataset using
+      @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
+      the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
+    ],
+  ),
+  placement: auto,
+) <fig:methods-regularisation-ebic>
+
+=== Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
+
+We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+@nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
+derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
+
+To ensure numerical stability irrespective of dataset size, we rescale the expected
+log-likelihood contribution to the objective function and partial derivatives, dividing
+by the number of observed observations (time intervals) in the dataset. For $M in NN$
+individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
 
 #line(length: 100%)
 The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
@@ -697,7 +806,7 @@ good approximation to L1 regularisation, i.e.,
 
 $
   sqrt(theta^2 + epsilon) approx |theta|
-$ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
+$ //<eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
 
 
 We use the Extended Bayesian Information Criterion (EBIC)
@@ -710,7 +819,7 @@ as recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "pro
 
 $
   op("EBIC")(bold(theta)^*) = overbracket(k ln q - 2 cal(L)_D (bold(theta)^*), op("BIC")(bold(theta)^*)) + 2 k dot gamma ln p
-$ <eqn:methods-ebic>
+$// <eqn:methods-ebic>
 
 #let ebic-footnote = footnote[
   Note that this is different from the prior used in the BIC, which is uniform over
@@ -753,21 +862,21 @@ are displayed in @fig:methods-regularisation-ebic.
     ],
   ),
   placement: auto,
-) <fig:methods-regularisation-ebic>
+) //<fig:methods-regularisation-ebic>
 
 
 
-=== Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
-
-We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
-quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
-@nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
-derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
-
-To ensure numerical stability irrespective of dataset size, we rescale the expected
-log-likelihood contribution to the objective function and partial derivatives, dividing
-by the number of observed observations (time intervals) in the dataset. For $M in NN$
-individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
+// === Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
+//
+// We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+// quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+// @nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
+// derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
+//
+// To ensure numerical stability irrespective of dataset size, we rescale the expected
+// log-likelihood contribution to the objective function and partial derivatives, dividing
+// by the number of observed observations (time intervals) in the dataset. For $M in NN$
+// individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
 
 == Calibrating to the climate beliefs dataset <sec:calibration>
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
