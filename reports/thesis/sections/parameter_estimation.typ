@@ -415,17 +415,19 @@ parameter $J_(j i)$ in the asymmetric variant (i.e., the influence of $j$ on $i$
   ]
 }
 
-In the symmetric model, since all interactions are bi-directional, the interaction
-parameter, $J_(i j)$, contributes to the behaviour of both $S_i$ and $S_j$, and as such
-we must count both contributions to the partial derivative. Let $alpha_(m,t) (i,j)$ denote
-the inner summand in @eqn:parameter-estimation-derivative-interaction-effect-asym:
+In the symmetric model, partial derivatives with respect to self-interaction parameters
+are also calculated using @eqn:parameter-estimation-derivative-interaction-effect-asym.
+However, for cross-interaction parameters, $J_(i j)$ with #box[$i < j$], we must account
+for the contributions to both $S_i$ and $S_j$ in the partial derivative. Let
+$alpha_(m,t) (i,j)$ denote the inner summand in
+@eqn:parameter-estimation-derivative-interaction-effect-asym:
 
 $
   alpha_(m,t) (i,j) := EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)]EE[sigma_((m),j)^t]
 $
 
 Then the partial derivative of $f$ with respect to the bi-directional interaction
-parameter $J_(i j)$ in the symmetric variant is:
+parameter $J_(i j)$, for $i < j$, in the symmetric variant is:
 
 #{
   //show math.equation: set align(left)
@@ -435,8 +437,6 @@ parameter $J_(i j)$ in the symmetric variant is:
     $ <eqn:parameter-estimation-derivative-interaction-effect-sym>
   ]
 }
-
-*MUST HANDLE SELF-INTERACTIONS*
 
 
 === Smooth L1 regularisation <subsec:parameter-estimation-regularisation>
