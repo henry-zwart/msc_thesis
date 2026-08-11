@@ -51,14 +51,23 @@ which we will call *sign-thresholding*, is to map values to ${-1, +1}$ in accord
 with their sign. Zero must be handled separately, for instance using a deterministic
 rule (e.g., $0 mapsto +1$) or a Bernoulli random variable. This produces discontinuous
 behaviour around the zero point, which may be unrealistic in this setting. If we are
-treating zero as an ambiguous or neutral belief state that can be mapped to either $-1$
+treating zero as an ambivalent or neutral belief state that can be mapped to either $-1$
 or $+1$, one could argue that we should treat small-magnitude positive or negative values
 similarly.
+
+#let sigma-choice-footnote = footnote[
+  The specific choice of $sigma$ is important. As $sigma -> 0^+$, the soft thresholding
+  function converges to the simple ('hard') thresholding function where zero is mapped
+  using a $op("Bernoulli")(0.5)$ random variable. As
+  $sigma -> infinity$, we approach a function which maps _all_ values randomly in this
+  way. Appropriate values are context-dependent, based on the
+  range of values which are considered 'near-neutral'.
+]
 
 We can improve on this using *soft thresholding*, in which each data value $x in RR$
 is perturbed by an independent noise term $epsilon ~ cal(N)(0, sigma)$ prior to this
 mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
-and given choice of $sigma in RR_+$.
+and given choice#sigma-choice-footnote <sigma-choice-footnote> of $sigma in RR_+$.
 <sec:parameter-estimation-soft-binarisation>
 
 #figure(
@@ -105,8 +114,7 @@ and strong support for the policy, or neutrality which has been mapped to $+1$.
 
 In short, since it uses a single binary output for each observation, MLE is not capable
 of representing ambiguity or neutrality, and instead requires that such cases are made
-unambiguous or non-neutral through binarisation. We now introduce a variation on maximum
-likelihood estimation which resolves this issue by avoiding binarisation altogether.
+unambiguous or non-neutral through binarisation.
 
 // where 'Neutral' (i.e., zero) values may be mapped which
 // may be unnatural for values with very small magnitude---should a positive  . with
@@ -237,6 +245,45 @@ likelihood estimation which resolves this issue by avoiding binarisation altoget
 // and then present our approach. We omit derivation details in this section;
 // however, the curious reader can find these in Appendix A (*TODO*).
 
+We now introduce a variation on maximum likelihood estimation which resolves the above
+issue by avoiding binarisation altogether.
+
+Let $D$ be a dataset with real values, and let $cal(D)_B$ be the random variable
+representing possible binarisations of $D$ using a thresholding function,
+$b$. In standard MLE, we maximise the likelihood
+for a particular realisation $D_B$ of the random variable $cal(D)_B$. However, when the
+probability distribution for $cal(D)_B$ is known, we can avoid explicit binarisation by
+instead maximising the *expected* likelihood, marginalising over the binarisation
+process:
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(theta) in RR^p) EE[P(b(D) | bold(theta))]
+$ <eqn:parameter-estimation-mele>
+
+If $b$ is the simple thresholding function described above, where we map each value
+to its sign (and we map zero deterministically), then @eqn:parameter-estimation-mele is
+equivalent to the MLE problem defined in @eqn:parameter-estimation-mle. But when $b$
+is a (non-constant) probabilistic binarisation function, @eqn:parameter-estimation-mele
+uses information regarding both binarisation possibilities.
+
+Consider the case where $b := b_sigma$ is the soft thresholding function, defined in the
+above section, for some choice of $sigma in RR_+$. If $sigma$ is chosen
+appropriately@sigma-choice-footnote then data values which are considered somewhat
+neutral or ambivalent are mapped to both $-1$ and $+1$ with nontrivial probability.
+When using @eqn:parameter-estimation-mele, such values contribute an expectation over
+these possible binarisations to the objective function. As such, we obtain a
+parameterised model which explains both possibilities, in accordance with their
+probability. Therefore, by avoiding explicit binarisation, using
+@eqn:parameter-estimation-mele we can obtain binary models which incorporate the
+neutrality and varying degrees of certainty present in the original data.
+
+== Parameter estimation for the KBS model <sec:parameter-estimation-method>
+
+We now adapt the maximum expected likelihood estimation approach described above to the
+context of the KBS model, explicitly defining the expected likelihood and its derivatives
+which are used for calibration.
+
+
 Consider a population of $M in NN$ individuals with a shared belief system $cal(M)$
 comprising $N in NN$ beliefs.
 // for which the parameters (i.e., the baseline activations and interaction effects) are
@@ -250,6 +297,61 @@ $
 The measurements need not be binary, but are assumed to be real. The collection of
 measurements across all individuals forms a dataset $D$, which is the particular
 observed value of the random variable $cal(D)$ representing possible datasets.
+
+To calibrate the (symmetric or asymmetric) KBS model, we identify the parameterisation
+which maximises the expected likelihood, marginalising over possible binarisations using
+a soft thresholding function, $b_sigma$, as defined above.
+Following #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we also
+use regularisation to reduce the risk of overfitting. This arises due to the combination
+of a quadratically scaling number of parameters with a small sample size.
+
+#let log-likelihood-equivalence = footnote[
+  For numerical stability we typically maximise the log-likelihood instead of the
+  likelihood. Since the logarithm is a strictly increasing function, the two approaches
+  yield identical results (theoretically); however, the multiplication of small
+  probabilities when computing the likelihood can lead to numerical overflow.
+]
+Let
+$cal(L)_D (bold(theta))$ denote the expected log-likelihood for a given parameterisation
+$bold(theta) in RR^p$, where $p in NN$ is the number of model parameters in the
+(symmetric or asymmetric) KBS model:#log-likelihood-equivalence
+
+$
+  exp(cal(L)_D (bold(theta))) := EE[P(b_sigma (D)|bold(theta))]
+  = sum_(D_B) P(D_B|bold(theta)) dot P(b_sigma (D) = D_B)
+$ <eqn:parameter-estimation-expected-ll-generic>
+
+We select the parameterisation $bold(theta)^*$ which is the solution to the following
+optimisation problem:
+
+$
+  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
+  f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
+$ <eqn:methods-parameter-estimation-optimisation-problem>
+
+The second term is a smooth variant of L1 regularisation
+@tibshiraniRegressionShrinkageSelection1996, which penalises nonzero parameters that do
+not meaningfully contribute to the expected likelihood.
+Parameters instead must reflect relationships which are sufficiently prevalent in the
+data, reducing the sample-size robustness issues described above. The hyperparameter
+$lambda in RR^+$ controls regularisation strength,
+with higher values resulting in sparser models. As $epsilon -> 0^+$ the second term
+converges to the standard formulation of L1 regularisation (i.e., the absolute value).
+Unlike the standard formulation, when $epsilon > 0$ the first-derivative of this term
+exists for all $bold(theta) in RR^p$, so is amenible to gradient-based optimisation.
+We discuss the choice of values for $lambda$ and $epsilon$ in
+@subsubsec:methods-parameter-estimation-hyperparameters.
+
+The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
+given a parameterisation $bold(hat(theta))$, over possible binarisations of $D$:
+
+$
+  cal(L)_D (bold(hat(theta))) = EE[L_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(op("Bin")(cal(D)) = D_B | cal(D) = D) dot L_(D_B) (bold(hat(theta)))
+$ <eqn:methods-parameter-estimation-conditional-expectation>
+
+where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisation
+$D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
+return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood.
 
 *NOTE: * An alternative approach here is to not mention the regularisation yet. Have
 this be a short section on the expected MLE. Then have the following section be on the
@@ -292,14 +394,14 @@ $bold(theta)^* in RR^p$ which satisfies the optimisation problem:
 $
   bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
   f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
-$ <eqn:methods-parameter-estimation-optimisation-problem>
+$// <eqn:methods-parameter-estimation-optimisation-problem>
 
 The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
 given a parameterisation $bold(hat(theta))$, over possible binarisations of $D$:
 
 $
   cal(L)_D (bold(hat(theta))) = EE[L_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(op("Bin")(cal(D)) = D_B | cal(D) = D) dot L_(D_B) (bold(hat(theta)))
-$ <eqn:methods-parameter-estimation-conditional-expectation>
+$// <eqn:methods-parameter-estimation-conditional-expectation>
 
 where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisation
 $D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
@@ -320,7 +422,7 @@ return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood
 
 
 By using the expected likelihood in place of the likelihood, the inferred model reflects
-the level of certainty or ambiguity present in the dataset. Consider that when using MLE,
+the level of certainty or ambivalence present in the dataset. Consider that when using MLE,
 a neutral survey response (with value $0$) must first be binarised to either $+1$ or $-1$.
 Supposing (without loss of generality) that the response is
 mapped to $+1$, this erases information which may be important, since this observation
