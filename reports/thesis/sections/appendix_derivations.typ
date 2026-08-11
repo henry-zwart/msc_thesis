@@ -30,7 +30,7 @@ Part 1:
 
 == Parameter estimation
 
-=== Log-likelihood
+=== Log-likelihood <derivation:log-likelihood>
 @eqn:methods-parameter-estimation-log-likelihood
 
 === Expected log-likelihood

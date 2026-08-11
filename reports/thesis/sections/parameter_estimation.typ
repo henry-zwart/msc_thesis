@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./discussion.typ": internal-link
 #import "./dataset.typ": climate-beliefs-variable-table
 #import "@preview/zero:0.6.1": num
 
@@ -342,6 +343,43 @@ exists for all $bold(theta) in RR^p$, so is amenible to gradient-based optimisat
 We discuss the choice of values for $lambda$ and $epsilon$ in
 @subsubsec:methods-parameter-estimation-hyperparameters.
 
+We now outline the explicit forms of the expected log-likelihood and the partial
+derivatives of the objective function for the (symmetric and asymmetric) KBS model.
+Derivations are omitted, but can be found in @sec:appendix-derivations.
+
+Let $p_bold(s) (bold(x))$ denote the probability that an observation $bold(x) in RR^N$
+is binarised to the state $bold(s) in {-1, +1}^N$ under the binarisation function
+$b_sigma$,
+
+$
+  p_bold(s) (bold(x)) = P(b_sigma (bold(x)) = bold(s))
+$
+
+#let log-likelihood-derivation = footnote[
+  See log-likelihood derivation in @sec:appendix-derivations
+  (#internal-link(<derivation:log-likelihood>)).
+]
+and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
+denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
+log-likelihood is then derived as:#log-likelihood-derivation
+
+$
+  cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) p_bold(s) (bold(x_((m))^t)) dot EE[bold(S)_((m))^(t+1)]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
+$ <eqn:methods-parameter-estimation-expected-ll-explicit>
+
+
+where the vector $h^"eff" (bold(s))$ contains the effective baseline activation
+(@eqn:model-effective-activation) for each spin given the previous state $bold(s)$, and
+$Z$ is the expected log partition function, summed across observations:
+
+$
+  Z(D; bold(theta)) = sum_(bold(s)) sum_(m=1)^M sum_(t=1)^(T - 1) p_bold(s) (bold(x)_((m))^t) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
+$ <eqn:methods-parameter-estimation-expected-partition-function>
+
+This form is identical for the symmetric and asymmetric variants of the KBS model.
+
+
+#line(length: 100%)
 The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
 given a parameterisation $bold(hat(theta))$, over possible binarisations of $D$:
 
@@ -471,7 +509,7 @@ expression for the expected likelihood:
 
 $
   cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) P(bold(S)_((m))^t = bold(s) | D) dot EE[bold(S)_((m))^(t+1) | D]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
-$ <eqn:methods-parameter-estimation-expected-ll-explicit>
+$ //<eqn:methods-parameter-estimation-expected-ll-explicit>
 
 where $EE[bold(S)_((m))^(t+1) | D]$ is the expected binary configuration for the
 observation $bold(x)_((m))^(t+1)$, the vector $h^"eff" (bold(s))$ contains the
@@ -480,7 +518,7 @@ is the expected log partition function, summed across observations:
 
 $
   Z(D; bold(theta)) = sum_(bold(s)) sum_(m <= M \ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
-$ <eqn:methods-parameter-estimation-expected-partition-function>
+$ //<eqn:methods-parameter-estimation-expected-partition-function>
 
 Per the optimisation problem defined in
 @eqn:methods-parameter-estimation-optimisation-problem, we choose the parameterisation
