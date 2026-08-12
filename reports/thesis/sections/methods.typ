@@ -61,10 +61,10 @@ the _comparison_ of edge weights via the mean difference
 ]
 
 We now outline our approach to modelling interventions in the KBS model. In this study
-we consider interventions which affect the _state_ of a
-belief system. Notably, this excludes interventions intended to influence the structure
-of a belief system, for instance, by changing the existence, sign, direction, or
-effect size of influence relations between beliefs.#structural-intervention-footnote
+we consider interventions which affect a belief system's _state_. Notably, this excludes
+interventions which affect the structure of a belief system, for instance, by changing
+the existence, sign, direction, or effect size of influence relations between
+beliefs.#structural-intervention-footnote
 
 
 Let $cal(M)$ be a belief system model with parameters
@@ -226,78 +226,28 @@ elsewhere in the network. We refer to the belief on which an intervention is app
 the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
 resulting state is measured as the *target* (marked 'T' in the diagram).
 
-== Counterfactual interventions <sec:methods-counterfactual-interventions>
-
-Individuals have different belief systems. Influence relations between beliefs reflect
-heterogeneity in individual experiences and perception. Often these
-relations can themselves be considered beliefs --- whether or not support for climate
-change mitigation leads to support for any specific policy depends in-part on an
-individual's belief regarding the policy's relevance. An individual's
-baseline activations, in turn, reflect a culmination of factors which determine their
-tendency toward certain beliefs.
-
-Our approach to parameter estimation, however, fundamentally assumes that the inferred
-belief system is shared by all individuals in the dataset from which the model is
-estimated. We note that this is not strictly a limitation of the parameter estimation
-method, nor of the model itself. Rather this assumption is imposed by data limitations.
-Fitting individual models requires substantial data from each individual, which is not
-available in the climate beliefs dataset. Moreover, even with substantial
-observational data, we are unlikely to observe all state transitions necessary to
-understand the _potential_ dynamics of an individual system, owing to the relatively
-slow-moving nature of beliefs.
-
-For any given individual, the inferred models may thus not accurately reflect the
-stability of belief system states. A configuration which is stable in a given
-individual's own belief system may be considered unstable in the shared model. When
-simulating interventions, we take the most recent measurement for each individual
-as their initial state. However, due to this perceived instability, we expect to
-observe natural dynamics away from this initial state, even in null-intervention
-scenarios.
-
-We thus consider intervention effects as relative to the null-intervention
-counterfactual baseline rather than relative to the initial state. For each
-intervention we run both intervention and null ($delta_h = 0$) scenarios with identical
-random number generation settings, and define the _intervention effect_ as the
-difference between the observed outcomes.
-
 == Counterfactual experiments with Common Random Numbers <subsec:methods-common-random-numbers>
 
-Most of our experiments require comparing simulated behaviour across different KBS
+Most of our experiments involve comparing simulated behaviour across different KBS
 models, either to examine the impact of an intervention by comparison with a null
 (i.e., no-intervention) model, or to assess the impact of interaction symmetry
-assumptions by comparing asymmetric and symmetric models. However, the KBS model
+assumptions by comparing asymmetric and symmetric models. The KBS model
 dynamics are inherently stochastic, with different trajectories reflecting differences
 in experimental conditions characterised by unmeasured, exogenous influencing factors.
 
-+ KBS model not necessarily at equilibrium, we must anticipate that the simulated
-  behaviour will change over time, even in the no-intervention scenarios
-+ The model dynamics are stochastic. Caused by different contexts, leading to different
-  dynamics.
+We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[p.~588--604] to
+ensure that measured differences in such experiments reflect differences in the compared
+models, as opposed to differences in the stochastic conditions under which they are
+simulated. Specifically, in any case where we compare observables between two models, we:
+(i) initialise the models using identical random seeds, and (ii) for each stochastic
+operation, we use the same random numbers for each model. The second point follows
+directly from the first in the KBS model, since the number of stochastic operations per
+simulation timestep is fixed, and these occur in a pre-specified order.
 
-
-Since the KBS model is not necessarily at equilibrium, we must anticipate that the
-simulated model behaviour will change over time, even in the no-intervention scenarios., ---even in the
-no-intervention scenarios---
-
-Both quantities compute a difference in effects between two models: the
-intervention and null models for the effect of intervention, and the asymmetric
-and symmetric models for the effect of asymmetry. To ensure outcome
-comparability, differences are computed between models with identical random number
-generation contexts.
-
-In computer simulation this called using Common Random Numbers (CRN). It's a variance reduction technique. In Judea Pearls framework for causal inference, this is equivalent to fixing the exogenous variables (unobserved background factors that inject randomness into a system).
-
-In probability theory and complex systems physics, running two Markov chains or stochastic processes with the same underlying random variables to see how their paths diverge or converge is called coupling. When applied to counterfactuals, you are essentially coupling the factual and counterfactual trajectories to measure the exact divergence caused by the intervention.
-
-Law, A. M., & Kelton, W. D. (1991). Simulation Modelling and Analysis. (there is a variance reduction chapter)
-
-Bratley, P., Fox, B. L., & Schrage, L. E. (1987). A Guide to Simulation. It emphasises the concept of "synchronisation" (the necessity of ensuring that the same random numbers are used for the exact same events in both the baseline and the intervention, rather than just starting with the same seed, to prevent the stochastic paths from becoming misaligned).
-
-Glasserman, P. (2003). Monte Carlo Methods in Financial Engineering.  (has variance reduction techniques, including how fixing paths is used to calculate "Greeks" (sensitivities/interventions) in complex systems.)
-
-Pearl, J. (2000). Causality: Models, Reasoning, and Inference.
-
-Balke, A., & Pearl, J. (1994). "Probabilistic Evaluation of Counterfactual Queries."
+As an additional safeguard, we verify each use of CRN in our experiments by sampling,
+for each model following simulation, a final floating point number. We write these
+to disk, and compare the sampled values after all simulations are complete. An error
+is raised if any differences are found.
 
 == Measuring the effects of interventions and asymmetry  <sec:methods-qois>
 
@@ -307,6 +257,7 @@ of interventions, and assumptions regarding asymmetry. The first two are used in
 behaviour, while the third is used in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects to examine individual-level
 intervention impacts.
+All three quantities are computed using Common Random Numbers, as discussed above.
 
 First, let us establish some shared notation. For a KBS model $cal(M)$, we denote the
 result of simulating $cal(M)$ for $t in NN$ timesteps (as in
@@ -360,6 +311,7 @@ experiments, while in population-level experiments
     f_"influence" (cal(M)_delta) = p_i^t (bold(s)_0; cal(M)_delta) - p_i^t (bold(s)_0; cal(M)_0)
   $
 ] <def:methods-effect-on-influence>
+
 
 
 == The Effect Characterisation Function <sec:methods-effect-characterisation-function>
