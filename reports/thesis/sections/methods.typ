@@ -312,9 +312,7 @@ experiments, while in population-level experiments
   $
 ] <def:methods-effect-on-influence>
 
-
-
-== The Effect Characterisation Function <sec:methods-effect-characterisation-function>
+== Identifying the conditions for effective interventions  <sec:methods-effect-characterisation-function>
 
 In the simulated interventions described above, the only
 distinguishing factor between individuals is their pre-intervention state. It follows
