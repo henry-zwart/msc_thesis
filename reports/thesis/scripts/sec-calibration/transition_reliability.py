@@ -122,9 +122,11 @@ def main(P: npt.NDArray[np.float64], λ: float):
         ax.set_yticks([0, 0.5, 1])
 
     fig.supxlabel(
-        r"Transition probability: $P(S_i^{t+1} = +1 \mid \boldsymbol{S}^{t})$"
+        r"Transition probability: $P(\sigma_i^{t+1} = +1 \mid \boldsymbol{\sigma}^{t})$"
     )
-    fig.supylabel(r"Mean Bin. probability: $P(S_i^{t+1} = +1)$", y=0.55)
+    fig.supylabel(
+        "Mean binarisation\nprobability: $P(\\sigma_i^{t+1} = +1)$", y=0.55, ha="center"
+    )
 
     for ext in ("png", "pdf"):
         fig.savefig(

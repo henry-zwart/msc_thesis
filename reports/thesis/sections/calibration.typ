@@ -444,7 +444,7 @@ the corresponding columns of @fig:calibration-interaction-matrices.
     long: [
       Reliability of transitions predicted by the model measured as the agreement
       between conditional probabilities under the model,
-      $P(S_i^(t+1) = +1 | bold(S)^t)$, and expected proportion of $+1$ values after
+      $P_cal(M)(sigma_i^(t+1) = +1 | bold(sigma)^t)$, and expected proportion of $+1$ values after
       binarisation, calculated as the average transition probability for survey
       participants in a given conditional probability bin.
     ],
