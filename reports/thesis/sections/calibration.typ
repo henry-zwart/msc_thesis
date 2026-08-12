@@ -136,7 +136,7 @@ climate beliefs dataset.
 
 
 
-== Calibration details <sec:climate-beliefs-calibration>
+== Hyperparameters and calibration details <sec:climate-beliefs-calibration>
 
 #let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
 
@@ -262,7 +262,7 @@ individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1)
 
 
 
-== Model evaluation <sec:climate-beliefs-evaluation>
+== Evaluating the calibrated model <sec:climate-beliefs-evaluation>
 
 #let bootstrap-footnote = footnote[
   Each bootstrap sample comprises a set of survey participants, such that each sampled

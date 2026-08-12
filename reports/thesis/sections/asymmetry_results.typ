@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./introduction.typ": RQ1, RQ2
 #import "./discussion.typ": internal-link
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
@@ -21,29 +22,44 @@
 //
 // #line(length: 100%)
 
-Belief system models based on the Ising model, inspired by the cognitive dissonance
-theory of belief system dynamics, demonstrate impressive descriptive and explanatory
-capacities for various observed cognitive phenomena at both individual and collective
-scales. The currently prevalent view within the modelling community is that influence
-relations between beliefs are symmetric --- the pressure for $X$ to align
-with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
-this assumption on trial.
+In this chapter we address the primary research questions, presented in
+@sec:introduction:
 
-We begin, in @subsec:asymmetry-results-existence, by calibrating the non-equilibrium
-belief system model to the climate beliefs dataset described in
-@subsec:dataset-dataset-construction. We demonstrate that belief system relations
-cannot be universally classified as symmetric, that some influence relations are
-recognisably asymmetric, and that relational asymmetry can vary in degree. In
-@subsec:asymmetry-results-impact, we then show that this finding is not
-inconsequential. Asymmetric models exhibit different dynamics in experiments on
-belief-level interventions, with the potential to affect conclusions drawn about
-the relative effectiveness of interventions.
+#{
+  set enum(numbering: "RQ1.", indent: 1em)
+  block(width: 97%, [
+    + #RQ1
+
+    + #RQ2
+  ])
+}
+
+To address RQ1., we first investigate the presence of (significantly) asymmetric
+influence relations in the asymmetric KBS model calibrated to the climate beliefs
+dataset in @sec:calibration. We then turn our attention to RQ2., where we examine
+differences in the population-level intervention impacts observed for the symmetric
+and asymmetric models, for both inbound and outbound interventions.
+
+// Belief system models based on the Ising model, inspired by the cognitive dissonance
+// theory of belief system dynamics, demonstrate impressive descriptive and explanatory
+// capacities for various observed cognitive phenomena at both individual and collective
+// scales. The currently prevalent view within the modelling community is that influence
+// relations between beliefs are symmetric --- the pressure for $X$ to align
+// with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
+// this assumption on trial.
+//
+// We begin, in @subsec:asymmetry-results-existence, by calibrating the non-equilibrium
+// belief system model to the climate beliefs dataset described in
+// @subsec:dataset-dataset-construction. We demonstrate that belief system relations
+// cannot be universally classified as symmetric, that some influence relations are
+// recognisably asymmetric, and that relational asymmetry can vary in degree. In
+// @subsec:asymmetry-results-impact, we then show that this finding is not
+// inconsequential. Asymmetric models exhibit different dynamics in experiments on
+// belief-level interventions, with the potential to affect conclusions drawn about
+// the relative effectiveness of interventions.
 
 
 == Existence of asymmetric relations <subsec:asymmetry-results-existence>
-*TODO:*
-- Consider adding squares to the asymmetric entries in
-  @fig:asymmetry-results-existence-interaction-matrix
 
 // To investigate the existence of asymmetric relations in the asymmetric model calibrated
 // to the climate beliefs dataset, we examine the differences in directional interaction
@@ -64,6 +80,12 @@ the relative effectiveness of interventions.
 // interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
 // as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
 // $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
+
+To assess the presence of asymmetric influence relations, we examine the estimated
+sampling distribution of directional differentials (as defined in
+@sec:methods-directional-differential), obtained from the set of asymmetric KBS models
+calibrated to the bootstrapped climate beliefs dataset ($n=500$) in @sec:calibration.
+
 
 #figure(
   image("../results/figures/model/directional_differentials/rank_no_structure.pdf"),
@@ -87,7 +109,7 @@ the relative effectiveness of interventions.
 differential (defined in @sec:methods-directional-differential) for each pair of spins
 in the asymmetric model, in decreasing order.
 The 90% confidence intervals are calculated as the 5th and 95th percentiles across
-bootstrap samples ($n=500$) of the directional differential matrix
+bootstrap samples of the directional differential matrix
 elements. For each pair of spins we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
@@ -112,9 +134,9 @@ symmetric), and we exclude diagonal entries (which are zero by definition).
     short: [Climate belief system interaction effect matrix],
     long: [
       Interaction effect matrix ($bold(J)$) for the asymmetric belief system model
-      calibrated to the full climate beliefs dataset. This figure is identical to the
-      asymmetric interaction matrix in the previous chapter
-      (@fig:calibration-interaction-matrices).
+      calibrated to the full climate beliefs dataset. Red borders indicate significant
+      asymmetric pairs. The matrix is otherwise identical to the
+      asymmetric interaction matrix in @fig:calibration-interaction-matrices.
     ],
   ),
 ) <fig:asymmetry-results-existence-interaction-matrix>
@@ -126,8 +148,8 @@ We can partition the asymmetric relations into two groups, according to whether
 directional interactions exist in only one direction, indicated using orange confidence
 intervals, or both directions with different strengths, indicated with blue confidence
 intervals (see the interaction matrix in @fig:asymmetry-results-existence-interaction-matrix;
-note that this is identical to the asymmetric matrix shown in
-@fig:calibration-interaction-matrices of the previous chapter). Pairs with two nonzero
+cell entries are identical to the matrix shown in
+@fig:calibration-interaction-matrices of @sec:calibration). Pairs with two nonzero
 interactions comprise $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
 #box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]; the only pair with a
 unidirectional interaction is $#raw("Politics") -> #raw("CC Real")$.
@@ -244,7 +266,7 @@ climate action.
 We consider both outbound and inbound interventions (defined in
 @sec:methods-inbound-outbound) to examine differences in how interventions
 propagate in general between the symmetric and asymmetric models, and to investigate
-how intervention strategy differs between the two models. For outbound intervention
+how intervention strategy may differ between the two models. For outbound intervention
 experiments we examine the effects of intervening on the following spins:
 
 - `Weather worry`: Level of worry about future extreme weather events
