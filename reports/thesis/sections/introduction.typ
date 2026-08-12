@@ -379,7 +379,7 @@ model dynamics. @chp:parameter-estimation then outlines a parameter estimation m
 the KBS model based on maximum likelihood estimation. The proposed method uses knowledge
 of a pre-defined soft thresholding function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-We then use this method to calibrate the KBS model to a two-wave longitudinal
+In @sec:calibration we then use this method to calibrate the KBS model to a two-wave longitudinal
 dataset comprising beliefs relating to climate change.
 
 // ---the calibrated model is

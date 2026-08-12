@@ -18,12 +18,12 @@
 //   - Exogenous influences, and unmeasured beliefs
 
 #let ideology-eval-footnote = footnote[
-  We do not evaluate the conservative and liberal models in the present chapter, but
+  We do not evaluate the conservative and liberal models here, but
   return to this in @sec:heterogeneity-in-belief-systems-and-intervention-effects.
 ]
 In this chapter, we calibrate both the symmetric and asymmetric KBS models to the
 *climate beliefs dataset* described in @sec:dataset. We then evaluate the calibrated
-models with respect to both structural accuracy ('how accurate or uncertain are the
+models with respect to both structural accuracy ('how accurate are the
 parameter estimates?') and predictive capacity ('how well do the models explain the
 data?'). We also calibrate two additional asymmetric models to the conservative and
 liberal subsets of the climate beliefs dataset for later use in
