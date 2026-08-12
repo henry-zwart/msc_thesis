@@ -74,6 +74,7 @@
   additional-frontmatter: (),
   signature: signature,
   appendices: (derivation-appendix, extra-results-appendix, dataset-appendix),
+  caption-width: 95%,
 )
 
 // = Notes (things to remember, to-dos)

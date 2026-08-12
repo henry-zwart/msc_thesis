@@ -1,6 +1,7 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
 #import "./dataset.typ": climate-beliefs-variable-table
 
+#import "@preview/zero:0.6.1": num
 #import "@preview/theorion:0.6.0": *
 #import cosmos.simple: *
 //#import cosmos.rainbow: *
@@ -16,15 +17,41 @@
 // - Discuss differences in baseline activations.
 //   - Exogenous influences, and unmeasured beliefs
 
-The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
-relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
-extracted from the CCCV survey
-(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose"). The dataset
+#let ideology-eval-footnote = footnote[
+  We do not evaluate the conservative and liberal models in the present chapter, but
+  return to this in @sec:heterogeneity-in-belief-systems-and-intervention-effects.
+]
+In this chapter, we calibrate both the symmetric and asymmetric KBS models to the
+*climate beliefs dataset* described in @sec:dataset. We then evaluate the calibrated
+models with respect to both structural accuracy ('how accurate or uncertain are the
+parameter estimates?') and predictive capacity ('how well do the models explain the
+data?'). We also calibrate two additional asymmetric models to the conservative and
+liberal subsets of the climate beliefs dataset for later use in
+@sec:heterogeneity-in-belief-systems-and-intervention-effects.#ideology-eval-footnote
+
+#figure(
+  climate-beliefs-variable-table,
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables (replicated)],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$. Note that this table is identical to
+      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+    ],
+  ),
+) <tab:calibration-climate-beliefs-dataset-items>
+
+The climate beliefs dataset comprises eight beliefs relating to climate change
+(@tab:calibration-climate-beliefs-dataset-items), extracted from the CCCV survey
+(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose")). The dataset
 includes responses from 1693 repeating participants, measured during waves 3 and 4 of
-the survey. We map the maximum and minimum (allowable) values for each variable to $+1$
-and $-1$ respectively, such that these reflect the two spin states in the KBS model.
-
-
+the survey. A subset of the variables are indices constructed from sets of variables
+in the CCCV survey. The marginal distributions for each variable are displayed in
+@fig:calibration-marginal-distributions. @sec:dataset provides complete details on the
+CCCV survey, including validation and cleaning, as well as the construction of the
+climate beliefs dataset.
 
 
 #figure(
@@ -38,22 +65,39 @@ and $-1$ respectively, such that these reflect the two spin states in the KBS mo
     ],
   ),
 ) <fig:calibration-marginal-distributions>
-#figure(
-  {
-    show table: set text(size: 10pt)
-    climate-beliefs-variable-table
-  },
-  gap: 1em,
-  caption: caption(
-    short: [Climate beliefs dataset variables (replicated)],
-    long: [
-      Variables included in the climate beliefs dataset. Index variables are constructed
-      by taking the average of their constituent columns, after re-scaling to the
-      interval $[-1, 1]$. Note that this table is identical to
-      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
-    ],
-  ),
-) <tab:calibration-climate-beliefs-dataset-items>
+
+
+// #figure(
+//   block(height: 65%, breakable: false)[
+// #figure(
+//   image("../results/figures/dataset/marginal_distributions.pdf"),
+//   caption: caption(
+//     short: [Climate beliefs dataset marginal distributions (replicated)],
+//     long: [
+//       Marginal distribution for each of the eight variables in the climate beliefs
+//       dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+//       is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+//     ],
+//   ),
+// ) <fig:calibration-marginal-distributions>
+// #figure(
+//   {
+//     show table: set text(size: 10pt)
+//     climate-beliefs-variable-table
+//   },
+//   gap: 1em,
+//   caption: caption(
+//     short: [Climate beliefs dataset variables (replicated)],
+//     long: [
+//       Variables included in the climate beliefs dataset. Index variables are constructed
+//       by taking the average of their constituent columns, after re-scaling to the
+//       interval $[-1, 1]$. Note that this table is identical to
+//       @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+//     ],
+//   ),
+// ) <tab:calibration-climate-beliefs-dataset-items>
+//   ],
+// )
 
 // #figure(
 //   block(height: 100%, breakable: false)[
@@ -90,15 +134,133 @@ and $-1$ respectively, such that these reflect the two spin states in the KBS mo
 // )
 
 
-Using the
-parameter estimation method outlined in the previous chapter, we calibrate the
-symmetric and asymmetric belief system models to the climate beliefs dataset (see
-@sec:dataset). We will evaluate the calibrated models on both structural accuracy
-('how accurate are the parameter estimates?') and predictive capacity ('how well do
-the models explain the data?').
 
 
 == Calibration details <sec:climate-beliefs-calibration>
+
+#let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
+
+The maximum expected likelihood parameter estimation method described in the previous
+chapter requires several hyperparameters to be specified, namely: the soft binarisation
+scale term, $xi in RR_(>0)$, the regularisation smoothing and strength hyperparameters,
+$epsilon in RR_(>0)$ and $lambda in RR_(>= 0)$, and the EBIC prior parameter
+$gamma in RR_(>= 0)$. The values of these parameters are summarised in
+@tab:methods-hyperparameter-values.
+
+#let regularisation_strengths = json("../results/data/model_fit/optimised_regularisation.json")
+
+#figure(
+  {
+    show table: set text(size: 9.25pt)
+    table(
+      columns: (20%, 20%, 20%, 20%),
+      stroke: none,
+      table.header[Parameter][Model type][Dataset][Value],
+      table.hline(stroke: 0.5pt),
+      [$lambda$],
+      [Symmetric],
+      [Climate beliefs],
+      [#num(exponent: "sci")[#calc.round(regularisation_strengths.sym_ising.full, digits: 3)]],
+      [],
+      [Asymmetric],
+      [Climate beliefs],
+      [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.full, digits: 3)]],
+      [],
+      [Asymmetric],
+      [Conservative],
+      [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.conservative, digits: 3)]],
+      [],
+      [Asymmetric],
+      [Liberal],
+      [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.liberal, digits: 3)]],
+      [$xi$], [All], [All], [#num(exponent: "sci")[#binarisation_sigma]],
+      [$epsilon$], [All], [All], [$10^(-8)$],
+      [$gamma$], [All], [All], [#num(exponent: "sci")[0.25]],
+    )
+  },
+  caption: caption(
+    short: [Hyperparameter values],
+    long: [
+      Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
+      hyperparameters. Regularisation strength model- and dataset-specific;
+      _Conservative_ and _Liberal_ refer to subsets of the climate beliefs dataset
+      comprising individuals with the specified ideology (@sec:dataset).
+    ],
+  ),
+  placement: auto,
+) <tab:methods-hyperparameter-values>
+
+As mentioned in the previous chapter, the soft thresholding scale parameter,
+$xi in RR_(> 0)$, is context-specific, and should be chosen to reflect the range of
+measurement values which are considered 'near-neutral'. To choose this, we first
+map the minimum and maximum (allowable) values for each variable to $-1$
+and $+1$ respectively, such that these reflect the two spin states in the KBS model.
+We then choose the soft thresholding function $b_xi$ with $xi = #binarisation_sigma$ such
+that a 'weakly oppose' response to a 7-point Likert scale (i.e., value $-1\/3$ in the
+normalised data) is mapped to $+1$ with probability 0.05. The resulting probability
+distribution is displayed in @fig:calibration-likert-7-prob for a Likert-7
+scale.@likert7-footnote-ref Under this choice of $b_xi$, values to either side of
+'neutral' are considered mostly unambiguously positive or negative, with some flexibility
+for 'weak' responses.
+
+#figure(
+  image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+  placement: auto,
+  caption: caption(
+    short: [Likert-7 binarisation distribution],
+    long: [
+      The probability of binarisation to $+1$ for each possible Likert-7 scale survey
+      response,@likert7-footnote-ref using a soft thresholding function
+      $b_xi$ as defined in @eqn:methods-dataset-binarisation-probability-map-to-1 with
+      $xi approx #calc.round(binarisation_sigma, digits: 1)$.
+    ],
+  ),
+) <fig:calibration-likert-7-prob>
+
+#figure(
+  image(
+    "../results/figures/model_fit/regularisation_ebic.pdf",
+  ),
+  caption: caption(
+    short: [Regularisation strength EBIC],
+    long: [
+      Effect of regularisation strength $lambda$ on Extended Bayesian Information
+      Criterion for symmetric and asymmetric belief system models optimised to the
+      climate beliefs dataset using
+      @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
+      the difference in EBIC compared to the no-regularisation case ($lambda = 0$);
+      smaller is better.
+
+    ],
+  ),
+  placement: auto,
+) <fig:calibration-regularisation-ebic>
+
+We choose the regularisation hyperparameters in accordance with the discussion
+in @subsec:parameter-estimation-regularisation (_Smooth L1 regularisation_).
+Taking $tau = 10^(-2)$ as the threshold below which parameters are considered 'effectively
+zero', we choose the regularisation smoothing hyperparameter to be $epsilon = 10^(-8)$,
+such that $epsilon << tau^2$.
+We set separate regularisation strengths for the symmetric and asymmetric models,
+as well as the conservative and liberal asymmetric models, taking values
+$lambda in [10^(-4), 1]$ which minimise the EBIC (@eqn:parameter-estimation-ebic). We
+take #box[$gamma = 0.25$] when computing the EBIC, i.e., the smallest value tested by
+#cite(<barberHighdimensionalIsingModel2015>, form: "prose").
+@fig:calibration-regularisation-ebic shows the EBIC results for the
+symmetric and asymmetric models calibrated to the complete climate beliefs dataset.
+
+=== Implementation details
+
+We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+@nocedal2006numerical[p.~136], using the analytic jacobian comprising the partial
+derivatives stated in @sec:parameter-estimation-method. We take $bold(theta) = bold(0)$ as the initial guess.
+To ensure numerical stability irrespective of dataset size, we rescale the expected
+log-likelihood contribution to the objective function and partial derivatives, dividing
+by the number of observed observations (time intervals) in the dataset. For $M in NN$
+individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
+
+
 
 == Model evaluation <sec:climate-beliefs-evaluation>
 
@@ -121,12 +283,12 @@ datasets by sampling rows (participants) with replacement from $bold(D)$,
 such that each bootstrapped dataset has the same shape as the complete dataset.
 
 For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
-with parameters
+with $p in NN$ parameters:
 $
   chevron bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
 $
 
-where $p in NN$ is the number of model parameters.
+//where $p in NN$ is the number of model parameters.
 
 // TODO: Consider adding squares/indicators for elements which are zero
 
@@ -137,8 +299,7 @@ where $p in NN$ is the number of model parameters.
     long: [
       (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices,
       $bold(J)$, for the symmetric and asymmetric belief
-      system model variants, calibrated to the climate beliefs dataset (@sec:dataset)
-      using the parameter estimation method in @subsec:methods-parameter-estimation.
+      system model variants, calibrated to the climate beliefs dataset.
       Error bars on the baseline activations display 95% confidence intervals, calculated
       over bootstrapped models ($n=500$) using the percentile method.
     ],
@@ -146,13 +307,16 @@ where $p in NN$ is the number of model parameters.
 ) <fig:calibration-interaction-matrices>
 
 #let timescale-footnote = footnote[
-  The models' timescales are set by the duration between survey responses, in this case
+  The timescale is determined by the interval between survey responses, i.e.,
   approximately six months (@sec:dataset).
+]
+#let symmetric-matrix-footnote = footnote[
+  We only display the upper triangular elements of the symmetric model's interaction
+  matrix, since the matrix is symmetric.
 ]
 @fig:calibration-interaction-matrices shows the baseline activation parameters, $bold(h)$,
 and interaction effect matrix, $bold(J)$,
-for each model. Note that we only display the upper triangular elements of the symmetric
-model's interaction matrix, since the matrix is symmetric.
+for each model.#symmetric-matrix-footnote
 The two models exhibit very similar baseline activations. The observed values indicate
 that after accounting for interaction effects, (i) belief in the existence and
 human-causes of climate change tend to be high, (ii) concern about extreme weather tends
@@ -260,12 +424,18 @@ effect size ($J_(i,j) approx 0.04$).
   the asymmetric model apply also to the symmetric one.
 ]
 
-We now evaluate the models' predictive capacities#calibration-disclaimer. First, we
+We now evaluate the models' predictive capacities.#calibration-disclaimer First, we
 examine the reliability of predicted transitions. @fig:calibration-transition-reliability
 shows the average binarisation probability for each spin (i.e., the probability that the
 corresponding observation in the second wave of the dataset is binarised to $+1$), binned
 by transition probability. Bins with no observations are not shown (e.g., extreme values
 for `CC Others Worry`).
+The two measurements are strongly correlated for most variables. The higher variation
+for `CC Real` and `CC Human` likely reflects the observed heavy skew in these variables
+toward larger values (see @fig:calibration-marginal-distributions).
+We observe no high/low probabilities for either `CC Others Worry` or `Weather Worry`,
+on account of the limited influence of other spins on these variables, as seen in
+the corresponding columns of @fig:calibration-interaction-matrices.
 
 #figure(
   image("../results/figures/model_fit/transition_reliability.pdf"),
@@ -281,14 +451,7 @@ for `CC Others Worry`).
   ),
 ) <fig:calibration-transition-reliability>
 
-The two measurements are strongly correlated for most variables. The higher variation
-for `CC Real` and `CC Human` likely reflects the observed heavy skew in these variables
-toward larger values (see @fig:dataset-marginal-distributions in @sec:dataset).
-We observe no high/low probabilities for either `CC Others Worry` or `Weather Worry`,
-on account of the limited influence of other spins on these variables, as seen in
-the corresponding columns of @fig:calibration-interaction-matrices.
-
-Next, we compare the calibrated model against a null model, in which we permit only
+Next, we compare the calibrated model against a null model with only
 baseline activation ($h_i$) and self-influence ($J_(i,i)$) parameters. We measure the
 relative entropy of the binarised data from the second wave of the dataset, with respect
 to the probability distributions induced by each model. For each participant and spin,
@@ -298,13 +461,13 @@ $
   D(P || Q) := H_C (P, Q) - H(P)
 $ <def:calibration-relative-entropy>
 
-Where $P := P(op("Bin")(X_(i, (m))^(t+1)))$ is the distribution over binarisations of
-the observation in the first timestep, and $Q := P_cal(M) (S_(i, (m))^(t+1))$ is the
-distribution over subsequent states according to the model, marginalising over
+Where $P := P(b_xi (x_((m), i)^t))$ is the distribution over binarisations of
+the observation in the first timestep, and $Q := P_cal(M) (sigma_((m), i)^(t+1) = +1)$ is the
+distribution over subsequent states according to the model, marginalising over the
 binarisation of the previous observation,
 
 $
-  Q := P_cal(M) (S_(i, (m))^(t+1)) = P_cal(M) (S_(i, (m))^(t+1) | op("Bin")(X_(i, (m))^t)) dot P(op("Bin")(X_(i, (m))^t))
+  Q := P_cal(M) (sigma_((m), i)^(t+1) = +1) = P_cal(M) (sigma_(i, (m))^(t+1) = +1 | b_xi (bold(x)_((m))^t)) dot P(b_xi (bold(x)_((m))^t))
 $
 
 The functions $H$ and $H_C$ denote the entropy and cross-entropy, respectively. The
@@ -376,15 +539,14 @@ better explained by the fully-connected model than the null model.
   ),
 ) <fig:relative-entropy-difference-dist>
 
-@fig:relative-entropy-difference-dist explores this hypothesis, displaying the empirical
+@fig:relative-entropy-difference-dist explores this hypothesis, showing the empirical
 probability density and cumulative distribution functions for the mean difference in
-relative entropy, across individuals. Indeed, we see substantial variation in effects.
-The weak right tail and heavy left tail indicate cases which are better-explained by
+relative entropy. We see substantial variation between individuals;
+the weak right tail and heavy left tail indicate cases which are better-explained by
 the null and fully-connected models respectively.
 
-We examine a sample of cases from either tail (top panel: left tail, bottom panel:
-right tail) in @fig:relative-entropy-difference-examples. Each panel displays the
-change in binarisation probability between the two observed survey waves for a sampled
+We examine a sample of cases from each tail  in @fig:relative-entropy-difference-examples.
+Each panel shows the change in binarisation probability between the survey waves for a sampled
 survey participant. In the first three panels of the top row, we observe scenarios in
 which most spins are initially aligned, and a subset of the remaining spins then update
 to align with this set, i.e., where the system shifts toward a more consistent state.
@@ -405,11 +567,11 @@ this theory.
   caption: caption(
     short: [Null model relative entropy comparison examples],
     long: [
-      Observed transitions for sample survey participants in the left tail (top row) and
-      right tail (bottom row) of @fig:relative-entropy-difference-dist. Circles indicate
+      Observed transitions for sample survey participants in the left (_Top_) and
+      right (_Bottom_) tails  of @fig:relative-entropy-difference-dist. Circles indicate
       the probability that participants' observations in the first wave are binarised to
       $+1$. Arrows denote the change in the second wave, colour-coded according to
-      whether the change is toward the positive (blue) or negative (orange) state.
+      the direction of change.
     ],
   ),
 ) <fig:relative-entropy-difference-examples>

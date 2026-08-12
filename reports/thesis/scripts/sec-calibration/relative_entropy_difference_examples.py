@@ -200,7 +200,8 @@ def main(P: npt.NDArray[np.float64], λ: float):
     fig.text(
         1.02,
         0.85,
-        r"$\cal{M} \succ \cal{M}_\text{null}$",
+        "Full model better",
+        # r"$\cal{M} \succ \cal{M}_\text{null}$",
         rotation=0,
         va="center",
         ha="left",
@@ -210,14 +211,15 @@ def main(P: npt.NDArray[np.float64], λ: float):
     fig.text(
         1.02,
         0.5,
-        r"$\cal{M} \prec \cal{M}_\text{null}$",
+        "Null model better",
+        # r"$\cal{M} \prec \cal{M}_\text{null}$",
         rotation=0,
         va="center",
         ha="left",
         fontsize=10,
     )
 
-    fig.supylabel("P$[S_i = +1]$", y=0.7)
+    fig.supylabel(r"P$[x_i \mapsto +1]$", y=0.7)
     for ax in axes[1]:
         ax.set_xticks(
             np.arange(8),

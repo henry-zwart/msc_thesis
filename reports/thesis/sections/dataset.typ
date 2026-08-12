@@ -786,42 +786,45 @@ temporal networks, respectively, for the climate beliefs dataset.
   placement: auto,
 ) <fig:dataset-reduced-var>
 
-#let climate-beliefs-variable-table = table(
-  columns: 3,
-  stroke: none,
-  align: (left, center, left),
-  table.header[Item][Index][Interpretation],
-  table.hline(stroke: 0.5pt),
-  [CC Real], [No], [Belief that climate change is/is not real.],
+#let climate-beliefs-variable-table = {
+  show table: set text(size: 9.25pt)
+  table(
+    columns: 3,
+    stroke: none,
+    align: (left, center, left),
+    table.header[Item][Index][Interpretation],
+    table.hline(stroke: 0.5pt),
+    [CC Real], [No], [Belief that climate change is/is not real.],
 
-  [CC Human],
-  [No],
-  [Belief that climate is/is not caused (at least in-part) by human activities.],
+    [CC Human],
+    [No],
+    [Belief that climate is/is not caused (at least partly) by human activities.],
 
-  [CC Worry],
-  [No],
-  [Level of worry about current and future climate change.],
+    [CC Worry],
+    [No],
+    [Level of worry about current and future climate change.],
 
-  [CC Others Worry],
-  [No],
-  [Belief regarding _others'_ level of worry about current and future climate change.],
+    [CC Others Worry],
+    [No],
+    [Belief regarding _others'_ level of worry about current/future climate change.],
 
-  [Weather Worry],
-  [No],
-  [Level of worry about possible near-term extreme weather events or natural disasters.],
+    [Weather Worry],
+    [No],
+    [Level of worry about near-term extreme weather events/natural disasters.],
 
-  [Politics],
-  [Yes],
-  [Political views, as a combination of partisan alignment and political ideology.],
+    [Politics],
+    [Yes],
+    [Political views, a combination of political alignment and ideology.],
 
-  [CC Impact],
-  [Yes],
-  [Belief regarding the degree of current climate change impacts, in general.],
+    [CC Impact],
+    [Yes],
+    [Belief about current climate change impacts' severity, in general.],
 
-  [CC Action],
-  [Yes],
-  [General attitude toward action on climate change.],
-)
+    [CC Action],
+    [Yes],
+    [General attitude toward action on climate change.],
+  )
+}
 
 #figure(
   climate-beliefs-variable-table,

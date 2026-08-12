@@ -28,7 +28,7 @@ class RegularisationEBICPlotCommand(BaseCommand):
             np.load(self.asym_results),
         )
 
-        fig, ax = plt.subplots(figsize=(5.25, 1.75), constrained_layout=True)
+        fig, ax = plt.subplots(figsize=(5.25, 2), constrained_layout=True)
 
         for label, results, colour in zip(labels, all_results, colours, strict=True):
             λs = results["λs"]
@@ -44,7 +44,7 @@ class RegularisationEBICPlotCommand(BaseCommand):
         ax.set_xscale("log")
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-        ax.set_xlabel(r"Regularisation strength ($\lambda$)")
+        ax.set_xlabel(r"$\lambda$")
         ax.set_ylabel(r"$\Delta$EBIC")
         λ_min = min(all_results[0]["λs"].min(), all_results[1]["λs"].min())
         λ_max = max(all_results[0]["λs"].max(), all_results[1]["λs"].max())
