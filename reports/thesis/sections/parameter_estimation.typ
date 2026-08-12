@@ -565,181 +565,149 @@ by the number of observed observations (time intervals) in the dataset. For $M i
 individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
 
 #line(length: 100%)
-The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
-given a parameterisation $bold(hat(theta))$, over possible binarisations of $D$:
 
-$
-  cal(L)_D (bold(hat(theta))) = EE[L_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(op("Bin")(cal(D)) = D_B | cal(D) = D) dot L_(D_B) (bold(hat(theta)))
-$ <eqn:methods-parameter-estimation-conditional-expectation>
-
-where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisation
-$D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
-return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood.
-
-*NOTE: * An alternative approach here is to not mention the regularisation yet. Have
-this be a short section on the expected MLE. Then have the following section be on the
-specific form used in this study.
-
-+ Introduce optimisation problem
-+ High-level, what are the two terms
-+ Go in-depth into the first one. Explain why it resolves the above problem.
-+ Touch on the second one.
-
-While maximum likelihood estimation (MLE) is often used to infer
-parameters for similar models @nguyenInverseStatisticalProblems2017
-@leeStatisticalMechanicsUS2015, we should be cautious, for two reasons, of applying this method naïvely
-in the present study.
-
-Firstly, the model defined in @eqn:model-kbs-dynamics assumes
-binary spin states $s in {-1, +1}$. The climate beliefs dataset does not satisfy this
-assumption and must be binarised for MLE to be applicable. However, we have no
-guarantee that the parameterisation inferred for any specific binarisation is a
-reasonable explanation for the non-binarised dataset, nor for any other possible
-binarisation in the case where a probabilistic binarisation scheme is used (such as
-the one described in *reference soft binarisation*).
-
-Secondly, maximum likelihood estimation is prone to overfitting when the number of
-model parameters is similar to the number of observations
-@epskampEstimatingPsychologicalNetworks2018. While we consider only a small number of
-beliefs in this study ($N in {7,8}$), the number of parameters $p$ grows
-rapidly, with $p in O(N^2)$ for both the symmetric and asymmetric model variants. In
-combination with sampling error, we expect the number of parameters to negatively
-impact the robustness of the inferred parameters---given an alternative dataset of
-the same size, we would expect significant variation in parameters.
-
-We mitigate these respective issues in our parameter estimation scheme by
-(i) marginalising over the set of possible binarisations of $D$, and (ii) applying
-regularisation based on parameter magnitudes. We choose the parameterisation
-$bold(theta)^* in RR^p$ which satisfies the optimisation problem:
-
-// TODO: Add dependence on lambda and epsilon
-
-$
-  bold(theta)^* = op("argmax", limits: #true)_(bold(hat(theta)) in RR^p) f(D; bold(hat(theta))), quad "where" quad
-  f(D; bold(hat(theta))) := cal(L)_D (bold(hat(theta))) - lambda sum_(theta in bold(hat(theta))) sqrt(theta^2 + epsilon) quad
-$// <eqn:methods-parameter-estimation-optimisation-problem>
-
-The first term in the objective function $f$, $cal(L)_D (bold(hat(theta)))$, denotes the _expected_ log-likelihood
-given a parameterisation $bold(hat(theta))$, over possible binarisations of $D$:
-
-$
-  cal(L)_D (bold(hat(theta))) = EE[L_(D_B) (bold(hat(theta))) | cal(D) = D] = sum_(D_B) P(op("Bin")(cal(D)) = D_B | cal(D) = D) dot L_(D_B) (bold(hat(theta)))
-$// <eqn:methods-parameter-estimation-conditional-expectation>
-
-where $L_(D_B) (bold(hat(theta)))$ is the log-likelihood of a specific binarisation
-$D_B$. We will defer explicitly defining $L_(D_B) (bold(hat(theta)))$ for now, but will
-return to this point shortly in @eqn:methods-parameter-estimation-log-likelihood.
-
-// *TODO:* Intuition for the effect of using the expectation.
-// - When the likelihood given one binary state would be significantly higher than for the
-//   other, this is downweighted to account for the probability that the value does not
-//   obtain this state.
-// - Therefore the expectation prevents overconfident optimisation toward any specific
-//   binarisation --- the inferred model is required to explain the binarised dataset
-//   _in expectation_.
-// Also:
-// - What does it mean at the extremes (hard thresholding, fully-random thresholding)?
-// - What does it imply for values near zero in soft thresholding?
-// - How does it compare to MLE with hard or soft thresholding?
-
-
-
-By using the expected likelihood in place of the likelihood, the inferred model reflects
-the level of certainty or ambivalence present in the dataset. Consider that when using MLE,
-a neutral survey response (with value $0$) must first be binarised to either $+1$ or $-1$.
-Supposing (without loss of generality) that the response is
-mapped to $+1$, this erases information which may be important, since this observation
-is now no longer distinguishable from those which are truly positive. When using the
-expected likelihood, however, each observation's contribution to the objective function
-is an expectation over the possible binarisations. Values close to zero contribute
-comparable weightings from each binary state. Consequently, for values which may be
-binarised to $-1$ _and_ $+1$ with non-trivial probability, both cases should be
-reasonably explained by the inferred model.
-
-
-The second term is a smooth variant of L1 regularisation
-@tibshiraniRegressionShrinkageSelection1996. This has the effect of penalising
-nonzero parameters which do not meaningfully contribute to the expected likelihood.
-Parameters instead must reflect relationships which are sufficiently prevalent in the
-data, reducing the robustness issues resulting from sampling error and a large
-number of parameters. The hyperparameter $lambda in RR^+$ controls regularisation strength,
-with higher values resulting in sparser models. As $epsilon -> 0^+$ the second term
-converges to the standard formulation of L1 regularisation. Unlike the standard
-formulation, when $epsilon > 0$ the first-derivative of this term
-exists, so is amenible to gradient-based optimisation. We discuss the choice of
-values for $lambda$ and $epsilon$ in
-@subsubsec:methods-parameter-estimation-hyperparameters.
-
-Let $D_B ~ op("Bin")(D)$ be a possible binarisation of $D$, and $bold(theta)$ a
-parameterisation for the (asymmetric or symmetric) belief system model, which is
-decomposable into the model parameters
-$bold(theta) = chevron bold(J), bold(h) chevron.r$. The log-likelihood of $D_B$ given
-$bold(theta)$ is:
-
-$
-  L_(D_B) (bold(theta)) &= log P(D_B | bold(theta)) \
-  //&= sum_(m=1)^M sum_(t=1)^(T - 1) sum_(i=1)^N log P(s_(i, (m))^(t+1) | bold(s)_((m))^t, bold(theta)) \
-  &= sum_(m=1)^M sum_(t=1)^(T - 1) log s_(i, (m))^(t+1) dot h_i^"eff" (bold(s)_((m))^t) - log(2 cosh h_i^"eff" (bold(s)_((m))^t))
-$ <eqn:methods-parameter-estimation-log-likelihood>
-
-The derivation of @eqn:methods-parameter-estimation-log-likelihood is analogous to that
-of the non-equilibrium Ising model log-likelihood @nguyenInverseStatisticalProblems2017.
-Combining @eqn:methods-parameter-estimation-log-likelihood and
-@eqn:methods-parameter-estimation-conditional-expectation, we obtain an explicit
-expression for the expected likelihood:
-
-// $
-//   cal(L)_D (bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) sum_(bold(s)^t) P(bold(S)_((m))^t = bold(s)_((m))^t | cal(D) = D) sum_(i=1)^N EE[S_(i, (m))^(t+1)] dot h_i^"eff" (bold(s)^t) - log(2 cosh h_i^"eff" (bold(s)^t))
-// $
-
-$
-  cal(L)_D (bold(theta)) = sum_(bold(s)) lr((sum_(m=1)^M sum_(t=1)^(T-1) P(bold(S)_((m))^t = bold(s) | D) dot EE[bold(S)_((m))^(t+1) | D]^T h^"eff" (bold(s)))) - Z(D; bold(theta))
-$ //<eqn:methods-parameter-estimation-expected-ll-explicit>
-
-where $EE[bold(S)_((m))^(t+1) | D]$ is the expected binary configuration for the
-observation $bold(x)_((m))^(t+1)$, the vector $h^"eff" (bold(s))$ contains the
-effective baseline activation for each spin given the previous state $bold(s)$, and $Z$
-is the expected log partition function, summed across observations:
-
-$
-  Z(D; bold(theta)) = sum_(bold(s)) sum_(m <= M \ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_(i=1)^N log(2 cosh h_i^"eff" (bold(s)))
-$ //<eqn:methods-parameter-estimation-expected-partition-function>
-
-Per the optimisation problem defined in
-@eqn:parameter-estimation-optimisation-problem, we choose the parameterisation
-$bold(theta)^*$ which maximises the regularised expected log-likelihood, which occurs
-when #box[$(partial f)/(partial theta) = 0$] for every parameter $theta in bold(theta)^*$.
-The partial derivative with respect to a given baseline activation parameter $h_i$, for
-$i in [1,N]$, is given by:
-
-$
-  partial/(partial h_i) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda h_i)/sqrt(h_i^2 + epsilon)
-$ //<eqn:methods-parameter-estimation-derivative-baseline-activation>
-
-
-Note that the expressions for $cal(L)_D (bold(theta))$ and
-$partial/(partial h_i) f(D; bold(theta))$ are applicable to both the asymmetric and
-symmetric belief system models. This property does not hold for the partial derivatives
-with respect to interaction effects. In the asymmetric model, for $i, j in [1, N]$,
-this is derived analogously to
-@eqn:parameter-estimation-derivative-baseline-activation as:
-
-$
-  partial/(partial J_(j i)) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) s_j lr([EE[S_(i, (m))^(t+1) | D] - tanh(h_i^"eff" (bold(s)))]) \ &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)
-$// <eqn:methods-parameter-estimation-derivative-interaction-effect-asym>
-
-In the symmetric belief system model, since we require that $bold(J) = bold(J)^T$, we
-estimate a single interaction parameter $J_(j i) = J_(i j) = beta_({i,j})$ for each
-pair of spins $S_i, S_j$. Each pair thus contributes twice to the partial derivative,
-once for each direction:
-
-$
-  partial/(partial beta_({i,j})) f(D; bold(theta)) = &sum_(bold(s)) sum_(m <= M\ t < T) P(bold(S)_((m))^t = bold(s) | D) sum_((i',j') in {i, j}) A_(j' i') s_(j') lr([EE[S_(i', (m))^(t+1) | D] - tanh(h_(i')^"eff" (bold(s)))]) \ &- (lambda beta_({i,j}))/sqrt(beta_({i, j})^2 + epsilon)
-$// <eqn:methods-parameter-estimation-derivative-interaction-effect-sym>
-
-=== Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
+//=== Hyperparameters <subsubsec:methods-parameter-estimation-hyperparameters>
 
 // TODO: Incorporate
+// #let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
+// For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
+// a 'weakly oppose' response to a 7-point Likert scale
+// #footnote[
+//   The oppose/support 7-point Likert scale has possible responses: strongly oppose,
+//   oppose, weakly oppose, neutral, weakly support, support, strongly support.
+// ] //<fn:likert-7-scale-responses>
+// (value $1\/3$) is mapped to $+1$ with probability 0.05.
+//
+// #figure(
+//   image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
+//   placement: auto,
+//   caption: caption(
+//     short: [Likert-7 binarisation distribution],
+//     long: [
+//       The probability of binarisation to $+1$ for each possible response to a Likert-7
+//       scale survey question@fn:likert-7-scale-responses, given
+//       $sigma approx #calc.round(binarisation_sigma, digits: 1)$.
+//     ],
+//   ),
+// )
+//
+// The optimisation problem in @eqn:parameter-estimation-optimisation-problem
+// has two hyperparameters which must be specified prior to parameter estimation: the
+// regularisation strength $lambda in RR^+$, and the smoothing parameter $epsilon in RR^+$.
+// The values for both are summarised in @tab:methods-hyperparameter-values.
+//
+// #let regularisation_strengths = json("../results/data/model_fit/optimised_regularisation.json")
+//
+// #figure(
+//   table(
+//     columns: 4,
+//     stroke: none,
+//     table.header[Parameter][Model type][Dataset][Value],
+//     table.hline(stroke: 0.5pt),
+//     [$lambda$],
+//     [Symmetric],
+//     [Full],
+//     [#num(exponent: "sci")[#calc.round(regularisation_strengths.sym_ising.full, digits: 3)]],
+//     [], [Asymmetric], [Full], [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.full, digits: 3)]],
+//     [],
+//     [],
+//     [Conservative],
+//     [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.conservative, digits: 3)]],
+//     [], [], [Liberal], [#num(exponent: "sci")[#calc.round(regularisation_strengths.ising.liberal, digits: 3)]],
+//     [$epsilon$], [All], [All], [$10^(-8)$],
+//   ),
+//   caption: caption(
+//     short: [Hyperparameter values],
+//     long: [
+//       Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
+//       hyperparameters. Regularisation strength model- and dataset-specific;
+//       _Conservative_ and _Liberal_ refer to subsets of the climate beliefs dataset
+//       comprising individuals with the specified ideology (@sec:dataset).
+//     ],
+//   ),
+//   placement: auto,
+// ) //<tab:methods-hyperparameter-values>
+//
+// We consider parameters with magnitude less than $10^(-2)$ as 'effectively zero', and
+// take #box[$epsilon = 10^(-8)$] such that $sqrt(epsilon)$ is significantly smaller than this
+// threshold. This choice of $epsilon$ ensures that the smooth regularisation remains a
+// good approximation to L1 regularisation, i.e.,
+//
+// $
+//   sqrt(theta^2 + epsilon) approx |theta|
+// $ //<eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
+//
+//
+// We use the Extended Bayesian Information Criterion (EBIC)
+// @chenExtendedBayesianInformation2008 to select $lambda$,
+// as recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"):
+//
+// // $
+// //   op("EBIC")(bold(theta)^*) = k dot [ln(M(T-1)) + 2 gamma ln(p)] - 2cal(L)_D (bold(theta)^*)
+// // $ <eqn:methods-ebic>
+//
+// $
+//   op("EBIC")(bold(theta)^*) = overbracket(k ln q - 2 cal(L)_D (bold(theta)^*), op("BIC")(bold(theta)^*)) + 2 k dot gamma ln p
+// $// <eqn:methods-ebic>
+//
+// #let ebic-footnote = footnote[
+//   Note that this is different from the prior used in the BIC, which is uniform over
+//   the entire space of models. The prior in the EBIC, for $gamma = 1$, is uniform only
+//   within each class of models containing $k$ parameters.
+// ]
+//
+// The variable $k$ denotes the number of (effectively) nonzero parameters in the optimised
+// model. The point of difference between the EBIC and the standard Bayesian Information
+// Criterion (BIC) is in their assumed priors over the space of possible models. While the
+// BIC assumes a uniform prior, the EBIC penalises values of $k$ which permit a large number
+// of models @foygelExtendedBayesianInformation2010 @barberHighdimensionalIsingModel2015.
+// For instance, the class of models comprising eight spins (i.e., with 72 parameters)
+// contains considerably fewer models with 10 parameters ($5.4 times 10^11$) than models
+// with 36 parameters ($4.4 times 10^20$). In this scenario, by assuming a uniform prior,
+// the BIC implicitly penalises models which are too sparse, or too dense. The parameter
+// $gamma >= 0$ specifies the degree to which the EBIC penalises such classes of models,
+// with $gamma = 1$ corresponding to a uniform prior over models with $k$
+// parameters#ebic-footnote, for each $k in 0...p$.
+//
+// #cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,
+// nonzero choices of $gamma$ are sufficient to improve the accuracy of Ising model
+// structural inference in various contexts. We take $gamma = 0.25$, which is the minimum
+// value considered in their study. We then select $lambda >= 0$ which minimises the
+// EBIC for the symmetric and asymmetric models (independently), the results of which
+// are displayed in @fig:methods-regularisation-ebic.
+//
+// #figure(
+//   image(
+//     "../results/figures/model_fit/regularisation_ebic.pdf",
+//   ),
+//   caption: caption(
+//     short: [Regularisation strength EBIC],
+//     long: [
+//       Effect of regularisation strength $lambda$ on Extended Bayesian Information
+//       Criterion for symmetric and asymmetric belief system models optimised to the
+//       climate beliefs dataset using
+//       @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
+//       the difference in EBIC compared to the no-regularisation case ($lambda = 0$).
+//     ],
+//   ),
+//   placement: auto,
+// ) //<fig:methods-regularisation-ebic>
+
+
+
+// === Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
+//
+// We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+// quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+// @nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
+// derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
+//
+// To ensure numerical stability irrespective of dataset size, we rescale the expected
+// log-likelihood contribution to the objective function and partial derivatives, dividing
+// by the number of observed observations (time intervals) in the dataset. For $M in NN$
+// individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
+
+=== Calibration details
 #let binarisation_sigma = json("../results/data/methods/binarisation_sigma.json").sigma
 For the purposes of our experiments, we choose $sigma = #binarisation_sigma$ such that
 a 'weakly oppose' response to a 7-point Likert scale
@@ -864,21 +832,18 @@ are displayed in @fig:methods-regularisation-ebic.
   placement: auto,
 ) //<fig:methods-regularisation-ebic>
 
+==== Implementation details
+We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
+@nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
+derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
 
+To ensure numerical stability irrespective of dataset size, we rescale the expected
+log-likelihood contribution to the objective function and partial derivatives, dividing
+by the number of observed observations (time intervals) in the dataset. For $M in NN$
+individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
 
-// === Implementation details <subsubsec:methods-parameter-estimation-implementation-details>
-//
-// We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
-// quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
-// @nocedal2006numerical[p.~136]. We use the analytic jacobian comprising the partial
-// derivatives stated above. We take $bold(theta) = bold(0)$ as the initial guess.
-//
-// To ensure numerical stability irrespective of dataset size, we rescale the expected
-// log-likelihood contribution to the objective function and partial derivatives, dividing
-// by the number of observed observations (time intervals) in the dataset. For $M in NN$
-// individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
-
-== Calibrating to the climate beliefs dataset <sec:calibration>
+== Calibrating to the climate beliefs dataset //<sec:calibration>
 The *climate beliefs dataset*, detailed in @sec:dataset, comprises eight beliefs
 relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
 extracted from the CCCV survey
@@ -889,40 +854,67 @@ and $-1$ respectively, such that these reflect the two spin states in the KBS mo
 
 
 
-
 #figure(
-  block(height: 100%, breakable: false)[
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions (replicated)],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+      is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+    ],
+  ),
+) //<fig:calibration-marginal-distributions>
+#figure(
+  {
+    show table: set text(size: 10pt)
+    climate-beliefs-variable-table
+  },
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables (replicated)],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$. Note that this table is identical to
+      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+    ],
+  ),
+) //<tab:calibration-climate-beliefs-dataset-items>
 
-    #figure(
-      image("../results/figures/dataset/marginal_distributions.pdf"),
-      caption: caption(
-        short: [Climate beliefs dataset marginal distributions (replicated)],
-        long: [
-          Marginal distribution for each of the eight variables in the climate beliefs
-          dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
-          is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
-        ],
-      ),
-    ) <fig:calibration-marginal-distributions>
-    #figure(
-      {
-        show table: set text(size: 10pt)
-        climate-beliefs-variable-table
-      },
-      gap: 1em,
-      caption: caption(
-        short: [Climate beliefs dataset variables (replicated)],
-        long: [
-          Variables included in the climate beliefs dataset. Index variables are constructed
-          by taking the average of their constituent columns, after re-scaling to the
-          interval $[-1, 1]$. Note that this table is identical to
-          @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
-        ],
-      ),
-    ) <tab:calibration-climate-beliefs-dataset-items>
-
-  ],
-)
+// #figure(
+//   block(height: 100%, breakable: false)[
+//
+//     #figure(
+//       image("../results/figures/dataset/marginal_distributions.pdf"),
+//       caption: caption(
+//         short: [Climate beliefs dataset marginal distributions (replicated)],
+//         long: [
+//           Marginal distribution for each of the eight variables in the climate beliefs
+//           dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+//           is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+//         ],
+//       ),
+//     ) <fig:calibration-marginal-distributions>
+//     #figure(
+//       {
+//         show table: set text(size: 10pt)
+//         climate-beliefs-variable-table
+//       },
+//       gap: 1em,
+//       caption: caption(
+//         short: [Climate beliefs dataset variables (replicated)],
+//         long: [
+//           Variables included in the climate beliefs dataset. Index variables are constructed
+//           by taking the average of their constituent columns, after re-scaling to the
+//           interval $[-1, 1]$. Note that this table is identical to
+//           @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+//         ],
+//       ),
+//     ) <tab:calibration-climate-beliefs-dataset-items>
+//
+//   ],
+// )
 
 
 Using the
@@ -931,6 +923,10 @@ symmetric and asymmetric belief system models to the climate beliefs dataset (se
 @sec:dataset). We will evaluate the calibrated models on both structural accuracy
 ('how accurate are the parameter estimates?') and predictive capacity ('how well do
 the models explain the data?').
+
+=== Calibration details// <sec:climate-beliefs-calibration>
+
+=== Model evaluation //<sec:climate-beliefs-evaluation>
 
 #let bootstrap-footnote = footnote[
   Each bootstrap sample comprises a set of survey participants, such that each sampled
@@ -973,7 +969,7 @@ where $p in NN$ is the number of model parameters.
       over bootstrapped models ($n=500$) using the percentile method.
     ],
   ),
-) <fig:calibration-interaction-matrices>
+) //<fig:calibration-interaction-matrices>
 
 #let timescale-footnote = footnote[
   The models' timescales are set by the duration between survey responses, in this case
@@ -1026,7 +1022,7 @@ dissonance. We provide a formal proof of this statement in @sec:appendix-derivat
       percentile method over models calibrated to bootstrapped datasets (500 repeats).
     ],
   ),
-) <fig:calibration-edge-accuracy>
+)// <fig:calibration-edge-accuracy>
 
 
 
@@ -1064,7 +1060,7 @@ model.
       'selected' if they survive regularisation with magnitude at least $0.01$.
     ],
   ),
-) <fig:calibration-selection-probability>
+) //<fig:calibration-selection-probability>
 
 Due to the use of regularisation in model calibration we must be careful not to draw
 conclusions regarding edge _existence_ from this figure
@@ -1109,7 +1105,7 @@ for `CC Others Worry`).
       participants in a given conditional probability bin.
     ],
   ),
-) <fig:calibration-transition-reliability>
+) //<fig:calibration-transition-reliability>
 
 The two measurements are strongly correlated for most variables. The higher variation
 for `CC Real` and `CC Human` likely reflects the observed heavy skew in these variables
@@ -1126,7 +1122,7 @@ we calculate the relative entropy as
 
 $
   D(P || Q) := H_C (P, Q) - H(P)
-$ <def:calibration-relative-entropy>
+$ //<def:calibration-relative-entropy>
 
 Where $P := P(op("Bin")(X_(i, (m))^(t+1)))$ is the distribution over binarisations of
 the observation in the first timestep, and $Q := P_cal(M) (S_(i, (m))^(t+1))$ is the
@@ -1144,11 +1140,11 @@ the model with the true binarised dataset. Formally, these are defined as follow
 
 $
   H(P) = - sum_(s in plus.minus 1) P(s) log_2 P(s)
-$ <def:calibration-entropy>
+$ //<def:calibration-entropy>
 
 $
   H_C (P,Q) = - sum_(s in plus.minus 1) P(s) log_2 Q(s)
-$ <def:calibration-cross-entropy>
+$ //<def:calibration-cross-entropy>
 
 #let nonneg-rel-entropy = footnote[
   The relative entropy is strictly non-negative (*CITE*), so the binarisation entropy is
@@ -1173,7 +1169,7 @@ the next state, despite the binarisation process being fairly deterministic.
       intervals display two standard deviations around the mean value.
     ],
   ),
-) <fig:calibration-mean-relative-entropy>
+) //<fig:calibration-mean-relative-entropy>
 
 To test for the effect of including cross-interactions, we fit the fully-connected model
 and null models using 10-fold cross-validation. For each survey participant in the
@@ -1204,7 +1200,7 @@ better explained by the fully-connected model than the null model.
       indicate lower relative entropy for the fully-connected model.
     ],
   ),
-) <fig:relative-entropy-difference-dist>
+) //<fig:relative-entropy-difference-dist>
 
 @fig:relative-entropy-difference-dist explores this hypothesis, displaying the empirical
 probability density and cumulative distribution functions for the mean difference in
@@ -1242,5 +1238,5 @@ this theory.
       whether the change is toward the positive (blue) or negative (orange) state.
     ],
   ),
-) <fig:relative-entropy-difference-examples>
+) //<fig:relative-entropy-difference-examples>
 

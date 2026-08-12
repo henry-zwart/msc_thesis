@@ -85,17 +85,17 @@
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
 
-= The Kinetic Belief System model <chp:kinetic-belief-system>
+= The Kinetic Belief System model (KBS) <chp:kinetic-belief-system>
 #include "sections/kinetic_belief_system.typ"
 
-= Parameter estimation <chp:parameter-estimation>
+= Parameter estimation in the KBS model <chp:parameter-estimation>
 #include "sections/parameter_estimation.typ"
 
-= Methods <sec:methods>
-#include "sections/methods.typ"
+= A KBS model of climate beliefs <sec:calibration>
+#include "sections/calibration.typ"
 
-// = Model Calibration <sec:calibration>
-// #include "sections/calibration.typ"
+= Experimental Methods <sec:methods>
+#include "sections/methods.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
 #include "sections/asymmetry_results.typ"
@@ -105,9 +105,6 @@
 
 = Discussion <sec:discussion>
 #include "sections/discussion.typ"
-
-// = Related work <sec:related-work>
-// #include "sections/literature_review.typ"
 
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"

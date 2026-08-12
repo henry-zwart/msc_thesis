@@ -21,45 +21,73 @@ relating to climate change (@tab:calibration-climate-beliefs-dataset-items),
 extracted from the CCCV survey
 (cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose"). The dataset
 includes responses from 1693 repeating participants, measured during waves 3 and 4 of
-the survey. We map the maximum and minimum (possible) values for each variable to $+1$
+the survey. We map the maximum and minimum (allowable) values for each variable to $+1$
 and $-1$ respectively, such that these reflect the two spin states in the KBS model.
 
 
 
 
 #figure(
-  block(height: 100%, breakable: false)[
+  image("../results/figures/dataset/marginal_distributions.pdf"),
+  caption: caption(
+    short: [Climate beliefs dataset marginal distributions (replicated)],
+    long: [
+      Marginal distribution for each of the eight variables in the climate beliefs
+      dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+      is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+    ],
+  ),
+) <fig:calibration-marginal-distributions>
+#figure(
+  {
+    show table: set text(size: 10pt)
+    climate-beliefs-variable-table
+  },
+  gap: 1em,
+  caption: caption(
+    short: [Climate beliefs dataset variables (replicated)],
+    long: [
+      Variables included in the climate beliefs dataset. Index variables are constructed
+      by taking the average of their constituent columns, after re-scaling to the
+      interval $[-1, 1]$. Note that this table is identical to
+      @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+    ],
+  ),
+) <tab:calibration-climate-beliefs-dataset-items>
 
-    #figure(
-      image("../results/figures/dataset/marginal_distributions.pdf"),
-      caption: caption(
-        short: [Climate beliefs dataset marginal distributions (replicated)],
-        long: [
-          Marginal distribution for each of the eight variables in the climate beliefs
-          dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
-          is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
-        ],
-      ),
-    ) <fig:calibration-marginal-distributions>
-    #figure(
-      {
-        show table: set text(size: 10pt)
-        climate-beliefs-variable-table
-      },
-      gap: 1em,
-      caption: caption(
-        short: [Climate beliefs dataset variables (replicated)],
-        long: [
-          Variables included in the climate beliefs dataset. Index variables are constructed
-          by taking the average of their constituent columns, after re-scaling to the
-          interval $[-1, 1]$. Note that this table is identical to
-          @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
-        ],
-      ),
-    ) <tab:calibration-climate-beliefs-dataset-items>
-
-  ],
-)
+// #figure(
+//   block(height: 100%, breakable: false)[
+//
+//     #figure(
+//       image("../results/figures/dataset/marginal_distributions.pdf"),
+//       caption: caption(
+//         short: [Climate beliefs dataset marginal distributions (replicated)],
+//         long: [
+//           Marginal distribution for each of the eight variables in the climate beliefs
+//           dataset (@tab:calibration-climate-beliefs-dataset-items). Note that this figure
+//           is identical to @fig:dataset-marginal-distributions displayed in @sec:dataset.
+//         ],
+//       ),
+//     ) <fig:calibration-marginal-distributions>
+//     #figure(
+//       {
+//         show table: set text(size: 10pt)
+//         climate-beliefs-variable-table
+//       },
+//       gap: 1em,
+//       caption: caption(
+//         short: [Climate beliefs dataset variables (replicated)],
+//         long: [
+//           Variables included in the climate beliefs dataset. Index variables are constructed
+//           by taking the average of their constituent columns, after re-scaling to the
+//           interval $[-1, 1]$. Note that this table is identical to
+//           @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
+//         ],
+//       ),
+//     ) <tab:calibration-climate-beliefs-dataset-items>
+//
+//   ],
+// )
 
 
 Using the
@@ -68,6 +96,11 @@ symmetric and asymmetric belief system models to the climate beliefs dataset (se
 @sec:dataset). We will evaluate the calibrated models on both structural accuracy
 ('how accurate are the parameter estimates?') and predictive capacity ('how well do
 the models explain the data?').
+
+
+== Calibration details <sec:climate-beliefs-calibration>
+
+== Model evaluation <sec:climate-beliefs-evaluation>
 
 #let bootstrap-footnote = footnote[
   Each bootstrap sample comprises a set of survey participants, such that each sampled
@@ -380,135 +413,4 @@ this theory.
     ],
   ),
 ) <fig:relative-entropy-difference-examples>
-
-
-
-
-// #figure(
-//   image("../results/figures/model/network.pdf"),
-//   caption: caption(
-//     short: [Calibrated belief system networks],
-//     long: [*TODO*],
-//   ),
-// ) <fig:calibration-networks>
-
-// *(Briefly!) Discuss the heatmap*:
-// - Large self-interaction effects.
-// - Be careful not to tread on topics that should be in results.
-
-
-// // To evaluate the calibrated models, we consider both structural accuracy as well as
-// // predictive capacity on unseen data. As recommended in
-// // #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we investigate
-// // edge weight accuracy by examining the bootstrapped confidence intervals around each
-// // parameter estimate (@fig:calibration-edge-accuracy). Due to the use of
-// // regularisation in model calibration we must be careful not to draw conclusions regarding
-// // edge _existence_ from this figure (Ibid.). For this reason we intentionally omit edge
-// // labels from this figure.
-//
-// We observe small 95% confidence intervals for most parameters in both the symmetric
-// and asymmetric models, indicating an accurate fit for both models. On average, the
-// symmetric model exhibits smaller confidence intervals than the asymmetric model
-// ($0.065 < 0.085$), which is expected given the larger number of parameters in the
-// latter model. In both models the self-interaction effect on `Politics` is significantly
-// larger than all other parameters, as evidenced by the non-overlapping confidence
-// intervals. Moreover, we see that the remaining self-interaction effects are, in-general,
-// significantly larger than the pairwise effects, with the exception of `CC Impact` in the
-// symmetric model, and `CC Impact`, `CC Worry Others` in the asymmetric model.
-
-
-
-// We evaluate the models' predictive capacity with respect to the *relative entropy* of
-// the binarised data with respect to the calibrated model#calibration-disclaimer. Before
-// proceeding, let us take a moment to define the relative entropy, and understand its
-// expected behaviour. We first define a related quantity --- the *cross-entropy*, $H_C$
-// --- which measures the expected surprise when drawing samples from a distribution $P$,
-// but anticipating the distribution $Q$:
-//
-// $
-//   H_C (P, Q) := -sum_(x in cal(X)) P_X (x) log_2 Q_X (x)
-// $ <eqn:calibration-cross-entropy>
-//
-// The relative entropy is then defined as:
-//
-// $
-//   D(P || Q) := H_C (P, Q) - H(P)
-// $ <eqn:calibration-relative-entropy>
-//
-// and can be can be considered the _excess_ surprise in such a situation as described
-// for the cross entropy, compared to the baseline entropy of the true distribution $P$.
-//
-// In our context, for a spin $i in {1, ..., N}$ and survey participant $m$, the _true_
-// distribution is the distribution over possible binarisations of the corresponding
-// observation in the dataset,
-// $
-//   P := P[op("Bin")(X_(i,(m))^(t+1))]
-// $
-// and the _proxy_ distribution is
-// that implied by the model, conditional on the previous observed configuration,
-// $
-//   Q := P[S_i^(t+1) | bold(S)^t = bold(s)]
-// $
-//
-// The relative entropy is small when either:
-// - The cross-entropy is small, such that the model predicts the transition accurately, or
-//
-// - The random variable $op("Bin")(X_(i, (m))^(t+1))$ has high entropy.
-//
-// This second property is particularly desirable---it means that we don't unduly
-// penalise poor model predictions on states which are highly ambiguous due to the
-// soft binarisation.
-//
-// Let us now proceed with evaluating the calibrated model. First, we investigate the
-// degree to the calibrated model's prediction capacity depends on cross-interaction
-// terms ($J_(i,j)$ for $i != j$), through comparison with the null model which allows
-// only baseline activation ($bold(h)$) and self-interaction terms ($J_(i,i)$). Using
-// 5-fold cross-validation, we estimate the mean difference in relative entropy between
-// the fully-connected and null models, on both calibration and validation
-// cross-validation splits. The null hypothesis---that the mean difference in relative
-// entropy is zero---is rejected ($p < 0.05$), with the cross-interaction model exhibiting
-// lower relative entropy than the null model on average in both calibration and validation
-// datasets.
-
-
-// @fig:calibration-mean-relative-entropy shows the mean relative entropy for each model
-// and dataset category. This is distinct from the above experiment, which measures the
-// mean difference. The similarity in mean relative entropy between the null and
-// fully-connected models reflects the dominance of self-interaction terms (*REFERENCE
-// HEATMAP FIGURE*). Note that since the relative entropy
-// responds non-linearly to changes in the model distribution, the magnitude of the
-// observed differences should be interpreted with caution. Furthermore, there is minimal
-// difference between the estimated relative entropy on the calibration and validation
-// splits, indicating that the model is not overfit.
-//
-// We may also consider how the relative entropy per spin varies between individuals
-// (@fig:calibration-cv-relative-entropy) for the calibrated fully-connected model.
-// The distribution is unimodel, peaking slightly below the mean relative entropy, and has
-// a long right tail, indicating the presence of participants whose behaviour is not
-// well-explained by the model. @fig:calibration-highest-relative-entropy examines the
-// eight participants with the highest mean relative entropy within the validation splits,
-// showing how the binarisation probability for each variable changes between the first and
-// second observations.
-
-// #figure(
-//   image("../results/figures/model_fit/cross_validation_relative_entropy.pdf"),
-//   caption: caption(
-//     short: [Cross-validated relative entropy on calibration model],
-//     long: [*TODO*],
-//   ),
-// ) <fig:calibration-cv-relative-entropy>
-//
-// #figure(
-//   image("../results/figures/model_fit/high_relative_entropy.pdf"),
-//   caption: caption(
-//     short: [Participants with high relative entropy],
-//     long: [*TODO*],
-//   ),
-// ) <fig:calibration-highest-relative-entropy>
-
-
-// *Note:* We _could_ compare BIC/EBIC between the symmetric and asymmetric models,
-// but we don't. We're not doing model selection. Our goal is to have calibrated models
-// for each.
-
 

@@ -31,7 +31,7 @@ Part 1:
 == Parameter estimation
 
 === Log-likelihood <derivation:log-likelihood>
-@eqn:methods-parameter-estimation-log-likelihood
+(*reference old equation for the log likelihood*)
 
 Let $D_B ~ op("Bin")(D)$ be a possible binarisation of $D$, and $bold(theta)$ a
 parameterisation for the (asymmetric or symmetric) belief system model, which is
@@ -45,10 +45,10 @@ $
   &= sum_(m=1)^M sum_(t=1)^(T - 1) log s_(i, (m))^(t+1) dot h_i^"eff" (bold(s)_((m))^t) - log(2 cosh h_i^"eff" (bold(s)_((m))^t))
 $
 
-The derivation of @eqn:methods-parameter-estimation-log-likelihood is analogous to that
+The derivation of (*old equation for the log-likelihood*) is analogous to that
 of the non-equilibrium Ising model log-likelihood @nguyenInverseStatisticalProblems2017.
-Combining @eqn:methods-parameter-estimation-log-likelihood and
-@eqn:methods-parameter-estimation-conditional-expectation, we obtain an explicit
+Combining (*old equation for the log-likelihood*) and
+@eqn:parameter-estimation-expected-ll-generic, we obtain an explicit
 expression for the expected likelihood:
 
 === Expected log-likelihood
