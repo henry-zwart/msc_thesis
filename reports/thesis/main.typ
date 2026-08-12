@@ -80,8 +80,8 @@
 // = Notes (things to remember, to-dos)
 // #include "sections/notes.typ"
 
-// = Terminology and notation <sec:notation>
-// #include "sections/notation.typ"
+= Terminology and notation <sec:notation>
+#include "sections/notation.typ"
 
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"

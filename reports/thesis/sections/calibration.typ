@@ -406,6 +406,7 @@ conclusions regarding edge _existence_ from this figure
 of bootstrapped models for which each edge is nonzero, shown in
 @fig:calibration-selection-probability. Relations which are selected in all
 models are not shown.
+<edge-existence-warning>
 
 All edges excluded from the model calibrated on the full
 dataset (@fig:calibration-interaction-matrices) have low selection probability in the

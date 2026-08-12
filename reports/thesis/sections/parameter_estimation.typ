@@ -278,6 +278,15 @@ probability. Therefore, by avoiding explicit binarisation in this way, we can
 obtain binary models which incorporate the neutrality and varying degrees of certainty
 present in non-binarised data.
 
+We note that this is far from the only approach which can be used to account for
+neutrality in belief system models. For instance,
+#cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose") suggest using
+three-valued models such as the Blume-Capel model (ibid.) which represent intermediate
+states explicitly using zero-valued spin states. Such approaches provide extra
+representational capacity---our approach cannot simulate neutral states---but raise the
+analytical complexity. For the purposes of this study, which has an exploratory nature,
+we prefer the relative simplicity of binary models.
+
 == Parameter estimation for the KBS model <sec:parameter-estimation-method>
 
 We now adapt the maximum expected likelihood estimation approach described above to the
@@ -524,8 +533,10 @@ of models @foygelExtendedBayesianInformation2010 @barberHighdimensionalIsingMode
 For instance, the class of models comprising eight spins (i.e., with 72 parameters)
 contains considerably fewer models with 10 parameters ($5.4 times 10^11$) than models
 with 36 parameters ($4.4 times 10^20$). In this scenario, by assuming a uniform prior,
-the BIC implicitly penalises models which are too sparse, or too dense. The parameter
-$gamma >= 0$ specifies the degree to which the EBIC penalises such classes of models,
+the BIC implicitly penalises models which are too sparse, or too dense.
+
+The parameter
+$gamma in RR_(>= 0)$ specifies the degree to which the EBIC penalises such classes of models,
 with $gamma = 1$ corresponding to a uniform prior over models with $k$
 parameters#ebic-footnote, for each $k in 0...p$.
 #cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,

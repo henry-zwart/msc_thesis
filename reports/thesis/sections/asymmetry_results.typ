@@ -82,20 +82,13 @@ the relative effectiveness of interventions.
   placement: auto,
 ) <fig:asymmetry-results-existence-ranked-differentials>
 
-#let edge-comparison-footnote = footnote[
-  In @sec:calibration we cautioned against using bootstrapped confidence intervals to
-  test for the _existence_ of edges by comparison with
-  zero when regularisation is used during calibration---this caution does not apply to
-  the _comparison_ of edge weights via the mean difference
-  @epskampEstimatingPsychologicalNetworks2018.
-]
 
 @fig:asymmetry-results-existence-ranked-differentials shows the median directional
 differential (defined in @sec:methods-directional-differential) for each pair of spins
 in the asymmetric model, in decreasing order.
 The 90% confidence intervals are calculated as the 5th and 95th percentiles across
 bootstrap samples ($n=500$) of the directional differential matrix
-elements#edge-comparison-footnote. For each pair of spins we display only the
+elements. For each pair of spins we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
 
