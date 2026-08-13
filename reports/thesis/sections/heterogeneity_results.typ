@@ -1,41 +1,59 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./introduction.typ": RQ3, RQ4
 
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
 #show: show-theorion
 
-In this chapter we investigate individual heterogeneity in both intervention behaviour
-and belief system structure in asymmetric, non-equilibrium belief system models.
+In this chapter, we address the final two research questions presented in
+@sec:introduction:
 
-While the previous chapter was primarily concerned with the _collective_ effects of
-intervention, the distribution of expected effect of intervention across individuals
-for inbound interventions targeting 'Climate Action' shows substantial variation between
-survey participants (@fig:heterogeneity-results-cc-action-distribution). We begin this
-chapter, in @sec:heterogeneity-results-intervention-effects, by investigating the
-conditions under which different interventions targeting beliefs about climate action are
-likely to be effective.
+#{
+  set enum(numbering: "RQ1.", indent: 1em, start: 3)
+  block(width: 97%, [
+    + #RQ3
 
-#figure(
-  image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
-  caption: caption(
-    short: [Individual effective of 'Climate Action 'interventions],
-    long: [
-      The expected effect of intervention for strong interventions #box[($delta_h = 2.5$)]
-      targeting 'Climate Action' exhibits substantial variation between
-      individuals.
-    ],
-  ),
-) <fig:heterogeneity-results-cc-action-distribution>
+    + #RQ4
+  ])
+}
 
-In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
-structure varies between subgroups in a population. In the previous chapter we identified
-political ideology as a particularly influential belief, both through asymmetric
-interactions with other variables (@subsec:asymmetry-results-existence) and as an
-effective point-of-intervention for interventions targeting attitudes toward climate
-action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
-extends beyond pairwise interactions with other variables by comparing asymmetric belief
-systems calibrated to the (self-reported) liberal and conservative subpopulations within
-the climate beliefs dataset.
+We first address RQ3., using the regression decision tree approach outlined in
+@sec:methods-effect-characterisation-function to qualitatively characterise the
+conditions under which we expect different interventions targeting attitudes on
+climate action to be effective. Then, to address RQ4., we compare
+structural features of the conservative and liberal asymmetric KBS models which were
+calibrated in @sec:calibration.
+
+// While the previous chapter was primarily concerned with the _collective_ effects of
+// intervention, the expected effects of interventions targeting 'Climate Action' show
+// substantial variation between survey participants
+// (@fig:heterogeneity-results-cc-action-distribution). We begin this chapter by
+// investigating the conditions under which different interventions targeting beliefs about
+// climate action are likely to be effective.
+
+
+
+
+
+// In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+// structure varies between subgroups in a population. In the previous chapter we identified
+// political ideology as a particularly influential belief, both through asymmetric
+// interactions with other variables (@subsec:asymmetry-results-existence) and as an
+// effective point-of-intervention for interventions targeting attitudes toward climate
+// action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+// extends beyond pairwise interactions with other variables by comparing asymmetric belief
+// systems calibrated to the (self-reported) liberal and conservative subpopulations within
+// the climate beliefs dataset.
+//
+// In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+// structure varies between subgroups in a population. In the previous chapter we identified
+// political ideology as a particularly influential belief, both through asymmetric
+// interactions with other variables (@subsec:asymmetry-results-existence) and as an
+// effective point-of-intervention for interventions targeting attitudes toward climate
+// action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+// extends beyond pairwise interactions with other variables by comparing asymmetric belief
+// systems calibrated to the (self-reported) liberal and conservative subpopulations within
+// the climate beliefs dataset.
 
 
 == Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
@@ -79,48 +97,62 @@ the climate beliefs dataset.
 // defining each region), these combinations can also be interpretable as rules or
 // _personas_.
 
+#figure(
+  image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
+  caption: caption(
+    short: [Individual effective of 'Climate Action 'interventions],
+    long: [
+      The expected effect of intervention for strong interventions #box[($delta_h = 2.5$)]
+      targeting 'Climate Action' exhibits substantial variation between
+      individuals.
+    ],
+  ),
+) <fig:heterogeneity-results-cc-action-distribution>
+
+While the previous chapter was primarily concerned with the _collective_ effects of
+intervention, the expected effects of interventions targeting 'Climate Action' vary
+substantially among survey participants, as observed in
+@fig:heterogeneity-results-cc-action-distribution.
+
 
 #figure(
   image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
     long: [
-      Pre-intervention states ('personas') for which interventions on different beliefs
+      Pre-intervention states, or 'personas', for which interventions on different beliefs
       (rows) are most effective for changing attitudes toward climate action in the
       asymmetric KBS model calibrated to the climate beliefs dataset. The *left* panel
       shows the distribution of changes in activation probability for the `CC Action`
       belief at $t=5$ (approximately two and a half years) using a strong intervention
       ($delta_h = 2.5$), with respect to the no-intervention scenario. The *center* panel
       shows the personas corresponding to those individuals in the upper quartile of
-      effects (shaded region in the left panel), identified using a depth-3 regression
-      decision tree. Rows are distinct personas. Cells correspond to intervals in
-      the initial state space dimensions, i.e., the different beliefs, with
-      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows the prevalence of each
-      persona within the upper quartile ('High-effect') and below the upper quartile
-      ('Low-effect') of measured effects.
+      effects (shaded region in the left panel). Rows are distinct
+      personas. Cells correspond to intervals in the initial state space dimensions,
+      i.e., the different beliefs, with
+      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows each persona's prevalence
+      within the upper quartile ('High-effect') and below the upper quartile
+      ('Low-effect') of effects.
+      Personas are identified using depth-3
+      regression decision trees fit with a mean-squared error objective and mean effect
+      of intervention on influence as the response variable ($n=500$).
+      $R^2 > 0.9$ for all decision trees, measured using 10-fold cross validation.
     ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
 
-We now investigate the conditions under which different targeting attitudes toward
-climate action are expected to be effective. We use a depth-3 regression decision
-tree to approximate the characterisation effect function
-(@subsec:methods-effect-characterisation-function-decision-tree) for the KBS model
-calibrated to the complete climate beliefs dataset (see @sec:calibration for calibration
-details). The response
-variable is the expected change in activation probability for `CC Action` at $t=5$
-(approximately two and a half years in the calibrated model) with respect to the
-no-intervention scenario. This is estimated using the average probability across 500
-repeated simulations. As in the previous chapter, we
-use a fixed intervention strength of $delta_h = 2.5$. The decision trees are fit using
-a mean-squared error objective function, and each achieve $R^2$ values of at least $0.9$,
-estimated using 10-fold cross-validation. We characterise an intervention for a given
-individual as being 'effective' if the change in activation probabilities is within
-the population upper quartile. Since this threshold depends on the effect distribution
-specific to each point-of-intervention, we exclude points-of-intervention whose upper
-quartile is below 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), i.e., which
-exhibit no meaningfully effective interventions. The identified conditions, or _personas_,
-are displayed in @fig:heterogeneity-results-interventions-personas.
+@fig:heterogeneity-results-interventions-personas shows the conditions (or, personas)
+for which interventions on different nodes in the belief system are expected to be
+effective for targeting attitudes toward climate action. These are obtained using the
+regression decision tree approach to approximating the effect characterisation function,
+as described in @sec:methods-effect-characterisation-function. We regard an
+intervention as _effective_ for a given individual if the expected effect of intervention
+on influence, estimated using the mean across $n=500$ simulations, is greater than or
+equal to the population upper quartile. Since the threshold for an intervention to be
+considered effective is specific to each point-of-intervention, we exclude
+points-of-intervention whose upper quartile is below 0.1 (`CC Human`, `CC Others Worry`,
+and `Weather Worry`), which exhibit no meaningfully effective interventions.
+
 
 // NOTE: Not mentioned, because we moved the paragraph to methods
 //  This is observed, for instance, in the persona
