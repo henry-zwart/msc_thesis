@@ -644,7 +644,9 @@ items to consider only those which assess beliefs (in the inclusive sense descri
 epistemic positions about states of affairs, as well as views, opinions, and preferences),
 and which either relate directly to climate change, or which are expected to influence
 climate-related beliefs (e.g., political alignment). The parameter
-estimation method (outlined in *TODO*) imposes several additional requirements on the
+estimation method used to calibrate the Kinetic Belief System model (outlined in
+@chp:parameter-estimation)
+imposes several additional requirements on the
 constructed dataset, in particular, the dataset should comprise at least two waves,
 with approximately equispaced observations per-individual, and with no null values.
 We additionally constrain the dataset to include three specific variables of interest:
