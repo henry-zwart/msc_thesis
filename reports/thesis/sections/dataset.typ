@@ -130,7 +130,7 @@ Question format, text, and response schemas also occasionally change between sur
 waves. Changes in response schema are less common, however, and typically affect items
 with categorical responses. With a view to constructing the calibration dataset for our
 experiments, we note that most response schemas are not binary and therefore require
-binarisation (see @subsec:dataset-binarisation).
+binarisation (see *REFERENCE BINARISATION SECTION*).
 
 Casting our attention to the survey timing, we examine the survey response dates for
 each wave (@fig:dataset-longitudinal-response-eventplot) and the distribution of
@@ -152,7 +152,7 @@ closer than others. For instance, notice that:
   ]
 }
 This poses a potential problem for model calibration, since the Kinetic Belief System
-model (defined in @sec:asymmetric-belief-systems) operates on the assumption that
+model (defined in @chp:kinetic-belief-system) operates on the assumption that
 samples are equispaced.
 
 #figure(
@@ -644,7 +644,9 @@ items to consider only those which assess beliefs (in the inclusive sense descri
 epistemic positions about states of affairs, as well as views, opinions, and preferences),
 and which either relate directly to climate change, or which are expected to influence
 climate-related beliefs (e.g., political alignment). The parameter
-estimation method (outlined in *TODO*) imposes several additional requirements on the
+estimation method used to calibrate the Kinetic Belief System model (outlined in
+@chp:parameter-estimation)
+imposes several additional requirements on the
 constructed dataset, in particular, the dataset should comprise at least two waves,
 with approximately equispaced observations per-individual, and with no null values.
 We additionally constrain the dataset to include three specific variables of interest:
@@ -686,7 +688,7 @@ However, this set of items still exceeds our target range of 7--10. We therefore
 to identify groups of similar or redundant variables which may be removed or combined
 into interpretable index variables. Note that cross-sectional methods should not be used
 for this analysis, as they fail to capture temporal relatonships, which are fundamental
-to the kinetic belief system model (defined in @sec:asymmetric-belief-systems). Instead,
+to the kinetic belief system model (defined in @chp:kinetic-belief-system). Instead,
 we examine the temporal and contemporaneous networks obtained using lag-1 vector
 autoregression (VAR).
 These networks are derived
@@ -786,42 +788,45 @@ temporal networks, respectively, for the climate beliefs dataset.
   placement: auto,
 ) <fig:dataset-reduced-var>
 
-#let climate-beliefs-variable-table = table(
-  columns: 3,
-  stroke: none,
-  align: (left, center, left),
-  table.header[Item][Index][Interpretation],
-  table.hline(stroke: 0.5pt),
-  [CC Real], [No], [Belief that climate change is/is not real.],
+#let climate-beliefs-variable-table = {
+  show table: set text(size: 9.25pt)
+  table(
+    columns: 3,
+    stroke: none,
+    align: (left, center, left),
+    table.header[Item][Index][Interpretation],
+    table.hline(stroke: 0.5pt),
+    [CC Real], [No], [Belief that climate change is/is not real.],
 
-  [CC Human],
-  [No],
-  [Belief that climate is/is not caused (at least in-part) by human activities.],
+    [CC Human],
+    [No],
+    [Belief that climate is/is not caused (at least partly) by human activities.],
 
-  [CC Worry],
-  [No],
-  [Level of worry about current and future climate change.],
+    [CC Worry],
+    [No],
+    [Level of worry about current and future climate change.],
 
-  [CC Others Worry],
-  [No],
-  [Belief regarding _others'_ level of worry about current and future climate change.],
+    [CC Others Worry],
+    [No],
+    [Belief regarding _others'_ level of worry about current/future climate change.],
 
-  [Weather Worry],
-  [No],
-  [Level of worry about possible near-term extreme weather events or natural disasters.],
+    [Weather Worry],
+    [No],
+    [Level of worry about near-term extreme weather events/natural disasters.],
 
-  [Politics],
-  [Yes],
-  [Political views, as a combination of partisan alignment and political ideology.],
+    [Politics],
+    [Yes],
+    [Political views, a combination of political alignment and ideology.],
 
-  [CC Impact],
-  [Yes],
-  [Belief regarding the degree of current climate change impacts, in general.],
+    [CC Impact],
+    [Yes],
+    [Belief about current climate change impacts' severity, in general.],
 
-  [CC Action],
-  [Yes],
-  [General attitude toward action on climate change.],
-)
+    [CC Action],
+    [Yes],
+    [General attitude toward action on climate change.],
+  )
+}
 
 #figure(
   climate-beliefs-variable-table,

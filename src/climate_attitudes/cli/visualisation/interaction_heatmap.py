@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from ising.model import ModelType
+from matplotlib.patches import Rectangle
 from rich.console import Console
 
 from climate_attitudes.cli.common import BaseCommand
@@ -94,6 +95,39 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         ax.set_xlabel("Interaction recipient")
         ax.yaxis.set_label_position("right")
         ax.set_ylabel("Interaction source", rotation=270, labelpad=20)
+
+        asym_cells = [
+            # Politics ->
+            (0, 5),  # CC Real
+            (2, 5),  # CC Action
+            (7, 5),  # CC Action
+            # CC Worry ->
+            (1, 2),  # CC Human
+            (6, 2),  # CC Impact
+        ]
+        for row, col in asym_cells:
+            ax.add_patch(
+                Rectangle(
+                    (row, col),
+                    1,
+                    1,
+                    fill=False,
+                    edgecolor="red",
+                    linewidth=1.5,
+                    clip_on=False,
+                ),
+            )
+            ax.add_patch(
+                Rectangle(
+                    (col, row),
+                    1,
+                    1,
+                    fill=False,
+                    edgecolor="red",
+                    linewidth=1.5,
+                    clip_on=False,
+                )
+            )
 
         # ax.legend(
         #     ncol=2,

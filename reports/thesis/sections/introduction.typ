@@ -83,7 +83,7 @@ inconsistency (the number of negative correlations). Similarly,
 to COVID-19 changed over time in the Netherlands during the start of
 the global pandemic. Despite ongoing debate about its usefulness and
 applicability to belief system networks
-(cf. #cite(<bringmannWhatCentralityMeasures2019>, form: "prose")), node
+(see #cite(<bringmannWhatCentralityMeasures2019>, form: "prose")), node
 centrality is frequently used to assess belief position within a belief system
 @brandtWhatCentralPolitical2019 @borsboomNetworkAnalysisMultivariate2021, relative influence
 @robinaughIdentifyingHighlyInfluential2016, or structural importance
@@ -247,7 +247,7 @@ argue that theoretical results derived for Ising-style belief system models are 
 to asymmetric and non-reciprocity assumptions. However, they note that studies outside
 the belief system modelling literature demonstrate that non-reciprocal Ising models
 can exhibit considerably more complex behaviour than
-the symmetric model (cf. #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
+the symmetric model (see #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
 
 
 One area in which the effects of asymmetric influence are likely to surface is the
@@ -319,8 +319,9 @@ models thereof.
 In this study, we investigate the prevalence of asymmetric influence among beliefs about
 climate change in the US, as well as the dynamic implications of
 symmetric and asymmetric modelling assumptions for belief-level interventions.
-Using a combination of data-driven and simulation-based methods, we will
-address the following four research questions:
+Using a combination of data-driven and simulation-based methods, in the context of the
+climate beliefs dataset described below, we will address the following four research
+questions:
 
 #let RQ1 = [
   To what extent are belief-level influences _symmetric_ or _asymmetric_, in models
@@ -328,20 +329,23 @@ address the following four research questions:
 ]
 
 #let RQ2 = [
-  How do asymmetric and symmetric beliefs systems differ with regards to
-  intervention strategy and effectiveness, in models inferred from the climate
-  beliefs dataset?
+  How do assumptions about relational symmetry or asymmetry impact population-level
+  intervention strategy and effectiveness in belief system models inferred
+  from the climate beliefs dataset? To what extent do the impacts depend on where,
+  in the belief system, an intervention is applied?
 ]
 
 #let RQ3 = [
-  How do intervention outcome and effectiveness vary between individuals with
-  different initial conditions in asymmetric belief systems inferred from the
+  How does individual-level intervention effectiveness, measured as the resulting
+  shift in behaviour toward a desired belief state, depend on an individual's
+  pre-intervention beliefs, in asymmetric belief systems inferred from the
   climate beliefs dataset?
 ]
 
 #let RQ4 = [
-  How do asymmetric belief systems inferred from the climate beliefs dataset
-  vary between conservative and liberal individuals?
+  How do belief systems for liberal and conservative subpopulations compare structurally,
+  in asymmetric belief system models inferred from subsets of the climate beliefs
+  dataset?
 ]
 
 #{
@@ -362,7 +366,7 @@ modelling belief systems with asymmetric influence relations, and estimating suc
 from time-series data. In the second half, we then use this framework to address the
 research questions listed above.
 
-In @sec:asymmetric-belief-systems we introduce the *Kinetic Belief System* model
+In @chp:kinetic-belief-system we introduce the *Kinetic Belief System* model
 (KBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984 of the Causal Attitude Network (CAN) model
 @dalegeFormalizedAccountAttitudes2016.
@@ -375,12 +379,12 @@ analyse intervention effects via simulation on the CAN model
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
 or GGM models @wuSimulatingNodeManipulations2026, which do
 consider neither individuals' pre-intervention belief states, nor the time-scale of
-model dynamics. @sec:methods then outlines a parameter estimation method for KBS based
-on maximum likelihood estimation. The proposed method uses knowledge of
-a pre-defined soft binarisation function to robustly estimate binary model parameters
+model dynamics. @chp:parameter-estimation then outlines a parameter estimation method for
+the KBS model based on maximum likelihood estimation. The proposed method uses knowledge
+of a pre-defined soft thresholding function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-We use this method to calibrate the KBS model to a two-wave longitudinal
-dataset comprising beliefs relating to climate change (see below).
+In @sec:calibration we then use this method to calibrate the KBS model to a two-wave longitudinal
+dataset comprising beliefs relating to climate change.
 
 // ---the calibrated model is
 // subsequently used to address our research questions in the second half of this study.
@@ -398,14 +402,13 @@ heterogeneity in intervention outcomes and belief systems in
 to our research questions in @sec:discussion, also discussing broader implications
 for belief system modelling.
 
-The data used for this study is sourced from the Longitudinal Panel of Perceptions About
-Climate Change and Covid representative longitudinal survey (*CCCV*), collected in the
-US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022. Comprehensively
-validating this dataset and constructing the targeted dataset of beliefs
+The *climate beliefs dataset* used in this study is sourced from the Longitudinal Panel
+of Perceptions About Climate Change and Covid representative longitudinal survey (*CCCV*),
+which was collected in the US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022.
+Comprehensively validating this survey data and constructing the targeted dataset of beliefs
 relating to climate change used in our experiments constituted substantial components of
 this investigation, and contribute to future use of the CCCV dataset. We detail both
 processes in @sec:dataset.
-
 
 In its totality, this study presents a theory-driven approach to studying the structure
 and dynamics of asymmetric belief systems. We apply this to investigate the existence and

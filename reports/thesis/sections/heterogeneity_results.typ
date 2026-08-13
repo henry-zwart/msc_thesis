@@ -1,19 +1,101 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./introduction.typ": RQ3, RQ4
 
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
 #show: show-theorion
 
-In this chapter we investigate individual heterogeneity in both intervention behaviour
-and belief system structure in asymmetric, non-equilibrium belief system models.
+In this chapter, we address the final two research questions presented in
+@sec:introduction:
 
-While the previous chapter was primarily concerned with the _collective_ effects of
-intervention, the distribution of expected effect of intervention across individuals
-for inbound interventions targeting 'Climate Action' shows substantial variation between
-survey participants (@fig:heterogeneity-results-cc-action-distribution). We begin this
-chapter, in @sec:heterogeneity-results-intervention-effects, by investigating the
-conditions under which different interventions targeting beliefs about climate action are
-likely to be effective.
+#{
+  set enum(numbering: "RQ1.", indent: 1em, start: 3)
+  block(width: 97%, [
+    + #RQ3
+
+    + #RQ4
+  ])
+}
+
+We first address RQ3., using the regression decision tree approach outlined in
+@sec:methods-effect-characterisation-function to qualitatively characterise the
+conditions under which we expect different interventions targeting attitudes on
+climate action to be effective. Then, to address RQ4., we compare
+structural features of the conservative and liberal asymmetric KBS models which were
+calibrated in @sec:calibration.
+
+// While the previous chapter was primarily concerned with the _collective_ effects of
+// intervention, the expected effects of interventions targeting 'Climate Action' show
+// substantial variation between survey participants
+// (@fig:heterogeneity-results-cc-action-distribution). We begin this chapter by
+// investigating the conditions under which different interventions targeting beliefs about
+// climate action are likely to be effective.
+
+
+
+
+
+// In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+// structure varies between subgroups in a population. In the previous chapter we identified
+// political ideology as a particularly influential belief, both through asymmetric
+// interactions with other variables (@subsec:asymmetry-results-existence) and as an
+// effective point-of-intervention for interventions targeting attitudes toward climate
+// action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+// extends beyond pairwise interactions with other variables by comparing asymmetric belief
+// systems calibrated to the (self-reported) liberal and conservative subpopulations within
+// the climate beliefs dataset.
+//
+// In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
+// structure varies between subgroups in a population. In the previous chapter we identified
+// political ideology as a particularly influential belief, both through asymmetric
+// interactions with other variables (@subsec:asymmetry-results-existence) and as an
+// effective point-of-intervention for interventions targeting attitudes toward climate
+// action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
+// extends beyond pairwise interactions with other variables by comparing asymmetric belief
+// systems calibrated to the (self-reported) liberal and conservative subpopulations within
+// the climate beliefs dataset.
+
+
+== Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
+
+// In the intervention simulations described in the previous chapter, the only
+// distinguishing factor between survey participants is their binarised initial state
+// derived from the final wave of the climate beliefs dataset. It follows
+// that any difference in belief system dynamics between distinct individuals---after
+// accounting for simulation stochasticity---is the result of their different initial
+// states. To identify the conditions under which an intervention is effective,
+// it then suffices to characterise the set of _initial states_ which yield effective
+// interventions, and distinguish them from those that do not.
+
+// Our goal is to find a function which maps from an intervention effect to
+// sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
+// #box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
+//
+// Consider a function which does the opposite, mapping initial states to a measure of
+// intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
+// construct the corresponding effect characterisation function as:
+//
+// $
+//   g: y mapsto {x in plus.minus 1^N subset RR^N | f(x) = y}
+// $ <eqn:heterogeneity-results-effect-characterisation-function>
+//
+// However, while technically satisfying the definition of the effect
+// characterisation function, such a function would be useless for qualitatively
+// determining the kinds of initial states which yield effective interventions.
+// The elements of the codomain have (potentially) infinite cardinality, and are
+// not immediately interpretable. For our purposes, we are less interested in the
+// _specific_ states that yield a given intervention effect, but more so in a
+// _concise description_ of that set of states.
+
+// Regression decision tree models can provide such descriptions, using inequality bounds
+// to partition the initial state space into regions, each of which is assigned a
+// predicted effect. Given a parameterised regression decision tree, we
+// may construct a concise effect characterisation function by identifying, for each
+// predicted effect, the combination of inequalities which define the corresponding
+// infinite set of initial states. When the parameter estimation algorithm is restricted
+// to shallow trees (e.g., depth 3 or 4, referring to the number of inequality bounds
+// defining each region), these combinations can also be interpretable as rules or
+// _personas_.
 
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
@@ -27,59 +109,10 @@ likely to be effective.
   ),
 ) <fig:heterogeneity-results-cc-action-distribution>
 
-In @sec:heterogeneity-results-belief-system, we then consider how inferred belief system
-structure varies between subgroups in a population. In the previous chapter we identified
-political ideology as a particularly influential belief, both through asymmetric
-interactions with other variables (@subsec:asymmetry-results-existence) and as an
-effective point-of-intervention for interventions targeting attitudes toward climate
-action (@subsec:asymmetry-results-impact). In this section, we investigate whether this influence
-extends beyond pairwise interactions with other variables by comparing asymmetric belief
-systems calibrated to the (self-reported) liberal and conservative subpopulations within
-the climate beliefs dataset.
-
-
-== Heterogeneity in intervention effects <sec:heterogeneity-results-intervention-effects>
-
-In the intervention simulations described in the previous chapter, the only
-distinguishing factor between survey participants is their binarised initial state
-derived from the final wave of the climate beliefs dataset. It follows
-that any difference in belief system dynamics between distinct individuals---after
-accounting for simulation stochasticity---is the result of their different initial
-states. To identify the conditions under which an intervention is effective,
-it then suffices to characterise the set of _initial states_ which yield effective
-interventions, and distinguish them from those that do not.
-
-// This fundamentally boils down to a regression problem. To make this clear, let's reframe
-// the above task.
-Our goal is to find a function which maps from an intervention effect to
-sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
-#box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
-
-Consider a function which does the opposite, mapping initial states to a measure of
-intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
-construct the corresponding effect characterisation function as:
-
-$
-  g: y mapsto {x in plus.minus 1^N subset RR^N | f(x) = y}
-$ <eqn:heterogeneity-results-effect-characterisation-function>
-
-However, while technically satisfying the definition of the effect
-characterisation function, such a function would be useless for qualitatively
-determining the kinds of initial states which yield effective interventions.
-The elements of the codomain have (potentially) infinite cardinality, and are
-not immediately interpretable. For our purposes, we are less interested in the
-_specific_ states that yield a given intervention effect, but more so in a
-_concise description_ of that set of states.
-
-Regression decision tree models can provide such descriptions, using inequality bounds
-to partition the initial state space into regions, each of which is assigned a
-predicted effect. Given a parameterised regression decision tree, we
-may construct a concise effect characterisation function by identifying, for each
-predicted effect, the combination of inequalities which define the corresponding
-infinite set of initial states. When the parameter estimation algorithm is restricted
-to shallow trees (e.g., depth 3 or 4, referring to the number of inequality bounds
-defining each region), these combinations can also be interpretable as rules or
-_personas_.
+While the previous chapter was primarily concerned with the _collective_ effects of
+intervention, the expected effects of interventions targeting 'Climate Action' vary
+substantially among survey participants, as observed in
+@fig:heterogeneity-results-cc-action-distribution.
 
 
 #figure(
@@ -87,49 +120,43 @@ _personas_.
   caption: caption(
     short: [Characterisation of responsiveness to intervention],
     long: [
-      Pre-intervention states ('personas') for which interventions on different beliefs
+      Pre-intervention states, or 'personas', for which interventions on different beliefs
       (rows) are most effective for changing attitudes toward climate action in the
       asymmetric KBS model calibrated to the climate beliefs dataset. The *left* panel
       shows the distribution of changes in activation probability for the `CC Action`
       belief at $t=5$ (approximately two and a half years) using a strong intervention
       ($delta_h = 2.5$), with respect to the no-intervention scenario. The *center* panel
       shows the personas corresponding to those individuals in the upper quartile of
-      effects (shaded region in the left panel), identified using a depth-3 regression
-      decision tree. Rows are distinct personas. Cells correspond to intervals in
-      the initial state space dimensions, i.e., the different beliefs, with
-      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows the prevalence of each
-      persona within the upper quartile ('High-effect') and below the upper quartile
-      ('Low-effect') of measured effects.
+      effects (shaded region in the left panel). Rows are distinct
+      personas. Cells correspond to intervals in the initial state space dimensions,
+      i.e., the different beliefs, with
+      $L = [-1, 0]$ and $H = [0, +1]$. The *right* panel shows each persona's prevalence
+      within the upper quartile ('High-effect') and below the upper quartile
+      ('Low-effect') of effects.
+      Personas are identified using depth-3
+      regression decision trees fit with a mean-squared error objective and mean effect
+      of intervention on influence as the response variable ($n=500$).
+      $R^2 > 0.9$ for all decision trees, measured using 10-fold cross validation.
     ],
   ),
 ) <fig:heterogeneity-results-interventions-personas>
 
-We now investigate the conditions under which different targeting attitudes toward
-climate action are expected to be effective. We use a depth-3 regression decision
-tree to approximate the characterisation effect function
-(*TODO: reference position in the methods.*) for the KBS model
-calibrated to the complete climate beliefs dataset (see @sec:calibration for calibration
-details). The response
-variable is the expected change in activation probability for `CC Action` at $t=5$
-(approximately two and a half years in the calibrated model) with respect to the
-no-intervention scenario. This is estimated using the average probability across 500
-repeated simulations. As in the previous chapter, we
-use a fixed intervention strength of $delta_h = 2.5$. The decision trees are fit using
-a mean-squared error objective function, and each achieve $R^2$ values of at least $0.9$,
-estimated using 10-fold cross-validation. We characterise an intervention for a given
-individual as being 'effective' if the change in activation probabilities is within
-the population upper quartile. Since this threshold depends on the effect distribution
-specific to each point-of-intervention, we exclude points-of-intervention whose upper
-quartile is below 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), i.e., which
-exhibit no meaningfully effective interventions. The identified conditions, or _personas_,
-are displayed in @fig:heterogeneity-results-interventions-personas.
+@fig:heterogeneity-results-interventions-personas shows the conditions (or, personas)
+for which interventions on different nodes in the belief system are expected to be
+effective for targeting attitudes toward climate action. These are obtained using the
+regression decision tree approach to approximating the effect characterisation function,
+as described in @sec:methods-effect-characterisation-function. We regard an
+intervention as _effective_ for a given individual if the expected effect of intervention
+on influence, estimated using the mean across $n=500$ simulations, is greater than or
+equal to the population upper quartile. Since the threshold for an intervention to be
+considered effective is specific to each point-of-intervention, we exclude
+points-of-intervention whose upper quartile is below 0.1 (`CC Human`, `CC Others Worry`,
+and `Weather Worry`), which exhibit no meaningfully effective interventions.
 
-Since the regression decision tree produces a full tree, all personas have size 3
-by default. However, these can often be compressed. When two personas differ only
-along one feature dimension, split at the same value, and both predict high-effect
-interventions, we combine them into a single persona which omits that feature (i.e.,
-spans the entire feature dimension). This is observed, for instance, in the persona
-for interventions on `CC Worry`.
+
+// NOTE: Not mentioned, because we moved the paragraph to methods
+//  This is observed, for instance, in the persona
+// for interventions on `CC Worry`.
 
 
 // TODO: FOOTNOTE NOT INCLUDED
@@ -180,7 +207,7 @@ more desirable states than would be observed given no intervention.
 With this in mind, we now consider several specific features of interest in the
 identified personas. Firstly, we observe that all personas require a low initial
 state for `CC Worry`. This may result from this variable's low inertia
-and high connectivity --- in particular, its large outbound interaction effect
+and high connectivity---in particular, its large outbound interaction effect
 toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
 These factors result in `CC Worry` being relatively influential
 and influentia#emph[ble], and therefore an effective indirect pathway for
@@ -198,7 +225,7 @@ a necessary condition for high effect is that the initial state of point of inte
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of
 interventions with respect to pre-intervention state
-(see @subsec:asymmetric-belief-system-modelling-interventions).
+(see @sec:methods-modelling-interventions).
 
 
 // With the exception of `CC Real`, the personas for each point-of-intervention require that

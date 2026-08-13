@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./introduction.typ": RQ1, RQ2
 #import "./discussion.typ": internal-link
 #import "@preview/theorion:0.6.0": *
 #import cosmos.clouds: *
@@ -21,83 +22,72 @@
 //
 // #line(length: 100%)
 
-Belief system models based on the Ising model, inspired by the cognitive dissonance
-theory of belief system dynamics, demonstrate impressive descriptive and explanatory
-capacities for various observed cognitive phenomena at both individual and collective
-scales. The currently prevalent view within the modelling community is that influence
-relations between beliefs are symmetric --- the pressure for $X$ to align
-with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
-this assumption on trial.
 
-We begin, in @subsec:asymmetry-results-existence, by calibrating the non-equilibrium
-belief system model to the climate beliefs dataset described in
-@subsec:dataset-dataset-construction. We demonstrate that belief system relations
-cannot be universally classified as symmetric, that some influence relations are
-recognisably asymmetric, and that relational asymmetry can vary in degree. In
-@subsec:asymmetry-results-impact, we then show that this finding is not
-inconsequential. Asymmetric models exhibit different dynamics in experiments on
-belief-level interventions, with the potential to affect conclusions drawn about
-the relative effectiveness of interventions.
+In this chapter we address the primary research questions, presented in
+@sec:introduction:
+
+#{
+  set enum(numbering: "RQ1.", indent: 1em)
+  block(width: 97%, [
+    + #RQ1
+
+    + #RQ2
+  ])
+}
+
+To address RQ1., we first investigate the presence of (significantly) asymmetric
+influence relations in the asymmetric KBS model calibrated to the climate beliefs
+dataset in @sec:calibration. We then turn our attention to RQ2., where we examine
+differences in the population-level intervention impacts observed for the symmetric
+and asymmetric models, for both inbound and outbound interventions.
+
+// Belief system models based on the Ising model, inspired by the cognitive dissonance
+// theory of belief system dynamics, demonstrate impressive descriptive and explanatory
+// capacities for various observed cognitive phenomena at both individual and collective
+// scales. The currently prevalent view within the modelling community is that influence
+// relations between beliefs are symmetric --- the pressure for $X$ to align
+// with $Y$ is equal to that placed on $Y$ to align with $X$. The present chapter places
+// this assumption on trial.
+//
+// We begin, in @subsec:asymmetry-results-existence, by calibrating the non-equilibrium
+// belief system model to the climate beliefs dataset described in
+// @subsec:dataset-dataset-construction. We demonstrate that belief system relations
+// cannot be universally classified as symmetric, that some influence relations are
+// recognisably asymmetric, and that relational asymmetry can vary in degree. In
+// @subsec:asymmetry-results-impact, we then show that this finding is not
+// inconsequential. Asymmetric models exhibit different dynamics in experiments on
+// belief-level interventions, with the potential to affect conclusions drawn about
+// the relative effectiveness of interventions.
 
 
 == Existence of asymmetric relations <subsec:asymmetry-results-existence>
-*TODO:*
-- Consider adding squares to the asymmetric entries in
-  @fig:asymmetry-results-existence-interaction-matrix
 
-// - Observations from figures:
-//   - Existence of _non-symmetric_ relations:
-//     - $"Politics" --> {"CC Action", "CC Worry", "CC Real"}$
-//     - $"CC Worry" --> {"CC Impact", "CC Human"}$
-//   - Within the non-symmetric relations, there exist different categories:
-//     - Unidirectional (arrow only one way): Politics --> CC Real
-//     - Remainder: Asymmetric (arrows each way; different strengths)
-//     - Potentially some complexity in interpreting this, since we use regularisation
-
-To investigate the existence of asymmetric relations in the asymmetric model calibrated
-to the climate beliefs dataset, we examine the differences in directional interaction
-effects for the asymmetric models calibrated using bootstrapping in the previous
-section.
-
-// To investigate the existence of asymmetric relations we calibrate the non-equilibrium
-// belief system model to the climate beliefs dataset using the parameter estimation
-// method outlined in @subsec:methods-parameter-estimation, and then compare the
-// inferred directional intervention strengths between each pair of spins.
+// To investigate the existence of asymmetric relations in the asymmetric model calibrated
+// to the climate beliefs dataset, we examine the differences in directional interaction
+// effects for the asymmetric models calibrated using bootstrapping in the previous
+// section.
 //
-// #let dataset-size-footnote = footnote[
-//   In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
-// ]
-// We use bootstrapping to estimate the uncertainty in our parameter estimates due to
-// sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
-// $M$, $T$, and $N$ denote the number of participants, observations, and spins
-// respectively#dataset-size-footnote. We construct 500 bootstrapped
-// datasets by sampling rows (participants) with replacement from $bold(D)$,
-// such that each bootstrapped dataset has the same shape as the complete dataset.
+// For each bootstrapped model, $cal(M)_((i))$ with parameters
+// $chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
+// the directional differential matrix:
 //
-// For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
-// with parameters
 // $
-//   chevron bold(A), bold(J)_((i)), bold(h)_((i)) chevron.r =: bold(theta)^*_((i)) in RR^p
-// $
+//   Delta_J^((i)) = bold(J)_((i)) - bold(J)^T_((i))
+// $ <eqn:asymmetry-results-existence-directional-differential-matrix>
 //
-// where $p in NN$ is the number of model parameters, and we take the adjacency matrix
-// $bold(A)$ as fully-connected, permitting influence relations to be inferred between
-// each pair of beliefs or attitudes.
+// Recall that the $k$'th row of $bold(J)_((i))$ (for #box[$k in {1, ..., N}$])
+// describes the strength and direction of influence _from_ the
+// spin $S_k$ _toward_ each other spin. Hence for $k, ell in {1, ..., N}$ we should
+// interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
+// as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
+// $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
-For each bootstrapped model, $cal(M)_((i))$ with parameters
-$chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
-the directional differential matrix:
+To assess the presence of asymmetric influence relations, we examine the estimated
+sampling distribution of directional differentials (as defined in
+@sec:methods-directional-differential), obtained from the set of asymmetric KBS models
+calibrated to the bootstrapped climate beliefs dataset ($n=500$) in @sec:calibration.
 
-$
-  Delta_J^((i)) = bold(J)_((i)) - bold(J)^T_((i))
-$ <eqn:asymmetry-results-existence-directional-differential-matrix>
 
-Recall that the $k$'th row of $bold(J)_((i))$ (for #box[$k in {1, ..., N}$])
-describes the strength and direction of influence _from_ the
-spin $S_k$ _toward_ each other spin. Hence for $k, ell in {1, ..., N}$ we should
-interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
-as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
-$S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 #figure(
   image("../results/figures/model/directional_differentials/rank_no_structure.pdf"),
   caption: caption(
@@ -115,19 +105,13 @@ $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
   placement: auto,
 ) <fig:asymmetry-results-existence-ranked-differentials>
 
-#let edge-comparison-footnote = footnote[
-  In @sec:calibration we cautioned against using bootstrapped confidence intervals to
-  test for the _existence_ of edges by comparison with
-  zero when regularisation is used during calibration---this caution does not apply to
-  the _comparison_ of edge weights via the mean difference
-  @epskampEstimatingPsychologicalNetworks2018.
-]
 
 @fig:asymmetry-results-existence-ranked-differentials shows the median directional
-differential for each pair of spins in the asymmetric model, in decreasing order.
+differential (defined in @sec:methods-directional-differential) for each pair of spins
+in the asymmetric model, in decreasing order.
 The 90% confidence intervals are calculated as the 5th and 95th percentiles across
 bootstrap samples of the directional differential matrix
-elements#edge-comparison-footnote. For each pair of spins we display only the
+elements. For each pair of spins we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
 
@@ -151,22 +135,22 @@ symmetric), and we exclude diagonal entries (which are zero by definition).
     short: [Climate belief system interaction effect matrix],
     long: [
       Interaction effect matrix ($bold(J)$) for the asymmetric belief system model
-      calibrated to the full climate beliefs dataset. This figure is identical to the
-      asymmetric interaction matrix in the previous chapter
-      (@fig:calibration-interaction-matrices).
+      calibrated to the full climate beliefs dataset. Red borders indicate significant
+      asymmetric pairs. The matrix is otherwise identical to the
+      asymmetric interaction matrix in @fig:calibration-interaction-matrices.
     ],
   ),
 ) <fig:asymmetry-results-existence-interaction-matrix>
 
-@fig:asymmetry-results-existence-ranked-differentials shows a majority of symmetric
-relations between spins (characterised by confidence intervals containing zero), with
-a small number of asymmetric relations.
+Most relations appear to be inconclusively asymmetric
+(characterised by confidence intervals containing zero), with a small number of
+asymmetric relations.
 We can partition the asymmetric relations into two groups, according to whether
 directional interactions exist in only one direction, indicated using orange confidence
 intervals, or both directions with different strengths, indicated with blue confidence
 intervals (see the interaction matrix in @fig:asymmetry-results-existence-interaction-matrix;
-note that this is identical to the asymmetric matrix shown in
-@fig:calibration-interaction-matrices of the previous chapter). Pairs with two nonzero
+cell entries are identical to the matrix shown in
+@fig:calibration-interaction-matrices of @sec:calibration). Pairs with two nonzero
 interactions comprise $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
 #box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]; the only pair with a
 unidirectional interaction is $#raw("Politics") -> #raw("CC Real")$.
@@ -280,32 +264,11 @@ individuals. We will return to _individual_ impacts of intervention in the follo
 chapter to understand who is most affected for interventions targeting attitudes toward
 climate action.
 
-We consider both *outbound* and *inbound* interventions, illustrated below. Outbound
-intervention experiments (left) examine how interventions on a particular spin propagate
-to other beliefs. On the other hand, inbound intervention experiments
-(right) consider how a focal belief's behaviour is differently affected by interventions
-elsewhere in the network. We refer to the belief on which an intervention is applied as
-the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
-resulting state is measured as the *target* (marked 'T' in the diagram).
-
-#{
-  set text(size: 12pt)
-  figure(
-    grid(
-      columns: (1fr, 1fr),
-      rows: 2,
-      row-gutter: 0.8em,
-      align: (center, center),
-      [*Outbound*], [*Inbound*],
-      grid.cell(colspan: 2, image("../diagrams/modelling_interventions/inbound_outbound.svg", width: 85%)),
-    ),
-    outlined: false,
-    placement: none,
-  )
-}
-
-For outbound intervention experiments we examine the effects of intervening on the
-following spins:
+We consider both outbound and inbound interventions (defined in
+@sec:methods-inbound-outbound) to examine differences in how interventions
+propagate in general between the symmetric and asymmetric models, and to investigate
+how intervention strategy may differ between the two models. For outbound intervention
+experiments we examine the effects of intervening on the following spins:
 
 - `Weather worry`: Level of worry about future extreme weather events
 
@@ -325,46 +288,46 @@ pro-environmental action on climate change (e.g., specific policies, support for
 increased regulation, and affirmative attitudes toward individual responsibility on
 climate change).
 
-We define two quantities of interest: the *effect of intervention*, and *effect of
-asymmetry*. These are used, respectively, to assess an intervention's impact on a given
-spin's behaviour with reference to our expectations in a no-intervention scenario
-(@def:asymmetry-results-effect-of-intervention),
-and the difference in a spin's behaviour in the asymmetric model, compared to our
-expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
-Note that the
-effect of asymmetry is not inherently concerned with intervention, but is a general
-measure for the difference between asymmetric and symmetry model dynamics.
-
-Both quantities compute a difference in effects between two distinct models: the
-intervention and null models for the effect of intervention, and the asymmetric
-and symmetric models for the effect of asymmetry. To ensure outcome
-comparability, differences are computed between models with identical random number
-generation contexts.
-
-#definition[Effect of Intervention][
-  Let $cal(M)$ be a non-equilibrium belief system model, and denote the result of
-  simulating the model for $t in NN$ timesteps with initial state $bold(s)_0$ as
-  $cal(M)^t (bold(s)_0)$.
-
-  For an intervention model $cal(M)_delta$ with an arbitrary point-of-intervention, we
-  define the *effect of intervention* for $cal(M)_delta$ as the change in outcome at
-  time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
-
-  $
-    f_"int" (cal(M)_delta) = cal(M)_delta^t (bold(s)_0) - cal(M)_0^t (bold(s)_0)
-  $
-] <def:asymmetry-results-effect-of-intervention>
-
-#definition[Effect of Asymmetry][
-  Let $cal(M)_"asym"$ be a calibrated asymmetric non-equilibrium belief system model
-  with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
-  symmetric model calibrated to the same dataset.
-  We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
-  in the effect of intervention with respect to the symmetric model:
-  $
-    f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
-  $
-] <def:asymmetry-results-effect-of-asymmetry>
+// We define two quantities of interest: the *effect of intervention*, and *effect of
+// asymmetry*. These are used, respectively, to assess an intervention's impact on a given
+// spin's behaviour with reference to our expectations in a no-intervention scenario
+// (@def:asymmetry-results-effect-of-intervention),
+// and the difference in a spin's behaviour in the asymmetric model, compared to our
+// expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
+// Note that the
+// effect of asymmetry is not inherently concerned with intervention, but is a general
+// measure for the difference between asymmetric and symmetry model dynamics.
+//
+// Both quantities compute a difference in effects between two distinct models: the
+// intervention and null models for the effect of intervention, and the asymmetric
+// and symmetric models for the effect of asymmetry. To ensure outcome
+// comparability, differences are computed between models with identical random number
+// generation contexts.
+//
+// #definition[Effect of Intervention][
+//   Let $cal(M)$ be a non-equilibrium belief system model, and denote the result of
+//   simulating the model for $t in NN$ timesteps with initial state $bold(s)_0$ as
+//   $cal(M)^t (bold(s)_0)$.
+//
+//   For an intervention model $cal(M)_delta$ with an arbitrary point-of-intervention, we
+//   define the *effect of intervention* for $cal(M)_delta$ as the change in outcome at
+//   time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
+//
+//   $
+//     f_"int" (cal(M)_delta) = cal(M)_delta^t (bold(s)_0) - cal(M)_0^t (bold(s)_0)
+//   $
+// ] <def:asymmetry-results-effect-of-intervention>
+//
+// #definition[Effect of Asymmetry][
+//   Let $cal(M)_"asym"$ be a calibrated asymmetric non-equilibrium belief system model
+//   with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
+//   symmetric model calibrated to the same dataset.
+//   We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
+//   in the effect of intervention with respect to the symmetric model:
+//   $
+//     f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
+//   $
+// ] <def:asymmetry-results-effect-of-asymmetry>
 
 #let timescale-footnote = footnote[
   Since the duration between waves in the climate beliefs dataset is approximately
@@ -372,7 +335,7 @@ generation contexts.
   roughly two and a half years after intervening.
 ]
 In each of the intervention experiments described below, we use the models calibrated
-to the full climate beliefs dataset (@sec:calibration). For a given experiment, we
+to the full climate beliefs dataset in @sec:calibration. For a given experiment, we
 initialise the associated model (symmetric/asymmetric; intervention/null) with the
 binarised observations from the final wave of the climate beliefs dataset. We then
 draw consecutive samples from the model using parallel glauber dynamics
@@ -383,25 +346,36 @@ each intervention.
 
 #let see-intervention-strengths-sec-footnote = footnote[
   For detailed discussion on the selection and implications of intervention strengths
-  see @subsec:asymmetric-belief-system-modelling-interventions.
+  see @sec:methods-modelling-interventions.
 ]
 
-We first consider the impact of intervention strength on effect of intervention. The
-strength of an intervention affects the degree to which the intervention changes the
-state of the point-of-intervention. However, this is also sensitive to the pre-existing
-influence on that spin#see-intervention-strengths-sec-footnote. Since the climate
-beliefs dataset comprises individuals with different states, it follows that
-intervention strength may impact not only the degree to which the behaviour of
-a target spin changes, but also the relative effects of different interventions.
 
-To understand the potential impacts of intervention strength, we compare the mean
-effect of intervention across individuals for intervention strengths
-$delta_h in {0.5, 2.5}$, for each of the outbound points of intervention listed above
-@fig:asymmetry-results-compare-strength. The choice of intervention strengths is
-motivated by our earlier analysis in
-@subsec:asymmetric-belief-system-modelling-interventions, with the two strengths
-corresponding to 'weak' and 'strong' interventions respectively, as judged by their
-direct impact on the behaviour of the point-of-intervention.
+We first consider the impact of intervention strength on effect of intervention.
+Since, as discussed in @sec:methods-intervention-strength, the change in behaviour at the
+point-of-intervention is sensitive to intervention strength, it follows that intervention
+strength may also impact the absolute or relative effects of intervention elsewhere in a
+belief system. @fig:asymmetry-results-compare-strength compares the mean effect of
+intervention on state (@def:asymmetry-results-effect-of-intervention) for each possible
+target belief, across 'weak' and
+'strong' interventions, $delta_h in {0.5, 2.5}$, for each of the outbound
+points-of-intervention listed above.
+
+// The
+// strength of an intervention affects the degree to which the intervention changes the
+// state of the point-of-intervention. However, this is also sensitive to the pre-existing
+// influence on that spin#see-intervention-strengths-sec-footnote. Since the climate
+// beliefs dataset comprises individuals with different states, it follows that
+// intervention strength may impact not only the degree to which the behaviour of
+// a target spin changes, but also the relative effects of different interventions.
+//
+// To understand the potential impacts of intervention strength, we compare the mean
+// effect of intervention across individuals for intervention strengths
+// $delta_h in {0.5, 2.5}$, for each of the outbound points of intervention listed above
+// @fig:asymmetry-results-compare-strength. The choice of intervention strengths is
+// motivated by our earlier analysis in
+// @sec:methods-modelling-interventions, with the two strengths
+// corresponding to 'weak' and 'strong' interventions respectively, as judged by their
+// direct impact on the behaviour of the point-of-intervention.
 
 #figure(
   image("../results/figures/asymmetry_results/intervention_strength_compare.pdf"),
@@ -458,10 +432,11 @@ shifting the behaviour at the point-of-intervention.
 
 
 Figures @fig:asymmetry-results-outbound-effect[] and
-@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the outbound mean effects of
-intervention and asymmetry, respectively, across individuals, for the points of
-intervention listed above. The confidence intervals show two standard deviations around
-the mean values, as calculated across repeats.
+@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the mean effect of
+intervention on state (@def:asymmetry-results-effect-of-intervention) and mean effect of
+asymmetry (@def:asymmetry-results-effect-of-asymmetry), respectively, across individuals,
+for the points-of-intervention listed above. The confidence intervals show two standard
+deviations around the mean values, as calculated across repeats.
 
 We observe, in @fig:asymmetry-results-outbound-effect, that different targets exhibit
 different effects of intervention. The effect generally decreases with the magnitude of
@@ -598,12 +573,12 @@ all tied spins the minimum rank which would have been assigned to the group, had
 been distinct#tiebreak-footnote.
 
 As with the outbound case, we find that the effect of intervention on `CC Action` varies
-depending on where we intervene. Points-of-intervention (along the x-axes) are sorted in
-decreasing order of mean values. We observe identical orderings between the effect of
-intervention and ranking plots, showing good correspondence between the two measures.
-We observe a clear inversion in this ordering for the asymmetric model, with `Politics`
-exhibiting the second-highest rank, and (at least) second-highest mean effect of
-intervention ($p < 0.05$).
+depending on where we intervene. Points-of-intervention (along the horizontal axes) are
+sorted in decreasing order of mean values. We observe identical orderings between the
+effect of intervention and ranking plots, showing good correspondence between the two
+measures. We observe a clear inversion in this ordering for the asymmetric model, with
+`Politics` exhibiting the second-highest rank, and (at least) second-highest mean effect
+of intervention ($p < 0.05$).
 
 Unlike with the outbound effects, the order of effect sizes does not align well with the
 corresponding strengths of direct interactions strengths into the target variable. For

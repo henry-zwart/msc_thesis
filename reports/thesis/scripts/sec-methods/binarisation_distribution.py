@@ -51,9 +51,7 @@ def main():
     ax.annotate("B", xy=(2.5 * x, 0.25), fontsize=12)
 
     # Add arrow denoting standard deviation
-    ax.annotate(
-        r"$\sigma$", xy=(x + 0.08, 0.25), fontsize=12, verticalalignment="bottom"
-    )
+    ax.annotate(r"$\xi$", xy=(x + 0.08, 0.25), fontsize=12, verticalalignment="bottom")
     ax.arrow(
         x,
         0.25,

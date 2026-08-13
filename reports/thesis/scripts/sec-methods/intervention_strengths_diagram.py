@@ -12,7 +12,7 @@ def prob(heff):
 def main():
     deltas = (0.5, 1.5, 2.5)
 
-    fig, ax = plt.subplots(figsize=(4.25, 2.25), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(4.25, 2.35), constrained_layout=True)
 
     heff_min, heff_max = -4, 3
     heff = np.linspace(heff_min, heff_max, 1_000)
@@ -32,8 +32,8 @@ def main():
             zorder=3,
         )
 
-    ax.set_xlabel(r"$h_\text{eff}$")
-    ax.set_ylabel("Prob. Activation")
+    ax.set_xlabel(r"Effective baseline activation, $h_\text{eff}$")
+    ax.set_ylabel("Activation probability", ha="center")
 
     ax.set_ylim(0, 1)
     ax.set_xlim(heff_min, heff_max)

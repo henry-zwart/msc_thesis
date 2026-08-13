@@ -43,7 +43,7 @@ influence over several other beliefs.
 How should we interpret these asymmetric relations? Recall that relations in the
 non-equilibrium belief system model reflect temporal influence---how much one belief
 constrains#within-person-footnote the future state of another
-(@sec:asymmetric-belief-systems). An asymmetric relation reflects a constraint
+(@chp:kinetic-belief-system). An asymmetric relation reflects a constraint
 differential, where one belief has greater influence on the other than vice
 versa. More generally, the asymmetric model distinguishes between two forces: influence
 and influentiability. Influence (the strength of outbound interactions) determines how
@@ -162,9 +162,10 @@ intervention effects. The presence of indirect effects is broadly expected given
 pre-defined model dynamics; however, the observed magnitudes suggest that while state
 changes may propagate beyond direct connections, this process is typically slow. We
 return to this point shortly in our discussion on *RQ3*
-(#internal-link(<discussion-rq3-indirect-effects>)), which finds that some indirect
-propagation may nonetheless be instrumental to achieving effective interventions at
+(#internal-link(<discussion-rq3-indirect-effects>)), which finds that indirect
+propagation may nonetheless contribute meaningfully to intervention effectiveness at
 an individual level. <discussion-rq2-indirect-effects>
+
 
 #let full-model-disclaimer = footnote[
   Note that this point pertains to the model calibrated on the complete climate
@@ -173,7 +174,7 @@ an individual level. <discussion-rq2-indirect-effects>
   assess the significance of asymmetric relations.
 ]
 
-This distinction in behaviour between political ideology/alignment and climate-related
+The distinction in behaviour between political ideology/alignment and climate-related
 concern likely relates to differences in influentiality and influentiability between the
 two beliefs. Climate-related concern is more influential than political
 ideology/alignment, on account of its increased outbound interactions and interaction
@@ -222,11 +223,21 @@ influentiability associated with climate-related concern, thereby making this va
 effective indirect route for various interventions (not restricted to this particular
 target). This stands in contrast with political ideology/alignment, which has similarly
 high influence on the target variable, but is harder to influence, as discussed above.
+
 At first glance this finding appears to contradict our earlier discussion on *RQ2*
-(#internal-link(<discussion-rq2-indirect-effects>)), which found indirect interventions
-to have limited impact on collective effects over short timeframes. However, this rather
-reflects the diversity in intervention outcomes across individuals.
+(#internal-link(<discussion-rq2-indirect-effects>)), which found that indirect
+interventions have limited impact on collective effects over short timeframes.
+However, recall that the corresponding experiments measured indirect intervention effects
+by examining beliefs with no direct influence from the point-of-intervention. In other
+words, all propagation of intervention effects to these beliefs is indirect. Compare this
+with the present analysis, in which the target belief (attitudes toward climate action) is
+directly influenced, nontrivially, by all of the considered points-of-intervention---this
+implies that effective interventions on these points-of-intervention, targeting this
+belief, are possible _in principle_. Therefore the apparent discrepancy in our findings
+is likely explained by low pre-intervention levels of climate-related worry marginally
+increasing the effectiveness of interventions which were already effective.
 <discussion-rq3-indirect-effects>
+
 
 #let persona-count-footnote = footnote[
   The personas are given by the paths from the root to each leaf; a binary tree with

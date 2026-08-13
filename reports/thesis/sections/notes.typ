@@ -11,12 +11,15 @@ drafts. This section is temporary, and for my own benefit :)
 == Questions for Vítor
 
 - Is it correct to acknowledge Sara directly in the dataset validation section?
+  - In acknowledgements lol
 - How much do I need to say about the climate beliefs dataset in the calibration section?
+  - As much as I've said
 - Do I need to include the quantitative explanation of the difference in intervention
   effects (in terms of where the derivative is maximum)? Or is the conceptual explanation
   sufficient?
 - Justifying the multiple of 2 in the logistic model formulation, without going from the
   Hamiltonian?
+  - Convenience for later equations
 - In discussion, do I need to talk about how @ryanTimeInterveneContinuousTime2022 use
   continuous models, and why I don't think that is necessary?
 - In chapter 2, on simulation with Glauber dynamics. Do I need to discuss why async
@@ -25,6 +28,7 @@ drafts. This section is temporary, and for my own benefit :)
   and $epsilon$ compactly?
 - When splitting methods and results, what should go where? Specifically for the effect
   characterisation part.
+- When introducing MLE, should I be more precise about $bold(theta)^* in Theta subset.eq RR^p$?
 
 === Resolving feedback
 - Page 9:

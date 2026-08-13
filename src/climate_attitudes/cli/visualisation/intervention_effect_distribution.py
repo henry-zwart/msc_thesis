@@ -115,7 +115,7 @@ def intervention_effect_distribution_plot(
         ax.spines.top.set_visible(False)
         ax.spines.right.set_visible(False)
 
-    fig.supxlabel("Effect of intervention", fontsize=13, x=0.55)
+    fig.supxlabel("Effect of intervention (on state)", fontsize=13, x=0.55)
     fig.supylabel("Density", fontsize=13, y=0.55)
 
     # Set xlim to be equally-sized around 0, just including all datapoints

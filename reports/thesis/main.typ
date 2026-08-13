@@ -1,4 +1,4 @@
-#import "@local/drifting-cls-thesis:0.1.0": thesis
+#import "@local/drifting-cls-thesis:0.1.0": blue-link, thesis
 
 
 #let author = (
@@ -7,9 +7,9 @@
 )
 
 #let supervision-team = (
-  supervisor: link("https://www.vvvasconcelos.net/")[Vítor Vasconcelos],
-  examiner: link("https://scholar.google.com/citations?user=jDmcdsUAAAAJ&hl=en")[Johan Bollen],
-  assessor: link("https://sustainability.stanford.edu/people/sara-constantino")[Sara Constantino],
+  supervisor: blue-link("https://www.vvvasconcelos.net/")[Vítor Vasconcelos],
+  examiner: blue-link("https://scholar.google.com/citations?user=jDmcdsUAAAAJ&hl=en")[Johan Bollen],
+  assessor: blue-link("https://sustainability.stanford.edu/people/sara-constantino")[Sara Constantino],
 )
 
 #let group = (
@@ -74,25 +74,29 @@
   additional-frontmatter: (),
   signature: signature,
   appendices: (derivation-appendix, extra-results-appendix, dataset-appendix),
+  caption-width: 95%,
 )
 
 // = Notes (things to remember, to-dos)
 // #include "sections/notes.typ"
 
-// = Terminology and notation <sec:notation>
-// #include "sections/notation.typ"
+= Terminology and notation <sec:notation>
+#include "sections/notation.typ"
 
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"
 
-= The Kinetic Belief System model <sec:asymmetric-belief-systems>
-#include "sections/asymmetric_belief_system.typ"
+= The Kinetic Belief System model (KBS) <chp:kinetic-belief-system>
+#include "sections/kinetic_belief_system.typ"
 
-= Methods <sec:methods>
-#include "sections/methods.typ"
+= Parameter estimation in the KBS model <chp:parameter-estimation>
+#include "sections/parameter_estimation.typ"
 
-= Model Calibration <sec:calibration>
+= A KBS model of climate beliefs <sec:calibration>
 #include "sections/calibration.typ"
+
+= Experimental Methods <sec:methods>
+#include "sections/methods.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
 #include "sections/asymmetry_results.typ"
@@ -102,9 +106,6 @@
 
 = Discussion <sec:discussion>
 #include "sections/discussion.typ"
-
-// = Related work <sec:related-work>
-// #include "sections/literature_review.typ"
 
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"

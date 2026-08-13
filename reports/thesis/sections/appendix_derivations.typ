@@ -30,13 +30,31 @@ Part 1:
 
 == Parameter estimation
 
-=== Log-likelihood
-@eqn:methods-parameter-estimation-log-likelihood
+=== Log-likelihood <derivation:log-likelihood>
+(*reference old equation for the log likelihood*)
+
+Let $D_B ~ op("Bin")(D)$ be a possible binarisation of $D$, and $bold(theta)$ a
+parameterisation for the (asymmetric or symmetric) belief system model, which is
+decomposable into the model parameters
+$bold(theta) = chevron bold(J), bold(h) chevron.r$. The log-likelihood of $D_B$ given
+$bold(theta)$ is:
+
+$
+  L_(D_B) (bold(theta)) &= log P(D_B | bold(theta)) \
+  //&= sum_(m=1)^M sum_(t=1)^(T - 1) sum_(i=1)^N log P(s_(i, (m))^(t+1) | bold(s)_((m))^t, bold(theta)) \
+  &= sum_(m=1)^M sum_(t=1)^(T - 1) log s_(i, (m))^(t+1) dot h_i^"eff" (bold(s)_((m))^t) - log(2 cosh h_i^"eff" (bold(s)_((m))^t))
+$
+
+The derivation of (*old equation for the log-likelihood*) is analogous to that
+of the non-equilibrium Ising model log-likelihood @nguyenInverseStatisticalProblems2017.
+Combining (*old equation for the log-likelihood*) and
+@eqn:parameter-estimation-expected-ll-generic, we obtain an explicit
+expression for the expected likelihood:
 
 === Expected log-likelihood
-@eqn:methods-parameter-estimation-expected-ll-explicit
+@eqn:parameter-estimation-expected-ll-explicit
 
-=== Partial derivatives of expected log-likelihood
+=== Partial derivatives of expected log-likelihood <derivation:partial-derivatives>
 
 
 == Dataset
