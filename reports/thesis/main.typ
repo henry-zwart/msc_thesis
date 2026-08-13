@@ -1,4 +1,4 @@
-#import "@local/drifting-cls-thesis:0.1.0": thesis
+#import "@local/drifting-cls-thesis:0.1.0": blue-link, thesis
 
 
 #let author = (
@@ -7,9 +7,9 @@
 )
 
 #let supervision-team = (
-  supervisor: link("https://www.vvvasconcelos.net/")[Vítor Vasconcelos],
-  examiner: link("https://scholar.google.com/citations?user=jDmcdsUAAAAJ&hl=en")[Johan Bollen],
-  assessor: link("https://sustainability.stanford.edu/people/sara-constantino")[Sara Constantino],
+  supervisor: blue-link("https://www.vvvasconcelos.net/")[Vítor Vasconcelos],
+  examiner: blue-link("https://scholar.google.com/citations?user=jDmcdsUAAAAJ&hl=en")[Johan Bollen],
+  assessor: blue-link("https://sustainability.stanford.edu/people/sara-constantino")[Sara Constantino],
 )
 
 #let group = (
