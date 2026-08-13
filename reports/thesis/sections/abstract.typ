@@ -14,7 +14,8 @@ Most authors in this field acknowledge that some beliefs are likely to exhibit a
 influence and influentiability, for instance, substantively influencing other beliefs,
 while being relatively unaffected themselves. Despite this, current research focuses,
 almost exclusively, on belief system models which assume symmetric influence, leaving
-theoretical and empirical studies into asymmetric influence scarce.
+theoretical and empirical studies into asymmetric influence scarce. The impacts of this
+assumption are theoretically consequential, yet remain largely unknown.
 
 Here, we present the Kinetic Belief System model, a theory-driven model of belief system
 dynamics which represents _both_ symmetric and asymmetric influence. We use this model
