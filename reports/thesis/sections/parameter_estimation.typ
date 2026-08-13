@@ -364,8 +364,8 @@ $
 $
 
 #let log-likelihood-derivation = footnote[
-  See log-likelihood derivation in @sec:appendix-derivations
-  (#internal-link(<derivation:log-likelihood>)).
+  See expected log-likelihood derivation in @sec:appendix-derivations
+  (#internal-link(<derivation:expected-log-likelihood>)).
 ]
 and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
 denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
@@ -378,11 +378,11 @@ is then derived as:#log-likelihood-derivation
 // $ <eqn:parameter-estimation-expected-ll-explicit>
 
 $
-  cal(L)_D (bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[bold(sigma)_((m))^(t+1)]^T EE[h^"eff" (bold(sigma)_((m))^t)])) - Z(D; bold(theta))
+  cal(L)_D (bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) sum_(i=1)^N EE[sigma_((m),i)^(t+1) dot h_i^"eff" (bold(sigma)_((m))^t)])) - Z(D; bold(theta))
 $ <eqn:parameter-estimation-expected-ll-explicit>
 
-where the vector $h^"eff" (bold(s))$ contains the effective baseline activation
-(@eqn:model-effective-activation) for each spin given the previous state $bold(s)$, and
+where $h_i^"eff" (bold(s))$ is the effective baseline activation
+(@eqn:model-effective-activation) given the previous state $bold(s)$, and
 $Z$ is the expected log partition function, summed across observations:
 
 $
@@ -420,7 +420,7 @@ parameter $J_(j i)$ in the asymmetric variant (i.e., the influence of $j$ on $i$
   //show math.equation: set align(left)
   [
     $
-      partial/(partial J_(j i)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)]EE[sigma_((m),j)^t])) &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon) quad quad
+      partial/(partial J_(j i)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[(sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t])) &- (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon) quad quad
     $ <eqn:parameter-estimation-derivative-interaction-effect-asym>
   ]
 }
@@ -433,7 +433,7 @@ $alpha_(m,t) (i,j)$ denote the inner summand in
 @eqn:parameter-estimation-derivative-interaction-effect-asym:
 
 $
-  alpha_(m,t) (i,j) := EE[sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)]EE[sigma_((m),j)^t]
+  alpha_(m,t) (i,j) := EE[(sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t]
 $
 
 Then the partial derivative of $f$ with respect to the bi-directional interaction
