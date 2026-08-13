@@ -334,7 +334,7 @@ climate change).
   roughly two and a half years after intervening.
 ]
 In each of the intervention experiments described below, we use the models calibrated
-to the full climate beliefs dataset (@sec:calibration). For a given experiment, we
+to the full climate beliefs dataset in @sec:calibration. For a given experiment, we
 initialise the associated model (symmetric/asymmetric; intervention/null) with the
 binarised observations from the final wave of the climate beliefs dataset. We then
 draw consecutive samples from the model using parallel glauber dynamics
@@ -348,24 +348,33 @@ each intervention.
   see @sec:methods-modelling-interventions.
 ]
 
-*TODO: Reword this*
 
-We first consider the impact of intervention strength on effect of intervention. The
-strength of an intervention affects the degree to which the intervention changes the
-state of the point-of-intervention. However, this is also sensitive to the pre-existing
-influence on that spin#see-intervention-strengths-sec-footnote. Since the climate
-beliefs dataset comprises individuals with different states, it follows that
-intervention strength may impact not only the degree to which the behaviour of
-a target spin changes, but also the relative effects of different interventions.
+We first consider the impact of intervention strength on effect of intervention.
+Since, as discussed in @sec:methods-intervention-strength, the change in behaviour at the
+point-of-intervention is sensitive to intervention strength, it follows that intervention
+strength may also impact the absolute or relative effects of intervention elsewhere in a
+belief system. @fig:asymmetry-results-compare-strength compares the mean effect of
+intervention on state (@def:asymmetry-results-effect-of-intervention) for each possible
+target belief, across 'weak' and
+'strong' interventions, $delta_h in {0.5, 2.5}$, for each of the outbound
+points-of-intervention listed above.
 
-To understand the potential impacts of intervention strength, we compare the mean
-effect of intervention across individuals for intervention strengths
-$delta_h in {0.5, 2.5}$, for each of the outbound points of intervention listed above
-@fig:asymmetry-results-compare-strength. The choice of intervention strengths is
-motivated by our earlier analysis in
-@sec:methods-modelling-interventions, with the two strengths
-corresponding to 'weak' and 'strong' interventions respectively, as judged by their
-direct impact on the behaviour of the point-of-intervention.
+// The
+// strength of an intervention affects the degree to which the intervention changes the
+// state of the point-of-intervention. However, this is also sensitive to the pre-existing
+// influence on that spin#see-intervention-strengths-sec-footnote. Since the climate
+// beliefs dataset comprises individuals with different states, it follows that
+// intervention strength may impact not only the degree to which the behaviour of
+// a target spin changes, but also the relative effects of different interventions.
+//
+// To understand the potential impacts of intervention strength, we compare the mean
+// effect of intervention across individuals for intervention strengths
+// $delta_h in {0.5, 2.5}$, for each of the outbound points of intervention listed above
+// @fig:asymmetry-results-compare-strength. The choice of intervention strengths is
+// motivated by our earlier analysis in
+// @sec:methods-modelling-interventions, with the two strengths
+// corresponding to 'weak' and 'strong' interventions respectively, as judged by their
+// direct impact on the behaviour of the point-of-intervention.
 
 #figure(
   image("../results/figures/asymmetry_results/intervention_strength_compare.pdf"),
@@ -422,11 +431,11 @@ shifting the behaviour at the point-of-intervention.
 
 
 Figures @fig:asymmetry-results-outbound-effect[] and
-@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the mean effects of
-intervention (@def:asymmetry-results-effect-of-intervention) and asymmetry
-(@def:asymmetry-results-effect-of-asymmetry), respectively, across individuals, for the
-points-of-intervention listed above. The confidence intervals show two standard deviations
-around the mean values, as calculated across repeats.
+@fig:asymmetry-results-outbound-effect-of-asymmetry[] show the mean effect of
+intervention on state (@def:asymmetry-results-effect-of-intervention) and mean effect of
+asymmetry (@def:asymmetry-results-effect-of-asymmetry), respectively, across individuals,
+for the points-of-intervention listed above. The confidence intervals show two standard
+deviations around the mean values, as calculated across repeats.
 
 We observe, in @fig:asymmetry-results-outbound-effect, that different targets exhibit
 different effects of intervention. The effect generally decreases with the magnitude of
