@@ -32,8 +32,53 @@ Part 1:
 + Therefore, internal consistency is possible, if and only if, it is possible to re-code
   the dataset variables such that there are no negative edges in the resulting model.
 
+== Smooth thresholding probability
+
+Let $b_xi$ be a soft thresholding function for $xi in RR_(> 0)$, and let $x in RR$.
+We now prove the statement from @eqn:methods-dataset-binarisation-probability-map-to-1,
+which states that $b_xi$ maps $x$ to $+1$ with probability described in terms of
+the standard normal cumulative distribution function:
+
+$
+  P(x mapsto +1) = Phi(x / xi)
+$
+
+Recall the following diagram from @chp:parameter-estimation:
+
+#align(
+  center,
+  image(
+    "../results/figures/methods/binarisation/distribution.pdf",
+  ),
+)
+
+In this example, $x < 0$, but the following argument holds in general. Notice
+that in this diagram, $x$ is mapped to $+1$ if the sampled noise term,
+$epsilon ~ cal(N)(0, xi)$, is such that #box[$x + epsilon$] is in region
+'A', i.e.,
+
+$
+  P(x mapsto +1) = P(x + epsilon > 0)
+$
+
+Or equivalently,
+
+$
+  P(x mapsto +1) = P(epsilon > -x)
+$
+
+Using the symmetry of the Gaussian distribution, this reduces to the
+standard normal cumulative distribution, as desired:
+
+$
+  P(x mapsto +1) & = P(epsilon > -x) \
+                 & = P(epsilon < x) \
+                 & = Phi(x / xi)
+$
+
 
 == Parameter estimation
+
 
 Let $D$ be a dataset comprising $T in NN$ observations for each of $M in NN$ individuals,
 where each observation measures the (not necessarily binary) state of $N in NN$ beliefs,
@@ -178,7 +223,7 @@ $
   partial/(partial J_(j i)) h_k^"eff" (bold(s)) = cases(s_j\, quad "if" k = i, 0\, quad "otherwise")
 $ <eqn:apdx-derivation-partial-interaction-asym>
 
-Finally, if the KBS model has symmetric interaction parameters, then each interaction
+If the KBS model has symmetric interaction parameters, then each interaction
 parameter, $theta = J_(i j)$, contributes to the behaviour of both $S_i$ and $S_j$.
 Therefore the partial derivative of the effective baseline activation
 $h_k^"eff" (bold(s))$ is nonzero if $k in.not {i,j}$:
@@ -187,23 +232,42 @@ $
   partial/(partial J_(i j)) h_k^"eff" (bold(s)) = cases(s_j\, quad "if" k in {i, j}, 0\, quad "otherwise")
 $ <eqn:apdx-derivation-partial-interaction-sym>
 
-Substituting these into @eqn:apdx-derivation-ll-partial-generic, we obtain the following
-partial derivatives of the expected log-likelihood with respect to each parameter type:
+We must also account for the partial derivative of the regularisation term. For an
+arbitrary parameter $theta$ and regularisation hyperparameters
+$lambda in RR_(>= 0), epsilon in RR_(>0)$, this is:
 
 $
-  partial/(partial h_i) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] \
-  partial/(partial J_(j i)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] \
+  partial/(partial theta) lambda sum_(theta' in bold(theta)) sqrt(theta'^2 + epsilon) &= lambda partial/(partial theta) sqrt(theta^2 + epsilon) \
+  &= (lambda theta) / sqrt(theta^2 + epsilon)
+$
+
+Finally, the complete partial derivative of the objective function $f$, with respect
+to a parameter $theta$ is:
+
+$
+  partial/(partial theta) f(D; bold(theta)) = partial/(partial theta) cal(L)_D (bold(theta)) - partial/(partial theta) lambda sum_(theta' in bold(theta)) sqrt(theta'^2 + epsilon)
+$
+
+Substituting the above results, we obtain the following partial derivatives of $f$ with
+respect to each parameter type:
+
+#{
+  show math.equation: set align(left)
+  [
+    $
+      partial/(partial h_i) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] - (lambda h_i)/sqrt(h_i^2 + epsilon)quad &""\
+      partial/(partial J_(j i)) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[alpha_(m,t)(i,j)] - (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)& "(Asymmetric)" \
+      partial/(partial J_(i j)) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[alpha_(m,t)(i,j) + alpha_(m,t)(j,i)] - (lambda J_(i j))/sqrt(J_(i j)^2 + epsilon) & "(Symmetric)" \
+    $
+  ]
+}
+
+where
+
+$
+  alpha_(m,t)(i,j) = (sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t
 $
 
 
-
-
-
-
-
-== Dataset
-
-=== Binarisation probability
-@eqn:methods-dataset-binarisation-probability-map-to-1
 
 

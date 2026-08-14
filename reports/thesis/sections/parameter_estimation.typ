@@ -433,7 +433,7 @@ $alpha_(m,t) (i,j)$ denote the inner summand in
 @eqn:parameter-estimation-derivative-interaction-effect-asym:
 
 $
-  alpha_(m,t) (i,j) := EE[(sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t]
+  alpha_(m,t) (i,j) := (sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t
 $
 
 Then the partial derivative of $f$ with respect to the bi-directional interaction
@@ -443,7 +443,7 @@ parameter $J_(i j)$, for $i < j$, in the symmetric variant is:
   //show math.equation: set align(left)
   [
     $
-      partial/(partial J_(i j)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) alpha_(m,t) (i,j) + alpha_(m,t) (j,i))) &- (lambda J_(i j))/sqrt(J_(i j)^2 + epsilon)
+      partial/(partial J_(i j)) f(D; bold(theta)) = lr((sum_(m=1)^M sum_(t=1)^(T-1) EE[alpha_(m,t) (i,j) + alpha_(m,t) (j,i)])) &- (lambda J_(i j))/sqrt(J_(i j)^2 + epsilon)
     $ <eqn:parameter-estimation-derivative-interaction-effect-sym>
   ]
 }

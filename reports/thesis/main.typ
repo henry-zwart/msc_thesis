@@ -33,9 +33,6 @@
 //#let quotation = (attrib: [Richard P. Feynman], quote-text: [What I cannot create, I do not understand.])
 #let quotation = none
 
-#let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
-#let title = [Interventions in Asymmetric#linebreak() Belief Systems]
-#let title = [Asymmetric Influence and Interventions in #linebreak() Climate Change Belief Systems]
 #let title = "Asymmetric Influence and Interventions in\nClimate Change Belief Systems"
 
 #let abstract = include "sections/abstract.typ"
