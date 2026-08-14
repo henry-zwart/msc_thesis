@@ -129,14 +129,12 @@ in @sec:dataset-validation.
 Question format, text, and response schemas also occasionally change between survey
 waves. Changes in response schema are less common, however, and typically affect items
 with categorical responses. With a view to constructing the calibration dataset for our
-experiments, we note that most response schemas are not binary and therefore require
-binarisation (see *REFERENCE BINARISATION SECTION*).
+experiments, we note that most response schemas are not binary.
 
 Casting our attention to the survey timing, we examine the survey response dates for
 each wave (@fig:dataset-longitudinal-response-eventplot) and the distribution of
 interval durations between consecutive-wave responses across individuals
 (@fig:dataset-longitudinal-interresponse-times), i.e., the 'inter-response time'.
-
 In @fig:dataset-longitudinal-response-eventplot we observe that the survey waves occur
 with irregular spacing and duration. Some consecutive pairs of waves are much
 closer than others. For instance, notice that:
@@ -167,7 +165,7 @@ samples are equispaced.
   ),
 ) <fig:dataset-longitudinal-response-eventplot>
 
-We see the irregular spacing reflected also in the inter-response time distributions.
+We also see the irregular spacing reflected in the inter-response time distributions.
 For each pair of consecutive waves, we observe substantial variation in the time between
 responses for different participants.
 
