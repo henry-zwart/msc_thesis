@@ -343,7 +343,7 @@ characterisation function, such a function would likely be useless for qualitati
 determining the kinds of initial states which yield effective interventions.
 The elements of the codomain have (potentially) infinite cardinality, and are
 not immediately interpretable. For our purposes, we are less interested in the
-_specific_ states that yield a given intervention effect, but more so in a
+specific states that yield a given intervention effect, but more so in a
 _concise description_ of that set of states.
 
 === Method: Shallow regression decision tree <subsec:methods-effect-characterisation-function-decision-tree>

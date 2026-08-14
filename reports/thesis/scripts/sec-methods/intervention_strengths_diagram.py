@@ -32,8 +32,11 @@ def main():
             zorder=3,
         )
 
-    ax.set_xlabel(r"Effective baseline activation, $h_\text{eff}$")
-    ax.set_ylabel("Activation probability", ha="center")
+    ax.set_xlabel(r"Effective baseline activation, $h^\text{eff}$")
+    ax.set_ylabel(
+        "Activation probability\n$P(\\sigma^{t+1} = +1\\mid h^\\text{eff})$",
+        ha="center",
+    )
 
     ax.set_ylim(0, 1)
     ax.set_xlim(heff_min, heff_max)
