@@ -288,7 +288,7 @@ support for climate policy and related beliefs @grometPoliticalIdeologyAffects20
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
 differences between asymmetric belief system models calibrated separately to
 conservative and liberal subpopulations; however, given the smaller sample sizes used
-to calibrate these models---and consequentially, higher parameter uncertainty---these
+to calibrate these models---and consequently, higher parameter uncertainty---these
 results must be interpreted with caution.
 
 When calibrated on the non-bootstrapped data subsets, each model featured high-magnitude

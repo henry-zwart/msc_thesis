@@ -270,7 +270,7 @@ Of particular concern, the absence of theoretical models of asymmetric
 influences appears to be self-perpetuating, with some studies citing historical
 trends as justification for continued focus on symmetric models
 @brandtMeasuringBeliefSystem2022[p.~3].
-Consequentially, it remains unclear as to whether asymmetric influence---should it
+Consequently, it remains unclear as to whether asymmetric influence---should it
 exist---meaningfully impacts belief system dynamics, or the conclusions we draw from
 models thereof.
 
