@@ -193,6 +193,7 @@ the high-effect category for interventions on `CC Worry` are not represented by 
 identified persona, while for interventions on `Politics` only 3% of high-effect
 individuals are not represented.
 
+
 // Recall that the effect of intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
 // (@def:asymmetry-results-effect-of-intervention).
@@ -328,29 +329,34 @@ Among the interactions present in the liberal model, 82% also occur in the conse
 model, contrasting the 54% of conservative interactions which are also in the liberal
 model.
 
-#figure(
-  table(
-    columns: (20%, 20%, 22%),
-    align: (center, center, center),
-    column-gutter: 1.5em,
-    stroke: none,
-    table.header[Data subset][Sparsity][Mean interaction],
-    table.hline(stroke: 0.5pt),
-    [Full], [0.30], [0.13],
-    [Conservative], [0.38], [0.10],
-    [Liberal], [0.60], [0.17],
-  ),
-  gap: 1.5em,
-  caption: caption(
-    short: [Comparison of ideological model properties],
-    long: [
-      Sparsity (proportion of missing cross-interactions) and mean
-      interaction effect (over cross-interactions) for asymmetric models
-      calibrated to the conservative and liberal subsets of the climate beliefs dataset,
-      compared with the model calibrated on the complete dataset.
-    ],
-  ),
-) <tab:heterogeneity-results-belief-systems-properties>
+#{
+  show table: set text(size: 10pt)
+  [
+    #figure(
+      table(
+        columns: (20%, 20%, 40%),
+        align: (center, center, center),
+        column-gutter: 1.5em,
+        stroke: none,
+        table.header[Data subset][Sparsity][Mean nonzero interaction effect],
+        table.hline(stroke: 0.5pt),
+        [Full], [0.30], [0.13],
+        [Conservative], [0.38], [0.10],
+        [Liberal], [0.60], [0.17],
+      ),
+      gap: 1.5em,
+      caption: caption(
+        short: [Comparison of ideological model properties],
+        long: [
+          Sparsity (proportion of missing cross-interactions) and mean
+          interaction effect (over cross-interactions) for asymmetric models
+          calibrated to the conservative and liberal subsets of the climate beliefs dataset,
+          compared with the model calibrated on the complete dataset.
+        ],
+      ),
+    ) <tab:heterogeneity-results-belief-systems-properties>
+  ]
+}
 
 The conservative model displays broad (yet mostly weak) reinforcing interactions
 between climate-related concerns, beliefs and others' concerns, and climate-impact

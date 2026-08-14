@@ -41,7 +41,7 @@ influence over several other beliefs.
 ]
 
 How should we interpret these asymmetric relations? Recall that relations in the
-non-equilibrium belief system model reflect temporal influence---how much one belief
+KBS model reflect temporal influence---how much one belief
 constrains#within-person-footnote the future state of another
 (@chp:kinetic-belief-system). An asymmetric relation reflects a constraint
 differential, where one belief has greater influence on the other than vice
@@ -789,7 +789,7 @@ Firstly, we posited two explanations for the asymmetric relations observed with
 regards to political beliefs and climate-related worry
 (#internal-link(<rq1-asymmetry-explanations>)). These are retrospectively
 applied to the findings, so arguably have minimal evidential weight @popper1963science.
-However, they demonstrate how the asymmetric non-equilibrium belief system model may be
+However, they demonstrate how the asymmetric KBS model may be
 used to test (as opposed to generate) hypotheses about the general mechanisms by which
 asymmetric belief relations may occur.
 
