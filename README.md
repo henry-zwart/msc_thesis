@@ -1,5 +1,7 @@
 # Master's Thesis: 2025-2026
 
+[![DOI](https://zenodo.org/badge/1102506969.svg)](https://doi.org/10.5281/zenodo.21933641)
+
 Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 
 Whenever `main` receives new changes, all _completed_ reports are recompiled in GitHub CI and published 
