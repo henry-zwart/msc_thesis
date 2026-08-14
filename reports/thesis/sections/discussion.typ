@@ -824,7 +824,7 @@ Rather than attempting to affect beliefs directly, structural interventions
 can be seen as amplifying or changing the influence between beliefs. Although we have
 not considered such interventions in this study, the open source _Ising_ Python
 package released alongside this study already supports these, inviting future work on
-this topic.#package-url-footnote
+this topic.
 
 Finally, we adopt a simplistic view of the interface between belief systems and the
 external world. This is most evident, for instance, in our treatment of interventions as

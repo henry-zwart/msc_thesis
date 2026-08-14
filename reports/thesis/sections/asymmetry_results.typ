@@ -463,7 +463,7 @@ in the symmetric model (i.e., it has higher average interaction effects).
 
 #let different-connectivity-footnote = footnote[
   Recall that this difference in connectivity was found to be significant in the
-  previous section #internal-link(<significant-connectivity-diffs-politics>).
+  previous section (#internal-link(<significant-connectivity-diffs-politics>)).
 ]
 
 Notice that the asymmetric model includes outbound (but not inbound) interactions from
