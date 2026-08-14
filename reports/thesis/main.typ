@@ -36,8 +36,10 @@
 #let title = [Asymmetric Belief Networks#linebreak() Inference and Intervention]
 #let title = [Interventions in Asymmetric#linebreak() Belief Systems]
 #let title = [Asymmetric Influence and Interventions in #linebreak() Climate Change Belief Systems]
+#let title = "Asymmetric Influence and Interventions in\nClimate Change Belief Systems"
 
 #let abstract = include "sections/abstract.typ"
+#let declaration-of-authorship = include "sections/declaration_of_authorship.typ"
 
 #let acknowledgements = [Thank the people that have helped: supervisors, family, etc.]
 
@@ -68,6 +70,7 @@
   faculty: faculty,
   quotation: quotation, //# TODO: Decide if I want to include a quotation
   abstract: abstract,
+  declaration-of-authorship-body: declaration-of-authorship,
   acknowledgements: acknowledgements,
   abbreviations: abbreviations,
   references: bibliography("references.bib", style: "apa"),
