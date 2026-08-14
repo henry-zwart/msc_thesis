@@ -9,9 +9,24 @@
 #show: show-theorion
 
 We now shift to the second half of this study, in which we will address the research
-questions outlined in the first chapter using the models calibrated in @sec:calibration.
-This chapter introduces the experimental methods we will use to address these questions.
+questions outlined in the first chapter. This chapter outlines our experimental approach
+and the key quantities used in the following chapters.
 
+We employ a combination of data-driven and simulation-based methods, using the models
+calibrated to the climate beliefs dataset (@sec:dataset) in the previous chapter.
+The climate beliefs dataset describes a subset of beliefs relating to
+climate change, collected in the United States in recent years.
+Note that this places a specific context of
+interpretation on our findings. In particular, we do not
+claim that the set of beliefs considered here comprehensively reflects the range of possible
+climate-related beliefs, and we expect that our results are likely to be sensitive to the
+(geographic and situational) contexts underlying the climate beliefs dataset.
+
+//This chapter introduces the experimental methods we will use to address these questions.
+
+// We now shift to the second half of this study, in which we will address the research
+// questions outlined in the first chapter using the models calibrated in @sec:calibration.
+// This chapter introduces the experimental methods we will use to address these questions.
 
 
 // In @sec:methods-directional-differential we describe the use of directional differentials
