@@ -249,7 +249,7 @@ interventions with respect to pre-intervention state
 ]
 
 Finally, the `CC Real` scenario is unique in that it includes two prevalent personas.
-The more prevalent persona corresponds to situations in which individuals are concerned
+The more prevalent persona corresponds to situations in which individuals are worried
 about the current/future effects of climate change, but do not believe that climate
 change is human-caused#negative-cc-human-footnote. In the case where an individual does
 believe that climate change is human-caused, this intervention may still be effective,
@@ -367,7 +367,7 @@ model.
 }
 
 The conservative model displays broad (yet mostly weak) reinforcing interactions
-between climate-related concerns, beliefs and others' concerns, and climate-impact
+between climate-related worry, beliefs about others' worry, and climate-impact
 beliefs. This contrasts with the liberal model, in which only `CC Worry` and `CC Impact`
 are non-trivially related. Moreover, we observe that `CC Others Worry` and
 `Weather Worry` in fact have _no_ incoming cross-interactions.
@@ -379,7 +379,7 @@ We also note differences in the interaction effects influencing `CC Action` betw
 the two models. While the liberal model expects attitudes toward climate action to
 be influenced substantially by individuals' beliefs regarding the existence and nature
 of climate change, these influences are absent or trivial in the conservative model.
-Instead, we observe that concern about climate change (`CC Worry`) is the only
+Instead, we observe that worry about climate change (`CC Worry`) is the only
 large cross-interaction toward `CC Action` in the conservative model.
 
 Comparing now with the complete model (calibrated to the full dataset), we find that

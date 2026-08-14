@@ -30,7 +30,7 @@ belief-level interventions.
 On the question of existence, @subsec:asymmetry-results-existence demonstrated
 asymmetric relations between several pairs of beliefs, while also
 finding that asymmetry may  not _always_ be exhibited. Two beliefs---political
-ideology/alignment and climate-related #box[concerns---displayed] significant excess
+ideology/alignment and climate-related #box[worry---displayed] significant excess
 influence over several other beliefs.
 
 #let within-person-footnote = footnote[
@@ -77,7 +77,7 @@ contributes meaningfully to climate-related beliefs, changes in these
 states are less likely to incite changes in political identity.
 
 
-Climate-related concern exhibits asymmetric influence over beliefs regarding the
+Climate-related worry exhibits asymmetric influence over beliefs regarding the
 anthropogenic nature and current impacts of climate change. Both relationships have
 received comparatively less attention in prior research than those of political
 political with climate beliefs. One possible explanation for
@@ -138,7 +138,7 @@ symmetric model. Moreover, for interventions targeting attitudes toward climate 
 political ideology/alignment ranked higher with regards to collective effect in the
 asymmetric model than the symmetric model, displacing a mostly-symmetric belief with
 similar outbound interactions.
-Interestingly, while interventions on climate-related concerns typically
+Interestingly, while interventions on climate-related worry typically
 outperformed those on political ideology/alignment in terms of absolute effect of
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
@@ -175,11 +175,11 @@ an individual level. <discussion-rq2-indirect-effects>
 ]
 
 The distinction in behaviour between political ideology/alignment and climate-related
-concern likely relates to differences in influentiality and influentiability between the
-two beliefs. Climate-related concern is more influential than political
+worry likely relates to differences in influentiality and influentiability between the
+two beliefs. Climate-related worry is more influential than political
 ideology/alignment, on account of its increased outbound interactions and interaction
 strength. The key difference, however, lies in the beliefs' influentiability; while
-climate-related concern has inbound and outbound interactions with all other beliefs,
+climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
 edges#full-model-disclaimer. That is, several beliefs influenced by this
 variable have no influence on it themselves. Since the symmetric model
@@ -215,11 +215,11 @@ intervention effectiveness depends predictably on individuals' pre-intervention 
 states. Most high-effect interventions targeting attitudes toward climate action
 required low initial values for both the point-of-intervention and target.
 
-Surprisingly, pre-intervention climate-related concern was required to be low for _all_
+Surprisingly, pre-intervention climate-related worry was required to be low for _all_
 of the personas identified as characteristic of effective interventions, even when this
 was neither the point-of-intervention, nor the target.
 This finding may be explained by the combination of high influence and
-influentiability associated with climate-related concern, thereby making this variable an
+influentiability associated with climate-related worry, thereby making this variable an
 effective indirect route for various interventions (not restricted to this particular
 target). This stands in contrast with political ideology/alignment, which has similarly
 high influence on the target variable, but is harder to influence, as discussed above.
