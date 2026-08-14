@@ -319,33 +319,56 @@ models thereof.
 In this study, we investigate the prevalence of asymmetric influence among beliefs about
 climate change in the US, as well as the dynamic implications of
 symmetric and asymmetric modelling assumptions for belief-level interventions.
-Using a combination of data-driven and simulation-based methods, in the context of the
-climate beliefs dataset described below, we will address the following four research
-questions:
+Using a combination of data-driven and simulation-based methods, we will address the
+following four research questions:
+
+// #let RQ1 = [
+//   To what extent are belief-level influences _symmetric_ or _asymmetric_, in models
+//   of climate change belief systems inferred from the climate beliefs dataset?
+// ]
+//
+// #let RQ2 = [
+//   How do assumptions about relational symmetry or asymmetry impact population-level
+//   intervention strategy and effectiveness in belief system models inferred
+//   from the climate beliefs dataset? To what extent do the impacts depend on where,
+//   in the belief system, an intervention is applied?
+// ]
+//
+// #let RQ3 = [
+//   How does individual-level intervention effectiveness, measured as the resulting
+//   shift in behaviour toward a desired belief state, depend on an individual's
+//   pre-intervention beliefs, in asymmetric belief systems inferred from the
+//   climate beliefs dataset?
+// ]
+//
+// #let RQ4 = [
+//   How do belief systems for liberal and conservative subpopulations compare structurally,
+//   in asymmetric belief system models inferred from subsets of the climate beliefs
+//   dataset?
+// ]
 
 #let RQ1 = [
-  To what extent are belief-level influences _symmetric_ or _asymmetric_, in models
-  of climate change belief systems inferred from the climate beliefs dataset?
+  To what extent are belief-level influences _symmetric_ or _asymmetric_, in climate
+  change belief systems in the United States?
 ]
 
 #let RQ2 = [
-  How do assumptions about relational symmetry or asymmetry impact population-level
-  intervention strategy and effectiveness in belief system models inferred
-  from the climate beliefs dataset? To what extent do the impacts depend on where,
-  in the belief system, an intervention is applied?
+  How do symmetric-influence assumptions impact expectations regarding population-level
+  intervention strategy and effectiveness in climate change belief systems?
+  To what extent do the impacts depend on where, in the belief system, an intervention is
+  applied?
 ]
 
 #let RQ3 = [
   How does individual-level intervention effectiveness, measured as the resulting
   shift in behaviour toward a desired belief state, depend on an individual's
-  pre-intervention beliefs, in asymmetric belief systems inferred from the
-  climate beliefs dataset?
+  pre-intervention beliefs, in asymmetric climate change belief systems?
 ]
 
 #let RQ4 = [
-  How do belief systems for liberal and conservative subpopulations compare structurally,
-  in asymmetric belief system models inferred from subsets of the climate beliefs
-  dataset?
+  How do asymmetric climate change belief systems for liberal and conservative
+  subpopulations compare structurally, with respect to sparsity, strength of belief-level
+  interactions, and presence of particular interactions?
 ]
 
 #{

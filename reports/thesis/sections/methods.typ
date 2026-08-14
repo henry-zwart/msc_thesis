@@ -12,6 +12,8 @@ We now shift to the second half of this study, in which we will address the rese
 questions outlined in the first chapter using the models calibrated in @sec:calibration.
 This chapter introduces the experimental methods we will use to address these questions.
 
+
+
 // In @sec:methods-directional-differential we describe the use of directional differentials
 // to identify significant cases of asymmetry in the KBS model. We then outline our approach
 // to modelling interventions in belief systems in @sec:methods-modelling-interventions.
