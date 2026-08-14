@@ -180,7 +180,7 @@ def plot_ranked_differentials(
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
 
-    ax.legend(
+    legend = ax.legend(
         ncol=2,
         loc="lower center",
         bbox_to_anchor=(0.5, 1.0),
@@ -190,6 +190,10 @@ def plot_ranked_differentials(
         # labelspacing=0.2,
         frameon=False,
     )
+    for handle, text in zip(legend.legend_handles, legend.texts, strict=True):
+        if text.get_text() == "90% CI":
+            handle.set_color("tab:grey")
+
     return fig
 
 
