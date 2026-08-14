@@ -113,25 +113,8 @@
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
 
+= Ethics and Data Management
+#include "sections/ethics_and_data_management.typ"
+
 = Climate beliefs dataset <sec:dataset>
 #include "sections/dataset.typ"
-
-= Ethics and Data Management
-A new requirement for the thesis is that there must be a short section in which you
-reflect on the ethical aspects of your project. This requirement is related to one of
-the final objectives that a graduated student of the Master of Computational Science
-must meet: “The graduate of the program has insight into the social significance of
-Computational Science and the responsibilities of experts in this field within science
-and in society". You don't need to devote an entire chapter to this; a short section
-or paragraph is sufficient.
-
-I acknowledge that the thesis adheres to the ethical code
-(https://student.uva.nl/en/topics/ethics-in-research) and research data management
-policies (https://rdm.uva.nl/en) of UvA and IvI.
-
-The following table lists the data used in this thesis (including source codes).
-I confirm that the list is complete and the listed data are sufficient to reproduce
-the results of the thesis. If a prohibitive non-disclosure agreement is in effect at
-the time of submission "NDA" is written under "Availability" and "License" for the
-concerned data items.
-

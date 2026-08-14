@@ -2,23 +2,18 @@
 
 Work relating to my MSc. Computational Science Master's Thesis, completed over 2025-2026.
 
-![Project timeline](outputs/project_timeline.png)
-
 Whenever `main` receives new changes, all _completed_ reports are recompiled in GitHub CI and published 
 at a [static site](https://henry-zwart.github.io/msc_thesis/) to ensure current versions 
-are easily accessible. 
+are easily accessible.  **Note: This currently doesn't happen. See note below.**
 
 Ongoing or draft reports must be compiled locally, or accessed via the links below:
 
 - [Project proposal](https://henry-zwart.github.io/msc_thesis/proposal.pdf)
+- [Thesis](https://github.com/henry-zwart/msc_thesis/blob/main/outputs/reports/thesis.pdf)
 
-> [!IMPORTANT]
-> While this repository is private, the associated static site is *publicly-accessible*.  
->
-> Access to unfinished/ongoing work is restricted by means of access to this repository.
-> Such work should not be published to the static site. However, it is okay to publish 
-> links which refer to documents stored directly in the repo, i.e., for which access is 
-> authenticated by GitHub.
+> [!NOTE]
+> The static site is currently not being updated, so that we don't have to re-run 
+> experiments on each push to `main`.
 
 
 ## Building reports locally
@@ -28,15 +23,27 @@ Ongoing or draft reports must be compiled locally, or accessed via the links bel
 - [uv](https://docs.astral.sh/uv/) (>= 0.9.0)
 
 Report compilation is orchestrated with Make, so reproducing them is straightforward. 
+First, clone this repository, and all submodules:
+
+```sh
+git clone --recursive git@github.com:henry-zwart/msc_thesis.git
+```
+
 To compile all reports, just run:
 
 ```sh
 # Create virtual environment with required dependencies 
 uv sync
 
-# The `-j` flag is used to compile the reports in parallel
-make -j
+make 
 ```
+
+
+> [!WARNING]
+> We do not recommend running make with parallel compilation (i.e., `make -j`). Most of 
+> the experiments use parallel processing under the hood, so using parallel compilation 
+> can easily cause your computer to crash. 
+
 
 Alternatively, you can generate an individual report by running `make outputs/reports/<REPORT>.pdf`
 or `make outputs/slides/<PRESENTATION>.{html, pdf}`. 
@@ -47,7 +54,7 @@ For instance:
 uv sync
 
 # Compile project proposal (for example)
-make outputs/report/proposal.pdf
+make outputs/reports/thesis.pdf
 ```
 
 The compiled PDFs are located in an auto-generated generated `outputs` directory.

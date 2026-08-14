@@ -101,6 +101,7 @@ THESIS_VERIFICATION_FILES := \
 
 THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/main.typ \
+		$(THESIS_DIR)/sections/declaration_of_authorship.typ \
 		$(THESIS_DIR)/sections/abstract.typ \
 		$(THESIS_DIR)/sections/notation.typ \
 		$(THESIS_DIR)/sections/introduction.typ \
@@ -111,8 +112,9 @@ THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/sections/asymmetry_results.typ \
 		$(THESIS_DIR)/sections/heterogeneity_results.typ \
 		$(THESIS_DIR)/sections/discussion.typ \
-		$(THESIS_DIR)/sections/dataset.typ \
 		$(THESIS_DIR)/sections/conclusion.typ \
+		$(THESIS_DIR)/sections/ethics_and_data_management.typ \
+		$(THESIS_DIR)/sections/dataset.typ \
 		$(THESIS_DIR)/references.bib
 
 

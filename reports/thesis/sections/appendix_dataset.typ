@@ -1,4 +1,4 @@
-= Climate Beliefs Dataset <apdx:dataset>
+= Climate beliefs dataset variables <apdx:dataset>
 
 #set table(stroke: (x, y) => (y: if y == 1 { 0.5pt } else { 0pt }))
 #figure(
