@@ -88,9 +88,14 @@ and given choice#scale-choice-footnote <scale-choice-footnote> of $xi in RR_+$.
   placement: none,
 ) <fig:methods-binarisation>
 
+#let smooth-thresholding-derivation = footnote[
+  See derivation in @sec:appendix-derivations
+  (#internal-link(<derivation:smooth-thresholding>)).
+]
+
 Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
 such that #box[$x + epsilon > 0$] (region A), or equivalently when $epsilon < x$ (region B).
-The probability that $x$ is mapped to $+1$ is then
+The probability that $x$ is mapped to $+1$ is then:#smooth-thresholding-derivation
 
 $
   P(x mapsto +1) = Phi(x/xi)

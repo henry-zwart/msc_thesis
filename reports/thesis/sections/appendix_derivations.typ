@@ -1,38 +1,72 @@
 #import "@preview/equate:0.3.3": equate
 
+#import "@preview/theorion:0.6.0": *
+// #import cosmos.simple: *
+#import cosmos.fancy: *
+// #import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 #show: equate.with(breakable: true)//, sub-numbering: true)
 #set math.equation(numbering: "(1.1)")
 
 = Derivations <sec:appendix-derivations>
 
 
-== Model
+== Possibility of internal consistency
 
-=== Positive edges implying consistency possible
+#conjecture[
+  Internal consistency in a calibrated Kinetic Belief System model is possible to
+  achieve, if, and only if, it is possible to re-code the calibration dataset variables
+  such that there are no negative edges in the resulting model.
+]
 
-Part 1:
-+ Internal consistency is possible, iff, for a given model, there exists a configuration
-  of belief states such that every pair of positively associated beliefs have the same
-  state, and every pair of negatively associated beliefs have opposite states.
-+ Corrolary: Internal consistency is not possible, iff, for every configuration, there
-  exist a pair of beliefs which are in conflict. i.e., where positively associated
-  beliefs have opposing states, or negatively associated beliefs have the same state.
+#proof[
+  First, we note the following fact, which is simply the definition of internal
+  consistency in the Kinetic Belief System model (KBS).
 
-+ Fit model to dataset
-+ Signs of edges denote whether each pair of beliefs is aligned or misaligned under the
-  original variable coding
-+ Reversing the scale for a variable has the effect of multiplying its edge signs by
-  $-1$.
-+ Notice that there is a bijective mapping between possible re-codings of the dataset,
-  and possible model configurations. The result follows immediately.
-  + Any re-coding which makes all edges positive is an example of internal consistency
-    in the original model.
-  + If for every re-coding, there exists at least one negative edge, then internal
-    consistency is impossible.
-+ Therefore, internal consistency is possible, if and only if, it is possible to re-code
-  the dataset variables such that there are no negative edges in the resulting model.
+  "Internal consistency if possible in a KBS model,
+  iff, there exists a configuration of belief states such that every pair of
+  positively associated beliefs have the same state, and every pair of negatively
+  associated beliefs have opposite states."
 
-== Smooth thresholding probability
+  As a corrolary, have that internal consistency is _not_  possible in a KBS
+  model, iff, for _every_ configuration of belief states there exist
+  a pair of beliefs which are in conflict, i.e., which are positively associated
+  but have opposing states, or which are negatively associated but have the same state.
+
+  Now, let $D$ be a calibration dataset and $cal(M)$ be a KBS model calibrated to $D$,
+  with parameters $bold(theta) = chevron bold(J), bold(h) chevron.r$.
+
+  For a pair of
+  beliefs $S_i, S_j$ within the model, where there exists an interaction term $J_(i j)$,
+  the sign of this interaction term describes whether the variables representing these
+  beliefs in the dataset $D$ are aligned ($J_(i j) > 0$) or misaligned ($J_(i j) < 0$).
+  Call this result *A*.
+
+  For any belief, if we were to reverse the scale of the associated dataset variable,
+  this has the effect of multiplying all (inbound and outbound) interaction effects
+  connecting to this belief by $-1$.
+
+  Notice that there is a bijective mapping between possible re-codings of the dataset
+  and possible model configurations. Specifically, if we let the configuration
+  $[+1, +1, ..., +1]$ correspond to the original dataset coding, then for any re-coding
+  which reverses the scales for a subset of the variables, this corresponds uniquely to
+  the configuration in which the associated belief states are also inverted.
+
+  We now prove the main result. Suppose that for a given re-coding of the dataset, all
+  edges in the calibrated model are positive. Then the corresponding configuration under
+  the bijective mapping is an example of internal consistency in the original model.
+  On the other hand, suppose that for every re-coding there exists at least one negative
+  edge. Then it follows that in the original model, all possible belief configurations
+  result in at least one pair of beliefs which are misaligned, and hence internal
+  consistency is not possible. Furthermore, these results apply not only to the
+  original model, but to all models calibrated under re-codings of the dataset, due to
+  the bijection between re-codings and configurations.
+]
+
+
+== Smooth thresholding probability <derivation:smooth-thresholding>
 
 Let $b_xi$ be a soft thresholding function for $xi in RR_(> 0)$, and let $x in RR$.
 We now prove the statement from @eqn:methods-dataset-binarisation-probability-map-to-1,
