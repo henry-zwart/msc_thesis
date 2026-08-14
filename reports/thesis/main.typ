@@ -57,6 +57,8 @@
 #let extra-results-appendix = include "sections/appendix_extra_results.typ"
 #let dataset-appendix = include "sections/appendix_dataset.typ"
 
+#let test-frontmatter = (title: "Test frontmatter", body: lorem(150))
+
 #show: thesis.with(
   title: title,
   author: author,
@@ -69,9 +71,10 @@
   abstract: abstract,
   declaration-of-authorship-body: declaration-of-authorship,
   acknowledgements: acknowledgements,
-  abbreviations: abbreviations,
+  abbreviations: none,
   references: bibliography("references.bib", style: "apa"),
   additional-frontmatter: (),
+  pre-chapter-content: (include "sections/notation.typ",),
   signature: signature,
   appendices: (derivation-appendix, extra-results-appendix, dataset-appendix),
   caption-width: 95%,
@@ -80,8 +83,8 @@
 // = Notes (things to remember, to-dos)
 // #include "sections/notes.typ"
 
-= Terminology and notation <sec:notation>
-#include "sections/notation.typ"
+//= Terminology and notation <sec:notation>
+//#include "sections/notation.typ"
 
 = Introduction <sec:introduction>
 #include "sections/introduction.typ"

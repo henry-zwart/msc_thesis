@@ -1,5 +1,6 @@
 // TODO: Outline terminology, notation. e.g., vector notation, random variables, etc.
 //
+= Notation <sec:notation>
 
 Define key terminology, outline notation used in following sections.
 

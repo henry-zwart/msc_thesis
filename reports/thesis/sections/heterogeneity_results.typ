@@ -101,7 +101,7 @@ calibrated in @sec:calibration.
 #figure(
   image("../results/figures/model/intervention_effect_distribution/asym_25_cc_action.pdf"),
   caption: caption(
-    short: [Individual effective of 'Climate Action 'interventions],
+    short: [Individual effectiveness of inbound `CC Action` interventions],
     long: [
       The expected effect of intervention for strong interventions #box[($delta_h = 2.5$)]
       targeting 'Climate Action' exhibits substantial variation between
@@ -119,7 +119,7 @@ substantially among survey participants, as observed in
 #figure(
   image("../results/figures/model/heterogeneous_effects/climate_policy_treedepth_3.pdf"),
   caption: caption(
-    short: [Characterisation of responsiveness to intervention],
+    short: [Conditions for effective interventions],
     long: [
       Pre-intervention states, or 'personas', for which interventions on different beliefs
       (rows) are most effective for changing attitudes toward climate action in the
@@ -305,7 +305,7 @@ are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-di
     "../results/figures/model_fit/ideology_interaction_heatmap.pdf",
   ),
   caption: caption(
-    short: [Conservative and liberal belief system interaction matrices],
+    short: [Conservative and liberal belief systems],
     long: [
       (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices
       ($bold(J)$) for asymmetric belief systems calibrated to the conservative ($n=507$)
