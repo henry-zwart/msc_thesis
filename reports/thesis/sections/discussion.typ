@@ -774,7 +774,7 @@ nature of tree depth to limit complexity (#internal-link(<rq3-prespecified-compl
 The first issue can be resolved post-hoc (by assessing correlations with identified
 variables). One promising direction for the second is to identify more flexible
 rulesets, allowing arbitrary quantity and size, while penalising characterisation
-complexity directly, e.g., using description length @aogaFindingProbabilisticRule2018
+complexity directly, e.g., using description length @aoga2018finding
 @proencaInterpretableMulticlassClassification2020.
 
 The models calibrated in @sec:calibration are assumed to reflect 'natural' belief system
