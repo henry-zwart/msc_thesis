@@ -1,39 +1,118 @@
 #import "@preview/equate:0.3.3": equate
 
+#import "@preview/theorion:0.6.0": *
+// #import cosmos.simple: *
+#import cosmos.fancy: *
+// #import cosmos.rainbow: *
+// #import cosmos.clouds: *
+#show: show-theorion
+
 #show: equate.with(breakable: true)//, sub-numbering: true)
 #set math.equation(numbering: "(1.1)")
 
 = Derivations <sec:appendix-derivations>
 
 
-== Model
+== Possibility of internal consistency
 
-=== Positive edges implying consistency possible
+#conjecture[
+  Internal consistency in a calibrated Kinetic Belief System model is possible to
+  achieve, if, and only if, it is possible to re-code the calibration dataset variables
+  such that there are no negative edges in the resulting model.
+]
 
-Part 1:
-+ Internal consistency is possible, iff, for a given model, there exists a configuration
-  of belief states such that every pair of positively associated beliefs have the same
-  state, and every pair of negatively associated beliefs have opposite states.
-+ Corrolary: Internal consistency is not possible, iff, for every configuration, there
-  exist a pair of beliefs which are in conflict. i.e., where positively associated
-  beliefs have opposing states, or negatively associated beliefs have the same state.
+#proof[
+  First, we note the following fact, which is simply the definition of internal
+  consistency in the Kinetic Belief System model (KBS).
 
-+ Fit model to dataset
-+ Signs of edges denote whether each pair of beliefs is aligned or misaligned under the
-  original variable coding
-+ Reversing the scale for a variable has the effect of multiplying its edge signs by
-  $-1$.
-+ Notice that there is a bijective mapping between possible re-codings of the dataset,
-  and possible model configurations. The result follows immediately.
-  + Any re-coding which makes all edges positive is an example of internal consistency
-    in the original model.
-  + If for every re-coding, there exists at least one negative edge, then internal
-    consistency is impossible.
-+ Therefore, internal consistency is possible, if and only if, it is possible to re-code
-  the dataset variables such that there are no negative edges in the resulting model.
+  "Internal consistency if possible in a KBS model,
+  iff, there exists a configuration of belief states such that every pair of
+  positively associated beliefs have the same state, and every pair of negatively
+  associated beliefs have opposite states."
+
+  As a corrolary, have that internal consistency is _not_  possible in a KBS
+  model, iff, for _every_ configuration of belief states there exist
+  a pair of beliefs which are in conflict, i.e., which are positively associated
+  but have opposing states, or which are negatively associated but have the same state.
+
+  Now, let $D$ be a calibration dataset and $cal(M)$ be a KBS model calibrated to $D$,
+  with parameters $bold(theta) = chevron bold(J), bold(h) chevron.r$.
+
+  For a pair of
+  beliefs $S_i, S_j$ within the model, where there exists an interaction term $J_(i j)$,
+  the sign of this interaction term describes whether the variables representing these
+  beliefs in the dataset $D$ are aligned ($J_(i j) > 0$) or misaligned ($J_(i j) < 0$).
+  Call this result *A*.
+
+  For any belief, if we were to reverse the scale of the associated dataset variable,
+  this has the effect of multiplying all (inbound and outbound) interaction effects
+  connecting to this belief by $-1$.
+
+  Notice that there is a bijective mapping between possible re-codings of the dataset
+  and possible model configurations. Specifically, if we let the configuration
+  $[+1, +1, ..., +1]$ correspond to the original dataset coding, then for any re-coding
+  which reverses the scales for a subset of the variables, this corresponds uniquely to
+  the configuration in which the associated belief states are also inverted.
+
+  We now prove the main result. Suppose that for a given re-coding of the dataset, all
+  edges in the calibrated model are positive. Then the corresponding configuration under
+  the bijective mapping is an example of internal consistency in the original model.
+  On the other hand, suppose that for every re-coding there exists at least one negative
+  edge. Then it follows that in the original model, all possible belief configurations
+  result in at least one pair of beliefs which are misaligned, and hence internal
+  consistency is not possible. Furthermore, these results apply not only to the
+  original model, but to all models calibrated under re-codings of the dataset, due to
+  the bijection between re-codings and configurations.
+]
+
+
+== Smooth thresholding probability <derivation:smooth-thresholding>
+
+Let $b_xi$ be a soft thresholding function for $xi in RR_(> 0)$, and let $x in RR$.
+We now prove the statement from @eqn:methods-dataset-binarisation-probability-map-to-1,
+which states that $b_xi$ maps $x$ to $+1$ with probability described in terms of
+the standard normal cumulative distribution function:
+
+$
+  P(x mapsto +1) = Phi(x / xi)
+$
+
+Recall the following diagram from @chp:parameter-estimation:
+
+#align(
+  center,
+  image(
+    "../results/figures/methods/binarisation/distribution.pdf",
+  ),
+)
+
+In this example, $x < 0$, but the following argument holds in general. Notice
+that in this diagram, $x$ is mapped to $+1$ if the sampled noise term,
+$epsilon ~ cal(N)(0, xi)$, is such that #box[$x + epsilon$] is in region
+'A', i.e.,
+
+$
+  P(x mapsto +1) = P(x + epsilon > 0)
+$
+
+Or equivalently,
+
+$
+  P(x mapsto +1) = P(epsilon > -x)
+$
+
+Using the symmetry of the Gaussian distribution, this reduces to the
+standard normal cumulative distribution, as desired:
+
+$
+  P(x mapsto +1) & = P(epsilon > -x) \
+                 & = P(epsilon < x) \
+                 & = Phi(x / xi)
+$
 
 
 == Parameter estimation
+
 
 Let $D$ be a dataset comprising $T in NN$ observations for each of $M in NN$ individuals,
 where each observation measures the (not necessarily binary) state of $N in NN$ beliefs,
@@ -178,7 +257,7 @@ $
   partial/(partial J_(j i)) h_k^"eff" (bold(s)) = cases(s_j\, quad "if" k = i, 0\, quad "otherwise")
 $ <eqn:apdx-derivation-partial-interaction-asym>
 
-Finally, if the KBS model has symmetric interaction parameters, then each interaction
+If the KBS model has symmetric interaction parameters, then each interaction
 parameter, $theta = J_(i j)$, contributes to the behaviour of both $S_i$ and $S_j$.
 Therefore the partial derivative of the effective baseline activation
 $h_k^"eff" (bold(s))$ is nonzero if $k in.not {i,j}$:
@@ -187,23 +266,42 @@ $
   partial/(partial J_(i j)) h_k^"eff" (bold(s)) = cases(s_j\, quad "if" k in {i, j}, 0\, quad "otherwise")
 $ <eqn:apdx-derivation-partial-interaction-sym>
 
-Substituting these into @eqn:apdx-derivation-ll-partial-generic, we obtain the following
-partial derivatives of the expected log-likelihood with respect to each parameter type:
+We must also account for the partial derivative of the regularisation term. For an
+arbitrary parameter $theta$ and regularisation hyperparameters
+$lambda in RR_(>= 0), epsilon in RR_(>0)$, this is:
 
 $
-  partial/(partial h_i) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] \
-  partial/(partial J_(j i)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] \
+  partial/(partial theta) lambda sum_(theta' in bold(theta)) sqrt(theta'^2 + epsilon) &= lambda partial/(partial theta) sqrt(theta^2 + epsilon) \
+  &= (lambda theta) / sqrt(theta^2 + epsilon)
+$
+
+Finally, the complete partial derivative of the objective function $f$, with respect
+to a parameter $theta$ is:
+
+$
+  partial/(partial theta) f(D; bold(theta)) = partial/(partial theta) cal(L)_D (bold(theta)) - partial/(partial theta) lambda sum_(theta' in bold(theta)) sqrt(theta'^2 + epsilon)
+$
+
+Substituting the above results, we obtain the following partial derivatives of $f$ with
+respect to each parameter type:
+
+#{
+  show math.equation: set align(left)
+  [
+    $
+      partial/(partial h_i) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[sigma_((m),i)^(t+1) - tanh[h_i^"eff" (bold(sigma)_((m))^t)]] - (lambda h_i)/sqrt(h_i^2 + epsilon)quad &""\
+      partial/(partial J_(j i)) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[alpha_(m,t)(i,j)] - (lambda J_(j i))/sqrt(J_(j i)^2 + epsilon)& "(Asymmetric)" \
+      partial/(partial J_(i j)) f(D; bold(theta)) &= sum_(m=1)^M sum_(t=1)^(T-1) EE[alpha_(m,t)(i,j) + alpha_(m,t)(j,i)] - (lambda J_(i j))/sqrt(J_(i j)^2 + epsilon) & "(Symmetric)" \
+    $
+  ]
+}
+
+where
+
+$
+  alpha_(m,t)(i,j) = (sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t
 $
 
 
-
-
-
-
-
-== Dataset
-
-=== Binarisation probability
-@eqn:methods-dataset-binarisation-probability-map-to-1
 
 
