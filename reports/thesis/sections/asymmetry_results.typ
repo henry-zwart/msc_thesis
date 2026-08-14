@@ -326,7 +326,7 @@ initialise the associated model (symmetric/asymmetric; intervention/null) with t
 binarised observations from the final wave of the climate beliefs dataset. We then
 draw consecutive samples from the model using parallel glauber dynamics
 (@subsec:methods-glauber-dynamics) until $t=5$, before measuring the state of the
-target spin#timescale-footnote. To account for stochasticity in both the simulation
+target spin.#timescale-footnote To account for stochasticity in both the simulation
 procedure and binarisation of individuals' initial states we perform 500 repeats for
 each intervention.
 
@@ -468,7 +468,7 @@ in the symmetric model (i.e., it has higher average interaction effects).
 
 Notice that the asymmetric model includes outbound (but not inbound) interactions from
 `Politics` to `CC Human` and `Weather Worry`, while symmetric model omits interactions
-with these beliefs entirely#different-connectivity-footnote. In contrast, `CC Worry` has
+with these beliefs entirely.#different-connectivity-footnote In contrast, `CC Worry` has
 inbound and outbound interactions with all other spins in both models. This explain the
 observed differences in the effects of intervention and asymmetry for `CC Worry` and
 `Politics`: `CC Worry` has higher effects of intervention in
@@ -553,10 +553,10 @@ interventions. To assess relative effectiveness, we therefore also estimate the
 expected ranking over points-of-intervention (the bottom panel of
 @fig:asymmetry-results-inbound-effect). For each repeat, we order the
 points-of-intervention in increasing order of average collective effect of
-intervention. Higher values are assigned higher ranks#rank-order-footnote. In the case
+intervention. Higher values are assigned higher ranks.#rank-order-footnote In the case
 of a tie, we assign
 all tied spins the minimum rank which would have been assigned to the group, had they
-been distinct#tiebreak-footnote.
+been distinct.#tiebreak-footnote
 
 As with the outbound case, we find that the effect of intervention on `CC Action` varies
 depending on where we intervene. Points-of-intervention (along the horizontal axes) are

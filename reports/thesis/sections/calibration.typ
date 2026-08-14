@@ -275,7 +275,7 @@ intervals around each parameter estimate.
 We use bootstrapping to estimate the uncertainty in our parameter estimates due to
 sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
 $M$, $T$, and $N$ denote the number of participants, observations, and spins
-respectively#dataset-size-footnote. We construct 500 bootstrapped
+respectively.#dataset-size-footnote We construct 500 bootstrapped
 datasets by sampling rows (participants) with replacement from $bold(D)$,
 such that each bootstrapped dataset has the same shape as the complete dataset.
 
@@ -323,9 +323,9 @@ climate change) to zero, indicating that the dataset provides limited evidence t
 tend to be either positive or negative.
 
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
-with respect to the modelled timescale#timescale-footnote (they are 'sticky'), which
+with respect to the modelled timescale (they are 'sticky'), which
 is consistent with prior studies looking at the rate of change for beliefs
-@greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.
+@greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.#timescale-footnote
 This is particularly true for `Politics`, and less so for `CC Others Worry` and
 `CC Impact`.
 
@@ -482,13 +482,14 @@ $
 $ <def:calibration-cross-entropy>
 
 #let nonneg-rel-entropy = footnote[
-  The relative entropy is strictly non-negative (*CITE*), so the binarisation entropy is
+  The relative entropy is strictly non-negative
+  @csiszarIDivergenceGeometryProbability1975, so the binarisation entropy is
   a lower bound on the cross-entropy. This aligns with our intuition---the model cannot
   possibly be highly accurate when the binarisation process is very uncertain.
 ]
 The relative entropy, $D(P || Q)$, is small when either (i) the model
 accurately predicts the observed binarised value such that the cross-entropy is
-low#nonneg-rel-entropy, or (ii) the binarisation process is very uncertain. It follows
+low,#nonneg-rel-entropy or (ii) the binarisation process is very uncertain. It follows
 that the relative entropy is high in cases where the model fails to accurately predict
 the next state, despite the binarisation process being fairly deterministic.
 

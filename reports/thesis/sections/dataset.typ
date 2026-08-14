@@ -215,15 +215,18 @@ matches the _prescribed_ schema. Since response data types vary between question
 (see @tab:dataset-types), the type-checking must be
 flexible and capable of handling complex data types.
 
-For instance, categorical multiple-choice responses are represented using a
-```python list[Enum]```, where ```python Enum``` is a question-specific enum-type
-#footnote[An enum is a type defined by a finite set of allowable values. In our case
+#let enum-footnote = footnote[
+  An enum is a type defined by a finite set of allowable values. In our case
   the values are human-readable strings. For instance, the `dem_urban` survey question,
   which asks 'What kind of area do you live in?' has responses with data type described
   by the enum ${"Urban", "Suburban", "Rural"}$.
-]. Type validation for a multiple-choice question thus requires checking: (i) that the
-response column comprises ```python list```'s, and (ii) that all list elements belong to
-the set of values defined by the ```python Enum```.
+]
+
+For instance, categorical multiple-choice responses are represented using a
+```python list[Enum]```, where ```python Enum``` is a question-specific
+enum-type.#enum-footnote Type validation for a multiple-choice question thus requires
+checking: (i) that the response column comprises ```python list```'s, and (ii) that all
+list elements belong to the set of values defined by the ```python Enum```.
 
 //#set table(stroke: (x, y) => (y: if y in (0,1) { 0.5pt } else { 0pt }))
 // #set table(
@@ -495,10 +498,14 @@ categories. We coerce these to `list[Enum]` types, which have all the benefits o
 categorical enums discussed above, and enable simpler programmatic analysis (e.g.,
 testing for set membership, determining differences in response sets between waves).
 
+#let empty-string-fixing-footnote = footnote[
+  Note that this particular value mapping must happen _after_ null-value validation
+  (described in @sec:dataset-validation), otherwise empty strings will be considered
+  errors.
+]
 Finally, we perform a series of value updates to ensure consistency between responses
 to different questions. This consists in replacing all empty string responses with
-`null` values#footnote[Note that this particular value mapping must happen _after_
-  null-value validation (@sec:dataset-validation).], and re-mapping integer columns
+`null` values,#empty-string-fixing-footnote and re-mapping integer columns
 (both numeric and ordinal) such that the minimum value is zero.
 
 === Cleaning <subsec:dataset-preprocessing-cleaning>
@@ -650,7 +657,7 @@ with approximately equispaced observations per-individual, and with no null valu
 We additionally constrain the dataset to include three specific variables of interest:
 
 #let cc-human-footnote = footnote[
-  In the CCCV survey, the item `CC Human` actually has four possible (categorical)
+  In the CCCV survey, the item `CC Human` has four possible (categorical)
   responses, reflecting all combinations of 'human activities' and 'natural causes' as
   the causes of climate change. We re-map these values to 'human-caused' and
   'not human-caused', such that the variable is instead binary, and thus both amenible
@@ -710,11 +717,11 @@ correlation between $X$ and $Y$ given the remaining variables.
   positive.
 ]
 @fig:dataset-full-subset-var displays the contemporaneous and temporal networks for the
-filtered set of 17 candidate variables#re-coded-footnote, with rows and columns ordered
-using hierarchical clustering on the temporal matrix to highlight groups of related
-items. Values with magnitude less than 0.05 are excluded, as is the (symmetric) upper
-triangle of the contemporaneous network. The values in each row of the temporal matrix
-are the regression predictors for that row's variable. Therefore we interpret row $i$ as
+filtered set of 17 candidate variables, with rows and columns ordered using hierarchical
+clustering on the temporal matrix to highlight groups of related items.#re-coded-footnote
+Values with magnitude less than 0.05 are excluded, as is the (symmetric) upper triangle
+of the contemporaneous network. The values in each row of the temporal matrix are the
+regression predictors for that row's variable. Therefore we interpret row $i$ as
 describing the variables which _influence_ item $i$, and column $i$ as describing the
 variables which are influenced _by_ item $i$.
 

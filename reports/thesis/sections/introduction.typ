@@ -32,7 +32,7 @@
 
 Our subjective interpretations of the world, natural phenomena, and
 those around us are dependent on a collection of beliefs about how things are,
-and how they work. These beliefs#belief-defn-footnote are highly interdependent,
+and how they work.#belief-defn-footnote These beliefs are highly interdependent,
 related by logical and psychological associations in what are often referred to as
 belief systems @converseNatureBeliefSystems2006 @fishbein1977belief. Beliefs
 are also subject to social dynamics @galesicHumanSocialSensing2021, as
@@ -233,7 +233,7 @@ of this study they do not test for the significance of these differences.
   relationships.
 ]
 Despite general agreement on the plausibility of asymmetric interactions,
-current research remains predominantly focused on symmetric models#bn-footnote.
+current research remains predominantly focused on symmetric models.#bn-footnote
 A handful of authors make reference to simulation studies in which asymmetric edges
 are used and found to have minimal impact on model dynamics
 @vandermaasPolarizationIndividualsHierarchical2020 @monroeGeneralConnectionistModel2008.

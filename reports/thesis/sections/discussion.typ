@@ -36,18 +36,17 @@ influence over several other beliefs.
 #let within-person-footnote = footnote[
   Note that this interpretation (in particular, the use of the verb 'constrains') depends
   on the assumption that the calibrated model captures within-person associations. We
-  discuss this matter in some depth
-  #link(<within-person-discussion>)[later in this chapter].
+  discuss this matter in some depth later in this chapter
+  (#internal-link(<within-person-discussion>)).
 ]
 
 How should we interpret these asymmetric relations? Recall that relations in the
-KBS model reflect temporal influence---how much one belief
-constrains#within-person-footnote the future state of another
-(@chp:kinetic-belief-system). An asymmetric relation reflects a constraint
-differential, where one belief has greater influence on the other than vice
-versa. More generally, the asymmetric model distinguishes between two forces: influence
-and influentiability. Influence (the strength of outbound interactions) determines how
-the extent to which one belief constrains others, while influentiability
+KBS model reflect temporal influence---how much one belief constrains the future state of
+another (@chp:kinetic-belief-system).#within-person-footnote An asymmetric relation
+reflects a constraint differential, where one belief has greater influence on the other
+than vice versa. More generally, the asymmetric model distinguishes between two forces:
+influence and influentiability. Influence (the strength of outbound interactions)
+determines how the extent to which one belief constrains others, while influentiability
 (the strength of inbound interactions) determines the extent to which its own behaviour
 is constrained by others.
 
@@ -181,7 +180,7 @@ ideology/alignment, on account of its increased outbound interactions and intera
 strength. The key difference, however, lies in the beliefs' influentiability; while
 climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
-edges#full-model-disclaimer. That is, several beliefs influenced by this
+edges.#full-model-disclaimer That is, several beliefs influenced by this
 variable have no influence on it themselves. Since the symmetric model
 must include or exclude both directional interactions between a pair of
 beliefs, cases where the asymmetric model specifies an interaction in only one
@@ -244,15 +243,19 @@ increasing the effectiveness of interventions which were already effective.
   depth three has $2^3 = 8$ leaves, and thus eight personas.
 ]
 
-In general, the identified personas characterise the conditions for effective
-interventions accurately. The rare instances where individuals with these traits fell
-outside the high-effect region may be attributable to the rough-and-ready use of the
-upper quartile to classify high-effect interventions. On the other hand, while the
-personas capture _most_ cases where interventions are effective, this varies between
-points-of-intervention. This directly reflects the limited representational capacity of
-effect characterisation functions based on shallow decision trees; a tree depth of three
-permits at most eight personas#persona-count-footnote to describe the full range of
-intervention effectiveness, each of which comprises at most three conditions.
+#{
+  [
+    In general, the identified personas characterise the conditions for effective
+    interventions accurately. The rare instances where individuals with these traits fell
+    outside the high-effect region may be attributable to the rough-and-ready use of the
+    upper quartile to classify high-effect interventions. On the other hand, while the
+    personas capture _most_ cases where interventions are effective, this varies between
+    points-of-intervention. This directly reflects the limited representational capacity of
+    effect characterisation functions based on shallow decision trees; a tree depth of three
+    permits at most eight personas to describe the full range of intervention effectiveness,
+    each of which comprises at most three conditions.#persona-count-footnote
+  ]
+}
 <rq3-prespecified-complexity>
 // NOTE: Do I need to say anything else here?
 
@@ -357,16 +360,15 @@ account for belief stability due to the presence of stable traits
 individual random intercepts (in our case, individual baseline activations) which
 are fixed across waves and account for some of the effects of stable traits. However,
 at least three waves of data are required for the random intercept model to be
-identifiable#identifiability-footnote, while the climate beliefs dataset comprises only
-two waves.
-In unreported experiments we tried a similar approach, modelling baseline activations
-as linear functions of demographic factors (e.g., age, education, rural/urban status),
-which requires only two waves to be identifiable. While the resulting baseline
-activations varied substantially between individuals, indicating that they captured
-some differences in stable traits, we found little-to-no impact on either the inferred
-interactions or the intervention experiment results. Hence further investigation is
-required to determine the extent to which the models calibrated in @sec:calibration
-capture within-person associations.
+identifiable, while the climate beliefs dataset comprises only two
+waves.#identifiability-footnote In unreported experiments we tried a similar approach,
+modelling baseline activations as linear functions of demographic factors (e.g., age,
+education, rural/urban status), which requires only two waves to be identifiable. While
+the resulting baseline activations varied substantially between individuals, indicating
+that they captured some differences in stable traits, we found little-to-no impact on
+either the inferred interactions or the intervention experiment results. Hence further
+investigation is required to determine the extent to which the models calibrated in
+@sec:calibration capture within-person associations.
 
 Relatedly, since the climate beliefs dataset comprises only two waves, we cannot
 distinguish between belief system dynamics arising due to endogenous factors (the
@@ -421,7 +423,7 @@ observations, known as the _time-interval dependency problem_
 @gollobTakingAccountTime1987. #cite(<gollobTakingAccountTime1987>, form: "prose")
 demonstrate that in certain contexts, inferred effect size, sign, and existence can
 be sensitive to interval duration. This is particularly evident in cases where the
-true dynamics play out at a much faster timescale than the measurements#aspirin-footnote.
+true dynamics play out at a much faster timescale than the measurements.#aspirin-footnote
 Furthermore, #cite(<ryanTimeInterveneContinuousTime2022>, form: "prose") argue that
 when several state updates can occur between observations, the inferred effects should
 be treated as _total effects_ rather than _direct effects_. This is potentially critical
@@ -821,8 +823,8 @@ effective @aggarwalWiredCoherenceNetwork2026 @brewerIncreasingVaccinationPutting
 Rather than attempting to affect beliefs directly, structural interventions
 can be seen as amplifying or changing the influence between beliefs. Although we have
 not considered such interventions in this study, the open source _Ising_ Python
-package#package-url-footnote released alongside this study already supports these,
-inviting future work on this topic.
+package released alongside this study already supports these, inviting future work on
+this topic.#package-url-footnote
 
 Finally, we adopt a simplistic view of the interface between belief systems and the
 external world. This is most evident, for instance, in our treatment of interventions as

@@ -65,10 +65,14 @@ similarly.
   range of values which are considered 'near-neutral'.
 ]
 
-We can improve on this using *soft thresholding*, in which each data value $x in RR$
-is perturbed by an independent noise term $epsilon ~ cal(N)(0, xi)$ prior to this
-mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
-and given choice#scale-choice-footnote <scale-choice-footnote> of $xi in RR_+$.
+#{
+  [
+    We can improve on this using *soft thresholding*, in which each data value $x in RR$
+    is perturbed by an independent noise term $epsilon ~ cal(N)(0, xi)$ prior to this
+    mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
+    and given choice of $xi in RR_+$.#scale-choice-footnote <scale-choice-footnote>
+  ]
+}
 <sec:parameter-estimation-soft-binarisation>
 
 #figure(
@@ -267,15 +271,14 @@ is a (non-constant) probabilistic binarisation function, @eqn:parameter-estimati
 uses information regarding both binarisation possibilities.
 
 Consider the case where $b := b_xi$ is the soft thresholding function defined in the
-above section, for $xi in RR_+$. If $xi$ is chosen
-appropriately@scale-choice-footnote then data values which are considered somewhat
-neutral or ambivalent are mapped to both $-1$ and $+1$ with nontrivial probability.
-When using @eqn:parameter-estimation-mele, the contribution of such values to the
-objective function is an expectation over possible binarisations, and we obtain a
-parameterised model which explains both possibilities in accordance with their
-probability. Therefore, by avoiding explicit binarisation in this way, we can
-obtain binary models which incorporate the neutrality and varying degrees of certainty
-present in non-binarised data.
+above section, for $xi in RR_+$. If $xi$ is chosen appropriately then data values which
+are considered somewhat neutral or ambivalent are mapped to both $-1$ and $+1$ with
+nontrivial probability.@scale-choice-footnote When using @eqn:parameter-estimation-mele,
+the contribution of such values to the objective function is an expectation over
+possible binarisations, and we obtain a parameterised model which explains both
+possibilities in accordance with their probability. Therefore, by avoiding explicit
+binarisation in this way, we can obtain binary models which incorporate the neutrality
+and varying degrees of certainty present in non-binarised data.
 
 We note that this is far from the only approach which can be used to account for
 neutrality in belief system models. For instance,
@@ -537,7 +540,7 @@ the BIC implicitly penalises models which are too sparse, or too dense.
 The parameter
 $gamma in RR_(>= 0)$ specifies the degree to which the EBIC penalises such classes of models,
 with $gamma = 1$ corresponding to a uniform prior over models with $k$
-parameters#ebic-footnote, for each $k in 0...p$.
+parameters, for each $k in 0...p$.#ebic-footnote
 #cite(<barberHighdimensionalIsingModel2015>, form: "prose") demonstrate that small,
 nonzero choices of $gamma$ are sufficient to improve the accuracy of Ising model
 structural inference in various contexts.

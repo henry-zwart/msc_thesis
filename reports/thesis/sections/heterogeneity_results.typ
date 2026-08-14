@@ -160,7 +160,7 @@ and `Weather Worry`), which exhibit no meaningfully effective interventions.
 // for interventions on `CC Worry`.
 
 
-// TODO: FOOTNOTE NOT INCLUDED
+// NOTE: FOOTNOTE NOT INCLUDED
 #let rounding-footnote = footnote[
   As our intention is to capture coarse patterns, we round the original `f64` values
   describing the interval boundaries extracted from the model to the nearest multiple
@@ -174,7 +174,7 @@ whenever the intervention effect is high. A complete characterisation includes b
 variables; however, a decision tree is likely to include only one, since after splitting
 on one of the two variables, the other is redundant. This is especially true for shallow
 decision trees.
-<footnote:incomplete-descriptions>
+<incomplete-descriptions>
 
 // #let incomplete-descriptions-footnote = footnote[
 //   Note that the personas are not necessarily complete. For instance, suppose that a pair
@@ -229,7 +229,7 @@ spins.
 
 Second, we observe that for each point-of-intervention (with the exception of `CC Real`
 on account of high correlation with `CC Human`, relating to our discussion earlier in
-this section #internal-link(<footnote:incomplete-descriptions>)),
+this section #internal-link(<incomplete-descriptions>)),
 a necessary condition for high effect is that the initial state of point of intervention
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of
@@ -251,7 +251,7 @@ interventions with respect to pre-intervention state
 Finally, the `CC Real` scenario is unique in that it includes two prevalent personas.
 The more prevalent persona corresponds to situations in which individuals are worried
 about the current/future effects of climate change, but do not believe that climate
-change is human-caused#negative-cc-human-footnote. In the case where an individual does
+change is human-caused.#negative-cc-human-footnote In the case where an individual does
 believe that climate change is human-caused, this intervention may still be effective,
 so long as they do not already have a positive attitude toward climate action.
 
