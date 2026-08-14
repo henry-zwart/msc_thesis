@@ -9,9 +9,6 @@
 // - Address the specific variables we look at in the outbound/inbound experiments.
 //   Are the variables interesting independently of the asymmetry results/theoretically
 //   motivated?
-// - Mention our hypotheses, where they exist.
-//   - RQ3: That interventions can only be effective when the target and the
-//     point-of-intervention are both low.
 
 // NOTE:
 // #emph-block[

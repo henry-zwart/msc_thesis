@@ -13,9 +13,6 @@
 //   beliefs dataset are provided in @sec:dataset.
 // ]
 
-// *TODO:*
-// - Discuss differences in baseline activations.
-//   - Exogenous influences, and unmeasured beliefs
 
 #let ideology-eval-footnote = footnote[
   We do not evaluate the conservative and liberal models here, but

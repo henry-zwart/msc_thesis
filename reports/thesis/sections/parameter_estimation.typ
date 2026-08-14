@@ -244,12 +244,6 @@ unambiguous or non-neutral through binarisation.
 
 == Maximising the _expected_ likelihood <subsec:methods-parameter-estimation>
 
-// For the purposes of the experiments in the following sections, we perform parameter
-// estimation to calibrate the belief system model described in
-// @subsec:theory-nonequilibrium-belief-system-model to the climate beliefs dataset
-// (@sec:dataset). We first outline the context of the parameter estimation problem,
-// and then present our approach. We omit derivation details in this section;
-// however, the curious reader can find these in Appendix A (*TODO*).
 
 We now introduce a variation on maximum likelihood estimation which resolves the above
 issue by avoiding binarisation altogether.

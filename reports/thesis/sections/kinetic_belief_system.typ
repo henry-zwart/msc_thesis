@@ -129,15 +129,6 @@ possible future states.
 
 == Kinetic Belief Systems <subsec:theory-nonequilibrium-belief-system-model>
 
-// *TODO:*
-// - Builds on the CAN model, also known as the 'Ising model of attitudes'
-//   @vandermaasPolarizationIndividualsHierarchical2020
-//   - Also @brandtEvaluatingBeliefSystem2021
-// - Points of contrast:
-//   - Asymmetric interactions
-//   - Self-interactions
-// - @brandtEvaluatingBeliefSystem2021 also uses transition probabilities like ours
-//   - Also @haslbeckInterpretingIsingModel2021
 
 
 // *NOTE:*

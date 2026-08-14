@@ -1,4 +1,5 @@
 #import "@local/drifting-cls-thesis:0.1.0": caption
+#import "./discussion.typ": internal-link
 #import "./introduction.typ": RQ3, RQ4
 
 #import "@preview/theorion:0.6.0": *
@@ -167,16 +168,22 @@ and `Weather Worry`), which exhibit no meaningfully effective interventions.
 ]
 
 
+Note that the identified personas are not necessarily complete. For instance, suppose
+that a pair of variables are highly correlated in the initial state, and are 'Low'
+whenever the intervention effect is high. A complete characterisation includes both
+variables; however, a decision tree is likely to include only one, since after splitting
+on one of the two variables, the other is redundant. This is especially true for shallow
+decision trees.
+<footnote:incomplete-descriptions>
 
-// TODO: Consider making this part of the text, since we refer to it in the discussion
-#let incomplete-descriptions-footnote = footnote[
-  Note that the personas are not necessarily complete. For instance, suppose that a pair
-  of variables are highly correlated in the initial state, and are Low whenever
-  the intervention effect is high. A complete characterisation includes both variables;
-  however, a decision tree is likely to include only one, since after splitting on one
-  of the two variables, the other is redundant. This is especially true for shallow
-  decision trees.
-]
+// #let incomplete-descriptions-footnote = footnote[
+//   Note that the personas are not necessarily complete. For instance, suppose that a pair
+//   of variables are highly correlated in the initial state, and are Low whenever
+//   the intervention effect is high. A complete characterisation includes both variables;
+//   however, a decision tree is likely to include only one, since after splitting on one
+//   of the two variables, the other is redundant. This is especially true for shallow
+//   decision trees.
+// ]
 
 The expected difference in activation probabilities between the intervention and null
 models exhibits a clear bimodal distribution across survey
@@ -186,7 +193,7 @@ small set of personas. In each case these personas exhibit high prevelence among
 individuals with high intervention effects, and considerably lower prevalence for other
 individuals, indicating that the identified personas effectively characterise the
 conditions for effective
-interventions#incomplete-descriptions-footnote <footnote:incomplete-descriptions>.
+interventions.
 While prevalence among the high-effect individuals is generally high, this does vary
 across points-of-intervention. For instance, 20% of individuals predicted to be in
 the high-effect category for interventions on `CC Worry` are not represented by the
@@ -221,7 +228,8 @@ desired result---if `CC Worry` remains low, it exerts this influence on all othe
 spins.
 
 Second, we observe that for each point-of-intervention (with the exception of `CC Real`
-on account of high correlation with `CC Human`@footnote:incomplete-descriptions),
+on account of high correlation with `CC Human`, relating to our discussion earlier in
+this section #internal-link(<footnote:incomplete-descriptions>)),
 a necessary condition for high effect is that the initial state of point of intervention
 itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
 be too high. This aligns with our prior expectations regarding the varied effects of

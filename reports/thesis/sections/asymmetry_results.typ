@@ -193,20 +193,6 @@ not exhibit significant asymmetric influence over any other variables. On the co
 it is asymmetrically _influenced_ by `Politics`.
 
 
-// Note that
-// we also observe nonzero interaction effects in only one direction for some
-// _symmetric_ relations as well (e.g., $#raw("Politics") -> #raw("CC Human")$), we still
-// consider these symmetric, as the bootstr
-
-
-// #figure(
-//   image("../results/figures/model/directional_differentials/pairwise_no_structure.pdf"),
-//   caption: caption(
-//     short: [Pairwise directional differential heatmap],
-//     long: [*TODO*],
-//   ),
-//   placement: auto,
-// ) <fig:asymmetry-results-existence-heatmap-differentials>
 
 
 == Asymmetry affects intervention dynamics <subsec:asymmetry-results-impact>
