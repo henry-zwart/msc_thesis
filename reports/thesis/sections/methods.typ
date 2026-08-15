@@ -8,19 +8,40 @@
 
 #show: show-theorion
 
-We now shift to the second half of this study, in which we will address the research
-questions outlined in the first chapter. This chapter outlines our experimental approach
-and the key quantities used in the following chapters.
+We now shift to the second half of this study, which addresses the research
+questions outlined in the first chapter. We will employ a combination of data-driven
+and simulation-based methods, using the models calibrated to the climate beliefs
+dataset (@sec:dataset) in the previous chapter. This chapter outlines our
+experimental approach and the key quantities measured in the following chapters.
 
-We employ a combination of data-driven and simulation-based methods, using the models
-calibrated to the climate beliefs dataset (@sec:dataset) in the previous chapter.
-The climate beliefs dataset describes a subset of beliefs relating to
-climate change, collected in the United States in recent years.
-Note that this places a specific context of
-interpretation on our findings. In particular, we do not
-claim that the set of beliefs considered here comprehensively reflects the range of possible
-climate-related beliefs, and we expect that our results are likely to be sensitive to the
-(geographic and situational) contexts underlying the climate beliefs dataset.
+// To address RQ1. and RQ4., concerning the prevalence of asymmetric influence in climate
+// change belief systems and the differences between conservative and liberal climate
+// change belief systems, we examine the
+// To address RQ1., concerning the prevalence of asymmetric influence in climate change
+// belief systems, we compare the directional interaction effects between each pair
+// of beliefs in the calibrated asymmetric model, using bootstrapping to assess
+// uncertainty (@sec:methods-directional-differential).
+// In the first instance, we assess the existence and prevalence of asymmetric influence
+// relations among climate-related beliefs by comparing the directional interaction effects
+// between each pair of beliefs in the calibrated asymmetric model (@)
+//
+//
+// This chapter outlines our experimental approach
+// and the key quantities used in the following chapters.
+//
+// We employ a combination of data-driven and simulation-based methods, using the models
+// calibrated to the climate beliefs dataset (@sec:dataset) in the previous chapter.
+//
+
+
+// The climate beliefs dataset describes a subset of beliefs relating to
+// climate change, collected in the United States in recent years.
+
+Note that our use of the climate beliefs dataset places a specific context of
+interpretation on our findings. In particular, we do not claim that the set of beliefs
+considered here comprehensively reflects the range of possible climate-related beliefs,
+and we expect that our results are likely to be sensitive to the (geographic and
+situational) contexts underlying the climate beliefs dataset.
 
 //This chapter introduces the experimental methods we will use to address these questions.
 
@@ -41,7 +62,7 @@ climate-related beliefs, and we expect that our results are likely to be sensiti
 
 == Identifying asymmetric relations with the KBS model <sec:methods-directional-differential>
 
-To investigate the existence of asymmetric relations in the asymmetric model calibrated
+To investigate the prevalence of asymmetric relations in the asymmetric model calibrated
 to the climate beliefs dataset, we examine the differences in directional interaction
 effects for the asymmetric models calibrated using bootstrapping in the previous
 section.
@@ -61,10 +82,9 @@ interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential
 as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
-In the previous chapter (#internal-link(<edge-existence-warning>)) we cautioned against
-using bootstrapped confidence intervals to
-test for the _existence_ of edges by comparison with
-zero when regularisation is used during calibration---this caution does not apply to
+Note that while, in the previous chapter (#internal-link(<edge-existence-warning>)), we
+cautioned against using bootstrapped confidence intervals to test for the _existence_ of
+edges by comparison with zero in regularised models, this caution does not apply to
 the _comparison_ of edge weights via the mean difference
 @epskampEstimatingPsychologicalNetworks2018.
 
@@ -243,6 +263,32 @@ elsewhere in the network. We refer to the belief on which an intervention is app
 the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
 resulting state is measured as the *target* (marked 'T' in the diagram).
 
+== Choice of points-of-intervention and targets <subsec:methods-choice-of-pois-and-targets>
+
+Since our outbound intervention experiments are intended to assess differences in
+intervention propagation in symmetric and asymmetric belief systems, we select
+points-of-intervention which are likely to highlight the differences between these
+models. So that interventions can propagate, we prioritise beliefs which are reasonably
+influential in both belief system models. Additionally, we attempt to
+select beliefs with varying degrees of asymmetry, conditional on the models containing
+such beliefs.
+
+// Points of intervention:
+// - Want to understand difference in how interventions propagate in symmetric and
+//   asymmetric belief systems
+// - Choose variables which are somewhat influential. Choose some which have substantial
+//   asymmetric influences (i.e., which are at the 'center' of the belief system asymmetry)
+//   and some which do now. If such variables exist.
+
+For the inbound experiments, on the other hand, our intention to assess differences
+in intervention strategy and the relative effectiveness of different interventions.
+In this case, ideal target beliefs are those which are reasonable targets in actual
+interventions. We select `CC Action` (attitudes toward climate action) for all inbound
+intervention experiments. In comparison with the other variables in the climate beliefs
+dataset (for instance, beliefs about the existence of climate change or climate-related
+worry), we expect this to correlate most directly with climate-related behavioural
+choices, and hence a justifiable intervention target.
+
 == Counterfactual experiments with Common Random Numbers <subsec:methods-common-random-numbers>
 
 Most of our experiments involve comparing simulated behaviour across different KBS
@@ -261,8 +307,8 @@ operation, we use the same random numbers for each model. The second point follo
 directly from the first in the KBS model, since the number of stochastic operations per
 simulation timestep is fixed, and these occur in a pre-specified order.
 
-As an additional safeguard, we verify each use of CRN in our experiments by sampling,
-for each model following simulation, a final floating point number. We write these
+As an additional safeguard, we verify each use of CRN in our experiments by comparing
+final floating point samples drawn for each model, after each simulation. We write these
 to disk, and compare the sampled values after all simulations are complete. An error
 is raised if any differences are found.
 

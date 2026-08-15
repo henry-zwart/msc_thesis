@@ -262,13 +262,15 @@ experiments we examine the effects of intervening on the following spins:
 
 - `Politics`: General political party identification and ideology
 
-These choices are motivated by our findings in the previous section. Recall that
-`CC Worry` and `Politics` both feature in the set of asymmetric relations, including
-in the relation between these two variables. `Weather worry` does not appear in any
-significant asymmetric relations, and---in comparison with the other variables---has
-relatively small outgoing interaction effects.
+In light of our selection criteria for outbound intervention experiments
+(@subsec:methods-choice-of-pois-and-targets), these choices are motivated by our findings
+in the previous section. Recall that `CC Worry` and `Politics` both feature in the set
+of asymmetric relations, including in the relation between these two variables.
+`Weather worry` does not appear in any significant asymmetric relations, and---in
+comparison with the other variables---has relatively small outgoing interaction effects.
 
-For inbound intervention experiments we consider interventions seeking to influence
+For inbound intervention experiments, as discussed in
+@subsec:methods-choice-of-pois-and-targets, we consider interventions seeking to influence
 the `CC Action` variable, which captures individuals' general support for
 pro-environmental action on climate change (e.g., specific policies, support for
 increased regulation, and affirmative attitudes toward individual responsibility on
