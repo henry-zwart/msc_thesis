@@ -191,7 +191,7 @@ As mentioned in the previous chapter, the soft thresholding scale parameter,
 $xi in RR_(> 0)$, is context-specific, and should be chosen to reflect the range of
 measurement values which are considered 'near-neutral'. To choose this, we first
 map the minimum and maximum (allowable) values for each variable to $-1$
-and $+1$ respectively, such that these reflect the two spin states in the KBS model.
+and $+1$ respectively, such that these reflect the two belief states in the KBS model.
 We then choose the soft thresholding function $b_xi$ with $xi = #binarisation_sigma$ such
 that a 'weakly oppose' response to a 7-point Likert scale (i.e., value $-1\/3$ in the
 normalised data) is mapped to $+1$ with probability 0.05. The resulting probability
@@ -274,7 +274,7 @@ we evaluate interaction parameter accuracy by examining the bootstrapped confide
 intervals around each parameter estimate.
 We use bootstrapping to estimate the uncertainty in our parameter estimates due to
 sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
-$M$, $T$, and $N$ denote the number of participants, observations, and spins
+$M$, $T$, and $N$ denote the number of participants, observations, and beliefs
 respectively.#dataset-size-footnote We construct 500 bootstrapped
 datasets by sampling rows (participants) with replacement from $bold(D)$,
 such that each bootstrapped dataset has the same shape as the complete dataset.
@@ -424,7 +424,7 @@ effect size ($J_(i,j) approx 0.04$).
 
 We now evaluate the models' predictive capacities.#calibration-disclaimer First, we
 examine the reliability of predicted transitions. @fig:calibration-transition-reliability
-shows the average binarisation probability for each spin (i.e., the probability that the
+shows the average binarisation probability for each belief (i.e., the probability that the
 corresponding observation in the second wave of the dataset is binarised to $+1$), binned
 by transition probability. Bins with no observations are not shown (e.g., extreme values
 for `CC Others Worry`).
@@ -432,7 +432,7 @@ The two measurements are strongly correlated for most variables. The higher vari
 for `CC Real` and `CC Human` likely reflects the observed heavy skew in these variables
 toward larger values (see @fig:calibration-marginal-distributions).
 We observe no high/low probabilities for either `CC Others Worry` or `Weather Worry`,
-on account of the limited influence of other spins on these variables, as seen in
+on account of the limited influence of other beliefs on these variables, as seen in
 the corresponding columns of @fig:calibration-interaction-matrices.
 
 #figure(
@@ -452,7 +452,7 @@ the corresponding columns of @fig:calibration-interaction-matrices.
 Next, we compare the calibrated model against a null model with only
 baseline activation ($h_i$) and self-influence ($J_(i,i)$) parameters. We measure the
 relative entropy of the binarised data from the second wave of the dataset, with respect
-to the probability distributions induced by each model. For each participant and spin,
+to the probability distributions induced by each model. For each participant and belief,
 we calculate the relative entropy as
 
 $
@@ -500,7 +500,7 @@ the next state, despite the binarisation process being fairly deterministic.
     long: [
       _(Left)_ Mean absolute relative entropy of the binarised dataset with respect to
       the calibrated model, for the full-connected and null (only self-interactions)
-      models, using 10-fold cross-validation. Average calculated across spins and
+      models, using 10-fold cross-validation. Average calculated across beliefs and
       survey participants. _(Right)_ Mean difference in relative entropy. Confidence
       intervals display two standard deviations around the mean value.
     ],
@@ -511,7 +511,7 @@ To test for the effect of including cross-interactions, we fit the fully-connect
 and null models using 10-fold cross-validation. For each survey participant in the
 validation (holdout) split we calculate the mean difference in relative entropy between
 the fully-connected and null models. @fig:calibration-mean-relative-entropy shows the
-mean relative entropy across individuals and spins on the null and fully-connected
+mean relative entropy across individuals and beliefs on the null and fully-connected
 models (left) and the mean _difference_ in relative entropy, averaged across survey
 participants (right).
 
@@ -547,10 +547,10 @@ the null and fully-connected models respectively.
 We examine a sample of cases from each tail  in @fig:relative-entropy-difference-examples.
 Each panel shows the change in binarisation probability between the survey waves for a sampled
 survey participant. In the first three panels of the top row, we observe scenarios in
-which most spins are initially aligned, and a subset of the remaining spins then update
+which most beliefs are initially aligned, and a subset of the remaining beliefs then update
 to align with this set, i.e., where the system shifts toward a more consistent state.
 Conversely, in the first, second, and fourth panels in the bottom row we see the opposite
-scenario play out. That is, the system is initially well-aligned, yet some spins update
+scenario play out. That is, the system is initially well-aligned, yet some beliefs update
 to a less consistent state.
 
 The observed behaviour aligns with our expectations, namely

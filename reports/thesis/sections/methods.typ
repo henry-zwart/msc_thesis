@@ -60,7 +60,7 @@ situational) contexts underlying the climate beliefs dataset.
 // conditions under which a given intervention is likely to be effective
 
 
-== Identifying asymmetric relations with the KBS model <sec:methods-directional-differential>
+== Assessing asymmetric influence using the KBS model <sec:methods-directional-differential>
 
 To investigate the prevalence of asymmetric relations in the asymmetric model calibrated
 to the climate beliefs dataset, we examine the differences in directional interaction
@@ -75,11 +75,11 @@ $
   Delta_J^((i)) = bold(J)_((i)) - bold(J)^T_((i))
 $ <eqn:methods-directional-differential-matrix>
 
-Recall that the $k$'th row of $bold(J)_((i))$ (for #box[$k in {1, ..., N}$])
+Recall that the $k$'th row of $bold(J)_((i))$, for #box[$k in [N]$],
 describes the strength and direction of influence _from_ the
-spin $S_k$ _toward_ each other spin. Hence for $k, ell in {1, ..., N}$ we should
+belief $S_k$ _toward_ each other belief. Hence for $k, ell in [N]$ we should
 interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
-as the excess influence of spin $S_k$ on $S_ell$. A positive value indicates that
+as the excess influence of belief $S_k$ on $S_ell$. A positive value indicates that
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
 Note that while, in the previous chapter (#internal-link(<edge-existence-warning>)), we
@@ -87,6 +87,18 @@ cautioned against using bootstrapped confidence intervals to test for the _exist
 edges by comparison with zero in regularised models, this caution does not apply to
 the _comparison_ of edge weights via the mean difference
 @epskampEstimatingPsychologicalNetworks2018.
+
+Degree centrality and strength centrality are commonly used to assess a belief's
+_importance_ or _position_ within a belief system @brandtWhatCentralPolitical2019
+@bringmannWhatCentralityMeasures2019 @chambonTailoredInterventionsBroad2022
+@brandtInterattitudeCentralityDoes2023. Degree centrality measures the number of
+edges adjacent to a node in a network. Strength centrality measures the sum of
+absolute edge weights. In directed networks, however, these centrality indices can be
+calculated using either incoming or outgoing edges, and the resulting values may differ.
+To understand the potential impact of symmetric-influence assumptions on judgements
+regarding belief importance, we therefore additionally compare the incoming and outgoing
+values for both centrality indices, for each belief that exhibits significant asymmetric
+influence.
 
 
 == Modelling interventions <sec:methods-modelling-interventions>
@@ -178,7 +190,7 @@ with fixed strength $delta_h in RR$ will affect individuals differently, dependi
 their pre-intervention states.
 
 @fig:methods-intervention-strengths-probability illustrates how the probability of
-activation for the intervention spin (@eqn:model-activation-probability) changes
+activation for the intervention belief (@eqn:model-activation-probability) changes
 for different intervention scenarios, as a function of the effective baseline
 activation. Since interventions constitute offsets to the effective baseline activaton,
 they are reflected as horizontal shifts in the logistic curve.
@@ -189,7 +201,7 @@ they are reflected as horizontal shifts in the logistic curve.
     short: [Impact of intervention on activation probability],
     long: [
       Impact of different intervention strengths ($delta_h in {0, 0.5, 1.5, 2.5}$) on
-      activation probability for the intervention spin. Activation probability is
+      activation probability for the intervention belief. Activation probability is
       calculated using @eqn:model-activation-probability.
     ],
   ),
@@ -198,9 +210,9 @@ they are reflected as horizontal shifts in the logistic curve.
 The solid line denotes the null scenario in which no intervention is applied. Consider
 two individuals, positioned at different locations on this base curve:
 
-+ $h_"eff" = 0$: Ambivalent disposition toward the intervention spin, and
++ $h_"eff" = 0$: Ambivalent disposition toward the intervention belief, and
 
-+ $h_"eff" = -2$: Strong negative disposition toward the intervention spin.
++ $h_"eff" = -2$: Strong negative disposition toward the intervention belief.
 
 To understand the impacts of intervention strength on each individual, we draw a
 vertical line upward from the solid curve at each location, and read off the activation
@@ -256,7 +268,7 @@ pathways through which interventions may propagate.
   )
 }
 Outbound
-intervention experiments (left) examine how interventions on a particular spin propagate
+intervention experiments (left) examine how interventions on a particular belief propagate
 to other beliefs. On the other hand, inbound intervention experiments
 (right) consider how a focal belief's behaviour is differently affected by interventions
 elsewhere in the network. We refer to the belief on which an intervention is applied as

@@ -169,7 +169,7 @@ possible future states.
 // - *A:* CAN model as theory of belief systems; assumes equilibrium dynamics
 
 The Causal Attitude Network (CAN) model considers an attitude as represented by an
-Ising-style network of beliefs (in the inclusive sense defined above)
+Ising-style network of beliefs (in the inclusive sense defined above), or _spins_,
 which are related via bi-directional edges reflecting reinforcing ($+$) or cognitive
 dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016. Each node, or _spin_,
 in the network takes on values in the domain ${-1, +1}$, representing two opposing states.
@@ -194,13 +194,13 @@ $bold(h) in RR^N$ is a vector of *baseline activation* effects for the elements 
 $bold(S)$.
 
 A baseline activation effect, $h_i in RR$, describes the tendency for the belief $S_i$ to
-take on the value $+1$ in the absence of interactions with other spins, or, more generally,
-when pairwise spin interactions have a net-effect of zero. $S_i$ tends to adopt the value
+take on the value $+1$ in the absence of interactions with other beliefs, or, more generally,
+when pairwise belief interactions have a net-effect of zero. $S_i$ tends to adopt the value
 $+1$ under these circumstances, iff, $h_i > 0$, and $-1$ iff $h_i < 0$. This tendency
 increases with the magnitude of $h_i$.
 
-Other spins influence $S_i$'s state through alignment or opposition relations. For
-a spin $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
+Other beliefs influence $S_i$'s state through alignment or opposition relations. For
+a belief $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
 $i$'_). When $J_(j i)$ is positive or negative, $S_i$ is influenced to adopt the state
 $S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
 to $J_(i i)$ as a _self-influence_ of _self-interaction_ effect. Positive self-influence
@@ -316,7 +316,7 @@ $ <eqn:asymmetric-belief-system-glauber-dynamics>
 
 Each belief has the opportunity to update during every time interval. This
 update routine is referred to as *synchronous Glauber dynamics*, contrasting
-*asynchronous Glauber dynamics*, in which only one spin can update during a given
+*asynchronous Glauber dynamics*, in which only one belief can update during a given
 interval @glauberTimeDependentStatisticsIsing1963 @nguyenInverseStatisticalProblems2017.
 
 Asynchronous models are often more realistic, particularly for phenomena which evolve

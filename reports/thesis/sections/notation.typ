@@ -21,6 +21,7 @@ Sets are regular weight and uppercase: $X$
 Random variables?
 
 Beliefs:
+- Referring to the node in the belief system: $S_i$
 - Data measurement, non-binarised, denoted $x in RR$ for scalar or $bold(x) in RR^N$
   for vectors for measurements.
 - Random variables for binarised belief state, denoted $sigma$ for single belief and

@@ -160,7 +160,7 @@ the belief network approach described above. While the Ising model was originall
 presented as a model of ferromagnetic behaviour @isingBeitragZurTheorie1925, it has
 since been variously applied to describe diverse systems of interacting variables which
 attract or repel one another @nguyenInverseStatisticalProblems2017.
-In the CAN model, beliefs and attituds are
+In the CAN model, beliefs and attitudes are
 represented as spins which take on values in the set ${-1, +1}$, representing two
 opposing states (e.g., 'climate change is happening' versus 'climate change is _not_
 happening' or 'support' versus 'oppose'). These are related by reinforcing ($+$) or
