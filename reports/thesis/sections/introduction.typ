@@ -31,22 +31,22 @@
 ]
 
 Our subjective interpretations of the world, natural phenomena, and
-those around us are dependent on a collection of beliefs about how things are,
+those around us depend on a collection of beliefs about how things are
 and how they work.#belief-defn-footnote These beliefs are highly interdependent,
 related by logical and psychological associations in what are often referred to as
 belief systems @converseNatureBeliefSystems2006 @fishbein1977belief. Beliefs
 are also subject to social dynamics @galesicHumanSocialSensing2021, as
 evidenced by observed geographic segregation of political attitudes in the United States
-@brownMeasurementPartisanSorting2021. Moreover, beliefs held by an
-individual have external consequences for behavioural decisions
-@granovetterThresholdModelsCollective1978 and are in turn
-influenced by these decisions @fishbein1977belief @olson2005influence, often in the
-form of reinforcing feedback loops. Put plainly, the beliefs which allow
-us to make internal sense of the world inevitably shape our collective impact on it.
+@brownMeasurementPartisanSorting2021. Moreover, an individual's beliefs have external
+consequences for their behavioural decisions
+@granovetterThresholdModelsCollective1978 and, in turn, are
+influenced by these decisions @fishbein1977belief @olson2005influence, often through
+reinforcing feedback loops. Put plainly, the beliefs that allow
+us to make sense of the world internally inevitably shape our collective impact on it.
 
 
 Distinct beliefs behave differently within a belief system. Some, such as political
-ideology (e.g., conservativism or liberalism) are highly stable
+ideology (e.g., conservativism or liberalism), are highly stable
 @greenPartisanStabilityTurbulent2024 @osborneDoesOpennessExperience2020
 @kileyMeasuringStabilityChange2020. Others appear to be more
 malleable (e.g., attitudes toward particular political candidates). In addition, some
@@ -55,8 +55,8 @@ might intuitively expect political alignment to be dependent on individuals' pol
 preferences. However, #cite(<unsworthItsPoliticalHow2014>, form: "prose") demonstrate
 that causal influence may actually flow primarily in the opposite direction. When shown
 identical policies with different partisan framings, individuals' support for those
-policies shifts in line with their own political alignment, suggesting that partisan
-identity may shape policy preferences more so than in the other direction.
+policies shifts in line with their political alignment, suggesting that partisan
+identity may shape policy preferences more so than the other way around.
 
 Given belief systems' interdependent nature, understanding the behaviour of any single
 belief requires consideration not only of how it interacts with
@@ -74,13 +74,12 @@ in topic-specific belief systems. Using cross-national surveys, several studies
 have examined geographic variation in belief system structure on topics including
 politics @keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025
 and climate change @leeVariationsClimateChange2025, comparing both specific relations and
-whole-network features such as density (the proportion of realised connections), and
+whole-network features such as density (the proportion of realised connections) and
 inconsistency (the number of negative correlations). Similarly,
-#cite(<chambonHowComplianceBehavioural2023>, form: "prose") examines how beliefs relating
-to COVID-19 changed over time in the Netherlands during the start of
+#cite(<chambonHowComplianceBehavioural2023>, form: "prose") examine how beliefs relating
+to COVID-19 changed over time in the Netherlands at the start of
 the global pandemic. Despite ongoing debate about its usefulness and
-applicability to belief system networks
-(see #cite(<bringmannWhatCentralityMeasures2019>, form: "prose")), node
+applicability to belief system networks @bringmannWhatCentralityMeasures2019, node
 centrality is frequently used to assess belief position within a belief system
 @brandtWhatCentralPolitical2019 @borsboomNetworkAnalysisMultivariate2021, relative influence
 @robinaughIdentifyingHighlyInfluential2016, or structural importance
@@ -94,11 +93,11 @@ interventions, in the context of a belief system on COVID-19.
 // change, affect one another and behaviour, and spread between individuals'.
 Although belief system networks characterise the statistical associations between
 beliefs, they make no claims about the nature of
-these associations, how they arise, nor their implications for belief dynamics.
+these associations, how they arise, or their implications for belief dynamics.
 Several explanatory models have been proposed to address these shortcomings, generally
 considering endogenous belief system dynamics as driven by individuals' efforts to
 achieve consistent sets of beliefs; that is, which are perceived as
-mutually compatible. This perspective is particularly amenible to formalisation under
+mutually compatible. This perspective is particularly amenable to formalisation within
 the framework of complex systems, treating belief system dynamics as arising from
 micro-level attempts to resolve perceived inconsistencies between beliefs.
 
@@ -114,17 +113,17 @@ Heider's balance theory interprets attitudes as signed, affective associations b
 concepts. Inconsistency arises when three concepts are related in a triangle for which
 the product of edge weights is negative. Festinger's theory of cognitive dissonance,
 on the other hand, takes the view that beliefs (and by extension, attitudes) can be
-more or less compatible with one another, and that inconsistency arises when an
+more or less compatible with one another, and inconsistency arises when an
 individual holds incompatible beliefs.
 
 The difference between these theories is best clarified with an
-example (illustrated below). Consider a person who cares deeply about animal wellbeing but who
+example (illustrated below). Consider a person who cares deeply about animal well-being but who
 also eats meat. Heider (_left_) considers
 the cognitive inconsistency as arising from the negative association between animals and
 meat consumption (interpreted as 'harm'). To resolve this, the individual could adjust
-their attitudes toward animal wellbeing, change their dietary habits, or limiting the
+their attitudes toward animal well-being, change their dietary habits, or limit the
 perceived association between animals and meat consumption. Festinger (_right_)
-relates the individual's attitudes directly rather than via their conceptual referrents,
+relates the individual's attitudes directly rather than via their conceptual referents,
 but arrives at the same conclusion, that the person will tend to change one of the
 two attitudes, or reduce their perceived negative association.
 
@@ -139,10 +138,10 @@ two attitudes, or reduce their perceived negative association.
 
 // TODO: Doesn't use their version of 'attitude'
 // TODO: Maybe reference HIOM and networks of belief?
-Balance theory and the theory of cognitive dissonance have given way to two families
-of belief system models basd on the statistical physics notion of energy minimisation
+Balance theory and the theory of cognitive dissonance have given rise to two families
+of belief system models based on the statistical-physics notion of energy minimisation
 @isingBeitragZurTheorie1925. The present study primarily considers models inspired by
-Festinger's theory of cognitive dissonance, which is more so concerned with relations
+Festinger's theory of cognitive dissonance, which is more concerned with relations
 _between_ beliefs than beliefs as relating concepts. For models based
 on Heider's balance theory, we refer the reader to
 #cite(<greenwaldUnifiedTheoryImplicit2002>, form: "prose"),
@@ -153,54 +152,54 @@ on Heider's balance theory, we refer the reader to
 // TODO: Mention the HIOM, Networks of Belief as social extensions.
 //  - More generally, mention the usefulness of these models.
 The _Causal Attitude Network_ (CAN) model @dalegeFormalizedAccountAttitudes2016
-formalises Festinger's theory of cognitive dissonance in an Ising-style model, also
-drawing on the more recently-proposed connectionist perspective on attitude change
+formalises Festinger's theory of cognitive dissonance as an Ising-style model, also
+drawing on the more recently proposed connectionist perspective on attitude change
 @monroeGeneralConnectionistModel2008. It can be viewed as a theory-driven variant of
 the belief network approach described above. While the Ising model was originally
 presented as a model of ferromagnetic behaviour @isingBeitragZurTheorie1925, it has
 since been variously applied to describe diverse systems of interacting variables which
 attract or repel one another @nguyenInverseStatisticalProblems2017.
 In the CAN model, beliefs and attitudes are
-represented as spins which take on values in the set ${-1, +1}$, representing two
+represented as spins that take on values in the set ${-1, +1}$, corresponding to two
 opposing states (e.g., 'climate change is happening' versus 'climate change is _not_
 happening' or 'support' versus 'oppose'). These are related by reinforcing ($+$) or
 opposing ($-$) interaction effects, based on the notion of cognitive dissonance.
 The model dynamics are described in terms of energy (read 'inconsistency') minimisation.
-That is, individuals tend to reduce cognitive dissonance, such that positively
-associated beliefs generally agree, and negatively associated beliefs generally disagree.
+That is, individuals tend to reduce cognitive dissonance, so that positively
+associated beliefs generally agree and negatively associated beliefs generally disagree.
 
 // *TODO:* (Maybe) Diagram of the CAN model.
 Importantly, the CAN model defines interaction relations as symmetric, such that related
 beliefs exert equal reinforcing or opposing influence on one another. Under this
-assumption the underlying Ising model satisfies detailed balance and can be considered
-an equilbrium system @christensenComplexityCriticality2005. This is mathematically
+assumption, the underlying Ising model satisfies detailed balance and can be considered
+an equilibrium system @christensenComplexityCriticality2005. This is mathematically
 convenient, as it allows for implicit definition of the CAN model dynamics using
 the Boltzmann distribution, such that each belief system state is observed with constant
 probability as a decreasing function of that state's inconsistency (i.e., energy).
-Highly consistent states are observed frequently, while highly inconsistent states
+Highly consistent states are frequently observed, whereas highly inconsistent states
 are rarely observed.
 
-In spite of its simple foundations, the CAN model and recent variants have
+Despite its simple foundations, the CAN model and recent variants have
 proven effective at capturing observed phenomena and demonstrated value for
 predicting and testing hypotheses about belief change.
 For instance, both #cite(<dalegeAttitudinalEntropyAE2018>, form: "prose") and
 #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose") show
 that such models may explain how merely thinking about a topic can induce more
-extreme views. In several cases the CAN model (or analogous models) have been
-used to explore the potential effects of intervention or persuasion attempts
-on belief system dynamics via simulation
+extreme views. In several cases, the CAN model (or an analogous model) has been
+used to explore, via simulation, the potential effects of interventions or persuasion attempts
+on belief system dynamics
 @dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025.
 Furthermore, #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose")
 and #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") demonstrate that
-extensions of the CAN model which incorporate social influences on belief dynamics are
+extensions of the CAN model that incorporate social influences on belief dynamics are
 also highly expressive. In both cases, the authors model
 social network influences via theoretically simple social cohesion mechanisms
 (i.e., the assumption that individuals who interact tend to align their beliefs). This
 turns out to be sufficient to capture various phenomena
 observed in reality, including: (i) attitude polarisation, (ii) how interventions
-can drive extreme attitudes on topics that has previously received limited
-attention, and (iii) how minority views propagate through a population
+can drive extreme attitudes on topics that had previously been relatively
+uncontroversial, and (iii) how minority views propagate through a population
 @dalegeNetworksBeliefsIntegrative2025.
 
 // NOTE: Could point out the Monroe inspired CAN, and was 10 years prior.
@@ -216,33 +215,33 @@ associations, or asymmetric/non-reciprocal influences as _plausible_
 @keskinturkOrganizationPoliticalBelief2022.
 #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose")
 go so far as to assert that asymmetric influences are _likely_, for instance, in
-relations linking beliefs and behaviour. Moreover, there exists some empirical evidence
-supporting the existence of asymmetric interactions. For instance,
+relations linking beliefs and behaviour. Moreover, there is empirical evidence
+supporting asymmetric interactions. For instance,
 #cite(<chambonHowComplianceBehavioural2023>, form: "prose") observe directional
 differences in temporal networks @kriekeEcologicalMomentaryAssessments2015 used to study
-belief systems relating to COVID-19; however, as identifying asymmetry was not a core aim
-of this study they do not test for the significance of these differences.
+belief systems related to COVID-19; however, as identifying asymmetry was not a core aim
+of this study, they do not test the significance of these differences.
 
 #let bn-footnote = footnote[
   Bayesian network models are a notable exception, which consider belief systems as
   directed acyclic graphs @powellModelingLeveragingIntuitive2023
   @cookRationalIrrationalityModeling2016. However, these do not allow for reinforcing
-  relationships.  Moreover, they fall victim to the
-  same problem as faced by the statistical belief system networks---while they describe the
-  relationships observed in data, they provide no explanation for the nature of these
-  relationships.
+  relationships. Moreover, they fall victim to the
+  same problem as the statistical belief system networks. While they describe the
+  relationships observed in the data, they offer no explanation as to the nature of
+  these relationships.
 ]
 Despite general agreement on the plausibility of asymmetric interactions,
 current research remains predominantly focused on symmetric models.#bn-footnote
-A handful of authors make reference to simulation studies in which asymmetric edges
+A handful of authors refer to simulation studies in which asymmetric edges
 are used and found to have minimal impact on model dynamics
 @vandermaasPolarizationIndividualsHierarchical2020 @monroeGeneralConnectionistModel2008.
 However, these experiments are rarely described in detail, and we are not aware of any
-instances in which asymmetric models are estimated from data. For the purposes of
-mean-field approximation, #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose")
+instances in which asymmetric models are estimated from data. For
+mean-field approximations, #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose")
 argue that theoretical results derived for Ising-style belief system models are robust
-to asymmetric and non-reciprocity assumptions. However, they note that studies outside
-the belief system modelling literature demonstrate that non-reciprocal Ising models
+to assumptions of asymmetry or non-reciprocity. However, they note that studies outside
+the belief system modelling literature show that non-reciprocal Ising models
 can exhibit considerably more complex behaviour than
 the symmetric model (see #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
 
@@ -258,20 +257,20 @@ for interventions intended to propagate to other beliefs
 (cf. #cite(<chambonTailoredInterventionsBroad2022>, form: "prose")), and (ii) more
 resistant to such interventions, on account of their received influence from adjacent
 beliefs (cf. #cite(<brandtInterattitudeCentralityDoes2023>, form: "prose")).
-However, both conclusions rely on the assumption of bi-directional influence.
+However, both conclusions rely on the assumption of bidirectional influence.
 When influence may be asymmetric or non-reciprocal, we may find that some beliefs are
 characterised almost exclusively by incoming or outgoing interactions, leading to
 situations where well-connected beliefs have limited influence on other beliefs or
-little-to-no resistance to interventions, respectively.
+little to no resistance to interventions, respectively.
 
 At the time of writing, empirical and theoretical studies into the existence,
 nature, and potential structure of asymmetric influences among beliefs remain scarce.
 Of particular concern, the absence of theoretical models of asymmetric
-influences appears to be self-perpetuating, with some studies citing historical
-trends as justification for continued focus on symmetric models
+influences appears self-perpetuating, with some studies citing historical
+trends as justification for a continued focus on symmetric models
 @brandtMeasuringBeliefSystem2022[p.~3].
-Consequently, it remains unclear as to whether asymmetric influence---should it
-exist---meaningfully impacts belief system dynamics, or the conclusions we draw from
+Consequently, it remains unclear whether asymmetric influence---should it
+exist---meaningfully affects belief system dynamics or the conclusions we draw from
 models thereof.
 
 
@@ -345,7 +344,7 @@ following four research questions:
 // ]
 
 #let RQ1 = [
-  To what extent are belief-level influences _symmetric_ or _asymmetric_, in climate
+  To what extent are belief-level influences _symmetric_ or _asymmetric_ in climate
   change belief systems in the United States?
 ]
 
@@ -381,41 +380,42 @@ following four research questions:
   ])
 }
 
-This study is divided into two halves. In the first half we establish a framework for
-modelling belief systems with asymmetric influence relations, and estimating such models
-from time-series data. In the second half, we then use this framework to address the
+This study is divided into two halves. In the first half, we establish a framework for
+modelling belief systems with asymmetric influence relations and estimating such models
+from time-series data. In the second half, we use this framework to address the
 research questions listed above.
 
-In @chp:kinetic-belief-system we introduce the *Kinetic Belief System* model
+In @chp:kinetic-belief-system, we introduce the *Kinetic Belief System* model
 (KBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984 of the Causal Attitude Network (CAN) model
 @dalegeFormalizedAccountAttitudes2016.
-KBS represents directed belief influences using distinct parameters, so is well-suited
-for studying asymmetry in belief systems. KBS' dynamics are explicitly time-dependent,
-enabling straightforward analysis of belief system dynamics, including
+The KBS model represents directed belief influences using distinct parameters, so it is
+well-suited for studying asymmetry in belief systems. KBS's dynamics are explicitly
+time-dependent, enabling straightforward analysis of belief system dynamics, including
 post-intervention behaviour, on an _individual_ basis. This contrasts past studies that
 analyse intervention effects via simulation on the CAN model
 @dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
-or GGM models @wuSimulatingNodeManipulations2026, which do
+or GGM models @wuSimulatingNodeManipulations2026, which
 consider neither individuals' pre-intervention belief states, nor the time-scale of
 model dynamics. @chp:parameter-estimation then outlines a parameter estimation method for
 the KBS model based on maximum likelihood estimation. The proposed method uses knowledge
-of a pre-defined soft thresholding function to robustly estimate binary model parameters
+of a predefined soft thresholding function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-In @sec:calibration we then use this method to calibrate the KBS model to a two-wave longitudinal
-dataset comprising beliefs relating to climate change.
+In @sec:calibration, we then use this method to calibrate the KBS model using a two-wave
+longitudinal dataset comprising beliefs about climate change.
 
 // ---the calibrated model is
 // subsequently used to address our research questions in the second half of this study.
 
 We then subsequently use the calibrated model to address our research questions in
 the second half of the study. Inspired by approaches used in the context of the CAN
-model, in @sec:methods we formalise interventions in Ising-style belief system models
-as additional influencing variables. We also give algorithms for: (i) quantifying expected
+model,  we formalise interventions in Ising-style belief system models
+as additional influencing variables in @sec:methods. We also outline our experimental
+methods to: (i) quantifying expected
 intervention effects on an individual basis and (ii) comparing effects between symmetric
 and asymmetric models, using Common Random Numbers to ensure result comparability.
-We assess the existency of asymmetry and its population-level implications for
+We assess the existence of asymmetry and its population-level implications for
 intervention dynamics in @sec:results-asymmetry-in-belief-systems, and
 heterogeneity in intervention outcomes and belief systems in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects, relating these back
@@ -423,8 +423,8 @@ to our research questions in @sec:discussion, also discussing broader implicatio
 for belief system modelling.
 
 The *climate beliefs dataset* used in this study is sourced from the Longitudinal Panel
-of Perceptions About Climate Change and Covid representative longitudinal survey (*CCCV*),
-which was collected in the US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022.
+of Perceptions About Climate Change and Covid (*CCCV*), a representative longitudinal survey
+collected in the US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022.
 Comprehensively validating this survey data and constructing the targeted dataset of beliefs
 relating to climate change used in our experiments constituted substantial components of
 this investigation, and contribute to future use of the CCCV dataset. We detail both
