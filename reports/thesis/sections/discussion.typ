@@ -15,11 +15,11 @@
   link(label, arrow)
 }
 
-In this chapter we review the research questions posed back in @sec:introduction
+In this chapter, we review the research questions posed in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
-we discuss their place in the broader context of belief system dynamics. We then
-conclude the chapter by discussing limitations
-of our findings and implications for future work on belief system dynamics and
+we discuss their place in the broader context of belief system dynamics. We
+conclude the chapter by discussing the limitations
+of our findings, and their implications for future work on belief system dynamics and
 belief-level interventions.
 
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
@@ -46,17 +46,17 @@ another (@chp:kinetic-belief-system).#within-person-footnote An asymmetric relat
 reflects a constraint differential, where one belief has greater influence on the other
 than vice versa. More generally, the asymmetric model distinguishes between two forces:
 influence and influentiability. Influence (the strength of outbound interactions)
-determines how the extent to which one belief constrains others, while influentiability
-(the strength of inbound interactions) determines the extent to which its own behaviour
-is constrained by others.
+determines the extent to which one belief constrains others. In contrast,
+influentiability (the strength of inbound interactions) determines the extent to which
+others constrain a belief's own behaviour.
 
 Political identity being more influential than influentiable in this context is
 consistent with previous studies on its mutual influences
 with climate-related beliefs in the USA. First, political identity
 has been shown to substantially impact both climate-related beliefs
-@whitmarshScepticismUncertaintyClimate2011, as well as support for climate policies
+@whitmarshScepticismUncertaintyClimate2011 and support for climate policies
 @bumannWhatAreDeterminants2021, with individuals tending to support or oppose specific
-policies on the basis of partisan identification rather than policy content
+policies based on partisan identification rather than policy content
 @unsworthItsPoliticalHow2014 @vanbovenPsychologicalBarriersBipartisan2018.
 <rq1-asymmetry-explanations>
 
@@ -76,10 +76,10 @@ contributes meaningfully to climate-related beliefs, changes in these
 states are less likely to incite changes in political identity.
 
 
-Climate-related worry exhibits asymmetric influence over beliefs regarding the
+Climate-related worry exerts asymmetric influence over beliefs about the
 anthropogenic nature and current impacts of climate change. Both relationships have
-received comparatively less attention in prior research than those of political
-political with climate beliefs. One possible explanation for
+received comparatively less attention in prior research than those involving political
+beliefs and climate beliefs. One possible explanation for
 these asymmetric relations is that climate worry and climate beliefs influence
 one another through different mechanisms. For instance,
 #cite(<meadInformationSeekingGlobal2012>, form: "prose") suggest that climate worry
@@ -134,27 +134,27 @@ The consequences of asymmetry for belief system dynamics were subsequently addre
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
 in the asymmetric model were found to be almost universally more effective than in the
 symmetric model. Moreover, for interventions targeting attitudes toward climate action,
-political ideology/alignment ranked higher with regards to collective effect in the
-asymmetric model than the symmetric model, displacing a mostly-symmetric belief with
+political ideology/alignment ranked higher on measures of collective effect in the
+asymmetric model than the symmetric model, displacing a mostly symmetric belief with
 similar outbound interactions.
 Interestingly, while interventions on climate-related worry typically
-outperformed those on political ideology/alignment in terms of absolute effect of
+outperformed those on political ideology/alignment in terms of the absolute effect of
 intervention, the differences between the asymmetric and symmetric models for this
 variable were comparatively less pronounced.
 
 It is important to note that the effectiveness of interventions on political
 ideology/alignment is _despite_ this variable's high inertia (i.e., strong
 self-interaction effect). When this variable is negative, high inertia leads to
-a lower pre-intervention effective baseline activation, making it harder to
-intervene. The effectiveness of interventions on this variable may be explained
-by fact that if an intervention successfully 'flips' political ideology/alignment,
-the high inertia works in favour of the intervention.
+a lower pre-intervention effective baseline activation, making intervening more
+difficult. The effectiveness of interventions on this variable may be explained
+by the fact that if an intervention successfully 'flips' political ideology/alignment,
+the high inertia works in its favour.
 
 For the measurement timescale used in these experiments (approximately 2.5 years),
 interventions appeared to act primarily through direct interactions, though smaller
 indirect effects were also present; this is consistent with empirical results
-obtained by #cite(<chambonTailoredInterventionsBroad2022>, form: "prose") in an
-experimental study concerning beliefs relating to COVID-19.
+from #cite(<chambonTailoredInterventionsBroad2022>, form: "prose") in an
+experimental study on beliefs related to COVID-19.
 Additional experiments included in
 @sec:appendix-extra-results found that longer timeframes led to increased indirect
 intervention effects. The presence of indirect effects is broadly expected given the
@@ -174,37 +174,37 @@ an individual level. <discussion-rq2-indirect-effects>
 ]
 
 The distinction in behaviour between political ideology/alignment and climate-related
-worry likely relates to differences in influentiality and influentiability between the
+worry likely reflects differences in the influential and influentiable nature of the
 two beliefs. Climate-related worry is more influential than political
-ideology/alignment, on account of its increased outbound interactions and interaction
-strength. The key difference, however, lies in the beliefs' influentiability; while
+ideology/alignment, owing to its greater outbound interactions and interaction
+strength. The key difference, however, lies in the beliefs' influentiability: while
 climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
 edges.#full-model-disclaimer That is, several beliefs influenced by this
-variable have no influence on it themselves. Since the symmetric model
+variable do not influence it themselves. Since the symmetric model
 must include or exclude both directional interactions between a pair of
 beliefs, cases where the asymmetric model specifies an interaction in only one
 direction necessarily lead to differences in model behaviour.
-This draws attention to a broader issue regarding relational symmetry assumptions.
+This draws attention to a broader issue regarding assumptions of relational symmetry.
 
-One of the symmetric model's key strengths is its small(er) parameter count. With fewer
+One of the symmetric model's key strengths is its smaller parameter count. With fewer
 degrees of freedom than the asymmetric model, it can achieve more accurate parameter
 estimates when calibrated to the same dataset (i.e., smaller confidence intervals in
 @fig:calibration-edge-accuracy). However, this comes at the cost of model
-misspecification when a subset of the true relations are asymmetric. We might expect
+misspecification when some true relations are asymmetric. We might expect
 the inferred symmetric influence relations to be similar to the average of the
-corresponding directed effects, yet this reasoning turns out to be flawed for at least
-two reasons. Firstly, interaction effects are not estimated in isolation, but jointly
-with all other parameters which influencing the same spin (or _both_ spins in the
+corresponding directed effects. However, this reasoning is flawed for at least
+two reasons. Firstly, interaction effects are not estimated in isolation but jointly
+with all other parameters that influence the same spin (or _both_ spins in the
 symmetric case). Hence, when one interaction parameter changes---for instance, if we
 replace a pair of asymmetric interactions by their average---the rest are likely to
 change as well. Secondly, regularisation is often used to obtain sparse network
-representations and reduce overfitting, and distorts parameter values non-linearly
-in the process. In reality we find that while most symmetric interactions lie between
+representations and reduce overfitting, and it distorts parameter values non-linearly
+in the process. In reality, we find that while most symmetric interactions lie between
 their asymmetric analogues, this is not always the case, and those that are do not
 fall predictably near the middle. As observed in the case of political
 ideology/alignment, the symmetric model may also exclude pairwise interactions
-altogether, or create a (bi-)directional interaction where influence actually
+altogether or create a (bi-)directional interaction when influence actually
 flows unidirectionally.
 
 #show-rq(3, RQ3) <discussion-rq3>
