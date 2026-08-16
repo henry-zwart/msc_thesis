@@ -27,7 +27,7 @@
 
       [CC Scientists], [Scientists with appropriate expertise should guide how we respond to climate change],
 
-      [Policy: ICA (\*)],
+      [Policy: ICA],
       [Do you favour an international agreement committing the USA and other countries to reduce their carbon emissions?],
 
       [Policy: Tax fuel], [How much do you support/oppose a tax on the production/distribution of carbon-based fuelds?],
