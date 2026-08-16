@@ -42,7 +42,7 @@ liberal subsets of the climate beliefs dataset for later use in
 
 The climate beliefs dataset comprises eight beliefs relating to climate change
 (@tab:calibration-climate-beliefs-dataset-items), extracted from the CCCV survey
-(cf. #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose")). The dataset
+@constantinoPersonalHardshipNarrows2022. The dataset
 includes responses from 1693 repeating participants, measured during waves 3 and 4 of
 the survey. A subset of the variables are indices constructed from sets of variables
 in the CCCV survey. The marginal distributions for each variable are displayed in
