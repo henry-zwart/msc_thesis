@@ -31,9 +31,7 @@ any aspect of this thesis.
 
 The following table lists the data used in this thesis (including source code).
 I confirm that the list is complete and the listed data are sufficient to reproduce
-the results of the thesis. If a prohibitive non-disclosure agreement is in effect at
-the time of submission "NDA" is written under "Availability" and "License" for the
-concerned data items.
+the results of the thesis.
 
 #show table: set text(size: 9pt)
 #set table(stroke: none)
@@ -53,5 +51,5 @@ concerned data items.
   [MIT],
   [Longitudinal Panel of Perceptions About Climate Change and Covid survey],
   [Available on request],
-  [--],
+  [N/A],
 )
