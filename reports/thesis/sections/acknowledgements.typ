@@ -5,7 +5,7 @@
     To my supervisor, Vítor, you have provided constant support
     throughout this project, while also trusting and encouraging me to be independent and
     thorough. If my impromptu questions from your office doorway ever bothered you, then your
-    acting was excellent.
+    poker face was excellent.
 
     To Sara, Kath, Kyuri, and Katinka, I deeply appreciate your collaboration and commitment
     to making time to meet, despite busy and at times chaotic schedules and time zone
@@ -23,27 +23,28 @@
     To all of the friends I have made during the past two years, through the Master's
     programme and the ECHO team, and through dance. Two years ago, I knew none of you.
     Now, I cannot imagine a world in which we didn't meet. Each of you has enriched
-    this experience and my life in so many ways.
+    this experience and my life beyond words.
 
     To Mike and Pat. You introduced me to research nearly a decade ago, and lit a fire
     that has not since dimmed. You taught me to make time for curiosity, to follow my gut,
     and to be bold in seeking answers to questions others deem too difficult. I will be
     forever grateful for your collaboration, mentoring, and friendship.
 
-    To my family in New Zealand. Mum, Dad, Maria, Ruby, Jago, and Nana, and, of course,
-    Butter and Crumpet. Two years is a long time to be so far from home. I have missed you
-    all deeply. Yet your support from afar, in the form of letters, Christmas presents (even when
-    they get pinged with $euro 100$ import taxes), and video calls from the front basket of
-    my bike, has made the distance feel manageable.
+    To my family in New Zealand. Mum, Dad, Maria, Ruby, Jago, and Nana. And, of course,
+    my beautiful cats, Butter and Crumpet. Two years is a long time to be so far from
+    home. I have missed you all deeply. Your support from afar, in the form of
+    letters, Christmas presents (even when they get pinged with $euro 100$ import taxes),
+    and video calls from the front basket of my bike, has made the distance feel
+    manageable.
 
     To my family here in Amsterdam. You made me feel at home in this new country, with
-    home-cooked meals, trips to the beach, and a Netherlands-cross-New-Zealand pavlova that
-    would be the centrepiece of any Kiwi Christmas lunch.
+    home-cooked meals, trips to the beach, and a Netherlands-crossed-with-New-Zealand
+    pavlova that would be the star of any Kiwi Christmas lunch.
 
-    To Natasha. We embarked on this journey together, learning to live in the Netherlands
-    and re-adjusting, once again, to the world of academia. Even at times when you were
-    also struggling, your support has been continuous. Truly, you have made this experience
-    possible.
+    To Natasha. We embarked on this journey together, learning to live in the Netherlands,
+    in tiny studio apartments, and re-adjusting, once again, to the worlds of study and
+    academia. Even at times when you were also struggling, your support has been
+    continuous. Truly, you made this experience possible.
 
     #v(2em)
 
