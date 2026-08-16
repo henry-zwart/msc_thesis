@@ -2,12 +2,12 @@
   set text(size: 10pt)
   set par(spacing: 1.5em)
   [
-    To my supervisor, Vítor, you have provided constant support
+    To my supervisor, Vítor. You have provided constant support
     throughout this project, while also trusting and encouraging me to be independent and
     thorough. If my impromptu questions from your office doorway ever bothered you, then your
     poker face was excellent.
 
-    To Sara, Kath, Kyuri, and Katinka, I have deeply appreciated your collaboration despite busy
+    To Sara, Kath, Kyuri, and Katinka. I have deeply appreciated your collaboration despite busy
     and at times chaotic schedules and time zone differences. Sara and Kath, your guidance
     on the psychology-related aspects of this project (that is, most aspects!), and your
     assistance working with the survey dataset made this work possible.
@@ -19,7 +19,7 @@
     effective scientific communication. I have tried to incorporate these lessons throughout
     this project.
 
-    To all of the friends I have made during the past two years, you have enriched this
+    To all of the friends I have made during the past two years. You have enriched this
     experience in many ways.
 
     To Mike and Pat. You introduced me to research nearly a decade ago, and lit a fire
