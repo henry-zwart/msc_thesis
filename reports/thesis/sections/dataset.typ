@@ -85,7 +85,7 @@ Climate Change and Covid* (*CCCV*), a representative longitudinal survey compris
 waves of responses from individuals residing in the United States, collected between
 #survey_start_date.display("[month repr:long] [year]") and
 #survey_end_date.display("[month repr:long] [year]")
-(see #cite(<constantinoPersonalHardshipNarrows2022>, form: "prose")). The assessed
+@constantinoPersonalHardshipNarrows2022. The assessed
 dimensions include general demographic information (e.g., age, gender, education, and
 financial status), beliefs, attitudes, and experiences relating to concurrently-salient
 topics such as COVID-19, climate change, or the 2020 US presidential election, and
