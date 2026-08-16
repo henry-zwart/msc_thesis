@@ -33,7 +33,7 @@ liberal subsets of the climate beliefs dataset for later use in
     short: [Climate beliefs dataset variables (replicated)],
     long: [
       Variables included in the climate beliefs dataset. Index variables are constructed
-      by taking the average of their constituent columns, after re-scaling to the
+      by averaging their constituent columns, after rescaling to the
       interval $[-1, 1]$. Note that this table is identical to
       @tab:climate-beliefs-dataset-items displayed in @sec:dataset.
     ],
@@ -187,15 +187,15 @@ $gamma in RR_(>= 0)$. The values of these parameters are summarised in
   placement: auto,
 ) <tab:methods-hyperparameter-values>
 
-As mentioned in the previous chapter, the soft thresholding scale parameter,
-$xi in RR_(> 0)$, is context-specific, and should be chosen to reflect the range of
-measurement values which are considered 'near-neutral'. To choose this, we first
+As discussed in the previous chapter, the soft thresholding scale parameter,
+$xi in RR_(> 0)$, is context-specific and should be chosen to reflect the range of
+measurement values considered 'near-neutral'. To choose this, we first
 map the minimum and maximum (allowable) values for each variable to $-1$
-and $+1$ respectively, such that these reflect the two belief states in the KBS model.
+and $+1$, respectively, such that these reflect the two belief states in the KBS model.
 We then choose the soft thresholding function $b_xi$ with $xi = #binarisation_sigma$ such
 that a 'weakly oppose' response to a 7-point Likert scale (i.e., value $-1\/3$ in the
 normalised data) is mapped to $+1$ with probability 0.05. The resulting probability
-distribution is displayed in @fig:calibration-likert-7-prob for a Likert-7
+distribution is displayed in @fig:calibration-likert-7-prob for a 7-point Likert
 scale.@likert7-footnote-ref Under this choice of $b_xi$, values to either side of
 'neutral' are considered mostly unambiguously positive or negative, with some flexibility
 for 'weak' responses.
@@ -221,12 +221,12 @@ for 'weak' responses.
   caption: caption(
     short: [Regularisation strength EBIC],
     long: [
-      Effect of regularisation strength $lambda$ on Extended Bayesian Information
+      Effect of regularisation strength $lambda$ on the Extended Bayesian Information
       Criterion for symmetric and asymmetric belief system models optimised to the
       climate beliefs dataset using
       @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
-      the difference in EBIC compared to the no-regularisation case ($lambda = 0$);
-      smaller is better.
+      the difference in EBIC relative to the no-regularisation case ($lambda = 0$);
+      smaller values are better.
 
     ],
   ),
@@ -240,7 +240,7 @@ zero', we choose the regularisation smoothing hyperparameter to be $epsilon = 10
 such that $epsilon << tau^2$.
 We set separate regularisation strengths for the symmetric and asymmetric models,
 as well as the conservative and liberal asymmetric models, taking values
-$lambda in [10^(-4), 1]$ which minimise the EBIC (@eqn:parameter-estimation-ebic). We
+$lambda in [10^(-4), 1]$ that minimise the EBIC (@eqn:parameter-estimation-ebic). We
 take #box[$gamma = 0.25$] when computing the EBIC, i.e., the smallest value tested by
 #cite(<barberHighdimensionalIsingModel2015>, form: "prose").
 @fig:calibration-regularisation-ebic shows the EBIC results for the
@@ -248,14 +248,14 @@ symmetric and asymmetric models calibrated to the complete climate beliefs datas
 
 === Implementation details
 
-We solve the parameter estimation problem using the Scipy 1.17.1 implementation of the
+We solve the parameter estimation problem using the SciPy 1.17.1 implementation of the
 quasi-Newton BFGS optimisation algorithm @virtanenSciPy10Fundamental2020
-@nocedal2006numerical[p.~136], using the analytic jacobian comprising the partial
+@nocedal2006numerical[p.~136], with the analytic Jacobian comprising the partial
 derivatives stated in @sec:parameter-estimation-method. We take $bold(theta) = bold(0)$ as the initial guess.
 To ensure numerical stability irrespective of dataset size, we rescale the expected
 log-likelihood contribution to the objective function and partial derivatives, dividing
 by the number of observed observations (time intervals) in the dataset. For $M in NN$
-individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1))$.
+individuals and $T in NN$ timesteps, this amounts to a scale factor of $1/(M(T-1))$.
 
 
 
@@ -269,15 +269,15 @@ individuals and $T in NN$ timesteps this amounts to a scale factor of $1/(M(T-1)
   In the climate beliefs dataset we have $M = 1693$, $T=2$, and $N=8$
 ]
 
-As recommended in #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"),
-we evaluate interaction parameter accuracy by examining the bootstrapped confidence
-intervals around each parameter estimate.
+As recommended by #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"),
+we evaluate the accuracy of the inferred interaction parameters by examining the
+bootstrapped confidence intervals around each parameter estimate.
 We use bootstrapping to estimate the uncertainty in our parameter estimates due to
 sampling error. Let $bold(D) in RR^(M times T times N)$ be the complete dataset, where
-$M$, $T$, and $N$ denote the number of participants, observations, and beliefs
+$M$, $T$, and $N$ denote the number of participants, observations, and beliefs,
 respectively.#dataset-size-footnote We construct 500 bootstrapped
 datasets by sampling rows (participants) with replacement from $bold(D)$,
-such that each bootstrapped dataset has the same shape as the complete dataset.
+such that each has the same shape as the complete dataset.
 
 For each bootstrapped dataset $bold(D)_((i))$ we calibrate a model $cal(M)_((i))$
 with $p in NN$ parameters:
@@ -315,7 +315,7 @@ $
 and interaction effect matrix, $bold(J)$,
 for each model.#symmetric-matrix-footnote
 The two models exhibit very similar baseline activations. The observed values indicate
-that after accounting for interaction effects, (i) belief in the existence and
+that after accounting for interaction effects, (i) belief in both the existence and
 human-causes of climate change tend to be high, (ii) concern about extreme weather tends
 to be low, and (iii) people mostly believe that other individuals are not particularly
 worried about climate change. Regularisation has pushed some values (e.g., worry about
@@ -323,17 +323,17 @@ climate change) to zero, indicating that the dataset provides limited evidence t
 tend to be either positive or negative.
 
 Both models feature a dominant diagonal, indicating that most variables are slow-moving
-with respect to the modelled timescale (they are 'sticky'), which
-is consistent with prior studies looking at the rate of change for beliefs
+relative to the modelled timescale (they are 'sticky'), which
+is consistent with prior studies examining the rate of change in beliefs
 @greenPartisanStabilityTurbulent2024 @kileyMeasuringStabilityChange2020.#timescale-footnote
 This is particularly true for `Politics`, and less so for `CC Others Worry` and
 `CC Impact`.
 
 Observe that all interaction effects are non-negative. This is by design; we have
 re-coded the dataset variables such that this is the case. The fact that such
-a re-coding exists implies that it is possible, within this belief system, to hold
-a set of beliefs which are internally consistent, i.e., with no cognitive
-dissonance. We provide a formal proof of this statement in @sec:appendix-derivations.
+a recoding exists implies that it is possible within this belief system to hold
+internally consistent beliefs, i.e., with no cognitive dissonance. We provide a formal
+proof of this statement in @sec:appendix-derivations.
 
 
 
@@ -370,19 +370,19 @@ dissonance. We provide a formal proof of this statement in @sec:appendix-derivat
 
 
 
-@fig:calibration-edge-accuracy shows the estimated interaction effects in increasing
-order for each model. The confidence intervals are calculated using the percentile
-method (*CITE*) across the bootstrapped models' parameters.
+@fig:calibration-edge-accuracy shows the estimated interaction effects, ranked in
+increasing order, for each model. The confidence intervals are calculated using the percentile
+method @rousseletPercentileBootstrapPrimer2021 across the bootstrapped models' parameters.
 Most parameters display small 95% confidence
 intervals, indicating an accurate fit for both models. On average, the
 symmetric model exhibits smaller confidence intervals than the asymmetric model
-($0.065 < 0.085$), which is expected given the larger number of parameters in the
-asymmetric model. In both models the self-interaction effect on `Politics` is
+($0.065 < 0.085$), as expected given the asymmetric model's larger number of parameters.
+In both models, the self-interaction effect on `Politics` is
 significantly larger than all other parameters, as evidenced by the non-overlapping
 confidence intervals, supporting our earlier observation regarding
 @fig:calibration-interaction-matrices. Moreover, the remaining self-interaction effects
-are, in-general, significantly larger than the pairwise effects, with the exception of
-`CC Impact` in the symmetric model, and `CC Impact`, `CC Worry Others` in the asymmetric
+are, in general, significantly larger than the pairwise effects, with the exception of
+`CC Impact` in the symmetric model, and `CC Impact` and `CC Worry Others` in the asymmetric
 model.
 
 #figure(
@@ -397,22 +397,22 @@ model.
   ),
 ) <fig:calibration-selection-probability>
 
-Due to the use of regularisation in model calibration we must be careful not to draw
-conclusions regarding edge _existence_ from this figure
+Given the use of regularisation in model calibration, we must be careful not to draw
+conclusions about the _existence_ of edges from this figure
 @epskampEstimatingPsychologicalNetworks2018. Instead, we may consider the proportion
 of bootstrapped models for which each edge is nonzero, shown in
 @fig:calibration-selection-probability. Relations which are selected in all
 models are not shown.
 <edge-existence-warning>
 
-All edges excluded from the model calibrated on the full
-dataset (@fig:calibration-interaction-matrices) have low selection probability in the
-bootstrapped datasets ($< 50%$). The relation
+All edges excluded from the complete model, calibrated on the full
+dataset (@fig:calibration-interaction-matrices), have low selection probabilities in
+the bootstrapped models ($< 50%$). The relation
 #box[$#raw("CC Real") -> #raw("Politics")$] is excluded from the complete asymmetric
 model but included (bidirectionally) in the symmetric model. This is reflected in the
 corresponding selection probabilities---this edge is selected in 100% of bootstrapped
 symmetric models but only 23% of asymmetric models. Edges which _are_ selected in the
-complete models generally have high selection probability. The notable exception in the
+complete models generally have a high selection probability. The notable exception in the
 asymmetric case, #box[$#raw("CC Human") -> #raw("CC Impact")$], has a relatively small
 effect size ($J_(i,j) approx 0.04$).
 
@@ -452,7 +452,8 @@ the corresponding columns of @fig:calibration-interaction-matrices.
 Next, we compare the calibrated model against a null model with only
 baseline activation ($h_i$) and self-influence ($J_(i,i)$) parameters. We measure the
 relative entropy of the binarised data from the second wave of the dataset, with respect
-to the probability distributions induced by each model. For each participant and belief,
+to the probability distributions induced by each model given the first wave observations.
+For each participant and belief,
 we calculate the relative entropy as
 
 $
@@ -470,8 +471,8 @@ $
 
 The functions $H$ and $H_C$ denote the entropy and cross-entropy, respectively. The
 entropy term quantifies the uncertainty in the binarisation process, and the
-cross-entropy measures the 'expected surprise' when comparing predictions generated from
-the model with the true binarised dataset. Formally, these are defined as follows:
+cross-entropy measures the 'expected surprise' when comparing model predictions with
+the true binarised dataset. Formally, these are defined as follows:
 
 $
   H(P) = - sum_(s in plus.minus 1) P(s) log_2 P(s)
@@ -490,7 +491,7 @@ $ <def:calibration-cross-entropy>
 The relative entropy, $D(P || Q)$, is small when either (i) the model
 accurately predicts the observed binarised value such that the cross-entropy is
 low,#nonneg-rel-entropy or (ii) the binarisation process is very uncertain. It follows
-that the relative entropy is high in cases where the model fails to accurately predict
+that the relative entropy is high when the model fails to accurately predict
 the next state, despite the binarisation process being fairly deterministic.
 
 #figure(
@@ -498,32 +499,37 @@ the next state, despite the binarisation process being fairly deterministic.
   caption: caption(
     short: [Calibrated model: mean relative entropy],
     long: [
-      _(Left)_ Mean absolute relative entropy of the binarised dataset with respect to
-      the calibrated model, for the full-connected and null (only self-interactions)
+      _(Left)_ Mean absolute relative entropy of the binarised dataset under
+      the calibrated model, for fully connected and null (only self-interactions)
       models, using 10-fold cross-validation. Average calculated across beliefs and
-      survey participants. _(Right)_ Mean difference in relative entropy. Confidence
-      intervals display two standard deviations around the mean value.
+      participants. _(Right)_ Mean difference in relative entropy. Confidence
+      intervals are two standard deviations around the mean.
     ],
   ),
 ) <fig:calibration-mean-relative-entropy>
 
-To test for the effect of including cross-interactions, we fit the fully-connected model
+To test the effect of including cross-interactions, we fit the fully connected model
 and null models using 10-fold cross-validation. For each survey participant in the
-validation (holdout) split we calculate the mean difference in relative entropy between
-the fully-connected and null models. @fig:calibration-mean-relative-entropy shows the
-mean relative entropy across individuals and beliefs on the null and fully-connected
-models (left) and the mean _difference_ in relative entropy, averaged across survey
+validation (holdout) split, we calculate the mean difference in relative entropy between
+the fully connected and null models. @fig:calibration-mean-relative-entropy shows the
+mean relative entropy across individuals and beliefs for the null and fully connected
+models (left), and the mean _difference_ in relative entropy, averaged across survey
 participants (right).
 
 
-We find, in the right-hand panel, that the fully-connected model leads to significant
+We find, in the right-hand panel, that the fully connected model leads to a significant
 reduction in relative entropy averaged over survey participants ($p < 0.05$). While
 statistically significant, the reduction is small. Since the measurement is averaged
 across survey participants, this finding suggests that the self-interaction model is
 sufficient to explain the behaviour for most participants---reflecting the
 slow-moving dynamics of the observed belief system---but not all participants. We
 anticipate that individuals whose belief states change more between observations are
-better explained by the fully-connected model than the null model.
+better explained by the fully connected model than the null model.
+@fig:relative-entropy-difference-dist explores this hypothesis, showing the empirical
+probability density and cumulative distribution functions for the mean difference in
+relative entropy. We see substantial variation between individuals;
+the weak right tail and heavy left tail indicate cases that are better explained by
+the null and fully connected models, respectively.
 
 #figure(
   image("../results/figures/model_fit/kl_difference_dist.pdf"),
@@ -531,32 +537,27 @@ better explained by the fully-connected model than the null model.
     short: [Null model relative entropy comparison],
     long: [
       Probability density function (left) and empirical cumulative distribution function
-      (right) of the mean difference in relative entropy between the fully-connected and
+      (right) of the mean difference in relative entropy between the fully connected and
       null (only self-interaction) models across survey participants. Negative values
       indicate lower relative entropy for the fully-connected model.
     ],
   ),
 ) <fig:relative-entropy-difference-dist>
 
-@fig:relative-entropy-difference-dist explores this hypothesis, showing the empirical
-probability density and cumulative distribution functions for the mean difference in
-relative entropy. We see substantial variation between individuals;
-the weak right tail and heavy left tail indicate cases which are better-explained by
-the null and fully-connected models respectively.
 
 We examine a sample of cases from each tail  in @fig:relative-entropy-difference-examples.
 Each panel shows the change in binarisation probability between the survey waves for a sampled
 survey participant. In the first three panels of the top row, we observe scenarios in
 which most beliefs are initially aligned, and a subset of the remaining beliefs then update
 to align with this set, i.e., where the system shifts toward a more consistent state.
-Conversely, in the first, second, and fourth panels in the bottom row we see the opposite
+Conversely, in the first, second, and fourth panels in the bottom row, we see the opposite
 scenario play out. That is, the system is initially well-aligned, yet some beliefs update
 to a less consistent state.
 
 The observed behaviour aligns with our expectations, namely
 that the model with cross-interactions outperforms the null model in scenarios where
 the belief system state updates toward a more consistent state (according to the theory
-of cognitive dissonance), and is out-performed when participants' behaviour contradicts
+of cognitive dissonance), and is outperformed when participants' behaviour contradicts
 this theory.
 
 

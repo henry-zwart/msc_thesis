@@ -151,7 +151,7 @@ def main(P: npt.NDArray[np.float64], λ: float):
     # Prepare figure
     fig, axes = plt.subplots(
         ncols=2,
-        figsize=(5.77, 2.25),
+        figsize=(5.77, 2),
         constrained_layout=True,
         gridspec_kw=dict(width_ratios=(2, 1.5)),
     )
