@@ -212,11 +212,11 @@ flows unidirectionally.
 In @sec:heterogeneity-results-intervention-effects we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
 states. Most high-effect interventions targeting attitudes toward climate action
-required low initial values for both the point-of-intervention and target.
+required low initial values for both the point of intervention and target.
 
 Surprisingly, pre-intervention climate-related worry was required to be low for _all_
 of the personas identified as characteristic of effective interventions, even when this
-was neither the point-of-intervention, nor the target.
+was neither the point of intervention, nor the target.
 This finding may be explained by the combination of high influence and
 influentiability associated with climate-related worry, thereby making this variable an
 effective indirect route for various interventions (not restricted to this particular
@@ -227,7 +227,7 @@ At first glance this finding appears to contradict our earlier discussion on *RQ
 (#internal-link(<discussion-rq2-indirect-effects>)), which found that indirect
 interventions have limited impact on collective effects over short timeframes.
 However, recall that the corresponding experiments measured indirect intervention effects
-by examining beliefs with no direct influence from the point-of-intervention. In other
+by examining beliefs with no direct influence from the point of intervention. In other
 words, all propagation of intervention effects to these beliefs is indirect. Compare this
 with the present analysis, in which the target belief (attitudes toward climate action) is
 directly influenced, nontrivially, by all of the considered points-of-intervention---this
@@ -265,7 +265,7 @@ may be incomplete when important features are highly correlated. This is a resul
 the decision tree optimisation procedure, which selects the 'splits' which best account
 for unexplained variance. We saw this reflected in the characterisation of effects for
 interventions on beliefs about the existence of climate change. While effective
-interventions here generally require that the initial point-of-intervention state be low,
+interventions here generally require that the initial point of intervention state be low,
 this was omitted due to high correlation between this variable and beliefs regarding the
 causes of climate change.
 <rq3-highly-correlated-features>

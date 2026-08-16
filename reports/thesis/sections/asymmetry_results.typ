@@ -272,7 +272,7 @@ points of intervention listed above.
 
 // The
 // strength of an intervention affects the degree to which the intervention changes the
-// state of the point-of-intervention. However, this is also sensitive to the pre-existing
+// state of the point of intervention. However, this is also sensitive to the pre-existing
 // influence on that belief#see-intervention-strengths-sec-footnote. Since the climate
 // beliefs dataset comprises individuals with different states, it follows that
 // intervention strength may impact not only the degree to which the behaviour of

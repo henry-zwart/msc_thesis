@@ -85,7 +85,7 @@ intervention as _effective_ for a given individual if the expected effect-of-int
 on influence (@def:methods-effect-on-influence), estimated using the mean across $n=500$
 simulations, is greater than or equal to the population upper quartile. Since the
 threshold for an intervention to be considered effective is specific to each
-point-of-intervention, we exclude points-of-intervention whose upper quartile is below
+point of intervention, we exclude points of intervention whose upper quartile is below
 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), which exhibit no meaningfully
 effective interventions.
 
@@ -123,14 +123,14 @@ decision trees.
 The expected difference in activation probabilities between the intervention and null
 models exhibits a clear bimodal distribution across survey
 participants for each scenario, with the higher mode contained within the upper quartile
-(indicated by the darker shaded regions). For each point-of-intervention we observe a
+(indicated by the darker shaded regions). For each point of intervention we observe a
 small set of personas. In each case these personas exhibit high prevelence among
 individuals with high intervention effects, and considerably lower prevalence for other
 individuals, indicating that the identified personas accurately characterise the
 conditions for effective
 interventions.
 While prevalence among the high-effect individuals is generally high, this does vary
-across points-of-intervention. For instance, 20% of individuals predicted to be in
+across points of intervention. For instance, 20% of individuals predicted to be in
 the high-effect category for interventions on `CC Worry` are not represented by the
 identified persona, while for interventions on `Politics` only 3% of high-effect
 individuals are not represented.
@@ -162,7 +162,7 @@ for propagation. In the null model, however, these interactions work against the
 desired result---if `CC Worry` remains low, it exerts this influence on all other
 beliefs.
 
-Second, we observe that for each point-of-intervention (with the exception of `CC Real`
+Second, we observe that for each point of intervention (with the exception of `CC Real`
 on account of high correlation with `CC Human`, relating to the remark earlier in
 this section #internal-link(<incomplete-descriptions>)),
 a necessary condition for high effect is that the initial state of point of intervention
@@ -172,10 +172,10 @@ interventions with respect to pre-intervention state
 (see @sec:methods-modelling-interventions).
 
 
-// With the exception of `CC Real`, the personas for each point-of-intervention require that
-// the initial state of the point-of-intervention be low. This aligns with our expectations
+// With the exception of `CC Real`, the personas for each point of intervention require that
+// the initial state of the point of intervention be low. This aligns with our expectations
 // per our earlier discussion on the varied effects of interventions on the behaviour of the
-// point-of-intervention, with respect to the pre-intervention state
+// point of intervention, with respect to the pre-intervention state
 // (@subsec:asymmetric-belief-system-modelling-interventions).
 #let negative-cc-human-footnote = footnote[
   The negative state for `CC Human` is an aggregation of the beliefs that climate change
