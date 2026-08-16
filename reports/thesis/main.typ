@@ -38,7 +38,7 @@
 #let abstract = include "sections/abstract.typ"
 #let declaration-of-authorship = include "sections/declaration_of_authorship.typ"
 
-#let acknowledgements = [Thank the people that have helped: supervisors, family, etc.]
+#let acknowledgements = include "sections/acknowledgements.typ"
 
 
 #let abbreviations = [
@@ -57,7 +57,6 @@
 #let extra-results-appendix = include "sections/appendix_extra_results.typ"
 #let dataset-appendix = include "sections/appendix_dataset.typ"
 
-#let test-frontmatter = (title: "Test frontmatter", body: lorem(150))
 
 #show: thesis.with(
   title: title,
