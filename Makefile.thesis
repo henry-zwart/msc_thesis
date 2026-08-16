@@ -102,6 +102,7 @@ THESIS_VERIFICATION_FILES := \
 THESIS_TYPST_DEPS := \
 		$(THESIS_DIR)/main.typ \
 		$(THESIS_DIR)/sections/declaration_of_authorship.typ \
+		$(THESIS_DIR)/sections/acknowledgements.typ \
 		$(THESIS_DIR)/sections/abstract.typ \
 		$(THESIS_DIR)/sections/notation.typ \
 		$(THESIS_DIR)/sections/introduction.typ \
