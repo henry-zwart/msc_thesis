@@ -42,8 +42,8 @@
     pavlova that would be the star of any Kiwi Christmas lunch.
 
     To Natasha. We embarked on this journey together, learning to live in the Netherlands,
-    in tiny studio apartments, and re-adjusting, once again, to the worlds of study and
-    academia. Even at times when you were also struggling, your support has been
+    to live in tiny studio apartments, and re-adjusting, once again, to the worlds of study
+    and academia. Even at times when you were also struggling, your support has been
     continuous. Truly, you made this experience possible.
 
     #v(2em)
