@@ -271,18 +271,17 @@ intervention experiments (left) examine how interventions on a particular belief
 to other beliefs. On the other hand, inbound intervention experiments
 (right) consider how a focal belief's behaviour is differently affected by interventions
 elsewhere in the network. We refer to the belief on which an intervention is applied as
-the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
+the *point of intervention* (marked 'P' in the diagram) and the belief whose
 resulting state is measured as the *target* (marked 'T' in the diagram).
 
 == Choice of points-of-intervention and targets <subsec:methods-choice-of-pois-and-targets>
 
 Since our outbound intervention experiments are intended to assess differences in
-intervention propagation in symmetric and asymmetric belief systems, we select
-points-of-intervention which are likely to highlight the differences between these
-models. So that interventions can propagate, we prioritise beliefs which are reasonably
-influential in both belief system models. Additionally, we attempt to
-select beliefs with varying degrees of asymmetry, conditional on the models containing
-such beliefs.
+intervention propagation between symmetric and asymmetric belief systems, we select
+points of intervention that are likely to highlight these differences. So that
+interventions can propagate, we prioritise beliefs that are reasonably influential in
+both belief system models. Additionally, we attempt to select beliefs with varying
+degrees of asymmetry, conditional on the models featuring such beliefs.
 
 // Points of intervention:
 // - Want to understand difference in how interventions propagate in symmetric and
@@ -291,42 +290,42 @@ such beliefs.
 //   asymmetric influences (i.e., which are at the 'center' of the belief system asymmetry)
 //   and some which do now. If such variables exist.
 
-For the inbound experiments, on the other hand, our intention to assess differences
+For the inbound experiments, our intention is to assess differences
 in intervention strategy and the relative effectiveness of different interventions.
 In this case, ideal target beliefs are those which are reasonable targets in actual
 interventions. We select `CC Action` (attitudes toward climate action) for all inbound
-intervention experiments. In comparison with the other variables in the climate beliefs
+intervention experiments. Compared with the other variables in the climate beliefs
 dataset (for instance, beliefs about the existence of climate change or climate-related
-worry), we expect this to correlate most directly with climate-related behavioural
-choices, and hence a justifiable intervention target.
+worry), we expect this belief to correlate most directly with climate-related behavioural
+choices, and hence be a justifiable intervention target.
 
 == Counterfactual experiments with Common Random Numbers <subsec:methods-common-random-numbers>
 
 Most of our experiments involve comparing simulated behaviour across different KBS
-models, either to examine the impact of an intervention by comparison with a null
+models, either to examine the impact of an intervention by comparing with a null
 (i.e., no-intervention) model, or to assess the impact of interaction symmetry
-assumptions by comparing asymmetric and symmetric models. The KBS model
+assumptions by comparing symmetric and asymmetric models. The KBS model
 dynamics are inherently stochastic, with different trajectories reflecting differences
 in experimental conditions characterised by unmeasured, exogenous influencing factors.
 
-We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[p.~588--604] to
-ensure that measured differences in such experiments reflect differences in the compared
-models, as opposed to differences in the stochastic conditions under which they are
-simulated. Specifically, in any case where we compare observables between two models, we:
+We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[pp.~588--604] to
+ensure that measured differences in such experiments reflect differences between the compared
+models, rather than differences in the stochastic conditions under which they are
+simulated. Specifically, in every situation where we compare observables between two models, we:
 (i) initialise the models using identical random seeds, and (ii) for each stochastic
 operation, we use the same random numbers for each model. The second point follows
 directly from the first in the KBS model, since the number of stochastic operations per
 simulation timestep is fixed, and these occur in a pre-specified order.
 
-As an additional safeguard, we verify each use of CRN in our experiments by comparing
-final floating point samples drawn for each model, after each simulation. We write these
-to disk, and compare the sampled values after all simulations are complete. An error
+As a safeguard, we verify each use of CRN in our experiments by comparing
+final floating-point samples drawn for each model after each simulation. We write these
+to disk and compare the sampled values after all simulations are complete. An error
 is raised if any differences are found.
 
 == Measuring the effects of interventions and asymmetry  <sec:methods-qois>
 
-We now define three quantities of interest which we will use to assess the impacts
-of interventions, and assumptions regarding asymmetry. The first two are used in
+We now define three quantities of interest that we will use to assess the impacts
+of interventions and the impacts of assumptions about asymmetry. The first two are used in
 @sec:results-asymmetry-in-belief-systems to investigate population-level model
 behaviour, while the third is used in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects to examine individual-level
@@ -340,14 +339,14 @@ $cal(M)^t (bold(s)_0)$. Also, we denote the activation probability (as defined i
 @eqn:model-activation-probability) for a belief $S_i$ following this simulation as
 $p_i^t (bold(s)_0, cal(M))$.
 
-The *effect of intervention (on state)* and *effect of asymmetry*, respectively, measure
+The *effect of intervention (on state)* and the *effect of asymmetry*, respectively, measure
 the impact of an intervention on observed belief system behaviour with reference to our
 expectations in a no-intervention scenario (@def:asymmetry-results-effect-of-intervention),
 and the difference in observed behaviour in the asymmetric KBS model, compared with our
 expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
 
 #definition[Effect of Intervention (on state)][
-  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point-of-intervention, we
+  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
   define the *effect of intervention (on state)* for $cal(M)_delta$ as the change in outcome at
   time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
 
@@ -361,7 +360,7 @@ expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry)
   with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
   symmetric KBS model calibrated to the same dataset.
   We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
-  in the effect of intervention with respect to the symmetric model:
+  in the effect of intervention (on state) with respect to the symmetric model:
   $
     f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
   $
@@ -372,11 +371,11 @@ intervention on the total influence experienced by a given belief, with referenc
 to our expectations under the no-intervention scenario (@def:methods-effect-on-influence).
 Note that this is richer than the effect of intervention (on state), which derives
 from the activation probabilities. We can make use of this richness in individual-level
-experiments, while in population-level experiments
+experiments, while in population-level experiments,
 @def:asymmetry-results-effect-of-intervention is more straightforwardly applicable.
 
 #definition[Effect of Intervention (on influence)][
-  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point-of-intervention, we
+  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
   define the *effect of intervention (on influence)* for $cal(M)_delta$ as the change in
   activation probability at time $t in NN$, with respect to the null (no-intervention)
   model, $cal(M)_0$:
@@ -392,13 +391,13 @@ In the simulated interventions described above, the only
 distinguishing factor between individuals is their pre-intervention state. It follows
 that any difference in belief system dynamics between distinct individuals---after
 accounting for simulation stochasticity---is the result of their different initial
-states. To identify the conditions under which an intervention is effective,
+states. Therefore, to identify the conditions under which an intervention is effective,
 it then suffices to characterise the set of _initial states_ which yield effective
-interventions, and distinguish them from those that do not.
+interventions and distinguish them from those that do not.
 
 Our goal is to find a function which maps from an intervention effect to
 sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
-#box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
+#box[$X = [-1,+1]^N subset RR^N$]. We will call $g$ the *effect characterisation function*.
 We measure intervention effects here using the effect of intervention on influence
 (@def:methods-effect-on-influence).
 
@@ -415,7 +414,7 @@ characterisation function, such a function would likely be useless for qualitati
 determining the kinds of initial states which yield effective interventions.
 The elements of the codomain have (potentially) infinite cardinality, and are
 not immediately interpretable. For our purposes, we are less interested in the
-specific states that yield a given intervention effect, but more so in a
+specific states that yield a given intervention effect, and more interested in a
 _concise description_ of that set of states.
 
 === Method: Shallow regression decision tree <subsec:methods-effect-characterisation-function-decision-tree>
@@ -426,12 +425,12 @@ predicted effect. Given a parameterised regression decision tree, we
 may construct a concise approximation to the effect characterisation function by
 identifying, for each predicted effect, the combination of inequalities which define
 the corresponding infinite set of initial states. When the parameter estimation algorithm
-is restricted to shallow trees (e.g., depth 3 or 4, referring to the number of inequality
-bounds defining each region), these combinations can also be interpretable as rules or
-_personas_.
+is restricted to shallow trees (e.g., depth 3 or 4, where depth refers to the number of
+inequality bounds defining each region), these combinations can also be interpreted as
+rules or _personas_.
 
 Since the regression decision tree produces a full tree, all personas for a tree with
 depth $d in NN$ have size $d$ by default. However, these can often be compressed. When
-two personas differ only along one feature dimension, split at the same value, and both
-predict high-effect interventions, we can combine these into a single persona which omits
+two personas differ in only one feature dimension, split at the same value, and both
+predict high-effect interventions, we can combine them into a single persona that omits
 that feature (i.e., spans the entire feature dimension).
