@@ -37,7 +37,7 @@ experimental approach and the key quantities measured in the following chapters.
 // The climate beliefs dataset describes a subset of beliefs relating to
 // climate change, collected in the United States in recent years.
 
-Note that our use of the climate beliefs dataset places a specific context of
+Note that our use of the climate beliefs dataset imposes a specific interpretive context of
 interpretation on our findings. In particular, we do not claim that the set of beliefs
 considered here comprehensively reflects the range of possible climate-related beliefs,
 and we expect that our results are likely to be sensitive to the (geographic and
@@ -63,9 +63,9 @@ situational) contexts underlying the climate beliefs dataset.
 == Assessing asymmetric influence using the KBS model <sec:methods-directional-differential>
 
 To investigate the prevalence of asymmetric relations in the asymmetric model calibrated
-to the climate beliefs dataset, we examine the differences in directional interaction
-effects for the asymmetric models calibrated using bootstrapping in the previous
-section.
+to the climate beliefs dataset, we examine differences in directional interaction
+effects between each pair of beliefs in the asymmetric models calibrated via
+bootstrapping in the previous chapter.
 
 For each bootstrapped model, $cal(M)_((i))$ with parameters
 $chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
@@ -78,18 +78,18 @@ $ <eqn:methods-directional-differential-matrix>
 Recall that the $k$'th row of $bold(J)_((i))$, for #box[$k in [N]$],
 describes the strength and direction of influence _from_ the
 belief $S_k$ _toward_ each other belief. Hence for $k, ell in [N]$ we should
-interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
+interpret the element $(Delta_(J)^((i)))_(k,ell)$ of the directional differential matrix
 as the excess influence of belief $S_k$ on $S_ell$. A positive value indicates that
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
-Note that while, in the previous chapter (#internal-link(<edge-existence-warning>)), we
+Note that, while in the previous chapter (#internal-link(<edge-existence-warning>)) we
 cautioned against using bootstrapped confidence intervals to test for the _existence_ of
 edges by comparison with zero in regularised models, this caution does not apply to
 the _comparison_ of edge weights via the mean difference
 @epskampEstimatingPsychologicalNetworks2018.
 
-Degree centrality and strength centrality are commonly used to assess a belief's
-_importance_ or _position_ within a belief system @brandtWhatCentralPolitical2019
+Degree centrality and strength centrality are commonly used to assess the _importance_
+or _position_ of a belief within a belief system @brandtWhatCentralPolitical2019
 @bringmannWhatCentralityMeasures2019 @chambonTailoredInterventionsBroad2022
 @brandtInterattitudeCentralityDoes2023. Degree centrality measures the number of
 edges adjacent to a node in a network. Strength centrality measures the sum of
@@ -97,7 +97,7 @@ absolute edge weights. In directed networks, however, these centrality indices c
 calculated using either incoming or outgoing edges, and the resulting values may differ.
 To understand the potential impact of symmetric-influence assumptions on judgements
 regarding belief importance, we therefore additionally compare the incoming and outgoing
-values for both centrality indices, for each belief that exhibits significant asymmetric
+values of both centrality indices for each belief that exhibits significant asymmetric
 influence.
 
 
@@ -105,11 +105,11 @@ influence.
 
 #let structural-intervention-footnote = footnote[
   Although not considered here, we implement such structural interventions in the
-  Ising Python package published alongside this study. We discuss this topic in
+  Ising Python package, which is published alongside this study. We discuss this topic in
   @sec:discussion.
 ]
 
-We now outline our approach to modelling interventions in the KBS model. In this study
+We now outline our approach to modelling interventions in the KBS model. In this study,
 we consider interventions which affect a belief system's _state_. Notably, this excludes
 interventions which affect the structure of a belief system, for instance, by changing
 the existence, sign, direction, or effect size of influence relations between
@@ -128,7 +128,7 @@ value and outgoing edges toward a subset of beliefs:
   image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
 )
 
-In the diagram above, the intervention node $I$ exerts influence on the beliefs
+In the diagram above, the intervention node $I$ influences the beliefs
 $A$ and $B$. Consider the effective baseline activation for belief $A$ at
 time $t+1$, as defined in @eqn:model-effective-activation, given a previous configuration
 $bold(s)^t$:
@@ -139,7 +139,7 @@ $ <eqn:asymmetric-belief-system-int-example-eff-baseline>
 
 Since the state of $I$ is fixed (in this case, at $+1$), the intervention node's
 contribution to $A$'s effective activation baseline is simply $J_(I A)$.
-We can then re-write @eqn:asymmetric-belief-system-int-example-eff-baseline,
+We can then rewrite @eqn:asymmetric-belief-system-int-example-eff-baseline,
 interpreting the intervention effect as an adjustment to the baseline activation
 $h_A$:
 
@@ -147,7 +147,7 @@ $
   h_A^"eff" (bold(s)^t) = (h_A + J_(I A)) + sum_("node" j != I) J_(j A) s^t_j
 $
 
-It follows that we can then equivalently model interventions more simply as an adjustment
+It follows that we can equivalently model interventions more simply as adjustments
 to the baseline activations of particular beliefs:
 
 #figure(
@@ -157,7 +157,7 @@ to the baseline activations of particular beliefs:
 )
 
 Let us define this more formally. For a belief system model $cal(M)$ as defined above
-with $N in NN$ nodes, an *intervention* is the function
+with #box[$N in NN$] nodes, an *intervention* is the function
 $phi_cal(M): bold(delta)_h mapsto cal(M)'$, where $bold(delta)_h in RR^N$ is a vector of offsets to
 the baseline activations, and the model $cal(M)'$ has parameters
 $chevron bold(J), bold(h)' chevron.r$, where
@@ -174,25 +174,25 @@ simulated-intervention studies
 @berteroConsolidationChangeExploring2025 @wuSimulatingNodeManipulations2026.
 
 The principles underlying this approach can also be used to model other exogenous factors
-which influence, but are not influenced by, belief system dynamics. For instance,
+that influence belief system dynamics but are not influenced by them. For instance,
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") use an analogous mechanism
-in a social network context, to represent the influence of an individual's actual belief
-state on another individual's second-order belief regarding this state (i.e., their
-belief about what the other person believes).
+in a social network context, to represent how an individual's actual belief state infuences
+another individual's second-order belief about that state (i.e., their
+belief about what the first individual believes).
 
 === Intervention strength <sec:methods-intervention-strength>
 
-Recall that in @chp:kinetic-belief-system we defined the probability distribution over
+Recall that in @chp:kinetic-belief-system, we defined the probability distribution over
 states for a given belief as a non-linear (specifically, logistic) function of that
 belief's effective baseline activation (@eqn:model-activation-probability). Since
-interventions adjust the baseline activation linearly, it follows that an intervention
-with fixed strength $delta_h in RR$ will affect individuals differently, depending on
+interventions adjust the baseline activation linearly, an intervention
+with fixed strength $delta_h in RR$ will affect individuals differently depending on
 their pre-intervention states.
 
 @fig:methods-intervention-strengths-probability illustrates how the probability of
-activation for the intervention belief (@eqn:model-activation-probability) changes
-for different intervention scenarios, as a function of the effective baseline
-activation. Since interventions constitute offsets to the effective baseline activaton,
+activation of an intervention belief (@eqn:model-activation-probability) varies
+across different intervention scenarios as a function of the effective baseline
+activation. Since interventions constitute offsets to the effective baseline activation,
 they are reflected as horizontal shifts in the logistic curve.
 
 #figure(
@@ -217,10 +217,10 @@ two individuals, positioned at different locations on this base curve:
 To understand the impacts of intervention strength on each individual, we draw a
 vertical line upward from the solid curve at each location, and read off the activation
 probability at each intersection with the other intervention curves. Under the null
-scenario ($delta_h = 0$) the first individual exhibits an equal tendency toward each
+scenario ($delta_h = 0$), the first individual exhibits an equal tendency toward each
 state, while the second is almost certain to adopt the state $-1$.
 
-Notice that interventions are not experienced equivalently by the two individuals. For
+Notice that interventions are not experienced equally by the two individuals. For
 a weak intervention ($delta_h = 0.5$), the first individual sees a substantial jump in
 activation probability, while the corresponding increase for the second individual is
 negligible. The stakes are reversed under a strong intervention ($delta_h = 2.5$).
@@ -228,10 +228,9 @@ negligible. The stakes are reversed under a strong intervention ($delta_h = 2.5$
 Prior to intervention, the first's indifference makes them maximally
 susceptible to interventions, while the second's strong negative stance is only
 affected by large interventions. On the other hand, the second individual's state
-has the _potential_ to change more than that of the first individual. Consider that
+has the _potential_ to change more than the first individual's. Consider that
 the interventions can, at best, shift the first individual from indifference to support,
-in contrast to the potential shift from opposition to support in the case of the second
-individual.
+whereas the second individual could shift from opposition to support.
 
 // *TODO:* Quantitative explanation:
 // - Take derivative of the difference in activation probabilities between intervention
