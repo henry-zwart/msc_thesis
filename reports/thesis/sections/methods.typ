@@ -339,15 +339,15 @@ $cal(M)^t (bold(s)_0)$. Also, we denote the activation probability (as defined i
 @eqn:model-activation-probability) for a belief $S_i$ following this simulation as
 $p_i^t (bold(s)_0, cal(M))$.
 
-The *effect of intervention (on state)* and the *effect of asymmetry*, respectively, measure
+The *effect-of-intervention (on state)* and the *effect-of-asymmetry*, respectively, measure
 the impact of an intervention on observed belief system behaviour with reference to our
 expectations in a no-intervention scenario (@def:asymmetry-results-effect-of-intervention),
 and the difference in observed behaviour in the asymmetric KBS model, compared with our
 expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
 
-#definition[Effect of Intervention (on state)][
+#definition[Effect-of-intervention (on state)][
   For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
-  define the *effect of intervention (on state)* for $cal(M)_delta$ as the change in outcome at
+  define the *effect-of-intervention (on state)* for $cal(M)_delta$ as the change in outcome at
   time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
 
   $
@@ -355,28 +355,28 @@ expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry)
   $
 ] <def:asymmetry-results-effect-of-intervention>
 
-#definition[Effect of Asymmetry][
+#definition[Effect-of-asymmetry][
   Let $cal(M)_"asym"$ be a calibrated asymmetric KBS model
   with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
   symmetric KBS model calibrated to the same dataset.
-  We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
-  in the effect of intervention (on state) with respect to the symmetric model:
+  We define the *effect-of-asymmetry* for $cal(M)_"asym"$ as the difference
+  in the effect-of-intervention (on state) with respect to the symmetric model:
   $
     f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
   $
 ] <def:asymmetry-results-effect-of-asymmetry>
 
-Finally, the *effect of intervention (on influence)* measures the impact of an
+Finally, the *effect-of-intervention (on influence)* measures the impact of an
 intervention on the total influence experienced by a given belief, with reference
 to our expectations under the no-intervention scenario (@def:methods-effect-on-influence).
-Note that this is richer than the effect of intervention (on state), which derives
+Note that this is richer than the effect-of-intervention (on state), which derives
 from the activation probabilities. We can make use of this richness in individual-level
 experiments, while in population-level experiments,
 @def:asymmetry-results-effect-of-intervention is more straightforwardly applicable.
 
-#definition[Effect of Intervention (on influence)][
+#definition[Effect-of-intervention (on influence)][
   For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
-  define the *effect of intervention (on influence)* for $cal(M)_delta$ as the change in
+  define the *effect-of-intervention (on influence)* for $cal(M)_delta$ as the change in
   activation probability at time $t in NN$, with respect to the null (no-intervention)
   model, $cal(M)_0$:
 
@@ -398,7 +398,7 @@ interventions and distinguish them from those that do not.
 Our goal is to find a function which maps from an intervention effect to
 sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
 #box[$X = [-1,+1]^N subset RR^N$]. We will call $g$ the *effect characterisation function*.
-We measure intervention effects here using the effect of intervention on influence
+We measure intervention effects here using the effect-of-intervention on influence
 (@def:methods-effect-on-influence).
 
 Consider a function which does the opposite, mapping initial states to a measure of

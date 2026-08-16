@@ -35,7 +35,7 @@ In this chapter, we address the final two research questions presented in
   caption: caption(
     short: [Individual effectiveness of inbound `CC Action` interventions],
     long: [
-      The expected effect of intervention on state
+      The expected effect-of-intervention on state
       (@def:asymmetry-results-effect-of-intervention) for strong interventions
       #box[($delta_h = 2.5$)] targeting attitudes toward climate action exhibits
       substantial variation between survey participants.
@@ -81,7 +81,7 @@ for which interventions on different nodes in the belief system are expected to 
 effective for targeting attitudes toward climate action. These are obtained using the
 regression decision tree approach to approximating the effect characterisation function,
 as described in @sec:methods-effect-characterisation-function. We regard an
-intervention as _effective_ for a given individual if the expected effect of intervention
+intervention as _effective_ for a given individual if the expected effect-of-intervention
 on influence (@def:methods-effect-on-influence), estimated using the mean across $n=500$
 simulations, is greater than or equal to the population upper quartile. Since the
 threshold for an intervention to be considered effective is specific to each
@@ -136,7 +136,7 @@ identified persona, while for interventions on `Politics` only 3% of high-effect
 individuals are not represented.
 
 
-// Recall that the effect of intervention measures the difference in effects between the
+// Recall that the effect-of-intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
 // (@def:asymmetry-results-effect-of-intervention).
 For the present analysis, it is
