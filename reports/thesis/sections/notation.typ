@@ -2,29 +2,50 @@
 //
 = Notation <sec:notation>
 
-Define key terminology, outline notation used in following sections.
+#{
+  set text(size: 11pt)
+  set list(spacing: 1.6em)
+  [
+    - *Scalars* are denoted using regular weight lowercase variables, e.g., $x$.
 
-// - $chevron i j chevron.r$: The set of interacting pairs of spins.
-// - $[N]$: The index set $1..=N$.
-// - $log$: Base 2 unless otherwise stated.
+    - *Vectors* are denoted using boldface lowercase variables, e.g., $bold(x)$.
 
-- $log$: Natural logarithm unless otherwise specified
-- $[N]$ for $N in NN$: The index set, ${1, ..., N}$
+    - *Matrices* are denoted using boldface uppercase variables, e.g., $bold(X)$.
 
-Scalars, vectors, and matrices:
-- Vectors are bold, lowercase: $bold(x)$
-- Matrices are bold, uppercase: $bold(X)$
-- Scalars are regular weight and lowercase: $x$
+    - *Sets* are denotes using regular weight uppercase variables, e.g., $X$.
 
-Sets are regular weight and uppercase: $X$
+    - *Random variables* are denoted using the uppercase version of the sample variable,
+      or the script typeface when the sample variable is uppercase. e.g., for a scalar $a$
+      or vector $bold(a)$, we denote the random variable as $A$ or $bold(A)$, respectively,
+      whereas for a set $B$ we denote the random variable as $cal(B)$.
 
-Random variables?
+    - Unless otherwise stated, $log$ refers to the natural logarithm.
 
-Beliefs:
-- Referring to the node in the belief system: $S_i$
-- Data measurement, non-binarised, denoted $x in RR$ for scalar or $bold(x) in RR^N$
-  for vectors for measurements.
-- Random variables for binarised belief state, denoted $sigma$ for single belief and
-  $bold(sigma)$ for vectors of belief states.
-- Realised values of the binarised belief state random variable are $s$ for single belief
-  and $bold(s)$ for vectors of belief states.
+    - For $n in NN$, $[n]$ denotes the *index set*, such that $[n] := {1, ..., n}$.
+
+    We adopt specific notation for the context of belief systems and beliefs. In
+    particular:
+    - *Models* are referred to using variants of the variable $cal(M)$, e.g., $cal(M)_"asymmetric"$.
+
+    - *Generic beliefs*, in the generic concept sense, as discussed at the start of
+      @sec:model-modelling-belief-system-dynamics, are denoted using the uppercase letter
+      $S$, possibly with a subscript, e.g., $S_i$.
+
+    - *Particular beliefs*, in the specific instance sense, as discussed at the start of
+      @sec:model-modelling-belief-system-dynamics, are denoted using the lowercase letter
+      $s$, possibly with a subscript, e.g., $s_i$.
+
+    - *Belief random variables* are denoted using the symbol $sigma$, possibly with a
+      subscript.
+
+    - *Belief data variables*, as measured by a survey (for instance), and corresponding
+      to a measurements of particular belief state, are denoted using the symbol $x$.
+
+    For instance, the generic concept 'belief regarding the contents of the box' would be
+    denoted as $S$. This takes on specific values, such as 'the box is empty', denoted as
+    $s$, which are realisations of the random variable $sigma$. If we were measure an
+    individual's belief about the contents of the box, this data variable would be denoted
+    as $x$.
+
+  ]
+}
