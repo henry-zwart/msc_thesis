@@ -827,7 +827,7 @@ package released alongside this study already supports these, inviting future wo
 this topic.
 
 Finally, we adopt a simplistic view of the interface between belief systems and the
-external world. This is most evident, for instance, in our treatment of interventions as
+external world. This is most evident in our treatment of interventions as
 acting directly and identically on individual beliefs, and the assumption that
 current events (e.g., the 2020 US presidential election) have minimal impact on observed
 belief dynamics. In reality, some beliefs may be easier or harder to affect
