@@ -116,7 +116,7 @@ interactions comprise $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}
 #box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]\; the only pair with a
 unidirectional interaction is $#raw("Politics") -> #raw("CC Real")$.
 
-Comparing directional strength and degree centrality indices for `CC Worry` and
+Comparing directed strength and degree centrality indices for `CC Worry` and
 `Politics` across bootstrapped models, we find significant differences ($p < 0.05$) for
 strength centrality on `CC Worry`, and both strength and degree centrality on `Politics`.
 The difference in degree centrality for `Politics` arises from the difference in selection
@@ -128,7 +128,7 @@ only outbound interactions from `Politics` to these beliefs.
 Most directional differentials display substantial uncertainty (confidence
 interval width $> 0.1$ on average), reflecting the parameter accuracy discussed in
 @sec:calibration (@fig:calibration-edge-accuracy). This results in several inconclusive
-cases, where the median bootstrap-estimate directional differential is nonzero but
+cases, where the median bootstrap-estimate is nonzero but
 the confidence interval contains zero. In other cases, we observe apparent symmetric
 or near-symmetric relations (for example,
 $#raw("Weather worry") --> #raw("CC Others Worry")$).
@@ -248,8 +248,8 @@ In each of the intervention experiments described below, we use the models calib
 to the full climate beliefs dataset in @sec:calibration. For a given experiment, we
 initialise the associated model (symmetric/asymmetric; intervention/null) with the
 binarised observations from the final wave of the climate beliefs dataset. We then
-draw consecutive samples from the model using parallel Glauber dynamics
-(@subsec:methods-glauber-dynamics) until $t=5$, before measuring the target belief
+draw consecutive samples from the model using synchronous Glauber dynamics
+(@subsec:methods-glauber-dynamics) until #box[$t=5$], before measuring the target belief
 state.#timescale-footnote To account for stochasticity in both the simulation
 procedure and binarisation of individuals' initial states, we perform 500 repeats for
 each intervention.
@@ -374,12 +374,12 @@ significant differences between the two models for the `Weather Worry` scenario.
 remaining two scenarios, however, we see several significant differences. In particular,
 all pairs of variables with asymmetric direct relations
 (that is, #box[$#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry"), #raw("CC Real")}$]
-and $#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$) display significant
+and #box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]) display significant
 differences.
 
 Comparing `Politics` and `CC Worry`, we observe that while `CC Worry` exhibits greater
-effects of intervention (@fig:asymmetry-results-outbound-effect), `Politics` exhibits
-larger mean effects of asymmetry (@fig:asymmetry-results-outbound-effect-of-asymmetry),
+effects-of-intervention (@fig:asymmetry-results-outbound-effect), `Politics` exhibits
+larger mean effects-of-asymmetry (@fig:asymmetry-results-outbound-effect-of-asymmetry),
 although we note that the significance of the latter differences is inconclusive. In both
 cases, we see that cross-interaction effect values, $J_(i j)$, in the symmetric model are
 typically between the corresponding inbound and outbound interaction effects in the asymmetric
@@ -397,8 +397,9 @@ Notice that the asymmetric model includes outbound (but not inbound) interaction
 `Politics` to both `CC Human` and `Weather Worry`, while the symmetric model omits
 interactions with these beliefs entirely.#different-connectivity-footnote In contrast,
 `CC Worry` has inbound and outbound interactions with all other beliefs in both models.
-This explains the observed differences in the effects of intervention and asymmetry for
-`CC Worry` and `Politics`: `CC Worry` has higher effects of intervention in both models
+This explains the observed differences in the effects-of-intervention and
+effects-of-asymmetry for
+`CC Worry` and `Politics`: #box[`CC Worry`] has higher effects of intervention in both models
 on account of its strong outbound interaction effects, which are also mostly retained in
 the symmetric model, while the removal of interactions for `Politics` in the symmetric
 model results in lower influence and fewer (direct and indirect) paths through which
@@ -450,8 +451,8 @@ interventions can propagate, compared with the asymmetric model.
 ]
 Turning our attention to inbound intervention dynamics, we now consider the effects
 of different interventions aimed at influencing the state of `CC Action`.
-The top panel of @fig:asymmetry-results-inbound-effect shows the mean effect of
-intervention on the state of `CC Action` for each possible point of intervention.
+The top panel of @fig:asymmetry-results-inbound-effect shows the mean effect-of-intervention
+on the state of `CC Action` for each possible point of intervention.
 // Examining the mean effects allows us to gauge the expected absolute effect of each
 // intervention, but is limited for purposes of comparing the relative effects of
 // interventions.

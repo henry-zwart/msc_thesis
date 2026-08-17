@@ -34,7 +34,7 @@ influential and highly influenceable may serve as effective indirect pathways fo
 interventions.
 
 Second, despite relatively smaller sample sizes, conservative and liberal
-belief systems differed in sparsity and specific belief relations, while
+belief-system models differed in sparsity and specific belief relations, while
 also displaying broad structural similarities. Both findings align with those of previous
 studies using symmetric networks @leeClimateChangeBelief2024. The similarities suggest
 that while belief systems likely vary among individuals, they also likely

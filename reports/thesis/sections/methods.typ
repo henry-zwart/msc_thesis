@@ -37,7 +37,7 @@ experimental approach and the key quantities measured in the following chapters.
 // The climate beliefs dataset describes a subset of beliefs relating to
 // climate change, collected in the United States in recent years.
 
-Note that our use of the climate beliefs dataset imposes a specific interpretive context of
+Note that our use of the climate beliefs dataset imposes a specific context of
 interpretation on our findings. In particular, we do not claim that the set of beliefs
 considered here comprehensively reflects the range of possible climate-related beliefs,
 and we expect that our results are likely to be sensitive to the (geographic and
@@ -66,7 +66,7 @@ To investigate the prevalence of asymmetric relations in the climate beliefs dat
 examine differences in directional interaction effects between each pair of beliefs in the
 asymmetric models calibrated via bootstrapping in the previous chapter.
 
-For each bootstrapped model, $cal(M)_((i))$ with parameters
+For each bootstrapped model, $cal(M)_((i))$, with parameters
 $chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
 the directional differential matrix:
 
@@ -82,7 +82,7 @@ as the excess influence of belief $S_k$ on $S_ell$. A positive value indicates t
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
 Note that, while in the previous chapter (#internal-link(<edge-existence-warning>)) we
-cautioned against using bootstrapped confidence intervals to test for the _existence_ of
+cautioned against using bootstrapped confidence intervals to test for the existence of
 edges by comparison with zero in regularised models, this caution does not apply to
 the _comparison_ of edge weights via the mean difference
 @epskampEstimatingPsychologicalNetworks2018.
@@ -95,7 +95,7 @@ edges adjacent to a node in a network. Strength centrality measures the sum of
 absolute edge weights. In directed networks, however, these centrality indices can be
 calculated using either incoming or outgoing edges, and the resulting values may differ.
 To understand the potential impact of symmetric-influence assumptions on judgements
-regarding belief importance, we therefore additionally compare the incoming and outgoing
+regarding belief importance, we compare the incoming and outgoing
 values of both centrality indices for each belief that exhibits significant asymmetric
 influence.
 
@@ -104,7 +104,7 @@ influence.
 
 #let structural-intervention-footnote = footnote[
   Although not considered here, we implement such structural interventions in the
-  Ising Python package, which is published alongside this study. We discuss this topic in
+  _Ising_ Python package, which is published alongside this study. We discuss this topic in
   @sec:discussion.
 ]
 
@@ -137,7 +137,7 @@ $
 $ <eqn:asymmetric-belief-system-int-example-eff-baseline>
 
 Since the state of $I$ is fixed (in this case, at $+1$), the intervention node's
-contribution to $A$'s effective activation baseline is simply $J_(I A)$.
+contribution to $A$'s effective baseline activation is simply $J_(I A)$.
 We can then rewrite @eqn:asymmetric-belief-system-int-example-eff-baseline,
 interpreting the intervention effect as an adjustment to the baseline activation
 $h_A$:
@@ -155,7 +155,7 @@ to the baseline activations of particular beliefs:
   image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 33%),
 )
 
-Let us define this more formally. For a belief-system model $cal(M)$ as defined above
+Let us define this more formally. For a belief-system model, $cal(M)$, as defined above
 with #box[$N in NN$] nodes, an *intervention* is the function
 $phi_cal(M): bold(delta)_h mapsto cal(M)'$, where $bold(delta)_h in RR^N$ is a vector of offsets to
 the baseline activations, and the model $cal(M)'$ has parameters
@@ -209,12 +209,12 @@ they are reflected as horizontal shifts in the logistic curve.
 The solid line denotes the null scenario in which no intervention is applied. Consider
 two individuals, positioned at different locations on this base curve:
 
-+ $h_"eff" = 0$: Ambivalent disposition toward the intervention belief, and
++ $h^"eff" = 0$: Ambivalent disposition toward the intervention belief, and
 
-+ $h_"eff" = -2$: Strong negative disposition toward the intervention belief.
++ $h^"eff" = -2$: Strong negative disposition toward the intervention belief.
 
 To understand the impacts of intervention strength on each individual, we draw a
-vertical line upward from the solid curve at each location, and read off the activation
+vertical line upward from the solid curve at each location, and read the activation
 probability at each intersection with the other intervention curves. Under the null
 scenario ($delta_h = 0$), the first individual exhibits an equal tendency toward each
 state, while the second is almost certain to adopt the state $-1$.
@@ -273,7 +273,7 @@ elsewhere in the network. We refer to the belief on which an intervention is app
 the *point of intervention* (marked 'P' in the diagram) and the belief whose
 resulting state is measured as the *target* (marked 'T' in the diagram).
 
-== Choice of points-of-intervention and targets <subsec:methods-choice-of-pois-and-targets>
+== Choice of points of intervention and targets <subsec:methods-choice-of-pois-and-targets>
 
 Since our outbound intervention experiments are intended to assess differences in
 intervention propagation between symmetric and asymmetric belief systems, we select
@@ -310,8 +310,8 @@ in experimental conditions characterised by unmeasured, exogenous influencing fa
 We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[pp.~588--604] to
 ensure that measured differences in such experiments reflect differences between the compared
 models, rather than differences in the stochastic conditions under which they are
-simulated. Specifically, in every situation where we compare observables between two models, we:
-(i) initialise the models using identical random seeds, and (ii) for each stochastic
+simulated. Specifically, in every situation where we compare observables between two models:
+(i) we initialise the models using identical random seeds, and (ii) for each stochastic
 operation, we use the same random numbers for each model. The second point follows
 directly from the first in the KBS model, since the number of stochastic operations per
 simulation timestep is fixed, and these occur in a pre-specified order.
@@ -324,16 +324,16 @@ is raised if any differences are found.
 == Measuring the effects of interventions and asymmetry  <sec:methods-qois>
 
 We now define three quantities of interest that we will use to assess the impacts
-of interventions and the impacts of assumptions about asymmetry. The first two are used in
+of interventions and the impacts of assumptions about interaction symmetry. The first two are used in
 @sec:results-asymmetry-in-belief-systems to investigate population-level model
 behaviour, while the third is used in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects to examine individual-level
 intervention impacts.
 All three quantities are computed using Common Random Numbers, as discussed above.
 
-First, let us establish some shared notation. For a KBS model $cal(M)$, we denote the
-result of simulating $cal(M)$ for $t in NN$ timesteps (as in
-@subsec:methods-glauber-dynamics) from an initial state $bold(s)_0$, as
+First, let us establish some shared notation. For a KBS model, $cal(M)$, we denote the
+result of simulating $cal(M)$ for $t in NN$ timesteps from an initial state $bold(s)_0$
+(as in @subsec:methods-glauber-dynamics), as
 $cal(M)^t (bold(s)_0)$. Also, we denote the activation probability (as defined in
 @eqn:model-activation-probability) for a belief $S_i$ following this simulation as
 $p_i^t (bold(s)_0, cal(M))$.
@@ -341,7 +341,7 @@ $p_i^t (bold(s)_0, cal(M))$.
 The *effect-of-intervention (on state)* and the *effect-of-asymmetry*, respectively, measure
 the impact of an intervention on observed belief-system behaviour relative to our
 expectations in a no-intervention scenario (@def:asymmetry-results-effect-of-intervention),
-and the difference in observed behaviour in the asymmetric KBS model, compared with our
+and the difference in observed behaviour in the asymmetric KBS model, relative to our
 expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
 
 #definition[Effect-of-intervention (on state)][
@@ -366,11 +366,11 @@ expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry)
 ] <def:asymmetry-results-effect-of-asymmetry>
 
 Finally, the *effect-of-intervention (on influence)* measures the impact of an
-intervention on the total influence experienced by a given belief, with reference
+intervention on the total influence experienced by a given belief, relative to
 to our expectations under the no-intervention scenario (@def:methods-effect-on-influence).
 Note that this is richer than the effect-of-intervention (on state), which derives
-from the activation probabilities. We can make use of this richness in individual-level
-experiments, while in population-level experiments,
+from the activation probabilities. In individual-level experiments we can make use of
+this richness, whereas in population-level experiments,
 @def:asymmetry-results-effect-of-intervention is more straightforwardly applicable.
 
 #definition[Effect-of-intervention (on influence)][
@@ -388,20 +388,20 @@ experiments, while in population-level experiments,
 
 In the simulated interventions described above, the only
 distinguishing factor between individuals is their pre-intervention state. It follows
-that any difference in belief-system dynamics between distinct individuals---after
+that any difference in belief-system dynamics between individuals---after
 accounting for simulation stochasticity---is the result of their different initial
 states. Therefore, to identify the conditions under which an intervention is effective,
-it then suffices to characterise the set of _initial states_ which yield effective
+it suffices to characterise the set of _initial states_ which yield effective
 interventions and distinguish them from those that do not.
 
 Our goal is to find a function which maps from an intervention effect to
-sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
+_sets of_ (non-binary) initial states that yield that effect, $g: RR -> 2^X$, where
 #box[$X = [-1,+1]^N subset RR^N$]. We will call $g$ the *effect characterisation function*.
 We measure intervention effects here using the effect-of-intervention on influence
 (@def:methods-effect-on-influence).
 
-Consider a function which does the opposite, mapping initial states to a measure of
-intervention effect, $f: X -> RR$. Given such a function, we can straightforwardly
+Consider a function which does the opposite, mapping an initial state to the corresponding
+effect-of-intervention, $f: X -> RR$. Given such a function, we can straightforwardly
 construct the corresponding effect characterisation function as:
 
 $
@@ -409,7 +409,7 @@ $
 $ <eqn:heterogeneity-results-effect-characterisation-function>
 
 However, while technically satisfying the definition of the effect
-characterisation function, such a function would likely be useless for qualitatively
+characterisation function, the function $g$ would likely be useless for qualitatively
 determining the kinds of initial states which yield effective interventions.
 The elements of the codomain have (potentially) infinite cardinality, and are
 not immediately interpretable. For our purposes, we are less interested in the
@@ -420,16 +420,16 @@ _concise description_ of that set of states.
 
 Regression decision-tree models can provide such descriptions, using inequality bounds
 to partition the initial state space into regions, each of which is assigned a
-predicted effect. Given a parameterised regression decision tree, we
-may construct a concise approximation to the effect characterisation function by
-identifying, for each predicted effect, the combination of inequalities which define
+predicted effect-of-intervention. Given a parameterised regression decision tree, we
+may construct a concise approximation to the effect characterisation function using, for
+each predicted effect, the combination of inequalities that define
 the corresponding infinite set of initial states. When the parameter estimation algorithm
 is restricted to shallow trees (e.g., depth 3 or 4, where depth refers to the number of
-inequality bounds defining each region), these combinations can also be interpreted as
+inequality bounds defining each region), these combinations can also be interpretable, as
 rules or _personas_.
 
 Since the regression decision tree produces a full tree, all personas for a tree with
 depth $d in NN$ have size $d$ by default. However, these can often be compressed. When
 two personas differ in only one feature dimension, split at the same value, and both
-predict high-effect interventions, we can combine them into a single persona that omits
-that feature (i.e., spans the entire feature dimension).
+predict similar effects, we can combine them into a single persona that omits
+that feature (that is, which spans the entire feature dimension).

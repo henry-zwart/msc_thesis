@@ -19,7 +19,7 @@ Ising model framework @glauberTimeDependentStatisticsIsing1963
 in the KBS model mirrors approaches used by
 #cite(<haslbeckInterpretingIsingModel2021>, form: "prose") and
 #cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") for modelling belief dynamics
-in symmetric belief systems (similar to the CAN model).
+in symmetric belief systems similar to the CAN model.
 
 
 We begin the chapter by formalising belief-system _dynamics_ as a modelling problem,
@@ -48,10 +48,10 @@ state. In particular, this assumption is incompatible with the perspective that 
 are contextual and have no singular internal state of their own
 @bendanaFragmentationBelief2021 @riemerPreferencesDontHave2014.
 
-Second, we assume that the state transition probability for a given belief (potentially)
-depends on the previous states of all beliefs, including itself, formalising the idea
+Second, we assume that the state transition probability for a given belief may
+depend on the previous states of all beliefs, including itself, formalising the idea
 that past beliefs influence present ones. Finally, we assume that these conditional
-distributions are time-invariant. While belief _states_ may change over time, the
+distributions are time-invariant. While belief _states_ can change over time, the
 dynamics by which this happens do not.
 
 #important-block[
@@ -96,10 +96,9 @@ $P(bold(sigma)^1) = product_(i=1)^N P(sigma_i^1)$.
 We use the term *belief system* to refer to the combination of a collection of beliefs
 $bold(S)$ and its associated transition probability distribution
 $P(bold(sigma)^(t+1) | bold(sigma)^t)$.
-In this
-conceptualisation, the task of modelling a belief system reduces to describing how the
-instantaneous configuration of belief states affects the distribution over
-possible future states.
+In this conceptualisation, the task of modelling belief-system dynamics reduces to
+describing how the instantaneous configuration of belief states affects the distribution
+over possible future states.
 
 // NOTE:
 // Although the above definitions do not specify the duration of a single timestep, in
@@ -183,27 +182,27 @@ We define the *Kinetic Belief System* model (*KBS*) as a variation on the Causal
 Network, based on the kinetic Ising model @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984. Structurally, the KBS model differs from the CAN model
 in two key respects: (i) interaction effects between a given pair of beliefs are not
-necessarily bi-directional or equal in strength, and (ii) self-interaction effects are
+necessarily bidirectional or equal in strength, and (ii) self-interaction effects are
 permitted.
 
-Formally, let $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs. A kinetic
-belief-system model for $bold(S)$ is described by parameters
+Formally, let $S = {S_1, ..., S_N}$ be a collection of beliefs. A kinetic
+belief-system model for $S$ is described by parameters
 $bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
 is a weighted adjacency matrix of directed *interaction effects* (or *influence effects*), and
 $bold(h) in RR^N$ is a vector of *baseline activation* effects for the elements of
-$bold(S)$.
+$S$.
 
 A baseline activation effect, $h_i in RR$, describes the tendency for the belief $S_i$ to
 take on the value $+1$ in the absence of interactions with other beliefs, or, more generally,
 when pairwise belief interactions have a net effect of zero. $S_i$ tends to adopt the value
-$+1$ under these circumstances, if, and only if, $h_i > 0$, and otherwise tends to adopt the
-value $-1$. This tendency increases with the magnitude of $h_i$.
+$+1$ more frequently under these circumstances, if, and only if, $h_i > 0$, and otherwise
+tends to adopt the value $-1$. This tendency increases with the magnitude of $h_i$.
 
 Other beliefs influence $S_i$'s state through alignment or opposition relations. For
 a belief $S_j$, we define an interaction effect $J_(j i)$ (read _'influence of $j$ on
 $i$'_). When $J_(j i)$ is positive or negative, $S_i$ is influenced to adopt the state
 $S_j^t$ or $-S_j^t$ respectively. In the special case when $j = i$, we refer
-to $J_(i i)$ as a _self-influence_ or _self-interaction_ effect. Positive self-influence
+to $J_(i i)$ as a *self-influence* or *self-interaction* effect. Positive self-influence
 effects reflect the inertia of $S_i$, i.e., the tendency to sustain a particular state
 irrespective of other beliefs. Negative self-influence effects
 are not clearly interpretable. In addition to modelling differences in inertia, the
@@ -229,8 +228,8 @@ dynamics of the entire KBS model; however, rather than defining this directly, w
 instead stitch it together from the dynamics of the individual beliefs using
 Definition @eqn:methods-belief-system-dynamics-parts-whole-relation[].
 
-Let $S_i in bold(S)$ be an arbitrary belief, and let $bold(s) in {-1, +1}^N$
-describe the states of all beliefs in $bold(S)$ at time $t$. We define the *effective
+Let $S_i in S$ be an arbitrary belief, and let $bold(s) in {-1, +1}^N$
+describe the states of all beliefs in $S$ at time $t$. We define the *effective
 baseline activation* of $S_i$ at time $t$ as the net pressure on this belief to adopt the
 state $+1$, resulting from the combined forces of its own baseline activation and
 inertia, as well as influence effects received from other beliefs:
@@ -275,14 +274,14 @@ Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
 
 == Symmetric and asymmetric belief systems
 
-In the special case where $bold(J)$ is symmetric, we say that the kinetic belief-system
-model is *symmetric*; otherwise, it is *asymmetric*. In
-an asymmetric KBS model, for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may
+In the special case where the interaction matrix, $bold(J)$, is symmetric, we say that
+the kinetic belief-system model is *symmetric*; otherwise, it is *asymmetric*. In
+an asymmetric KBS model, for any pair of distinct beliefs $S_i != S_j in S$, it may
 be the case that an influence relation exists in only one direction, or that the directed
 relations differ in sign and/or magnitude. On the other hand, all influence relations in
 a symmetric KBS model are directionally equivalent.
 
-The symmetric KBS model is a simple extension of the symmetric Ising model
+The symmetric KBS model is an extension of the symmetric Ising model
 with self-interaction effects and temporal dynamics. However, due to the
 self-interaction effects, the symmetric KBS model still does not satisfy detailed balance,
 and therefore is not guaranteed to tend toward an equilibrium steady state

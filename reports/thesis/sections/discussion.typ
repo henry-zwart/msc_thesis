@@ -67,19 +67,19 @@ policies based on partisan identification rather than policy content
 )
 
 At the same
-time, while public beliefs toward climate change in the USA have shifted
+time, public beliefs toward climate change in the USA have shifted
 significantly over the past two decades @marlonChangeUSStatelevel2022
-@hamiltonTrackingPublicBeliefs2015, political identity has been shown to be highly
+@hamiltonTrackingPublicBeliefs2015, whereas political identity has been shown to be highly
 stable over similar timeframes @greenPartisanStabilityTurbulent2024
 @brandtBetweenpersonMethodsProvide2022. This suggests that while political identity
 contributes meaningfully to climate-related beliefs, changes in these
-states are less likely to incite changes in political identity.
+beliefs are less likely to incite changes in political identity.
 
 
-Climate-related worry exerts asymmetric influence over beliefs about the
+Climate-related worry exerts asymmetric influence over beliefs about both the
 anthropogenic nature and current impacts of climate change. Both relationships have
 received comparatively less attention in prior research than those involving political
-beliefs and climate beliefs. One possible explanation for
+beliefs and climate beliefs; however, one possible explanation for
 these asymmetric relations is that climate worry and climate beliefs influence
 one another through different mechanisms. For instance,
 #cite(<meadInformationSeekingGlobal2012>, form: "prose") suggest that climate worry
@@ -90,7 +90,7 @@ centrality indices (strength centrality for climate worry; strength and degree c
 for political ideology/alignment). The undirected-network versions of these centrality
 indices are often used to assess belief importance, influence, or position in belief
 systems. Our findings indicate that such assessments may be misleading for beliefs
-involved in several asymmetric relations.
+involved in asymmetric relations.
 
 
 
@@ -144,7 +144,7 @@ variable were comparatively less pronounced.
 
 It is important to note that the effectiveness of interventions on political
 ideology/alignment is _despite_ this variable's high inertia (i.e., strong
-self-interaction effect). When this variable is negative, high inertia leads to
+self-interaction effect). When this belief's state is negative, high inertia leads to
 a lower pre-intervention effective baseline activation, making intervening more
 difficult. The effectiveness of interventions on this variable may be explained
 by the fact that if an intervention successfully 'flips' political ideology/alignment,
@@ -180,7 +180,7 @@ ideology/alignment, owing to its greater outbound interactions and interaction
 strength. The key difference, however, lies in the beliefs' influenceability: while
 climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
-edges.#full-model-disclaimer That is, several beliefs influenced by this
+interactions.#full-model-disclaimer That is, several beliefs influenced by this
 variable do not, in turn, influence it. Since the symmetric model
 must include or exclude both directional interactions between a pair of
 beliefs, cases where the asymmetric model specifies an interaction in only one
@@ -199,12 +199,12 @@ with all other parameters that influence the same spin (or _both_ spins in the
 symmetric case). Hence, when one interaction parameter changes---for instance, if we
 replace a pair of asymmetric interactions by their average---the rest are likely to
 change as well. Secondly, regularisation is often used to obtain sparse network
-representations and reduce overfitting, and it distorts parameter values non-linearly
+representations and reduce overfitting, but it distorts parameter values non-linearly
 in the process. In reality, we find that while most symmetric interactions lie between
 their asymmetric analogues, this is not always the case, and those that are do not
 fall predictably near the middle. As observed in the case of political
 ideology/alignment, the symmetric model may also exclude pairwise interactions
-altogether or create a (bi-)directional interaction when influence actually
+altogether or create a (bi)directional interaction when influence actually
 flows unidirectionally.
 
 #show-rq(3, RQ3) <discussion-rq3>
@@ -214,7 +214,7 @@ intervention effectiveness depends predictably on individuals' pre-intervention 
 states. Most high-effect interventions targeting attitudes toward climate action
 required low initial values for both the point of intervention and the target.
 
-Surprisingly, _all_ of the personas identified as characteristic of effective interventions
+Surprisingly, _all_ of the personas characteristic of effective interventions
 required that pre-intervention climate-related worry be low, even when this
 was neither the point of intervention nor the target.
 This finding may be explained by the combination of high influence and
@@ -247,11 +247,11 @@ which were already effective.
 #{
   [
     In general, the identified personas accurately characterise the conditions for
-    effective interventions. The rare instances in which individuals with these traits
+    effective interventions. The rare instances in which individuals with these personas
     fell outside the high-effect region may be attributable to the rough-and-ready use of
     the upper quartile to classify high-effect interventions. On the other hand, while
     the personas capture _most_ cases where interventions are effective, this varies
-    across points-of-intervention. This directly reflects the limited representational
+    across points of intervention. This directly reflects the limited representational
     capacity of effect characterisation functions based on shallow decision trees; a tree
     depth of three permits at most eight personas to describe the full range of
     intervention effectiveness, each comprising at most three
@@ -279,8 +279,8 @@ responses to interventions beyond those characterised here. Potentially influent
 factors include political identity and social norms. Both vary individually
 @laursenWhatDoesIt2022 and socially @laursenWhatDoesIt2022
 @brownMeasurementPartisanSorting2021 @websterSocialConsequencesPolitical2022, and both
-have been demonstrated as moderating the effects of interventions in the USA targeting
-support for climate policy and related beliefs @grometPoliticalIdeologyAffects2013
+have been demonstrated as moderating the effects of interventions targeting
+support for climate policy and related beliefs in the USA @grometPoliticalIdeologyAffects2013
 @unsworthItsPoliticalHow2014 @allcottSocialNormsEnergy2011
 @vanvalkengoedSelectEffectiveInterventions2022.
 
@@ -361,7 +361,7 @@ account for belief stability arising from stable traits
 #cite(<hamakerCritiqueCrosslaggedPanel2015>, form: "author") suggest modelling
 individual random intercepts (in our case, individual baseline activations), which
 are fixed across waves and account for some of the effects of stable traits. However,
-at least three waves of data are required for the random intercept model to be
+at least three waves of data are required for random intercept models to be
 identifiable, while the climate beliefs dataset comprises only two
 waves.#identifiability-footnote In unreported experiments, we tried a similar approach,
 modelling baseline activations as linear functions of demographic factors (e.g., age,
@@ -386,7 +386,7 @@ the 2020 US presidential election and the January 6 Capitol attack occurred duri
 timeframe. However, we observed highly stable political beliefs over this period,
 consistent with prior studies @greenPartisanStabilityTurbulent2024. Given the
 significance and considerable media coverage of both events, as well as their highly
-political nature, we would expect political beliefs to be affected more so than
+political nature, we would expect political beliefs to be affected by these events more so than
 climate-related beliefs. Therefore, the fact that we do not see this reflected may suggest
 minimal exogenous impacts on the beliefs considered in this study.
 
@@ -518,7 +518,7 @@ influence of extreme weather concerns on climate-related beliefs.
 We now discuss three representational limitations of the model used in the present study,
 on (i) the use of pairwise relations, (ii) representation of belief states as
 Ising model spins, $s in {-1, +1}$, as opposed to binary variables, #box[$s in {0,1}$],
-and (iii) the non-dependence of interaction effect magnitude on belief states.
+and (iii) the non-dependence of interaction-effect magnitude on belief states.
 
 Consider the following (hypothetical) motivating example. Suppose that parents'
 attitudes toward childhood vaccination typically depend, in a simplistic way, on
@@ -536,7 +536,7 @@ between perceived risk and vaccination attitudes, thereby amplifying the existin
 Suppose that, in an attempt to increase childhood vaccination rates, we
 undertake a media campaign appealing to family well-being values. The expected outcome
 is evident: attitudes improve among individuals who are relatively more concerned about
-the disease; for others, the opposite effect ensues.
+the disease than the vaccine; for others, the opposite effect ensues.
 
 This relational structure can be seen as a triplet-interaction extension to the
 belief-system model used in the present study. In a belief-system model with triplet
@@ -557,8 +557,8 @@ pairwise model adopted here.
   ]
 ]
 
-Which comprises both an epistemic position (_Believes that_) and a state of affairs
-(_climate change is happening_). Negating each of these components yields two
+Which comprises both an epistemic position (_Believes that ..._) and a state of affairs
+#box[(_... climate change is happening_)]. Negating each of these components yields two
 reasonable choices for the 'opposite' state:
 
 #align(center)[
@@ -692,7 +692,8 @@ distinguishing between _within-person_ and _between-person_ effects, which is re
 to make strong claims about causal influences. We note that the broader
 CCCV survey from which the climate beliefs dataset (used for model calibration) is drawn
 includes several additional waves that are usable if we relax our
-requirements regarding the number of variables and the inclusion of specific beliefs.
+requirements, outlined in @sec:dataset, regarding the number of variables and the
+inclusion of specific beliefs.
 
 However, this raises a separate issue regarding the intervals between measurements, as
 inter-response times across different pairs of waves can differ significantly, violating
@@ -766,7 +767,7 @@ this topic.
 
 Finally, we adopt a simplistic view of the interface between belief systems and the
 external world. This is most evident in our treatment of interventions as
-acting directly and identically on individual beliefs, and the assumption that
+acting directly and identically on individual beliefs, and our assumption that
 current events (e.g., the 2020 US presidential election) have minimal impact on observed
 belief dynamics. In reality, some beliefs may be easier or harder to affect
 directly than others. Communication of interventions or current events may be noisy

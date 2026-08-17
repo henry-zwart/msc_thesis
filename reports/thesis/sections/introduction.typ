@@ -36,7 +36,7 @@ and how they work.#belief-defn-footnote These beliefs are highly interdependent,
 related by logical and psychological associations in what are often referred to as
 belief systems @converseNatureBeliefSystems2006 @fishbein1977belief. Beliefs
 are also subject to social dynamics @galesicHumanSocialSensing2021, as
-evidenced by observed geographic segregation of political attitudes in the United States
+evidenced, for instance, by observed geographic segregation of political attitudes in the United States
 @brownMeasurementPartisanSorting2021. Moreover, an individual's beliefs have external
 consequences for their behavioural decisions
 @granovetterThresholdModelsCollective1978 and, in turn, are
@@ -155,10 +155,10 @@ The _Causal Attitude Network_ (CAN) model @dalegeFormalizedAccountAttitudes2016
 formalises Festinger's theory of cognitive dissonance as an Ising-style model, also
 drawing on the more recently proposed connectionist perspective on attitude change
 @monroeGeneralConnectionistModel2008. It can be viewed as a theory-driven variant of
-the belief network approach described above. While the Ising model was originally
-presented as a model of ferromagnetic behaviour @isingBeitragZurTheorie1925, it has
-since been variously applied to describe diverse systems of interacting variables which
-attract or repel one another @nguyenInverseStatisticalProblems2017.
+the belief-system network approach described above. Originally presented as a model of
+ferromagnetic behaviour @isingBeitragZurTheorie1925, the Ising model has since been
+variously applied to describe diverse systems of interacting variables which attract or
+repel one another @nguyenInverseStatisticalProblems2017.
 In the CAN model, beliefs and attitudes are
 represented as spins that take on values in the set ${-1, +1}$, corresponding to two
 opposing states (e.g., 'climate change is happening' versus 'climate change is _not_
@@ -207,7 +207,7 @@ uncontroversial, and (iii) how minority views propagate through a population
 However, although mathematically convenient, symmetric interactions are not
 psychologically necessary. Indeed, this has been broadly acknowledged within the belief
 systems modelling literature as a limitation of current approaches. Most authors
-explicitly mention either causal directionality underlying inferred bi-directional
+explicitly mention either causal directionality underlying inferred bidirectional
 associations, or asymmetric/non-reciprocal influences as _plausible_
 @epskampPersonalizedNetworkModeling2018 @brandtMeasuringBeliefSystem2022
 @brandtEvaluatingBeliefSystem2021 @leeClimateChangeBelief2024
@@ -231,7 +231,7 @@ of this study, they do not test the significance of these differences.
   relationships observed in the data, they offer no explanation as to the nature of
   these relationships.
 ]
-Despite general agreement on the plausibility of asymmetric interactions,
+Despite general consensus on the plausibility of asymmetric interactions,
 current research remains predominantly focused on symmetric models.#bn-footnote
 A handful of authors refer to simulation studies in which asymmetric edges
 are used and found to have minimal impact on model dynamics
@@ -243,7 +243,7 @@ argue that theoretical results derived for Ising-style belief-system models are 
 to assumptions of asymmetry or non-reciprocity. However, they note that studies outside
 the belief-system modelling literature show that non-reciprocal Ising models
 can exhibit considerably more complex behaviour than
-the symmetric model (see #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
+symmetric models (see #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
 
 
 One area in which the effects of asymmetric influence are likely to surface is the
@@ -313,7 +313,7 @@ models thereof.
 //     belief system dynamics. They just measure path length after each deactivation.
 
 In this study, we investigate the prevalence of asymmetric influence among beliefs about
-climate change in the US, as well as the dynamic implications of
+climate change in the US, and the dynamic implications of
 symmetric and asymmetric modelling assumptions for belief-level interventions.
 Using a combination of data-driven and simulation-based methods, we will address the
 following four research questions:
@@ -386,7 +386,7 @@ from time-series data. In the second half, we use this framework to address the
 research questions listed above.
 
 In @chp:kinetic-belief-system, we introduce the *Kinetic Belief System* model
-(KBS), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
+(*KBS*), a kinetic Ising model formulation @glauberTimeDependentStatisticsIsing1963
 @fredricksonKineticIsingModel1984 of the Causal Attitude Network (CAN) model
 @dalegeFormalizedAccountAttitudes2016.
 The KBS model represents directed belief influences using distinct parameters, so it is
@@ -398,21 +398,21 @@ analyse intervention effects via simulation on the CAN model
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025
 or GGM models @wuSimulatingNodeManipulations2026, which
 consider neither individuals' pre-intervention belief states, nor the time-scale of
-model dynamics. @chp:parameter-estimation then outlines a parameter estimation method for
+belief-change. @chp:parameter-estimation then outlines a parameter estimation method for
 the KBS model based on maximum likelihood estimation. The proposed method uses knowledge
 of a predefined soft thresholding function to robustly estimate binary model parameters
 from survey data that is not necessarily binary, without requiring explicit binarisation.
-In @sec:calibration, we then use this method to calibrate the KBS model using a two-wave
-longitudinal dataset comprising beliefs about climate change.
+In @sec:calibration, we then use this method to calibrate symmetric and asymmetric KBS
+models using a two-wave longitudinal dataset comprising beliefs about climate change.
 
 // ---the calibrated model is
 // subsequently used to address our research questions in the second half of this study.
 
-We then subsequently use the calibrated model to address our research questions in
+We then subsequently use the calibrated models to address our research questions in
 the second half of the study. Inspired by approaches used in the context of the CAN
 model, we formalise interventions in Ising-style belief-system models
 as additional influencing variables in @sec:methods. We also outline our experimental
-methods to: (i) quantifying expected
+methods for #box[(i) quantifying] expected
 intervention effects on an individual basis and (ii) comparing effects between symmetric
 and asymmetric models, using Common Random Numbers to ensure result comparability.
 We assess the existence of asymmetry and its population-level implications for
@@ -426,16 +426,16 @@ The *climate beliefs dataset* used in this study is sourced from the Longitudina
 of Perceptions About Climate Change and Covid (*CCCV*), a representative longitudinal survey
 collected in the US between 2020 and 2023 @constantinoPersonalHardshipNarrows2022.
 Comprehensively validating this survey data and constructing the targeted dataset of beliefs
-relating to climate change used in our experiments constituted substantial components of
-this investigation, and contribute to future use of the CCCV dataset. We detail both
+relating to climate change used in our experiments both constituted substantial components of
+our investigation, and contribute to future use of the CCCV dataset. We detail both
 processes in @sec:dataset.
 
 #let ising-link-footnote = footnote[
   #link("https://github.com/henry-zwart/ising")
 ]
 
-Alongside this study, we have open-sourced the Python package, `Ising`, developed for
-our experiments.#ising-link-footnote `Ising` provides optimised implementations of the
+Alongside this study, we have open-sourced the _Ising_ Python package developed for
+our experiments.#ising-link-footnote _Ising_ provides an optimised implementation of the
 Kinetic Belief System model, including parameter estimation and functionality to simulate
 interventions on beliefs and interactions.
 

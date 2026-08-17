@@ -19,7 +19,7 @@
   return to this in @sec:heterogeneity-in-belief-systems-and-intervention-effects.
 ]
 In this chapter, we calibrate both the symmetric and asymmetric KBS models to the
-*climate beliefs dataset* described in @sec:dataset. We then evaluate the calibrated
+climate beliefs dataset described in @sec:dataset. We then evaluate the calibrated
 models with respect to both structural accuracy ('how accurate are the
 parameter estimates?') and predictive capacity ('how well do the models explain the
 data?'). We also calibrate two additional asymmetric models to the conservative and
@@ -197,7 +197,7 @@ We then choose the soft thresholding function $b_xi$ with $xi = #binarisation_si
 that a 'weakly oppose' response to a 7-point Likert scale (i.e., value $-1\/3$ in the
 normalised data) is mapped to $+1$ with probability 0.05. The resulting probability
 distribution is displayed in @fig:calibration-likert-7-prob for a 7-point Likert
-scale.@likert7-footnote-ref Under this choice of $b_xi$, values to either side of
+scale.@likert7-footnote-ref For this choice of $b_xi$, values to either side of
 'neutral' are considered mostly unambiguously positive or negative, with some flexibility
 for 'weak' responses.
 
@@ -235,9 +235,9 @@ for 'weak' responses.
 ) <fig:calibration-regularisation-ebic>
 
 We choose the regularisation hyperparameters in accordance with the discussion
-in @subsec:parameter-estimation-regularisation (_Smooth L1 regularisation_).
+in @subsec:parameter-estimation-regularisation.
 Taking $tau = 10^(-2)$ as the threshold below which parameters are considered 'effectively
-zero', we choose the regularisation smoothing hyperparameter to be $epsilon = 10^(-8)$,
+zero', we choose the regularisation smoothing hyperparameter to be #box[$epsilon = 10^(-8)$],
 such that $epsilon << tau^2$.
 We set separate regularisation strengths for the symmetric and asymmetric models,
 as well as the conservative and liberal asymmetric models, taking values
@@ -547,7 +547,8 @@ the null and fully connected models, respectively.
 
 
 We examine a sample of cases from each tail  in @fig:relative-entropy-difference-examples.
-Each panel shows the change in binarisation probability between the survey waves for a sampled
+Each panel shows the change in binarisation probability between the survey waves for a
+different sampled
 survey participant. In the first three panels of the top row, we observe scenarios in
 which most beliefs are initially aligned, and a subset of the remaining beliefs then update
 to align with this set, i.e., where the system shifts toward a more consistent state.

@@ -20,7 +20,7 @@ While the KBS model is theoretically interesting, its _empirical_ value hinges o
 the ability to infer its parameters from observational data.
 
 In this chapter, we provide a method for doing just this, based on maximum likelihood
-estimation---this turns out to be not so straightforward, due to the mismatch between the
+estimation. This task turns out to be not so straightforward, due to the mismatch between the
 binary representation of beliefs assumed by the KBS model and typical approaches for
 assessing beliefs in surveys.
 // We then use this method to calibrate symmetric and
@@ -51,9 +51,9 @@ There are several approaches to binarising continuous values; the simplest,
 which we will call *sign-thresholding*, is to map values to ${-1, +1}$ according to
 their sign. Zero must be handled separately, for instance, using a deterministic
 rule (e.g., $0 mapsto +1$) or a Bernoulli random variable. This produces discontinuous
-behaviour around the zero point, which may be unrealistic in this setting. If we are
+behaviour around the zero point, which may be unrealistic in the present context. If we are
 treating zero as an ambivalent or neutral belief state that can be mapped to either $-1$
-or $+1$, one could argue that we should treat small-magnitude positive or negative values
+or $+1$, we should arguably also treat small-magnitude positive or negative values
 similarly.
 
 #let scale-choice-footnote = footnote[
@@ -67,7 +67,7 @@ similarly.
 
 #{
   [
-    We can improve on this using *soft thresholding*, in which each data value $x in RR$
+    We can improve the situation by using *soft thresholding*, in which each data value $x in RR$
     is perturbed by an independent noise term $epsilon ~ cal(N)(0, xi)$ prior to this
     mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
     and a specified $xi in RR_+$.#scale-choice-footnote <scale-choice-footnote>
@@ -121,10 +121,10 @@ resolve: _any_ form of binarisation necessarily erases information about
 the magnitude of the original data. For instance, consider a survey question that
 assesses an individual's attitude toward a particular policy using a 7-point Likert
 scale.#likert7-footnote <likert7-footnote-ref>After binarisation, if a value is mapped
-to $+1$, we can no longer determine whether this originally corresponded to weak or
+to $+1$, we can no longer determine whether the original value corresponded to weak or
 strong support, neutrality, or even opposition.
 
-In short, since it uses a single binary output for each observation, MLE cannot capture
+In short, since it uses a single binary value for each observation, MLE cannot capture
 ambiguity or neutrality and instead requires that all data be made unambiguous and
 non-neutral through binarisation.
 
@@ -257,10 +257,10 @@ issue by avoiding binarisation altogether.
 Let $D$ be a dataset with real values, and let $cal(D)_B$ be the random variable
 representing possible binarisations of $D$ using a thresholding function,
 $b$. In standard MLE, we maximise the likelihood
-for a particular realisation $D_B$ of the random variable $cal(D)_B$. However, when the
+for a particular realisation, $D_B$, of the random variable $cal(D)_B$. However, when the
 probability distribution for $cal(D)_B$ is known, we can avoid explicit binarisation by
-instead maximising the *expected* likelihood, marginalising over the binarisation
-process:
+instead maximising the _expected_ likelihood, marginalising over the binarisation
+function:
 
 $
   bold(theta)^* = op("argmax", limits: #true)_(bold(theta) in RR^p) EE[P(b(D) | bold(theta))]
@@ -274,7 +274,7 @@ uses information regarding both binarisation possibilities.
 
 Consider the case where $b := b_xi$ is the soft-thresholding function defined in the
 above section, with $xi in RR_+$. If $xi$ is chosen appropriately,@scale-choice-footnote
-then data values which are considered somewhat neutral or ambivalent are mapped to both
+then data values considered near-neutral or near-ambivalent are mapped to both
 $-1$ and $+1$ with nontrivial probability. When using @eqn:parameter-estimation-mele,
 the contribution of such values to the objective function is an expectation over
 possible binarisations, yielding a parameterised model that explains both
@@ -287,7 +287,7 @@ neutrality in belief-system models. For instance,
 #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose") suggest using
 three-valued models, such as the Blume-Capel model (ibid.), that explicitly represent
 intermediate states using zero-valued spin states. Such approaches provide extra
-representational capacity---our approach cannot simulate neutral states---but raise the
+representational capacity---our approach cannot _simulate_ neutral states---but raise the
 analytical complexity. For the purposes of this study, which has an exploratory nature,
 we prefer the relative simplicity of binary models.
 
@@ -303,14 +303,15 @@ comprising $N in NN$ beliefs.
 // for which the parameters (i.e., the baseline activations and interaction effects) are
 // unknown.
 Suppose that we have measured the belief-system state of each individual, $m in [M]$,
-at each of $T in NN$ uniformly spaced times:
+at $T in NN$ uniformly spaced times:
 $
   {bold(x)_((m))^t}_(t=1)^T, quad "where each" bold(x)_((m))^t in RR^N
 $
 
-The measurements need not be binary, but are assumed to be real. The collection of
-measurements across all individuals forms a dataset $D$, which is the particular
-observed value of the random variable $cal(D)$ representing possible datasets.
+The measurements need not be binary, but are assumed to be real and centred at their
+'neutral-point'. The collection of
+measurements across individuals forms a dataset, $D$, which is the particular
+instance of the random variable, $cal(D)$, representing possible datasets.
 
 To calibrate the (symmetric or asymmetric) KBS model, we identify the parameterisation
 that maximises the expected likelihood, marginalising over possible binarisations using
@@ -440,7 +441,7 @@ $
   alpha_(m,t) (i,j) := (sigma_((m),i)^(t+1) - tanh h_i^"eff" (bold(sigma)_((m))^t)) dot sigma_((m),j)^t
 $
 
-Then the partial derivative of $f$ with respect to the bi-directional interaction
+Then the partial derivative of $f$ with respect to the bidirectional interaction
 parameter $J_(i j)$, for $i < j$, in the symmetric variant is:
 
 #{
@@ -487,14 +488,14 @@ $
 $ <eqn:methods-parameter-estimation-hyperparameters-L1-approximation>
 
 It is not possible to obtain a good approximation for the full range of parameter
-values due to finite precision. Rather, one should choose $epsilon$ such that this
+values. Rather, one should choose $epsilon$ such that this
 approximation holds for parameter values $|theta| > tau$, where
 $tau in RR_(>0)$ is the minimum parameter considered 'effectively nonzero'. As a rule
 of thumb, we may take $epsilon$ to be at least two orders of magnitude smaller than
 $tau^2$.
 
 
-The hyperparameter $lambda in RR^+$ controls regularisation strength, with higher values
+The hyperparameter $lambda in RR_(>=0)$ controls regularisation strength, with higher values
 resulting in sparser models.
 #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose") suggest choosing
 $lambda$ which minimises the Extended Bayesian Information Criterion (EBIC)

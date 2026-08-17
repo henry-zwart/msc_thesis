@@ -78,7 +78,7 @@ substantially among survey participants.
 
 @fig:heterogeneity-results-interventions-personas shows the conditions (or personas)
 for which interventions on different nodes in the belief system are expected to be
-effective for targeting attitudes toward climate action. These are obtained using the
+effective at targeting attitudes toward climate action. These are obtained using the
 regression decision-tree approach to approximating the effect characterisation function,
 as described in @sec:methods-effect-characterisation-function. We regard an
 intervention as _effective_ for a given individual if the expected effect-of-intervention
