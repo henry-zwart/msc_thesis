@@ -692,8 +692,8 @@ Despite the promising results of this study, several questions remain. The limit
 number of waves in the climate beliefs dataset prevents us from
 distinguishing between _within-person_ and _between-person_ effects, which is required
 to make strong claims about causal influences. We note that the broader
-CCCV survey from which the climate beliefs dataset (used for calibration in
-this study) is drawn includes several additional waves that are usable if we relax our
+CCCV survey from which the climate beliefs dataset (used for model calibration) is drawn
+includes several additional waves that are usable if we relax our
 requirements regarding the number of variables and the inclusion of specific beliefs.
 
 However, this raises a separate issue regarding the intervals between measurements, as

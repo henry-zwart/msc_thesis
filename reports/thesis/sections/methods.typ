@@ -11,7 +11,7 @@
 We now shift to the second half of this study, which addresses the research
 questions outlined in the first chapter. We will employ a combination of data-driven
 and simulation-based methods, using the models calibrated to the climate beliefs
-dataset (@sec:dataset) in the previous chapter. This chapter outlines our
+dataset in the previous chapter. This chapter outlines our
 experimental approach and the key quantities measured in the following chapters.
 
 // To address RQ1. and RQ4., concerning the prevalence of asymmetric influence in climate

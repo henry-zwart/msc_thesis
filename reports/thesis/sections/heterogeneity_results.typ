@@ -241,8 +241,7 @@ are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-di
     long: [
       (_Top_) Baseline activations, $bold(h)$, and (_Bottom_) interaction effect matrices
       ($bold(J)$) for asymmetric belief systems calibrated to the conservative ($n=507$)
-      and liberal ($n=375$) subsets of the climate beliefs dataset (@sec:dataset) using
-      the parameter estimation method in @subsec:methods-parameter-estimation.
+      and liberal ($n=375$) subsets of the climate beliefs dataset in @sec:calibration.
     ],
   ),
 ) <fig:heterogeneity-results-ideology-interaction-matrices>
