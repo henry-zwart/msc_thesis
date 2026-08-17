@@ -178,8 +178,9 @@ $gamma in RR_(>= 0)$. The values of these parameters are summarised in
   caption: caption(
     short: [Hyperparameter values],
     long: [
-      Values for regularisation strength ($lambda$) and smoothing ($epsilon$)
-      hyperparameters. Regularisation strength model- and dataset-specific;
+      Values for regularisation strength ($lambda$) and smoothing ($epsilon$),
+      EBIC prior strength ($gamma$), and soft thresholding scale ($xi$)
+      hyperparameters. Regularisation strength is model- and dataset-specific;
       _Conservative_ and _Liberal_ refer to subsets of the climate beliefs dataset
       comprising individuals with the specified ideology (@sec:dataset).
     ],
