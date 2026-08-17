@@ -384,41 +384,41 @@ describing it here only to illustrate the bounds of the above validation process
 
 == Normalisation, cleaning, and transformations <sec:dataset-preprocessing>
 
-We apply pre-processing steps to make the dataset amenible to downstream
+We apply pre-processing steps to make the dataset amenable to downstream
 analysis, which are divided into three categories:
 
-- *Normalisation:* Ensuring the data schema (variable names, types, and values) conform to
-  consistent standards.
+- *Normalisation:* Ensuring the data schema (variable names, types, and values) conforms
+  to consistent standards.
 
-- *Cleaning:* Filtering erroneous or otherwise-problematic data.
+- *Cleaning:* Filtering erroneous or otherwise problematic data.
 
 - *Transformation:* Structural dataset enrichments, including constructed data variables
-  and improved organisation of information.
+  and improved information organisation.
 
 === Normalisation <subsec:dataset-preprocessing-normalisation>
 
-Variable names in the original dataset are subject to some inconsistency, featuring
+Variable name formats in the original dataset are inconsistent, featuring
 a mixture of `snake_case`, `CamelCase`, `dot.case`, and `kebab-case`. We therefore
 first convert the names of all variables specified in the codebook to a standard
 format, making all names lowercase, and replacing hyphens and periods with underscores.
 
-The dataset also contains several columns which are not described in the codebook, often
-containing survey metadata, the functions of which are typically indicated
-using a variable name prefix. For instance, the `Group_` prefix indicates that a
+The dataset also contains several columns that are not described in the codebook, often
+containing survey metadata, whose functions are typically indicated
+by a variable-name prefix. For instance, the `Group_` prefix indicates that a
 column describes treatment group membership. We do not normalise these variable names
-here, so as to maintain identiability for later transformations
+here to maintain identifiability for later transformations
 (@subsec:dataset-preprocessing-transformations).
 
-Secondly, we coerce all variable data types to a standard set. In most cases this
+Secondly, we coerce all variable data types to a standard set. In most cases, this
 is straightforward. Dates and times represented as strings are coerced to timezone-free
 `datetime` types. Non-floating-point numeric values (which constitute most survey
 response types) are coerced to 64-bit integers.
 
-Categorical variable responses are originally represented as integeres, which presents
-three issues. Firstly, it imposes an ordinal structure which does not, in general, make
-sense for categorical variables. For instance, consider the first four response options
-to a survey question asking participants about their recent experience with different
-forms of extreme weather:
+Categorical variable responses in the original dataset are represented as integers, which
+presents three issues. Firstly, it imposes an ordinal structure which does not, in
+general, make sense for categorical variables. For instance, consider the first four
+response options to a survey question asking participants about their recent experience
+with different forms of extreme weather:
 
 #{
   set math.equation(numbering: none)
@@ -430,21 +430,21 @@ forms of extreme weather:
 
 
 One may devise any number of reasonable ordinal interpretations over this set (e.g.,
-'highest average risk of property damage', or 'annual emergency response cost'), yet
+'highest average risk of property damage', or 'annual emergency response cost'); however,
 such interpretations are context-dependent and not inherent to the categories
 themselves. Recording categorical responses using numeric types therefore risks spurious
-interpretations. Second, integer values provide no information about the categories to
-consumers of the dataset, requiring that they cross-reference manually with the
-codebook. Thirdly, in some cases the mapping from categories to integers for a given
+interpretations. Second, integer values provide no information about the categories for
+dataset users, requiring them to manually cross-reference columns with the codebook.
+Thirdly, in some cases, the mapping from categories to integers for a given
 question varies between survey waves. We account for all three of these issues by
 coercing categorical variables to `Enum` types, which preserve information about the
-underlying categories, and do not assume an ordinal structure.
+underlying categories and do not assume an ordinal structure.
 
-Multiple-selection survey items are more complex still. These are represented as
+Multiple-choice survey items are even more complex. These are represented as
 strings comprising comma-separated integers, whose values typically refer to non-ordinal
-categories. We coerce these to `list[Enum]` types, which have all the benefits of the
-categorical enums discussed above, and enable simpler programmatic analysis (e.g.,
-testing for set membership, determining differences in response sets between waves).
+categories. We coerce these into `list[Enum]` types, which have all the benefits of the
+categorical enums discussed above and enable simpler programmatic analysis (for example,
+testing for set membership and identifying differences in response sets between waves).
 
 #let empty-string-fixing-footnote = footnote[
   Note that this particular value mapping must happen _after_ null-value validation
@@ -452,39 +452,39 @@ testing for set membership, determining differences in response sets between wav
   errors.
 ]
 Finally, we perform a series of value updates to ensure consistency between responses
-to different questions. This consists in replacing all empty string responses with
-`null` values,#empty-string-fixing-footnote and re-mapping integer columns
-(both numeric and ordinal) such that the minimum value is zero.
+to different questions. This involves replacing all empty-string responses with
+`null` values,#empty-string-fixing-footnote and remapping integer columns
+(both numeric and ordinal) so that the minimum value is zero.
 
 === Cleaning <subsec:dataset-preprocessing-cleaning>
 
-Following schema normalisation, we then perform a cleaning stage, which primarily
-includes filtering out invalid or problematic data. We only filter out entire
-survey responses, rather than answers to specific survey items. Survey responses may
-be removed for any one of three reasons.
+Following schema normalisation, we perform a cleaning step to filter out invalid or
+problematic data. We filter entire survey responses, rather than individual survey items,
+to avoid creating null response values. Survey responses may be removed for any one of
+three reasons.
 
 Firstly, we remove responses where the `participant_id` column is `null`, such that the
-individuals cannot be traced across survey waves. Secondly, we remove any responses
+individuals cannot be traced across survey waves. Secondly, we remove responses
 from participants who fail the survey validity check in _any_ of their participation
 waves. Thirdly, we remove any responses which fail either of the response-value or
 null-value validation checks described in the previous section
 (@sec:dataset-validation). We recognise that these issues are not necessarily
-problematic in every research context (e.g., cross-sectional studies are unconcerned
-with tracing an individual's responses across waves), and thus have made each condition
-optional in the dataset construction code.
+problematic in every research context (for example, cross-sectional studies are not
+concerned with tracing an individual's responses across waves) and thus have made each
+condition optional in the dataset-construction code.
 
 === Transformation <subsec:dataset-preprocessing-transformations>
 
-Finally, we apply several transformation steps with the goal of simplifying manipulation
-and analysis of the existing dataset, or enriching it with additional information.
+Finally, we apply several transformation steps to simplify the manipulation
+and analysis of the existing dataset and to enrich it with additional information.
 
-The original dataset includes two survey items querying participants' alignment with the
-two largest US political parties (i.e., the Republicans and the Democrats). The first
-item asks whether the participant whether they consider themselves as _Republican_,
-_Democrat_, or _Independent_. Those who respond _Independent_ are then presented a
-follow-up question asking whether they _lean_ toward either (or neither) party.
-We replace these two survey items with a single variable combining the responses, with
-possible values:
+The original dataset includes two survey items that ask participants about their
+identification with the two largest US political parties (i.e., the Republicans and the
+Democrats). The first item asks whether a participant considers themselves
+a _Republican_, _Democrat_, or _Independent_. Those who respond _Independent_ are then
+presented with a follow-up question asking whether they lean toward either party (or
+neither). We replace these two survey items with a single variable that combines the
+responses and has the following ordered response values:
 
 #{
   set math.equation(numbering: none)
@@ -495,10 +495,10 @@ possible values:
 }
 
 While this supplements the first item with additional information, we note two potential
-limitations of this transformation. Firstly, some participants who respond _Republican_
-or _Democrat_ to the first question may more accurately describe themselves as only
-leaning in a given direction, if they had been aware of the (conditional) second question.
-Therefore the 'Leaning' responses are perhaps better interpreted as 'Independent with
+limitations of this transformation. Firstly, some participants who responded _Republican_
+or _Democrat_ to the first question may have more accurately described themselves as only
+leaning in a given direction if they had been aware of the conditional second question.
+Therefore, the 'Leaning' responses are perhaps better interpreted as 'Independent with
 Republican/Democrat tendencies'.
 
 Secondly, our implicit assumption that _Independent_ is a midpoint between
@@ -510,38 +510,37 @@ first question.
 Our second transformation concerns survey questions with different variants, which are
 conditionally displayed based on treatment group membership. The original dataset
 includes, for each treatment group associated with a given question, a separate
-response column, as well as a binary indicator column describing group membership.
+response column and a binary-valued column indicating group membership.
 Since group membership is always mutually exclusive in the dataset, we coalesce these
-various columns, replacing them with singular response and group membership columns.
-The group membership column contains integer indexes as opposed to the original binary
-indicators. In some cases, different treatment groups have an associated numerical
-value. For instance, the `ccSolveX` items query support policies compensating
-communities affected by climate change, with the treatment group specifying the cost
-($X$) of such a policy to the participant. In these cases we supplement the dataset
-with an additional column containing the associated numerical value, simplifying
+columns, replacing them with one column describing responses and one column describing
+group membership. The group membership column contains integer indices rather than the
+original binary indicators. In some cases, treatment groups are associated with a
+numerical value. For instance, the `ccSolveX` items ask about support for policies
+compensating communities affected by climate change, with the treatment group specifying
+the cost ($X$) of such a policy to the participant. In these cases, we supplement the
+dataset with an additional column containing the associated numerical value, simplifying
 downstream analyses.
 
 Finally, we improve the dataset organisation by constructing a database comprising
-tables for survey item and question metadata and responses, as well as participants
-themselves (@fig:dataset-preprocessing-transformations-database-diagram). The
-requirement for such as database arose during the construction of the climate beliefs
+tables for survey items' and questions' metadata, responses, and participants
+(illustrated in @fig:dataset-preprocessing-transformations-database-diagram). The
+need for such a database arose during the construction of the climate beliefs
 dataset used for model calibration (@subsec:dataset-dataset-construction). The original
 data, comprising a codebook (a spreadsheet) and an RData file containing rows of
-participant responses, is not immediately amenible to our task, which requires
-reasoning about both survey logic and participation in tandem.
-The constructed database primarily serves to link survey metadata (extracted from the
-codebook) with survey response data.
+participant responses, is not immediately amenable to our task, which requires reasoning
+about survey logic and participation simultaneously. The constructed database primarily
+serves to link survey metadata (extracted from the codebook) with survey response data.
 
 #figure(
   image("../diagrams/survey_database/database.svg"),
   caption: caption(
     short: [Constructed survey database diagram],
     long: [
-      The constructed survey database comprises tables for survey items (underlying
-      concepts assessed in the survey), survey questions (the particular mode in which
-      an item is assessed in a given wave or treatment condition), survey responses,
+      The constructed survey database comprises tables for survey items (the underlying
+      concepts assessed in the survey), survey questions (the specific mode used to assess
+      an item for a given wave or treatment condition), survey responses,
       and participants. Arrows denote data hierarchy, e.g., each response belongs to
-      a participant, and is associated with a particular survey question.
+      a participant and is associated with a particular survey question.
     ],
   ),
 ) <fig:dataset-preprocessing-transformations-database-diagram>
@@ -552,14 +551,14 @@ response schema between waves or treatment conditions, we separate the concepts 
 _survey items_ (the underlying concept being assessed) and _survey questions_ (the
 particular mode of assessment). Survey questions are associated with particular waves,
 participant types (i.e., new or repeating), and treatment conditions, but may be related
-under a common survey item. _Survey responses_ are associated with a particular
-question as well as a _survey participant_. We include a separate table for participants
-which records wave participation as well as the initial wave in which a participant has
+under a common survey item. _Survey responses_ are associated with both a particular
+question and a _survey participant_. We include a separate table for participants
+that records overall wave participation and the first wave in which a participant
 responded.
 
 The database is stored on disk as a collection of parquet files, which
-preserve complex data type information, including those in @tab:dataset-types, and are
-supported in both R (e.g., using
+preserve information about complex data types, including those in @tab:dataset-types, and
+are supported in both R (e.g., using
 #link("https://arrow.apache.org/docs/r/reference/read_parquet.html")[Arrow]) and Python
 (e.g., using
 #link("https://pandas.pydata.org/docs/reference/api/pandas.read_parquet.html")[Pandas]
@@ -584,8 +583,8 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 
 == Climate beliefs dataset <subsec:dataset-dataset-construction>
 
-In light of the discussed complexities and breadth of content of the CCCV survey, we
-construct a smaller, targeted dataset of beliefs relating to climate
+In light of the complexities and breadth of content in the CCCV survey, we
+construct a smaller, targeted dataset of beliefs related to climate
 change, which we expect---on theoretical grounds---to exhibit interdependent
 behaviour. This serves as the calibration dataset for the experiments described
 in this study. We will refer to this targeted dataset as the *climate beliefs dataset*.
@@ -595,22 +594,22 @@ parameters and parameter uncertainty acceptably small. We first filter the surve
 items to consider only those which assess beliefs (in the inclusive sense described by
 #cite(<galesicIntegratingSocialCognitive2021>, form: "prose"), which includes both
 epistemic positions about states of affairs, as well as views, opinions, and preferences),
-and which either relate directly to climate change, or which are expected to influence
+and which either relate directly to climate change or are expected to influence
 climate-related beliefs (e.g., political alignment). The parameter
 estimation method used to calibrate the Kinetic Belief System model (outlined in
 @chp:parameter-estimation)
 imposes several additional requirements on the
 constructed dataset, in particular, the dataset should comprise at least two waves,
-with approximately equispaced observations per-individual, and with no null values.
+with approximately equispaced observations per individual, and with no null values.
 We additionally constrain the dataset to include three specific variables of interest:
 
 #let cc-human-footnote = footnote[
   In the CCCV survey, the item `CC Human` has four possible (categorical)
   responses, reflecting all combinations of 'human activities' and 'natural causes' as
-  the causes of climate change. We re-map these values to 'human-caused' and
-  'not human-caused', such that the variable is instead binary, and thus both amenible
-  to the analysis described below and interpretable in the kinetic belief system model in
-  @sec:calibration.
+  the causes of climate change. We remap these values to 'human-caused' and
+  'not human-caused', such that the variable is binary, and thus both amenable
+  to the analysis described below and interpretable within the kinetic belief system
+  model in @sec:calibration.
 ]
 
 + *CC Worry*: Level of worry regarding current and future climate change.
@@ -624,23 +623,23 @@ beliefs relating to climate change, including support for climate policy
 @meadInformationSeekingGlobal2012 @whitmarshClimateAnxietyWhat2022a
 @goldbergIdentifyingMostImportant2021 @boumanWhenWorryClimate2020
 @bumannWhatAreDeterminants2021, and is expected to be
-influenced by beliefs others' level of worry, as a descriptive norm
-@gavriletsModellingSocialNorms2024. The third variable serves to provide a more complex
-view of individuals' beliefs about the nature of climate change; while most
-Americans believe in the existence of climate change, there is greater variation in
+influenced by beliefs about others' level of worry, as a descriptive norm
+@gavriletsModellingSocialNorms2024. The third variable provides a more complex
+view of individuals' beliefs about the nature of climate change. While most
+Americans believe climate change exists, there is greater variation in
 beliefs about its causes @hamiltonTrackingPublicBeliefs2015.
 
 To satisfy these requirements while maximising the number of observations (for model
 calibration purposes), we limit the climate beliefs dataset to waves 3 and 4, which
 contain 1693 repeat observations, excluding survey errors. After removing items
-with no substantial correlations, and small groups with no substantial external
+with no substantial correlations and small groups with no substantial external
 correlations, we identify 17 relevant survey items (see @apdx:dataset for the full set
 of items).
 
-However, this set of items still exceeds our target range of 7--10. We therefore proceed
-to identify groups of similar or redundant variables which may be removed or combined
+However, this set of items still exceeds our target range of 7--10. We therefore also
+identify groups of similar or redundant variables that may be removed or combined
 into interpretable index variables. Note that cross-sectional methods should not be used
-for this analysis, as they fail to capture temporal relatonships, which are fundamental
+for this analysis, as they fail to capture temporal relationships, which are fundamental
 to the kinetic belief system model (defined in @chp:kinetic-belief-system). Instead,
 we examine the temporal and contemporaneous networks obtained using lag-1 vector
 autoregression (VAR).
@@ -669,7 +668,7 @@ filtered set of 17 candidate variables, with rows and columns ordered using hier
 clustering on the temporal matrix to highlight groups of related items.#re-coded-footnote
 Values with magnitude less than 0.05 are excluded, as is the (symmetric) upper triangle
 of the contemporaneous network. The values in each row of the temporal matrix are the
-regression predictors for that row's variable. Therefore we interpret row $i$ as
+regression predictors for that row's variable. Therefore, we interpret row $i$ as
 describing the variables which _influence_ item $i$, and column $i$ as describing the
 variables which are influenced _by_ item $i$.
 
@@ -695,17 +694,17 @@ and ideology (conservative $<-->$ liberal) cluster together in both networks, ye
 appear to have minimal external associations. We retain this group on theoretical
 grounds, since political beliefs are often key determinants for climate-related
 beliefs and policy positions @palmWhatCausesPeople2017 @bumannWhatAreDeterminants2021.
-Secondly, beliefs regarding the impact of climate change on different population groups,
-`CC Impact (X)`, exhibit strong internal contemporaneous associations, relatively
-weaker temporal associations. We choose here to combine these into an index variable,
-although an alternative strategy would be to retain only `CC Impact (World)` and/or
-`CC Impact (Wealthy)`, noting that these variables each have several (and distinct)
-temporal associations. Finally, the right-most six variables form clear clusters in
-both networks. Four of these relate directly to climate policy, while the remaining
-two assess participants views on the importance of individual action in managing
-climate change, and the role of scientists in guiding the climate change response.
-We combine these into a third cluster, which we interpret as reflecting an individual's
-general attitude toward climate action.
+Secondly, beliefs regarding the impact of climate change on different population groups
+(`CC Impact X`) exhibit strong internal contemporaneous associations but relatively
+weak internal temporal associations. Here, we choose to combine these into an index
+variable. However, an alternative strategy would be to retain only `CC Impact (World)`
+and/or `CC Impact (Wealthy)`, noting that these variables each have several (and
+distinct) temporal associations. Finally, the right-most six variables form clear
+clusters in both networks. Four of these relate directly to climate policy, while the
+remaining two assess participants' views on the importance of individual action in
+managing climate change and the role of scientists in guiding the climate change
+response. We combine these into a third cluster, which we interpret as reflecting an
+individual's general attitude toward climate action.
 
 #figure(
   image("../results/figures/dataset/marginal_distributions.pdf"),
@@ -719,11 +718,11 @@ general attitude toward climate action.
   placement: auto,
 ) <fig:dataset-marginal-distributions>
 
-We construct the index variables by first re-scaling each constituent item to the
-interval $[-1, 1]$ and then taking the average. All other variables are also re-scaled
+We construct the index variables by first rescaling each constituent item to the
+interval $[-1, 1]$ and then averaging them. All other variables are also rescaled
 in the same way. The final dataset comprises eight variables, described in
 @tab:climate-beliefs-dataset-items. Figures @fig:dataset-marginal-distributions[] and
-@fig:dataset-reduced-var show the marginal distributions, and the contemporaneous and
+@fig:dataset-reduced-var[] show the marginal distributions and the contemporaneous and
 temporal networks, respectively, for the climate beliefs dataset.
 
 #figure(
@@ -788,8 +787,8 @@ temporal networks, respectively, for the climate beliefs dataset.
     short: [Climate beliefs dataset variables],
     long: [
       Variables included in the climate beliefs dataset. Index variables are constructed
-      by taking the average of their constituent columns, after re-scaling to the
-      interval $[-1, 1]$.
+      by taking rescaling each constituent column to the interval $[-1, 1]$ and then
+      averaging them.
     ],
   ),
 ) <tab:climate-beliefs-dataset-items>
