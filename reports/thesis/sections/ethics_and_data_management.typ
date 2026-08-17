@@ -22,9 +22,9 @@
 I acknowledge that the thesis adheres to the ethical code and research data management
 policies of UvA and IvI.#ethics-in-research#super[,]#rda-policies
 
-Where our findings relate to real phenomena we have clarified the context of
+Where our findings relate to real phenomena, we have clarified the context of
 interpretation, as is necessary in all research using computational modelling to address
-questions about the natural world. During the production of this thesis we have
+questions about the natural world. During the production of this thesis, we have
 been committed to the standards outlined in the Netherlands Code of Conduct for Research
 Integrity.#nl-code-of-conduct-integrity In addition, generative AI has not been used for
 any aspect of this thesis.
