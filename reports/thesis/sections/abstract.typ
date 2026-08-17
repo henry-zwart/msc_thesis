@@ -10,8 +10,8 @@ interactions within a larger belief system. Most authors in this field acknowled
 that some beliefs may display asymmetric influence, for instance,
 strongly influencing other beliefs while being relatively insensitive themselves.
 However, current research focuses almost exclusively on models which assume
-symmetric influence between beliefs. In theory, this assumption directly affects
-belief dynamics and common methods for assessing belief importance. In practice,
+symmetric influence between beliefs. In theory, this assumption has direct implications
+for belief dynamics and common methods for assessing belief importance. In practice,
 a scarcity of theoretical and empirical studies on the existence and dynamic impacts
 of asymmetric influence leaves the actual impacts largely unknown.
 
@@ -22,7 +22,7 @@ derive a parameter estimation method that we use to calibrate the model to a
 longitudinal dataset of climate-related beliefs in the US ($n=1693$). In the second half
 of the study, we use the calibrated models to investigate the prevalence of asymmetric
 influence among climate-related beliefs, and the resulting dynamic impacts for simulated
-belief-level interventions, compared with the corresponding symmetric-influence model.
+belief-level interventions compared with corresponding symmetric-influence models.
 For the asymmetric model, we also investigate two secondary aims: examining the
 conditions under which individual-level
 interventions targeting attitudes on climate action are likely to be effective and

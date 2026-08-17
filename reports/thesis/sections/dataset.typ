@@ -583,7 +583,7 @@ or #link("https://docs.pola.rs/user-guide/io/parquet/")[Polars]).
 //   - How does dependence/correlation between related variables degrade as we increase the number of imputation waves?
 
 
-== Climate beliefs dataset <subsec:dataset-dataset-construction>
+== Constructing the climate beliefs dataset <subsec:dataset-dataset-construction>
 
 In light of the complexities and breadth of content in the CCCV survey, we
 construct a smaller, targeted dataset of beliefs related to climate

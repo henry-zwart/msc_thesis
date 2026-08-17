@@ -97,7 +97,7 @@
 = A KBS model of climate beliefs <sec:calibration>
 #include "sections/calibration.typ"
 
-= Experimental Methods <sec:methods>
+= Experimental methods <sec:methods>
 #include "sections/methods.typ"
 
 = Existence and impact of asymmetry in belief systems <sec:results-asymmetry-in-belief-systems>
@@ -112,7 +112,7 @@
 = Conclusions <sec:conclusions>
 #include "sections/conclusion.typ"
 
-= Ethics and Data Management
+= Ethics and data management
 #include "sections/ethics_and_data_management.typ"
 
 = Climate beliefs dataset <sec:dataset>
