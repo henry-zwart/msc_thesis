@@ -294,9 +294,9 @@ to calibrate these models---and consequently, higher parameter uncertainty---the
 results must be interpreted with caution.
 
 When calibrated on the non-bootstrapped data subsets, each model featured high-magnitude
-interactions not present in the other, yet while the liberal model was considerably
+interactions not present in the other. However, while the liberal model was considerably
 sparser than the conservative model, most interactions in the former were also present
-in the latter. In comparison with the asymmetric model calibrated on the complete
+in the latter. Compared with the asymmetric model calibrated on the complete
 dataset, used in the prior experiments, the ideological models were both sparser, yet
 together had high overlap in connectivity with the complete model. We found only one
 case of significant asymmetry, which was also present in the model fit to the complete
@@ -311,29 +311,29 @@ These findings demonstrate both significant differences and similarities between
 relational belief system structures, conditional on political ideology, in line with
 earlier studies comparing belief systems on partisan identity
 @leeClimateChangeBelief2024. The observed differences suggest the presence of
-higher-order relationships between beliefs, consistent with
-the view that belief system relations, themselves, correspond to beliefs
-(e.g., belief that two states of affairs are related) @fishbein1977belief[p.~219].
+higher-order relationships among beliefs, consistent with
+the view that belief-system relations themselves correspond to beliefs
+(for example, the belief that two states of affairs are related) @fishbein1977belief[p.~219].
 
-Sparse networks imply a restricted set of commonly-observed transitions. This is, to
+Sparse networks imply a restricted set of commonly observed transitions. This is, to
 an extent, expected for the liberal model, which is calibrated using fewer observations
 than the conservative model; however, the higher sparsity is also corroborated by
-significantly lower edge selection for several interaction in the liberal model across
-bootstrap samples. This finding may suggest a greater degree of consistency in the
-observed dynamics between individuals who self-identify as liberal.
+significantly lower edge selection for several interactions in the liberal model across
+bootstrap samples. This finding may suggest greater consistency in the
+observed dynamics among individuals who self-identify as liberal.
 
 Previous studies by #cite(<gregersenPoliticalOrientationModerates2020>, form: "prose")
-and #cite(<lindComparingAttitudinalStructures2024>, form: "prose") identified
-beliefs about the anthropogenic causes of climate change as more strongly associated
-with various climate-related beliefs for non-right-leaning individuals.
-These findings were not replicated in our results; instead we found limited association
+and #cite(<lindComparingAttitudinalStructures2024>, form: "prose") found that
+beliefs about the anthropogenic causes of climate change were more strongly associated
+with various other climate-related beliefs among non-right-leaning individuals.
+These findings were not replicated in our results; instead, we found limited association
 (inbound or outbound) with this variable in both models. There are several possible
 explanations for this apparently contrary result, including parameter uncertainty in
-the present study. Firstly, both studies are based in a European, as opposed to US,
+the present study. Firstly, both studies are based in a European, as opposed to a US,
 context; #cite(<leeVariationsClimateChange2025>, form: "prose") showed cross-national
-differences in climate belief systems including related variables. Second, both measure
-association using cross-sectional correlational measures, which may differ considerably
-from the time-lagged interaction parameters used in the present study.
+differences in climate belief systems including related variables. Second, both use
+cross-sectional correlations, which may differ considerably from the time-lagged
+interaction parameters used in the present study.
 
 == Limitations <sec:discussion-limitations>
 
