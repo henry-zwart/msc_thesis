@@ -79,7 +79,7 @@ substantially among survey participants.
 @fig:heterogeneity-results-interventions-personas shows the conditions (or personas)
 for which interventions on different nodes in the belief system are expected to be
 effective for targeting attitudes toward climate action. These are obtained using the
-regression decision tree approach to approximating the effect characterisation function,
+regression decision-tree approach to approximating the effect characterisation function,
 as described in @sec:methods-effect-characterisation-function. We regard an
 intervention as _effective_ for a given individual if the expected effect-of-intervention
 on influence (@def:methods-effect-on-influence), estimated using the mean across $n=500$
@@ -143,7 +143,7 @@ For the present analysis, it is
 important to recognise that the intervention effect measured here does not, in general,
 reflect a change in belief state relative to the initial state. It is
 entirely possible for both intervention and null models to exhibit an increase, or
-decrease, in the probability of desired behaviour for the target belief. Hence, it is most
+decrease, in the probability of the desired behaviour for the target belief. Hence, it is most
 appropriate to view 'high-effect' interventions as those that achieve substantially
 more desirable states than would be observed in the absence of intervention.
 

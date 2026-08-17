@@ -417,11 +417,11 @@ not immediately interpretable. For our purposes, we are less interested in the
 specific states that yield a given intervention effect, and more interested in a
 _concise description_ of that set of states.
 
-=== Method: Shallow regression decision-tree <subsec:methods-effect-characterisation-function-decision-tree>
+=== Method: Shallow regression decision tree <subsec:methods-effect-characterisation-function-decision-tree>
 
 Regression decision-tree models can provide such descriptions, using inequality bounds
 to partition the initial state space into regions, each of which is assigned a
-predicted effect. Given a parameterised regression decision-tree, we
+predicted effect. Given a parameterised regression decision tree, we
 may construct a concise approximation to the effect characterisation function by
 identifying, for each predicted effect, the combination of inequalities which define
 the corresponding infinite set of initial states. When the parameter estimation algorithm
@@ -429,7 +429,7 @@ is restricted to shallow trees (e.g., depth 3 or 4, where depth refers to the nu
 inequality bounds defining each region), these combinations can also be interpreted as
 rules or _personas_.
 
-Since the regression decision-tree produces a full tree, all personas for a tree with
+Since the regression decision tree produces a full tree, all personas for a tree with
 depth $d in NN$ have size $d$ by default. However, these can often be compressed. When
 two personas differ in only one feature dimension, split at the same value, and both
 predict high-effect interventions, we can combine them into a single persona that omits
