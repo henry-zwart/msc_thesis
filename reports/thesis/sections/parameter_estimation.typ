@@ -112,7 +112,7 @@ nontrivial probability, while the binarisation of large values is effectively
 deterministic.
 
 #let likert7-footnote = footnote[
-  In this case, the Likert-7 scale has response options: $"strongly oppose" prec "oppose" prec "weakly oppose" prec "neither support nor oppose" prec "weakly support" prec "support" prec "strongly support"$.
+  In this case, the 7-point Likert scale has response options: $"strongly oppose" prec "oppose" prec "weakly oppose" prec "neither support nor oppose" prec "weakly support" prec "support" prec "strongly support"$.
 ]
 
 However, there remains a deeper issue with binarisation, that soft thresholding does not

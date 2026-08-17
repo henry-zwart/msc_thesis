@@ -205,9 +205,9 @@ for 'weak' responses.
   image("../results/figures/dataset/likert_7_binarisation_probability.pdf"),
   placement: auto,
   caption: caption(
-    short: [Likert-7 binarisation distribution],
+    short: [7-point Likert scale binarisation distribution],
     long: [
-      The probability of binarisation to $+1$ for each possible Likert-7 scale survey
+      The probability of binarisation to $+1$ for each possible 7-point Likert scale survey
       response,@likert7-footnote-ref using a soft thresholding function
       $b_xi$ as defined in @eqn:methods-dataset-binarisation-probability-map-to-1 with
       $xi approx #calc.round(binarisation_sigma, digits: 1)$.

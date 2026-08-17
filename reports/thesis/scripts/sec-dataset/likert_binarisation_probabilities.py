@@ -39,7 +39,7 @@ def main():
     ax.set_xlim(-1.0, 1.0)
     ax.set_ylim(0, 1)
     ax.set_ylabel(r"$P(x \mapsto +1)$")
-    ax.set_xlabel("Likert-7 scale response", labelpad=10)
+    ax.set_xlabel("7-point Likert scale response", labelpad=10)
     ax.tick_params("x", length=0, pad=8)
 
     ax.spines.top.set_visible(False)
