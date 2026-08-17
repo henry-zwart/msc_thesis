@@ -154,7 +154,7 @@ For the measurement timescale used in these experiments (approximately 2.5 years
 interventions appeared to act primarily through direct interactions, though smaller
 indirect effects were also present; this is consistent with empirical results
 from #cite(<chambonTailoredInterventionsBroad2022>, form: "prose") in an
-experimental study on beliefs related to COVID-19.
+experimental study on COVID-19-related beliefs.
 Additional experiments included in
 @sec:appendix-extra-results found that longer timeframes led to increased indirect
 intervention effects. The presence of indirect effects is broadly expected given the
@@ -181,7 +181,7 @@ strength. The key difference, however, lies in the beliefs' influentiability: wh
 climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
 edges.#full-model-disclaimer That is, several beliefs influenced by this
-variable do not influence it themselves. Since the symmetric model
+variable do not, in turn, influence it. Since the symmetric model
 must include or exclude both directional interactions between a pair of
 beliefs, cases where the asymmetric model specifies an interaction in only one
 direction necessarily lead to differences in model behaviour.
@@ -209,32 +209,33 @@ flows unidirectionally.
 
 #show-rq(3, RQ3) <discussion-rq3>
 
-In @sec:heterogeneity-results-intervention-effects we found that
+In @sec:heterogeneity-results-intervention-effects, we found that
 intervention effectiveness depends predictably on individuals' pre-intervention belief
 states. Most high-effect interventions targeting attitudes toward climate action
-required low initial values for both the point of intervention and target.
+required low initial values for both the point of intervention and the target.
 
-Surprisingly, pre-intervention climate-related worry was required to be low for _all_
-of the personas identified as characteristic of effective interventions, even when this
-was neither the point of intervention, nor the target.
+Surprisingly, _all_ of the personas identified as characteristic of effective interventions
+required that pre-intervention climate-related worry be low, even when this
+was neither the point of intervention nor the target.
 This finding may be explained by the combination of high influence and
 influentiability associated with climate-related worry, thereby making this variable an
 effective indirect route for various interventions (not restricted to this particular
-target). This stands in contrast with political ideology/alignment, which has similarly
-high influence on the target variable, but is harder to influence, as discussed above.
+target). This stands in contrast to political ideology/alignment, which has comparable
+influence on the target variable but is harder to influence, as discussed above.
 
-At first glance this finding appears to contradict our earlier discussion on *RQ2*
+At first glance, this finding appears to contradict our earlier discussion on *RQ2*
 (#internal-link(<discussion-rq2-indirect-effects>)), which found that indirect
-interventions have limited impact on collective effects over short timeframes.
+interventions have a limited impact on collective effects over short timeframes.
 However, recall that the corresponding experiments measured indirect intervention effects
-by examining beliefs with no direct influence from the point of intervention. In other
-words, all propagation of intervention effects to these beliefs is indirect. Compare this
-with the present analysis, in which the target belief (attitudes toward climate action) is
-directly influenced, nontrivially, by all of the considered points-of-intervention---this
-implies that effective interventions on these points-of-intervention, targeting this
-belief, are possible _in principle_. Therefore the apparent discrepancy in our findings
-is likely explained by low pre-intervention levels of climate-related worry marginally
-increasing the effectiveness of interventions which were already effective.
+by examining beliefs that were not directly influenced by the point of intervention. In
+other words, all propagation of intervention effects to these beliefs is indirect.
+Compare this with the present analysis, in which the target belief (attitudes toward
+climate action) is directly and nontrivially influenced by all the considered
+points of intervention---this implies that effective interventions at these points,
+targeting this belief, are possible _in principle_. Therefore, the apparent
+discrepancy in our findings is likely explained by low pre-intervention levels of
+climate-related worry, which enable marginally higher effectiveness for interventions
+which were already effective.
 <discussion-rq3-indirect-effects>
 
 
@@ -245,29 +246,30 @@ increasing the effectiveness of interventions which were already effective.
 
 #{
   [
-    In general, the identified personas characterise the conditions for effective
-    interventions accurately. The rare instances where individuals with these traits fell
-    outside the high-effect region may be attributable to the rough-and-ready use of the
-    upper quartile to classify high-effect interventions. On the other hand, while the
-    personas capture _most_ cases where interventions are effective, this varies between
-    points-of-intervention. This directly reflects the limited representational capacity of
-    effect characterisation functions based on shallow decision trees; a tree depth of three
-    permits at most eight personas to describe the full range of intervention effectiveness,
-    each of which comprises at most three conditions.#persona-count-footnote
+    In general, the identified personas accurately characterise the conditions for
+    effective interventions. The rare instances in which individuals with these traits
+    fell outside the high-effect region may be attributable to the rough-and-ready use of
+    the upper quartile to classify high-effect interventions. On the other hand, while
+    the personas capture _most_ cases where interventions are effective, this varies
+    across points-of-intervention. This directly reflects the limited representational
+    capacity of effect characterisation functions based on shallow decision trees; a tree
+    depth of three permits at most eight personas to describe the full range of
+    intervention effectiveness, each comprising at most three
+    conditions.#persona-count-footnote
   ]
 }
 <rq3-prespecified-complexity>
 // NOTE: Do I need to say anything else here?
 
-The results also highlighted a separate issue with our regression decision tree
+The results also highlighted a separate issue with our regression decision-tree
 approach to characterising intervention effectiveness, namely that the descriptions
 may be incomplete when important features are highly correlated. This is a result of
 the decision tree optimisation procedure, which selects the 'splits' which best account
 for unexplained variance. We saw this reflected in the characterisation of effects for
 interventions on beliefs about the existence of climate change. While effective
-interventions here generally require that the initial point of intervention state be low,
-this was omitted due to high correlation between this variable and beliefs regarding the
-causes of climate change.
+interventions here generally require that the initial state at the point of intervention
+be low, this was omitted from the persona due to a high correlation between this variable
+and beliefs about the causes of climate change.
 <rq3-highly-correlated-features>
 
 Importantly, the findings from this experiment must be interpreted in the context
