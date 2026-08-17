@@ -340,8 +340,8 @@ $(THESIS_DIR)/results/figures/asymmetry_results/intervention_strength_compare.pd
 	uv run cadata plot compare-intervention-strengths \
 		--output-dir $(@D) \
 		--data-dir $(THESIS_DIR)/results/data/model/all_interventions \
-		--point-of-intervention-idx 0 \
 		--point-of-intervention-idx 2 \
+		--point-of-intervention-idx 4 \
 		--point-of-intervention-idx 5 \
 		--delta 0.5 \
 		--delta 2.5 \
