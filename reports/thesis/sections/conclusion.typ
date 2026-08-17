@@ -1,12 +1,12 @@
-Most studies on belief system structure or dynamics acknowledge the likelihood
+Most studies on belief-system structure or dynamics acknowledge the likelihood
 that some beliefs may be more causally influential than others. Despite
 this, current research almost universally focuses on belief-system models that assume
 symmetric influence among beliefs. Theoretical models which capture
 asymmetric relations remain scarce, as do empirical studies on the existence of such
-asymmetry and its potential implications for belief system dynamics.
+asymmetry and its potential implications for belief-system dynamics.
 
 In this study, we have addressed both theoretical and empirical shortcomings. We first
-introduced the Kinetic Belief System model (KBS) as a theory-based model of belief system
+introduced the Kinetic Belief System model (KBS) as a theory-based model of belief-system
 dynamics based on the Causal Attitude Network model @dalegeFormalizedAccountAttitudes2016,
 which: (i) _does not_ assume symmetric influence and (ii) _does not_ assume equilibrium
 dynamics. We then used the KBS model, calibrated to a longitudinal dataset comprising
@@ -72,7 +72,7 @@ empirical findings.
 Returning to the primary topic of our investigation, our findings support
 the existence of asymmetric relations between beliefs about climate change.
 Crucially, we have also demonstrated that this _matters_, both for studies of
-belief system structure and those of belief system dynamics. When true relations
+belief-system structure and those of belief-system dynamics. When true relations
 are asymmetric, using symmetric models amounts to misspecification. This can lead to
 incorrect assessments of the existence and strength of interactions, which are frequently
 used to assess belief importance via node centrality indices. Moreover, this has

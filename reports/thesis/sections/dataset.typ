@@ -608,7 +608,7 @@ We additionally constrain the dataset to include three specific variables of int
   responses, reflecting all combinations of 'human activities' and 'natural causes' as
   the causes of climate change. We remap these values to 'human-caused' and
   'not human-caused', such that the variable is binary, and thus both amenable
-  to the analysis described below and interpretable within the kinetic belief system
+  to the analysis described below and interpretable within the kinetic belief-system
   model in @sec:calibration.
 ]
 
@@ -640,7 +640,7 @@ However, this set of items still exceeds our target range of 7--10. We therefore
 identify groups of similar or redundant variables that may be removed or combined
 into interpretable index variables. Note that cross-sectional methods should not be used
 for this analysis, as they fail to capture temporal relationships, which are fundamental
-to the kinetic belief system model (defined in @chp:kinetic-belief-system). Instead,
+to the kinetic belief-system model (defined in @chp:kinetic-belief-system). Instead,
 we examine the temporal and contemporaneous networks obtained using lag-1 vector
 autoregression (VAR).
 These networks are derived

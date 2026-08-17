@@ -8,7 +8,7 @@
 #show: show-theorion
 
 In this chapter, we define the *Kinetic Belief System* model (*KBS*) as a model of
-belief system dynamics which supports (but does not assume) asymmetric influence
+belief-system dynamics which supports (but does not assume) asymmetric influence
 relations between beliefs.
 
 
@@ -16,14 +16,14 @@ The KBS model builds on the Causal Attitude Network (CAN) model
 by #cite(<dalegeFormalizedAccountAttitudes2016>, form: "prose"), extending their
 formulation of an _attitude network_ (which we call a _belief system_) to a kinetic
 Ising model framework @glauberTimeDependentStatisticsIsing1963
-@fredricksonKineticIsingModel1984. Our treatment of belief system dynamics
+@fredricksonKineticIsingModel1984. Our treatment of belief-system dynamics
 in the KBS model mirrors the approach used by
 #cite(<haslbeckInterpretingIsingModel2021>, form: "prose") and
 #cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") to model belief dynamics
-in symmetric belief system models (similar to the CAN model).
+in symmetric belief-system models (similar to the CAN model).
 
 
-We begin the chapter by formalising belief system _dynamics_ as a modelling problem,
+We begin the chapter by formalising belief-system _dynamics_ as a modelling problem,
 after which we present the KBS model as a solution to this problem which permits
 asymmetric influence relations. Finally, we outline one approach to simulating the
 KBS model using Glauber dynamics.
@@ -53,9 +53,9 @@ KBS model using Glauber dynamics.
 //   - Broader Markov process describes the state of the belief system as a whole
 //
 
-== Modelling belief system dynamics <sec:model-modelling-belief-system-dynamics>
+== Modelling belief-system dynamics <sec:model-modelling-belief-system-dynamics>
 
-Our theory of belief system dynamics rests on three main assumptions. First, we assume
+Our theory of belief-system dynamics rests on three main assumptions. First, we assume
 that beliefs can be represented by distinct random variables. This allows
 us to consider beliefs as entities characterised by an instantaneous
 state. In particular, this assumption is not compatible with the perspective that beliefs
@@ -228,7 +228,7 @@ which are related via bi-directional edges reflecting reinforcing ($+$) or cogni
 dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016. Each node, or _spin_,
 in the network takes on values in the domain ${-1, +1}$, representing two opposing states.
 Since the underlying Ising model contains only symmetric edges, the CAN model satisfies
-detailed balance, so is an equilibrium model of belief system dynamics
+detailed balance, so is an equilibrium model of belief-system dynamics
 @christensenComplexityCriticality2005 @cardyScalingRenormalizationStatistical1996. As
 such, it's associated transition probability is stationary and is described by the
 Boltzmann distribution (ibid.).
@@ -241,7 +241,7 @@ necessarily bi-directional or equal in strength, and (ii) self-interaction effec
 permitted.
 
 Formally, letting $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs, a kinetic
-belief system model for $bold(S)$ is described by parameters
+belief-system model for $bold(S)$ is described by parameters
 $bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
 is a weighted adjacency matrix of directed *interaction effects* (or *influence effects*), and
 $bold(h) in RR^N$ is a vector of *baseline activation* effects for the elements of
@@ -271,7 +271,7 @@ two reasons for this. First, critically, unlike in the CAN model, we cannot
 assume that the KBS model will exhibit equilibrium dynamics, as asymmetric interaction
 effects violate detailed balance, so the state transition probability is not necessarily
 stationary @nguyenInverseStatisticalProblems2017. Second, by describing the model
-dynamics explicitly we are forced to consider how each variable in the belief system
+dynamics explicitly we are forced to consider how each variable in the belief
 system responds to the states of all other beliefs (including itself). As
 such, temporal dynamics are 'baked into' the KBS model, making it straightforward to
 simulate forward in time to investigate potential model dynamics. We make extensive use
@@ -323,8 +323,8 @@ Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
 
 == Symmetric and asymmetric belief systems
 
-In the special case when $bold(J)$ is symmetric, we say that the kinetic belief system
-model is *symmetric*, and otherwise that the kinetic belief system is *asymmetric*. In
+In the special case when $bold(J)$ is symmetric, we say that the kinetic belief-system
+model is *symmetric*, and otherwise that the kinetic belief-system model is *asymmetric*. In
 an asymmetric KBS model, for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may
 be the case that an influence relation exists in only one direction, or that the directed
 relations differ in sign and/or magnitude. On the other hand, all influence relations in
@@ -382,7 +382,7 @@ estimation. For extended discussion on this matter, we refer the reader to
 #cite(<nguyenInverseStatisticalProblems2017>, form: "prose", supplement: [p.~34]).
 
 We note that while an asynchronous formulation of the KBS model is possible, this would
-require a different formulation of the belief system dynamics modelling problem defined
+require a different formulation of the belief-system dynamics modelling problem defined
 in @sec:model-modelling-belief-system-dynamics, to prohibit multiple beliefs
 from updating at once.
 
@@ -403,10 +403,10 @@ of a belief system, for instance, by changing the existence, sign, direction, or
 effect size of influence relations between beliefs#structural-intervention-footnote.
 
 
-Let $cal(M)$ be a belief system model with parameters
+Let $cal(M)$ be a belief-system model with parameters
 $chevron bold(A), bold(J), bold(h) chevron.r$.
 We can consider an intervention as an
-auxiliary node, $I$, in the belief system network, with state fixed at a particular
+auxiliary node, $I$, in the belief-system network, with state fixed at a particular
 value and outgoing edges toward a subset of beliefs:
 
 // #figure(
@@ -448,7 +448,7 @@ to the baseline activation of certain beliefs:
   image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
 )
 
-Let us define this more formally. For a belief system model $cal(M)$ with $N in NN$
+Let us define this more formally. For a belief-system model $cal(M)$ with $N in NN$
 nodes, and parameters $chevron bold(A), bold(J), bold(h) chevron.r$, an _intervention_,
 is the function $phi_cal(M): delta_h mapsto cal(M)'$, where $delta_h in RR^N$ is a vector
 of offsets to the baseline activations, and the model $cal(M)'$ has parameters
@@ -459,14 +459,14 @@ $
 $
 
 Our approach is analogous to the method for modelling interventions in symmetric
-belief system models, described by
+belief-system models, described by
 #cite(<dalegeNetworkAnalysisAttitudes2017>, form: "prose"), variants of which have been
 used in other simulated-intervention studies
 @schlicht-schmalzleAttitudeNetworkAnalysis2018 @lunanskyInterveningPsychopathologyNetworks2022
 @berteroConsolidationChangeExploring2025 @wuSimulatingNodeManipulations2026.
 
 The principles underlying this approach can also be used to model other exogenous factors
-which influence, but are not influenced by, belief system dynamics. For instance,
+which influence, but are not influenced by, belief-system dynamics. For instance,
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") use the same mechanism
 in a social network context, to represent the influence of an individual's actual belief
 state on another individual's second-order belief regarding this state (i.e., their

@@ -93,9 +93,9 @@ symmetric), and we exclude diagonal entries (which are zero by definition).
 #figure(
   image("../results/figures/model/interaction_matrix/full_asym_ising_no_structure.pdf"),
   caption: caption(
-    short: [Climate belief system interaction effect matrix],
+    short: [Climate belief-system interaction effect matrix],
     long: [
-      Interaction effect matrix ($bold(J)$) for the asymmetric belief system model
+      Interaction effect matrix ($bold(J)$) for the asymmetric belief-system model
       calibrated to the full climate beliefs dataset. Red borders indicate significant
       asymmetric pairs. The matrix is otherwise identical to the
       asymmetric interaction matrix in @fig:calibration-interaction-matrices.
@@ -203,7 +203,7 @@ it is asymmetrically _influenced_ by `Politics`.
 //   - Ranked interventions
 //     - Explaining the occasional wider error bars in ranked interventions.
 
-We now investigate differences in belief system behaviour under intervention in
+We now investigate differences in belief-system behaviour under intervention in
 symmetric and asymmetric models calibrated to the climate beliefs dataset. In this
 section, we focus on _collective_ impacts (for instance, the proportion of
 individuals whose behaviour shifts due to an intervention). These reflect
@@ -318,7 +318,7 @@ shifting behaviour at the point of intervention.
     long: [
       Outbound effect-of-intervention on belief state (@def:asymmetry-results-effect-of-intervention)
       at each target belief for interventions targeting `Weather Worry`, `CC Worry`, and
-      `Politics`, in symmetric and asymmetric belief system models calibrated to the
+      `Politics`, in symmetric and asymmetric belief-system models calibrated to the
       climate beliefs dataset. Intervention strength: $delta_h = 2.5$. Confidence
       intervals display 1.96 standard deviations around the mean effect, measured
       across 500 repeated simulations.

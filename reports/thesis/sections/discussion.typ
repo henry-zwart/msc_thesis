@@ -17,9 +17,9 @@
 
 In this chapter, we review the research questions posed in @sec:introduction
 (restated below) in light of the results presented in the previous two chapters, and
-we discuss their place in the broader context of belief system dynamics. We
+we discuss their place in the broader context of belief-system dynamics. We
 conclude the chapter by discussing the limitations
-of our findings, and their implications for future work on belief system dynamics and
+of our findings, and their implications for future work on belief-system dynamics and
 belief-level interventions.
 
 #let show-rq(number, body) = block(above: 2em, below: 2em)[*RQ#number\:* #emph(body)]
@@ -130,7 +130,7 @@ involved in several asymmetric relations.
 
 #show-rq(2, RQ2) <discussion-rq2>
 
-The consequences of asymmetry for belief system dynamics were subsequently addressed in
+The consequences of asymmetry for belief-system dynamics were subsequently addressed in
 @subsec:asymmetry-results-impact, where interventions on political ideology/alignment
 in the asymmetric model were found to be almost universally more effective than in the
 symmetric model. Moreover, for interventions targeting attitudes toward climate action,
@@ -273,7 +273,7 @@ and beliefs about the causes of climate change.
 <rq3-highly-correlated-features>
 
 Importantly, the findings from this experiment must be interpreted in the context
-of the belief system model calibrated to the complete dataset. Individual differences
+of the belief-system model calibrated to the complete dataset. Individual differences
 in belief systems (as discussed in a moment) are likely to result in heterogeneous
 responses to interventions beyond those characterised here. Potentially influential
 factors include political identity and social norms. Both vary individually
@@ -288,7 +288,7 @@ support for climate policy and related beliefs @grometPoliticalIdeologyAffects20
 
 
 Finally, @sec:heterogeneity-results-belief-system showed (potentially) substantive
-differences between asymmetric belief system models calibrated separately to
+differences between asymmetric belief-system models calibrated separately to
 conservative and liberal subpopulations; however, given the smaller sample sizes used
 to calibrate these models---and consequently, higher parameter uncertainty---these
 results must be interpreted with caution.
@@ -308,7 +308,7 @@ dataset.
 // @gregersenPoliticalOrientationModerates2020.
 
 These findings demonstrate both significant differences and similarities between
-relational belief system structures, conditional on political ideology, in line with
+relational belief-system structures, conditional on political ideology, in line with
 earlier studies comparing belief systems on partisan identity
 @leeClimateChangeBelief2024. The observed differences suggest the presence of
 higher-order relationships among beliefs, consistent with
@@ -340,7 +340,7 @@ interaction parameters used in the present study.
 
 #metadata[] <within-person-discussion>
 When beliefs are fairly stable---as in the climate beliefs
-dataset---cross-sectional methods for inferring belief system structure tend to
+dataset---cross-sectional methods for inferring belief-system structure tend to
 identify _between_-person associations more than the _within_-person associations
 typically desired @brandtBetweenpersonMethodsProvide2022. We partially
 mitigate this problem by calibrating to longitudinal data and using self-interaction
@@ -398,7 +398,7 @@ role of social interaction in belief change
 including in intervention contexts
 @brewerIncreasingVaccinationPutting2017. Rather, this decision reflects the fact that
 the dataset used in this study did not include social network information. The matter
-of integrating social and cognitive forces in similar belief system models has been
+of integrating social and cognitive forces in similar belief-system models has been
 explored in several accounts @rodriguezCollectiveDynamicsBelief2016
 @aiyappaEmergenceSimpleComplex2024 @dalegeNetworksBeliefsIntegrative2025
 @vandermaasPolarizationIndividualsHierarchical2020, generally assuming individuals have
@@ -599,7 +599,7 @@ this may not always hold. Consider two variables:
 - *Action:* General attitude toward climate action.
 
 An individual who _does not_ believe in climate change should, logically, not support
-climate action. In the asymmetric belief system model, this corresponds to a large
+climate action. In the asymmetric belief-system model, this corresponds to a large
 positive interaction, such that *Action* aligns with *Happening*. However, individuals
 who _do_ believe in climate change may nonetheless oppose climate action for other
 reasons (e.g., cost or prioritisation), suggesting that *Action* may be less
@@ -719,11 +719,11 @@ rule sets that allow arbitrary numbers and sizes of rules, while directly penali
 characterisation complexity, e.g., using description length @aoga2018finding
 @proencaInterpretableMulticlassClassification2020.
 
-The models calibrated in @sec:calibration are assumed to reflect 'natural' belief system
+The models calibrated in @sec:calibration are assumed to reflect 'natural' belief-system
 dynamics (i.e., minimal exogenous influence). By simulating interventions on these
 models, we are therefore assuming transferability to situations _with_ exogenous
 influences in the form of interventions. However, prior studies have demonstrated that
-belief system dynamics may differ in such situations, for instance, due to increased
+belief-system dynamics may differ in such situations, for instance, due to increased
 salience of certain beliefs @unsworthItsPoliticalHow2014. Accordingly,
 experimental validation---and, ideally, calibration to data collected in controlled
 intervention scenarios---is a natural continuation of the present study.
@@ -736,9 +736,9 @@ weight @popper1963science. However, they demonstrate how the asymmetric KBS mode
 used to test (rather than generate) hypotheses about the general mechanisms underlying
 asymmetric belief relations.
 
-Secondly, while belief system structure is typically expected to vary across individuals
+Secondly, while belief-system structure is typically expected to vary across individuals
 @morganStructurePoliticalIdeology2017 @brandtBetweenpersonMethodsProvide2022,
-calibrating individual belief system models is generally considered infeasible due
+calibrating individual belief-system models is generally considered infeasible due
 to the associated data requirements @brandtMeasuringBeliefSystem2022. Moreover, due to
 the potential stability of belief dynamics, as observed in the present study, even
 substantial individual-level data are likely to reflect only a small set of possible

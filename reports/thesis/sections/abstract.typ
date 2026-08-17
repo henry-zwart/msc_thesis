@@ -3,7 +3,7 @@ Increased recent polarisation on urgent issues such as climate change and public
 has highlighted the critical role of individuals' beliefs in shaping
 collective attitudes and behaviour. A central challenge in the study of belief change
 and behavioural dynamics is understanding the structure and internal
-forces between beliefs. To this end, computational belief system models---the most
+forces between beliefs. To this end, computational belief-system models---the most
 prevalent of which treat belief systems as interrelated networks of beliefs---have
 emerged as a valuable lens for understanding belief dynamics in terms of
 interactions within a larger belief system. Most authors in this field acknowledge
@@ -16,7 +16,7 @@ a scarcity of theoretical and empirical studies on the existence and dynamic imp
 of asymmetric influence leaves the actual impacts largely unknown.
 
 Here, we address both theoretical and empirical shortcomings. In the first half of this
-study, we present the Kinetic Belief System as a computational model of belief system
+study, we present the Kinetic Belief System as a computational model of belief-system
 dynamics that supports both symmetric and asymmetric influence assumptions. We then
 derive a parameter estimation method that we use to calibrate the model to a
 longitudinal dataset of climate-related beliefs in the US ($n=1693$). In the second half

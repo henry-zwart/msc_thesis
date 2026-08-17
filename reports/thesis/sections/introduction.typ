@@ -61,17 +61,17 @@ identity may shape policy preferences more so than the other way around.
 Given belief systems' interdependent nature, understanding the behaviour of any single
 belief requires consideration not only of how it interacts with
 other beliefs, but also how _those beliefs_ interact with the broader belief system.
-This has motivated empirical approaches to studying belief system structure based on
+This has motivated empirical approaches to studying belief-system structure based on
 network science, which treat belief systems as undirected networks describing the
 pairwise correlational structure (edges) between distinct beliefs (nodes)
 @epskampQgraphNetworkVisualizations2012 @costantiniStateARtPersonality2015
 @boutylineBeliefNetworkAnalysis2017 @dalegeNetworkAnalysisAttitudes2017
 @epskampEstimatingPsychologicalNetworks2018.
 
-Analysis of _belief system networks_ using network science methods has proven
-valuable for understanding belief system structure and the roles of specific beliefs
+Analysis of _belief-system networks_ using network science methods has proven
+valuable for understanding belief-system structure and the roles of specific beliefs
 in topic-specific belief systems. Using cross-national surveys, several studies
-have examined geographic variation in belief system structure on topics including
+have examined geographic variation in belief-system structure on topics including
 politics @keskinturkOrganizationPoliticalBelief2022 @vannoordNatureStructureEuropean2025
 and climate change @leeVariationsClimateChange2025, comparing both specific relations and
 whole-network features such as density (the proportion of realised connections) and
@@ -79,7 +79,7 @@ inconsistency (the number of negative correlations). Similarly,
 #cite(<chambonHowComplianceBehavioural2023>, form: "prose") examine how beliefs relating
 to COVID-19 changed over time in the Netherlands at the start of
 the global pandemic. Despite ongoing debate about its usefulness and
-applicability to belief system networks @bringmannWhatCentralityMeasures2019, node
+applicability to belief-system networks @bringmannWhatCentralityMeasures2019, node
 centrality is frequently used to assess belief position within a belief system
 @brandtWhatCentralPolitical2019 @borsboomNetworkAnalysisMultivariate2021, relative influence
 @robinaughIdentifyingHighlyInfluential2016, or structural importance
@@ -91,17 +91,17 @@ interventions, in the context of a belief system on COVID-19.
 
 // TODO: 'Both of these aspects are important to understanding how beliefs and attitudes
 // change, affect one another and behaviour, and spread between individuals'.
-Although belief system networks characterise the statistical associations between
+Although belief-system networks characterise the statistical associations between
 beliefs, they make no claims about the nature of
 these associations, how they arise, or their implications for belief dynamics.
 Several explanatory models have been proposed to address these shortcomings, generally
-considering endogenous belief system dynamics as driven by individuals' efforts to
+considering endogenous belief-system dynamics as driven by individuals' efforts to
 achieve consistent sets of beliefs; that is, which are perceived as
 mutually compatible. This perspective is particularly amenable to formalisation within
-the framework of complex systems, treating belief system dynamics as arising from
+the framework of complex systems, treating belief-system dynamics as arising from
 micro-level attempts to resolve perceived inconsistencies between beliefs.
 
-Current theories (and models) of belief system dynamics have been especially influenced
+Current theories (and models) of belief-system dynamics have been especially influenced
 by two classical theories of belief and attitude consistency:
 #cite(<heiderAttitudesCognitiveOrganization1946>, form: "author")'s
 _balance theory_
@@ -139,7 +139,7 @@ two attitudes, or reduce their perceived negative association.
 // TODO: Doesn't use their version of 'attitude'
 // TODO: Maybe reference HIOM and networks of belief?
 Balance theory and the theory of cognitive dissonance have given rise to two families
-of belief system models based on the statistical-physics notion of energy minimisation
+of belief-system models based on the statistical-physics notion of energy minimisation
 @isingBeitragZurTheorie1925. The present study primarily considers models inspired by
 Festinger's theory of cognitive dissonance, which is more concerned with relations
 _between_ beliefs than beliefs as relating concepts. For models based
@@ -174,7 +174,7 @@ beliefs exert equal reinforcing or opposing influence on one another. Under this
 assumption, the underlying Ising model satisfies detailed balance and can be considered
 an equilibrium system @christensenComplexityCriticality2005. This is mathematically
 convenient, as it allows for implicit definition of the CAN model dynamics using
-the Boltzmann distribution, such that each belief system state is observed with constant
+the Boltzmann distribution, such that each belief-system state is observed with constant
 probability as a decreasing function of that state's inconsistency (i.e., energy).
 Highly consistent states are frequently observed, whereas highly inconsistent states
 are rarely observed.
@@ -187,7 +187,7 @@ For instance, both #cite(<dalegeAttitudinalEntropyAE2018>, form: "prose") and
 that such models may explain how merely thinking about a topic can induce more
 extreme views. In several cases, the CAN model (or an analogous model) has been
 used to explore, via simulation, the potential effects of interventions or persuasion attempts
-on belief system dynamics
+on belief-system dynamics
 @dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
 @lunanskyInterveningPsychopathologyNetworks2022 @berteroConsolidationChangeExploring2025.
 Furthermore, #cite(<vandermaasPolarizationIndividualsHierarchical2020>, form: "prose")
@@ -227,7 +227,7 @@ of this study, they do not test the significance of these differences.
   directed acyclic graphs @powellModelingLeveragingIntuitive2023
   @cookRationalIrrationalityModeling2016. However, these do not allow for reinforcing
   relationships. Moreover, they fall victim to the
-  same problem as the statistical belief system networks. While they describe the
+  same problem as the statistical belief-system networks. While they describe the
   relationships observed in the data, they offer no explanation as to the nature of
   these relationships.
 ]
@@ -239,9 +239,9 @@ are used and found to have minimal impact on model dynamics
 However, these experiments are rarely described in detail, and we are not aware of any
 instances in which asymmetric models are estimated from data. For
 mean-field approximations, #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose")
-argue that theoretical results derived for Ising-style belief system models are robust
+argue that theoretical results derived for Ising-style belief-system models are robust
 to assumptions of asymmetry or non-reciprocity. However, they note that studies outside
-the belief system modelling literature show that non-reciprocal Ising models
+the belief-system modelling literature show that non-reciprocal Ising models
 can exhibit considerably more complex behaviour than
 the symmetric model (see #cite(<avniNonreciprocalIsingModel2025>, form: "prose")).
 
@@ -270,7 +270,7 @@ influences appears self-perpetuating, with some studies citing historical
 trends as justification for a continued focus on symmetric models
 @brandtMeasuringBeliefSystem2022[p.~3].
 Consequently, it remains unclear whether asymmetric influence---should it
-exist---meaningfully affects belief system dynamics or the conclusions we draw from
+exist---meaningfully affects belief-system dynamics or the conclusions we draw from
 models thereof.
 
 
@@ -391,7 +391,7 @@ In @chp:kinetic-belief-system, we introduce the *Kinetic Belief System* model
 @dalegeFormalizedAccountAttitudes2016.
 The KBS model represents directed belief influences using distinct parameters, so it is
 well-suited for studying asymmetry in belief systems. KBS's dynamics are explicitly
-time-dependent, enabling straightforward analysis of belief system dynamics, including
+time-dependent, enabling straightforward analysis of belief-system dynamics, including
 post-intervention behaviour, on an _individual_ basis. This contrasts past studies that
 analyse intervention effects via simulation on the CAN model
 @dalegeNetworkAnalysisAttitudes2017 @schlicht-schmalzleAttitudeNetworkAnalysis2018
@@ -410,7 +410,7 @@ longitudinal dataset comprising beliefs about climate change.
 
 We then subsequently use the calibrated model to address our research questions in
 the second half of the study. Inspired by approaches used in the context of the CAN
-model,  we formalise interventions in Ising-style belief system models
+model, we formalise interventions in Ising-style belief-system models
 as additional influencing variables in @sec:methods. We also outline our experimental
 methods to: (i) quantifying expected
 intervention effects on an individual basis and (ii) comparing effects between symmetric
@@ -420,7 +420,7 @@ intervention dynamics in @sec:results-asymmetry-in-belief-systems, and
 heterogeneity in intervention outcomes and belief systems in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects, relating these back
 to our research questions in @sec:discussion, also discussing broader implications
-for belief system modelling.
+for belief-system modelling.
 
 The *climate beliefs dataset* used in this study is sourced from the Longitudinal Panel
 of Perceptions About Climate Change and Covid (*CCCV*), a representative longitudinal survey

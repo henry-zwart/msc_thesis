@@ -190,7 +190,7 @@ believe climate change is human-caused, this intervention may still be effective
 provided the individual does not already have a positive attitude toward climate action.
 
 
-== Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
+== Heterogeneity in belief-system structure <sec:heterogeneity-results-belief-system>
 
 
 Until this point, we have considered belief systems as common to a population of

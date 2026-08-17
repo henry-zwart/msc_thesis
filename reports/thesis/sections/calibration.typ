@@ -223,7 +223,7 @@ for 'weak' responses.
     short: [Regularisation strength EBIC],
     long: [
       Effect of regularisation strength $lambda$ on the Extended Bayesian Information
-      Criterion for symmetric and asymmetric belief system models optimised to the
+      Criterion for symmetric and asymmetric belief-system models optimised to the
       climate beliefs dataset using
       @eqn:parameter-estimation-optimisation-problem. The vertical axis measures
       the difference in EBIC relative to the no-regularisation case ($lambda = 0$);
@@ -557,7 +557,7 @@ to a less consistent state.
 
 The observed behaviour aligns with our expectations, namely
 that the model with cross-interactions outperforms the null model in scenarios where
-the belief system state updates toward a more consistent state (according to the theory
+the belief-system state updates toward a more consistent state (according to the theory
 of cognitive dissonance), and is outperformed when participants' behaviour contradicts
 this theory.
 

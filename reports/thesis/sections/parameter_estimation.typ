@@ -15,7 +15,7 @@
 //     participants.
 
 In the previous chapter, we introduced the Kinetic Belief System (KBS) as a model of
-belief system structure and dynamics, that allows for asymmetric influence relations.
+belief-system structure and dynamics, that allows for asymmetric influence relations.
 While the KBS model is theoretically interesting, its _empirical_ value hinges on
 the ability to infer its parameters from observational data.
 
@@ -43,7 +43,7 @@ MLE is often used for parameter estimation in similar modelling situations
 @nguyenInverseStatisticalProblems2017 @leeStatisticalMechanicsUS2015. It has a
 significant drawback, however, in that it assumes that the observations in the
 dataset $D$ are representable within the model. This poses a problem when calibrating
-binary belief system models---such as the KBS model---using survey data, which often
+binary belief-system models---such as the KBS model---using survey data, which often
 describes belief states with multi-valued (e.g., Likert) scales. To use
 MLE in such situations, we must first binarise the observations to the set ${-1, +1}$.
 
@@ -282,7 +282,7 @@ binarisation, we can obtain binary models that incorporate the neutrality
 and varying degrees of certainty present in non-binarised data.
 
 This is far from the only approach that can be used to account for
-neutrality in belief system models. For instance,
+neutrality in belief-system models. For instance,
 #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose") suggest using
 three-valued models, such as the Blume-Capel model (ibid.), that explicitly represent
 intermediate states using zero-valued spin states. Such approaches provide extra
@@ -301,7 +301,7 @@ Consider a population of $M in NN$ individuals with a shared belief system $cal(
 comprising $N in NN$ beliefs.
 // for which the parameters (i.e., the baseline activations and interaction effects) are
 // unknown.
-Suppose that we have measured the belief system state of each individual, $m in [M]$,
+Suppose that we have measured the belief-system state of each individual, $m in [M]$,
 at each of $T in NN$ uniformly spaced times:
 $
   {bold(x)_((m))^t}_(t=1)^T, quad "where each" bold(x)_((m))^t in RR^N

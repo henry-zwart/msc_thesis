@@ -8,21 +8,21 @@
 
 
 In this chapter, we define the *Kinetic Belief System* model (*KBS*) as a model of
-belief system dynamics that supports (but does not require) asymmetric influence
+belief-system dynamics that supports (but does not require) asymmetric influence
 relations among beliefs.
 
 The KBS model builds on the Causal Attitude Network (CAN) model
 by #cite(<dalegeFormalizedAccountAttitudes2016>, form: "prose"), extending their
 formulation of an _attitude network_ (which we call a _belief system_) to a kinetic
 Ising model framework @glauberTimeDependentStatisticsIsing1963
-@fredricksonKineticIsingModel1984. Our treatment of belief system dynamics
+@fredricksonKineticIsingModel1984. Our treatment of belief-system dynamics
 in the KBS model mirrors approaches used by
 #cite(<haslbeckInterpretingIsingModel2021>, form: "prose") and
 #cite(<brandtEvaluatingBeliefSystem2021>, form: "prose") for modelling belief dynamics
 in symmetric belief systems (similar to the CAN model).
 
 
-We begin the chapter by formalising belief system _dynamics_ as a modelling problem,
+We begin the chapter by formalising belief-system _dynamics_ as a modelling problem,
 after which we present the KBS model as a solution to this problem that permits
 asymmetric influence relations. Finally, we outline one approach to simulating the
 KBS model using Glauber dynamics.
@@ -39,9 +39,9 @@ KBS model using Glauber dynamics.
 // mathematical/conceptual models
 //
 
-== Modelling belief system dynamics <sec:model-modelling-belief-system-dynamics>
+== Modelling belief-system dynamics <sec:model-modelling-belief-system-dynamics>
 
-Our theory of belief system dynamics rests on three main assumptions. First, we assume
+Our theory of belief-system dynamics rests on three main assumptions. First, we assume
 that beliefs can be represented by distinct random variables. This allows
 us to consider beliefs as entities characterised by an instantaneous
 state. In particular, this assumption is incompatible with the perspective that beliefs
@@ -174,7 +174,7 @@ which are related via bidirectional edges reflecting reinforcing ($+$) or
 cognitive-dissonance ($-$) relations @dalegeFormalizedAccountAttitudes2016. Each spin
 in the network takes on values in the domain ${-1, +1}$, representing two
 opposing states. Since the underlying Ising model contains only symmetric edges, the CAN
-model satisfies detailed balance and is therefore an equilibrium model of belief system
+model satisfies detailed balance and is therefore an equilibrium model of belief-system
 dynamics @christensenComplexityCriticality2005 @cardyScalingRenormalizationStatistical1996.
 As such, its associated transition probability is stationary and is described by the
 Boltzmann distribution (ibid.).
@@ -187,7 +187,7 @@ necessarily bi-directional or equal in strength, and (ii) self-interaction effec
 permitted.
 
 Formally, let $bold(S) = {S_1, ..., S_N}$ be a collection of beliefs. A kinetic
-belief system model for $bold(S)$ is described by parameters
+belief-system model for $bold(S)$ is described by parameters
 $bold(theta) = chevron bold(J), bold(h) chevron.r$, where $bold(J) in RR^(N times N)$
 is a weighted adjacency matrix of directed *interaction effects* (or *influence effects*), and
 $bold(h) in RR^N$ is a vector of *baseline activation* effects for the elements of
@@ -275,7 +275,7 @@ Where the initial distribution $P(bold(sigma)^1)$ is specified directly.
 
 == Symmetric and asymmetric belief systems
 
-In the special case where $bold(J)$ is symmetric, we say that the kinetic belief system
+In the special case where $bold(J)$ is symmetric, we say that the kinetic belief-system
 model is *symmetric*; otherwise, it is *asymmetric*. In
 an asymmetric KBS model, for any pair of distinct beliefs $S_i != S_j in bold(S)$, it may
 be the case that an influence relation exists in only one direction, or that the directed
@@ -334,7 +334,7 @@ estimation. For an extended discussion of this matter, we refer the reader to
 #cite(<nguyenInverseStatisticalProblems2017>, form: "prose", supplement: [p.~34]).
 
 We note that while an asynchronous formulation of the KBS model is possible, it would
-require a different formulation of the belief system dynamics modelling problem defined
+require a different formulation of the belief-system dynamics modelling problem defined
 in @sec:model-modelling-belief-system-dynamics, to prevent multiple beliefs
 from updating simultaneously.
 

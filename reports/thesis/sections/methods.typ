@@ -116,10 +116,10 @@ the existence, sign, direction, or effect size of influence relations between
 beliefs.#structural-intervention-footnote
 
 
-Let $cal(M)$ be a belief system model with parameters
+Let $cal(M)$ be a belief-system model with parameters
 $chevron bold(J), bold(h) chevron.r$.
 We can consider an intervention as an
-auxiliary node, $I$, in the belief system network, with state fixed at a particular
+auxiliary node, $I$, in the belief-system network, with state fixed at a particular
 value and outgoing edges toward a subset of beliefs:
 
 #figure(
@@ -156,7 +156,7 @@ to the baseline activations of particular beliefs:
   image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
 )
 
-Let us define this more formally. For a belief system model $cal(M)$ as defined above
+Let us define this more formally. For a belief-system model $cal(M)$ as defined above
 with #box[$N in NN$] nodes, an *intervention* is the function
 $phi_cal(M): bold(delta)_h mapsto cal(M)'$, where $bold(delta)_h in RR^N$ is a vector of offsets to
 the baseline activations, and the model $cal(M)'$ has parameters
@@ -168,13 +168,13 @@ $
 
 Our approach is analogous to the method described by
 #cite(<dalegeNetworkAnalysisAttitudes2017>, form: "prose") for modelling interventions in
-symmetric belief system models, variants of which have been used in other
+symmetric belief-system models, variants of which have been used in other
 simulated-intervention studies
 @schlicht-schmalzleAttitudeNetworkAnalysis2018 @lunanskyInterveningPsychopathologyNetworks2022
 @berteroConsolidationChangeExploring2025 @wuSimulatingNodeManipulations2026.
 
 The principles underlying this approach can also be used to model other exogenous factors
-that influence belief system dynamics but are not influenced by them. For instance,
+that influence belief-system dynamics but are not influenced by them. For instance,
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") use an analogous mechanism
 in a social network context, to represent how an individual's actual belief state infuences
 another individual's second-order belief about that state (i.e., their
@@ -280,7 +280,7 @@ Since our outbound intervention experiments are intended to assess differences i
 intervention propagation between symmetric and asymmetric belief systems, we select
 points of intervention that are likely to highlight these differences. So that
 interventions can propagate, we prioritise beliefs that are reasonably influential in
-both belief system models. Additionally, we attempt to select beliefs with varying
+both belief-system models. Additionally, we attempt to select beliefs with varying
 degrees of asymmetry, conditional on the models featuring such beliefs.
 
 // Points of intervention:
@@ -340,7 +340,7 @@ $cal(M)^t (bold(s)_0)$. Also, we denote the activation probability (as defined i
 $p_i^t (bold(s)_0, cal(M))$.
 
 The *effect-of-intervention (on state)* and the *effect-of-asymmetry*, respectively, measure
-the impact of an intervention on observed belief system behaviour with reference to our
+the impact of an intervention on observed belief-system behaviour relative to our
 expectations in a no-intervention scenario (@def:asymmetry-results-effect-of-intervention),
 and the difference in observed behaviour in the asymmetric KBS model, compared with our
 expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
@@ -389,7 +389,7 @@ experiments, while in population-level experiments,
 
 In the simulated interventions described above, the only
 distinguishing factor between individuals is their pre-intervention state. It follows
-that any difference in belief system dynamics between distinct individuals---after
+that any difference in belief-system dynamics between distinct individuals---after
 accounting for simulation stochasticity---is the result of their different initial
 states. Therefore, to identify the conditions under which an intervention is effective,
 it then suffices to characterise the set of _initial states_ which yield effective
