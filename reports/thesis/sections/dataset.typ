@@ -346,8 +346,7 @@ of the data from Wave 6, and exclude this wave from the present study.
 
 All type-level and response-value validation checks succeed, providing a strong
 guarantee that the data schema matches our expectations per the codebook. We do,
-however, encounter several problems during null-value validation. Sara Constantino's
-guidance was instrumental in the process of diagnosing these problems.
+however, encounter several problems during null-value validation.
 
 In some cases, these were due to errors in the codebook itself. These errors are
 relatively straightforward to identify from the null-value validation results, since
