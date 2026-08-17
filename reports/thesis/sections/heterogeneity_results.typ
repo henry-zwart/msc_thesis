@@ -153,7 +153,7 @@ state for `CC Worry`. This may result from this variable's low inertia
 and high connectivity---in particular, its large outbound interaction effect
 toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
 These factors result in `CC Worry` being relatively influential
-and influentia#emph[ble], thereby making it an effective indirect pathway for
+and influen#emph[ceable], thereby making it an effective indirect pathway for
 various interventions targeting `CC Action`. The significance of the requirement
 that `CC Worry` be _low_ is evident when comparing the implications for the null
 and intervention models. Due to `CC Worry`'s considerable outbound interactions,

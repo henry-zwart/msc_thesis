@@ -45,12 +45,12 @@ KBS model reflect temporal influence---how much one belief constrains the future
 another (@chp:kinetic-belief-system).#within-person-footnote An asymmetric relation
 reflects a constraint differential, where one belief has greater influence on the other
 than vice versa. More generally, the asymmetric model distinguishes between two forces:
-influence and influentiability. Influence (the strength of outbound interactions)
+influence and influenceability. Influence (the strength of outbound interactions)
 determines the extent to which one belief constrains others. In contrast,
-influentiability (the strength of inbound interactions) determines the extent to which
+influenceability (the strength of inbound interactions) determines the extent to which
 others constrain a belief's own behaviour.
 
-Political identity being more influential than influentiable in this context is
+Political identity being more influential than influenceable in this context is
 consistent with previous studies on its mutual influences
 with climate-related beliefs in the USA. First, political identity
 has been shown to substantially impact both climate-related beliefs
@@ -174,10 +174,10 @@ an individual level. <discussion-rq2-indirect-effects>
 ]
 
 The distinction in behaviour between political ideology/alignment and climate-related
-worry likely reflects differences in the influential and influentiable nature of the
+worry likely reflects differences in the influential and influenceable nature of the
 two beliefs. Climate-related worry is more influential than political
 ideology/alignment, owing to its greater outbound interactions and interaction
-strength. The key difference, however, lies in the beliefs' influentiability: while
+strength. The key difference, however, lies in the beliefs' influenceability: while
 climate-related worry has inbound and outbound interactions with all other beliefs,
 political ideology/alignment has considerably fewer _inbound_ than _outbound_
 edges.#full-model-disclaimer That is, several beliefs influenced by this
@@ -218,7 +218,7 @@ Surprisingly, _all_ of the personas identified as characteristic of effective in
 required that pre-intervention climate-related worry be low, even when this
 was neither the point of intervention nor the target.
 This finding may be explained by the combination of high influence and
-influentiability associated with climate-related worry, thereby making this variable an
+influenceability associated with climate-related worry, thereby making this variable an
 effective indirect route for various interventions (not restricted to this particular
 target). This stands in contrast to political ideology/alignment, which has comparable
 influence on the target variable but is harder to influence, as discussed above.
@@ -660,13 +660,13 @@ constrained when *Happening* is high than when it is low.
 // + Model choice:
 //   - Symmetry assumption may often be valid
 //   - But risks misspecification
-// + Distinction between influence and influentiability:
+// + Distinction between influence and influenceability:
 //   - Compare with other measures of centrality/influence
-//   - Influence is often important for interventions, but influentiability is also
+//   - Influence is often important for interventions, but influenceability is also
 //     important for indirect propagation.
 
 // - May be different for symmetric and asymmetric networks
-// - Influence and influentiability are both important
+// - Influence and influenceability are both important
 // - While high values may indicate both high in asymmetric, low values don't necessarily
 //   mean that both are low (e.g., in-degree vs out-degree for `Politics`).
 
@@ -686,7 +686,7 @@ when modelling belief interactions constitutes model misspecification and can le
 incorrect inferences about the relative influence of different beliefs.
 The primary issue here is that symmetric models do not account for the distinction
 between a belief's influence (how much it affects the states of other beliefs) and
-its influentiability (how much its own state is affected by other beliefs).
+its influenceability (how much its own state is affected by other beliefs).
 
 Despite the promising results of this study, several questions remain. The limited
 number of waves in the climate beliefs dataset prevents us from
