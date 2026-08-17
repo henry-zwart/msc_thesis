@@ -430,6 +430,15 @@ relating to climate change used in our experiments constituted substantial compo
 this investigation, and contribute to future use of the CCCV dataset. We detail both
 processes in @sec:dataset.
 
+#let ising-link-footnote = footnote[
+  #link("https://github.com/henry-zwart/ising")
+]
+
+Alongside this study, we have open-sourced the Python package, `Ising`, developed for
+our experiments.#ising-link-footnote `Ising` provides optimised implementations of the
+Kinetic Belief System model, including parameter estimation and functionality to simulate
+interventions on beliefs and interactions.
+
 In its totality, this study presents a theory-driven approach to studying the structure
 and dynamics of asymmetric belief systems. We apply this to investigate the existence and
 prevalence of asymmetry in an observational context regarding beliefs about
