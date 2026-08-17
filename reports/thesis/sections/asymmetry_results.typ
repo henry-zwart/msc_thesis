@@ -326,19 +326,6 @@ shifting behaviour at the point of intervention.
   ),
 ) <fig:asymmetry-results-outbound-effect>
 
-#figure(
-  image("../results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf"),
-  caption: caption(
-    short: [Outbound effect-of-asymmetry],
-    long: [
-      Outbound effect-of-asymmetry (@def:asymmetry-results-effect-of-asymmetry) at each
-      target belief for interventions on `Weather Worry`, `CC Worry`, and `Politics`, for
-      models calibrated to the climate beliefs dataset. Intervention strength:
-      $delta_h = 2.5$. Confidence intervals display 1.96 standard deviations around the
-      mean effect-of-asymmetry ($n=500$).
-    ],
-  ),
-) <fig:asymmetry-results-outbound-effect-of-asymmetry>
 
 
 Figures @fig:asymmetry-results-outbound-effect[] and
@@ -361,6 +348,20 @@ taken at time $t = 10$ (approximately five years in the calibrated model;
 @fig:apdx-extra-results-outbound-effects-10 in @sec:appendix-extra-results), which show
 larger increases in the effect-of-intervention for variables with stronger incoming
 interactions from non-intervention beliefs.
+
+#figure(
+  image("../results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf"),
+  caption: caption(
+    short: [Outbound effect-of-asymmetry],
+    long: [
+      Outbound effect-of-asymmetry (@def:asymmetry-results-effect-of-asymmetry) at each
+      target belief for interventions on `Weather Worry`, `CC Worry`, and `Politics`, for
+      models calibrated to the climate beliefs dataset. Intervention strength:
+      $delta_h = 2.5$. Confidence intervals display 1.96 standard deviations around the
+      mean effect-of-asymmetry ($n=500$).
+    ],
+  ),
+) <fig:asymmetry-results-outbound-effect-of-asymmetry>
 
 Note that @fig:asymmetry-results-outbound-effect does not provide an accurate reflection
 of the difference in intervention effects between symmetric and asymmetric models, as
