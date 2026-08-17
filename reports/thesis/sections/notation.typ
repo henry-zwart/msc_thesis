@@ -23,17 +23,16 @@
 
     - For $n in NN$, $[n]$ denotes the *index set*, such that $[n] := {1, ..., n}$.
 
-    We adopt specific notation for the context of belief systems and beliefs. In
-    particular:
+    We adopt specific notation for belief systems and beliefs. In particular:
     - *Models* are referred to using variants of the variable $cal(M)$, e.g., $cal(M)_"asymmetric"$.
 
     - *Generic beliefs*, in the generic concept sense, as discussed at the start of
       @sec:model-modelling-belief-system-dynamics, are denoted using the uppercase letter
-      $S$, possibly with a subscript, e.g., $S_i$.
+      $S$.
 
     - *Particular beliefs*, in the specific instance sense, as discussed at the start of
       @sec:model-modelling-belief-system-dynamics, are denoted using the lowercase letter
-      $s$, possibly with a subscript, e.g., $s_i$.
+      $s$.
 
     - *Belief random variables* are denoted using the symbol $sigma$, possibly with a
       subscript.
@@ -43,8 +42,8 @@
 
     For instance, the generic concept 'belief regarding the contents of the box' would be
     denoted as $S$. This takes on specific values, such as 'the box is empty', denoted as
-    $s$, which are realisations of the random variable $sigma$. If we were measure an
-    individual's belief about the contents of the box, this data variable would be denoted
+    $s$, which are realisations of the random variable $sigma$. If we were to measure an
+    individual's belief about the contents of the box, the data variable would be denoted
     as $x$.
 
   ]
