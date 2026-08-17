@@ -61,7 +61,7 @@ policies based on partisan identification rather than policy content
 <rq1-asymmetry-explanations>
 
 #figure(
-  image("../diagrams/politics_example/politics_example.svg", width: 80%),
+  image("../diagrams/politics_example/politics_example.svg", width: 90%),
   placement: none,
   outlined: false,
 )
@@ -527,13 +527,11 @@ Positive attitudes prevail when the disease is perceived as riskier than the vac
 Values regarding family well-being may influence the relationship
 between perceived risk and vaccination attitudes, thereby amplifying the existing effect.
 
-#h(0.5em)
 #figure(
   image("../diagrams/vaccination_example/vaccination_example_nocircles.svg", width: 70%),
   placement: none,
   outlined: false,
 )
-#h(0.5em)
 
 Suppose that, in an attempt to increase childhood vaccination rates, we
 undertake a media campaign appealing to family well-being values. The expected outcome

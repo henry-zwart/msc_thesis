@@ -78,6 +78,7 @@ similarly.
 #figure(
   image(
     "../results/figures/methods/binarisation/distribution.pdf",
+    width: 65%,
   ),
   caption: caption(
     short: [Soft thresholding],

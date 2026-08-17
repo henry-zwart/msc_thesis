@@ -181,10 +181,10 @@ list elements belong to the set of values defined by the ```python Enum```.
 // #set table(
 //   inset: (x: 6pt, y: 4pt),
 // )
-#show table: set text(size: 10pt)
+#show table: set text(size: 11pt)
 #figure(
   table(
-    columns: (auto, auto, auto),
+    columns: (40%, 20%, 20%),
     align: (left, center, center),
     stroke: none,
     table.header[Response format][Raw type][Coerced type],
@@ -195,7 +195,8 @@ list elements belong to the set of values defined by the ```python Enum```.
     [Multiple response], [```python str```], [```python list[Enum]```],
     [Numeric], [```python float```], [```python float | int```],
   ),
-  placement: auto,
+  placement: none,
+  gap: 1.5em,
   caption: caption(
     short: [CCCV survey type coercion mapping],
     long: [
@@ -533,6 +534,7 @@ serves to link survey metadata (extracted from the codebook) with survey respons
 
 #figure(
   image("../diagrams/survey_database/database.svg"),
+  gap: 1em,
   caption: caption(
     short: [Constructed survey database diagram],
     long: [

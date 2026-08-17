@@ -62,10 +62,9 @@ situational) contexts underlying the climate beliefs dataset.
 
 == Assessing asymmetric influence using the KBS model <sec:methods-directional-differential>
 
-To investigate the prevalence of asymmetric relations in the asymmetric model calibrated
-to the climate beliefs dataset, we examine differences in directional interaction
-effects between each pair of beliefs in the asymmetric models calibrated via
-bootstrapping in the previous chapter.
+To investigate the prevalence of asymmetric relations in the climate beliefs dataset, we
+examine differences in directional interaction effects between each pair of beliefs in the
+asymmetric models calibrated via bootstrapping in the previous chapter.
 
 For each bootstrapped model, $cal(M)_((i))$ with parameters
 $chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
@@ -125,7 +124,7 @@ value and outgoing edges toward a subset of beliefs:
 #figure(
   outlined: false,
   placement: none,
-  image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
+  image("../diagrams/modelling_interventions/intervention.svg", width: 44%),
 )
 
 In the diagram above, the intervention node $I$ influences the beliefs
@@ -153,7 +152,7 @@ to the baseline activations of particular beliefs:
 #figure(
   outlined: false,
   placement: none,
-  image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 35%),
+  image("../diagrams/modelling_interventions/intervention_baseline_activation.svg", width: 33%),
 )
 
 Let us define this more formally. For a belief-system model $cal(M)$ as defined above
