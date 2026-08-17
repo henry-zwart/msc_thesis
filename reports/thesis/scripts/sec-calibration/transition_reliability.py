@@ -98,7 +98,7 @@ def main(P: npt.NDArray[np.float64], λ: float):
     fig, axes = plt.subplots(
         ncols=4,
         nrows=2,
-        figsize=(5.77, 3.25),
+        figsize=(5.77, 3),
         constrained_layout=True,
         sharex=True,
         sharey=True,

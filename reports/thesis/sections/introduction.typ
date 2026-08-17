@@ -251,12 +251,12 @@ assessment of belief importance, often quantified using node centrality indices 
 discussed above). While most undirected-network centrality indices have directed-network
 analogues, these can differ substantially in value @bringmannWhatCentralityMeasures2019.
 This becomes especially critical when belief centrality is used to predict intervention
-effectiveness. For instance, beliefs with many connections
-(i.e., high strength or degree centrality) are often considered both (i) good targets
-for interventions intended to propagate to other beliefs
-(cf. #cite(<chambonTailoredInterventionsBroad2022>, form: "prose")), and (ii) more
+effectiveness. For instance, beliefs with many, or strong, connections
+(that is, high degree centrality or strength centrality) are often considered both (i)
+good targets for interventions intended to propagate to other beliefs
+(see #cite(<chambonTailoredInterventionsBroad2022>, form: "prose")), and (ii) more
 resistant to such interventions, on account of their received influence from adjacent
-beliefs (cf. #cite(<brandtInterattitudeCentralityDoes2023>, form: "prose")).
+beliefs (see #cite(<brandtInterattitudeCentralityDoes2023>, form: "prose")).
 However, both conclusions rely on the assumption of bidirectional influence.
 When influence may be asymmetric or non-reciprocal, we may find that some beliefs are
 characterised almost exclusively by incoming or outgoing interactions, leading to

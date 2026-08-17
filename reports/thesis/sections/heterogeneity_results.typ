@@ -35,7 +35,7 @@ In this chapter, we address the final two research questions presented in
   caption: caption(
     short: [Individual effectiveness of inbound `CC Action` interventions],
     long: [
-      The expected effect of intervention on state
+      The expected effect-of-intervention on state
       (@def:asymmetry-results-effect-of-intervention) for strong interventions
       #box[($delta_h = 2.5$)] targeting attitudes toward climate action exhibits
       substantial variation between survey participants.
@@ -76,16 +76,16 @@ substantially among survey participants.
   ),
 ) <fig:heterogeneity-results-interventions-personas>
 
-@fig:heterogeneity-results-interventions-personas shows the conditions (or, personas)
+@fig:heterogeneity-results-interventions-personas shows the conditions (or personas)
 for which interventions on different nodes in the belief system are expected to be
 effective for targeting attitudes toward climate action. These are obtained using the
-regression decision tree approach to approximating the effect characterisation function,
+regression decision-tree approach to approximating the effect characterisation function,
 as described in @sec:methods-effect-characterisation-function. We regard an
-intervention as _effective_ for a given individual if the expected effect of intervention
+intervention as _effective_ for a given individual if the expected effect-of-intervention
 on influence (@def:methods-effect-on-influence), estimated using the mean across $n=500$
 simulations, is greater than or equal to the population upper quartile. Since the
 threshold for an intervention to be considered effective is specific to each
-point-of-intervention, we exclude points-of-intervention whose upper quartile is below
+point of intervention, we exclude points of intervention whose upper quartile is below
 0.1 (`CC Human`, `CC Others Worry`, and `Weather Worry`), which exhibit no meaningfully
 effective interventions.
 
@@ -104,10 +104,10 @@ effective interventions.
 
 
 Note that the identified personas are not necessarily complete. For instance, suppose
-that a pair of variables are highly correlated and are 'Low', in the initial state,
+that two variables are highly correlated and are 'Low' in the initial state
 whenever the intervention effect is high. A complete characterisation includes both
 variables; however, a decision tree is likely to include only one, since after splitting
-on one of the two variables, the other is redundant. This is especially true for shallow
+on one variable, the other becomes redundant. This is especially true for shallow
 decision trees.
 <incomplete-descriptions>
 
@@ -122,30 +122,30 @@ decision trees.
 
 The expected difference in activation probabilities between the intervention and null
 models exhibits a clear bimodal distribution across survey
-participants for each scenario, with the higher mode contained within the upper quartile
-(indicated by the darker shaded regions). For each point-of-intervention we observe a
-small set of personas. In each case these personas exhibit high prevelence among
-individuals with high intervention effects, and considerably lower prevalence for other
-individuals, indicating that the identified personas accurately characterise the
+participants in each scenario, with the higher mode contained within the upper quartile
+(indicated by the darker-shaded regions). For each point of intervention, we observe a
+small set of personas. In each case, these personas exhibit a high prevalence among
+individuals with high intervention effects and a considerably lower prevalence among
+other individuals, indicating that the identified personas accurately characterise the
 conditions for effective
 interventions.
-While prevalence among the high-effect individuals is generally high, this does vary
-across points-of-intervention. For instance, 20% of individuals predicted to be in
+While prevalence among high-effect individuals is generally high, it varies
+across points of intervention. For instance, 20% of individuals predicted to be in
 the high-effect category for interventions on `CC Worry` are not represented by the
-identified persona, while for interventions on `Politics` only 3% of high-effect
-individuals are not represented.
+identified persona. In comparison, for interventions on `Politics`, only 3% of
+high-effect individuals are not represented.
 
 
-// Recall that the effect of intervention measures the difference in effects between the
+// Recall that the effect-of-intervention measures the difference in effects between the
 // intervention model and the corresponding null (no-intervention) model
 // (@def:asymmetry-results-effect-of-intervention).
 For the present analysis, it is
 important to recognise that the intervention effect measured here does not, in general,
-reflect the change in belief state with respect to the initial state. It is
-entirely possible that both intervention and null models lead to an increase, or
-decrease, in the probability of desired behaviour for the target belief. Hence it is most
-appropriate to view 'high-effect' interventions as those which achieve substantially
-more desirable states than would be observed given no intervention.
+reflect a change in belief state relative to the initial state. It is
+entirely possible for both intervention and null models to exhibit an increase, or
+decrease, in the probability of the desired behaviour for the target belief. Hence, it is most
+appropriate to view 'high-effect' interventions as those that achieve substantially
+more desirable states than would be observed in the absence of intervention.
 
 With this in mind, we now consider several specific features of interest in the
 identified personas. Firstly, we observe that all personas require a low initial
@@ -153,7 +153,7 @@ state for `CC Worry`. This may result from this variable's low inertia
 and high connectivity---in particular, its large outbound interaction effect
 toward the target variable (see @fig:asymmetry-results-existence-interaction-matrix).
 These factors result in `CC Worry` being relatively influential
-and influentia#emph[ble], and therefore an effective indirect pathway for
+and influen#emph[ceable], thereby making it an effective indirect pathway for
 various interventions targeting `CC Action`. The significance of the requirement
 that `CC Worry` be _low_ is evident when comparing the implications for the null
 and intervention models. Due to `CC Worry`'s considerable outbound interactions,
@@ -162,33 +162,32 @@ for propagation. In the null model, however, these interactions work against the
 desired result---if `CC Worry` remains low, it exerts this influence on all other
 beliefs.
 
-Second, we observe that for each point-of-intervention (with the exception of `CC Real`
-on account of high correlation with `CC Human`, relating to the remark earlier in
-this section #internal-link(<incomplete-descriptions>)),
-a necessary condition for high effect is that the initial state of point of intervention
-itself be low. That is, for an intervention on $X$ to be successful, $X$ must not already
-be too high. This aligns with our prior expectations regarding the varied effects of
-interventions with respect to pre-intervention state
-(see @sec:methods-modelling-interventions).
+Second, we observe that for each point of intervention (except `CC Real`, due to its
+high correlation with `CC Human`, the implications of which we noted above
+#internal-link(<incomplete-descriptions>)), a necessary condition for a high effect is
+that the initial state at the point of intervention itself be low. That is, for an
+intervention on $X$ to be successful, $X$ must not already be too high. This aligns with
+our prior expectations regarding the varied effects of interventions, with respect to
+the pre-intervention state (see @sec:methods-modelling-interventions).
 
 
-// With the exception of `CC Real`, the personas for each point-of-intervention require that
-// the initial state of the point-of-intervention be low. This aligns with our expectations
+// With the exception of `CC Real`, the personas for each point of intervention require that
+// the initial state of the point of intervention be low. This aligns with our expectations
 // per our earlier discussion on the varied effects of interventions on the behaviour of the
-// point-of-intervention, with respect to the pre-intervention state
+// point of intervention, with respect to the pre-intervention state
 // (@subsec:asymmetric-belief-system-modelling-interventions).
 #let negative-cc-human-footnote = footnote[
   The negative state for `CC Human` is an aggregation of the beliefs that climate change
-  is a natural phenomenon, and that climate change is not real (has no causes). See
+  is a natural phenomenon and that it is not real (i.e., has no causes). See
   @sec:dataset for further details.
 ]
 
 Finally, the `CC Real` scenario is unique in that it includes two prevalent personas.
 The more prevalent persona corresponds to situations in which individuals are worried
-about the current/future effects of climate change, but do not believe that climate
-change is human-caused.#negative-cc-human-footnote In the case where an individual does
-believe that climate change is human-caused, this intervention may still be effective,
-so long as they do not already have a positive attitude toward climate action.
+about the current/future effects of climate change but do not believe it is
+human-caused.#negative-cc-human-footnote In cases where an individual does
+believe climate change is human-caused, this intervention may still be effective,
+provided the individual does not already have a positive attitude toward climate action.
 
 
 == Heterogeneity in belief system structure <sec:heterogeneity-results-belief-system>
@@ -196,8 +195,8 @@ so long as they do not already have a positive attitude toward climate action.
 
 Until this point, we have considered belief systems as common to a population of
 individuals. However, the relations between beliefs are inherently
-individual in nature. The existence, direction, and degree of relation between
-two beliefs is dependent on an individual's own beliefs regarding their relatedness.
+individual. The existence, direction, and degree of relation between
+two beliefs are dependent on an individual's own beliefs regarding their relatedness.
 
 
 #let liberal-metadata = json("../results/data/model/ideology_fit_liberal_metadata.json")
@@ -206,13 +205,12 @@ two beliefs is dependent on an individual's own beliefs regarding their relatedn
 #let ncons = conservative-metadata.dataset_size
 
 #let smaller-dataset-footnote = footnote[
-  Note that the total number of samples across the conservative and liberal subsets is
-  smaller than the number of samples in the complete climate beliefs dataset, since we
-  only retain data from participants whose ideology is with consistent across survey
-  waves.
+  The total number of samples across the conservative and liberal subsets is
+  smaller than the number of samples in the complete climate beliefs dataset, because we
+  retain only data from participants whose ideology is consistent across survey waves.
 ]
 
-Here we investigate the extent to which belief systems may vary between groups of
+Here, we investigate the extent to which belief systems may vary between groups of
 individuals with different self-reported political ideologies. While this is still
 far from representative of the differences between individuals
 @brandtBetweenpersonMethodsProvide2022, it will allow us to examine general structural
@@ -221,7 +219,7 @@ to the subsets of the climate beliefs dataset comprising individuals who consist
 (that is, in both waves) report their political ideology as being either 'conservative'
 or 'very conservative' ($n=#ncons$) or 'liberal' or 'very liberal'
 #box[($n=#nlib$)].#smaller-dataset-footnote We exclude the `Politics` variable from the
-model, since this is captured by the partitioning of the dataset.
+model, since the partitioning of the dataset already captures this.
 // The hyperparameters used
 // for regularisation strength and smoothing are listed in @tab:methods-hyperparameter-values.
 
@@ -253,22 +251,22 @@ are stronger in the conservative model (@fig:apdx-extra-results-ideology-edge-di
 parameters, $bold(h)$, and interaction effect matrices, $bold(J)$, for the conservative
 and liberal subpopulations. The model calibrated to the liberal subpopulation exhibits
 much higher uncertainty in the estimated baseline activations for belief in the existence
-and human-causes of climate change than the conservative subpopulation model; however,
-in the liberal model these are reliably positive. The conservative model shows negative
+and human causes of climate change than the conservative subpopulation model; however,
+in the liberal model, these are reliably positive. The conservative model shows negative
 baseline activations for worry about climate change and extreme weather, beliefs about
 others' worry, and beliefs about the general impacts of climate change. While these
 are generally low-magnitude, in several cases their sizes are comparable with the
 interaction effects influencing these variables (e.g., for `CC Worry Others` and
 `Weather Worry`).
 
-We observe several structural differences between the two models, as well as with
-comparison to the model calibrated on the full dataset
+We observe several structural differences between the two models, as well as when
+comparing them to the model calibrated on the full dataset
 (@fig:asymmetry-results-existence-interaction-matrix). Notably, the model calibrated to
-the liberal subpopulation has higher sparsity (proportion of missing cross-interaction
-edges) and mean interaction effect over cross-interactions than either the conservative
-model or the complete model (@tab:heterogeneity-results-belief-systems-properties).
+the liberal subpopulation has higher sparsity (the proportion of missing
+cross-interactions) and a higher mean interaction effect for cross-interactions than
+either the conservative or complete model (@tab:heterogeneity-results-belief-systems-properties).
 Among the interactions present in the liberal model, 82% also occur in the conservative
-model, contrasting the 54% of conservative interactions which are also in the liberal
+model, compared with 54% of conservative interactions that are also in the liberal
 model.
 
 #{
@@ -302,8 +300,8 @@ model.
 
 The conservative model displays broad (yet mostly weak) reinforcing interactions
 between climate-related worry, beliefs about others' worry, and climate-impact
-beliefs. This contrasts with the liberal model, in which, among these beliefs,
-only `CC Worry` and `CC Impact` are non-trivially related. Moreover, we observe that
+beliefs. This contrasts with the liberal model, in which only `CC Worry` and `CC Impact`
+are non-trivially related among these beliefs. Moreover, we observe that
 `CC Others Worry` and `Weather Worry` in fact have _no_ incoming cross-interactions
 in the liberal model.
 
@@ -312,7 +310,7 @@ in the liberal model.
 
 We also note differences in the interaction effects influencing `CC Action` between
 the two models. While the liberal model expects attitudes toward climate action to
-be influenced substantially by individuals' beliefs regarding the existence and nature
+be substantially influenced by individuals' beliefs about the existence and nature
 of climate change, these influences are absent or trivial in the conservative model.
 Instead, we observe that worry about climate change (`CC Worry`) is the only
 large cross-interaction toward `CC Action` in the conservative model.
@@ -323,16 +321,16 @@ models. The exceptions are
 ${#raw("CC Others Worry"), #raw("Weather Worry")} --> #raw("CC Action")$, which are
 present in the conservative model, albeit with small effect sizes.
 
-The converse does
-not hold; in several cases edges are absent from the smaller models, yet included in
-the complete model (e.g., $#raw("CC Human") --> #raw("CC Action")$ in the conservative
-model, #box[$#raw("CC Worry") --> #raw("Weather Worry")$] in the liberal model). While
+The converse does not hold: in several cases, edges are absent from the ideological
+models but present in the complete model (e.g., $#raw("CC Human") --> #raw("CC Action")$
+in the conservative model; #box[$#raw("CC Worry") --> #raw("Weather Worry")$] in the
+liberal model). While
 it is tempting to interpret these as differences in the ideology-specific belief
 systems, this inference is not necessarily valid.
 Given the smaller datasets used to calibrate these models---and the slow-moving dynamics
-of the measured variables---these edges may be excluded on the basis that we do not
-observe their effects. This is less likely for effects which are more substantial in
-the complete model, and thus supported better by the dataset.
+of the measured variables---these edges may be excluded because we do not
+observe their effects. This is less likely for effects that are more substantial in
+the complete model and thus better supported by the dataset.
 
 // especially when the corresponding
 // effect size in the complete model is small (e.g.,

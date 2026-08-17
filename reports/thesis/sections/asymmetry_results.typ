@@ -10,7 +10,7 @@
 
 // == Plan
 //
-// First results section, for experiments on the effect of asymmetry
+// First results section, for experiments on the effect-of-asymmetry
 //
 // - *RF1:* Show asymmetric model fit
 // - *RQ2.1:* Existence of asymmetric relations. Some, but not all, are significant.
@@ -58,10 +58,10 @@ calibrated to the bootstrapped climate beliefs dataset ($n=500$) in @sec:calibra
       Directional differentials---the difference between directed interaction effects
       for a pair of beliefs---in reverse order of median value. Confidence intervals are
       calculated using the percentile method on models calibrated using bootstrapping
-      ($n = 500$). Grey confidence intervals indicate absence of significant asymmetry.
+      ($n = 500$). Grey confidence intervals indicate insignificant asymmetry.
       For cases with significant asymmetry, the colour indicates that one
       (#text(fill: orange)[*orange*]) or both (#text(fill: blue)[*blue*]) of the
-      directed interacton effects are nonzero.
+      directed interaction effects are nonzero.
     ],
   ),
   placement: auto,
@@ -70,10 +70,9 @@ calibrated to the bootstrapped climate beliefs dataset ($n=500$) in @sec:calibra
 
 @fig:asymmetry-results-existence-ranked-differentials shows the median directional
 differential (defined in @sec:methods-directional-differential) for each pair of beliefs
-in the asymmetric model, in decreasing order.
-The 90% confidence intervals are calculated as the 5th and 95th percentiles across
-bootstrap samples of the directional differential matrix
-elements. For each pair of beliefs we display only the
+in the asymmetric model, ordered from smallest to largest. The 90% confidence intervals
+are calculated as the 5th and 95th percentiles of the directional differential matrix
+elements across bootstrap samples. For each pair of beliefs, we display only the
 directional differential for which the median is positive (since $Delta_J$ is
 symmetric), and we exclude diagonal entries (which are zero by definition).
 
@@ -114,7 +113,7 @@ intervals (see the interaction matrix in @fig:asymmetry-results-existence-intera
 cell entries are identical to the matrix shown in
 @fig:calibration-interaction-matrices). Pairs with two nonzero
 interactions comprise $#raw("Politics") -> {#raw("CC Action"), #raw("CC Worry")}$ and
-#box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]; the only pair with a
+#box[$#raw("CC Worry") -> {#raw("CC Impact"), #raw("CC Human")}$]\; the only pair with a
 unidirectional interaction is $#raw("Politics") -> #raw("CC Real")$.
 
 Comparing directional strength and degree centrality indices for `CC Worry` and
@@ -130,27 +129,26 @@ Most directional differentials display substantial uncertainty (confidence
 interval width $> 0.1$ on average), reflecting the parameter accuracy discussed in
 @sec:calibration (@fig:calibration-edge-accuracy). This results in several inconclusive
 cases, where the median bootstrap-estimate directional differential is nonzero but
-the confidence interval contains zero. In other cases we observe apparent symmetric
+the confidence interval contains zero. In other cases, we observe apparent symmetric
 or near-symmetric relations (for example,
 $#raw("Weather worry") --> #raw("CC Others Worry")$).
 
-At the top of @fig:asymmetry-results-existence-ranked-differentials we see several
+At the top of @fig:asymmetry-results-existence-ranked-differentials, we see several
 apparently skewed confidence intervals. These all correspond to cases where both
 interactions are zero in the complete model
 (@fig:asymmetry-results-existence-interaction-matrix), so the skews likely reflect
-differences in edge selection probability between the two directional interactions,
-such that both effects are often zero but one is nonzero more frequently than the
-other. For instance,
+differences in edge-selection probabilities between the two directional interactions,
+with one interaction effect occurring more frequently than the other. For instance,
 $#raw("CC Others Worry") --> #raw("CC Human")$ exhibits a larger apparent skew than
 $#raw("CC Others Worry") --> #raw("CC Real")$, and this is reflected in observed
 differences in selection probability (@fig:calibration-selection-probability).
 
-Due to the large confidence intervals on most directional differentials we are less
+Due to the large confidence intervals on most directional differentials, we are less
 likely to observe significant asymmetric relations between variables with small
 interaction effects (since the possible difference in effects is smaller by definition).
-Indeed, all observed significant cases of asymmetry have at least one interaction effect
-with magnitude exceeding $0.1$. This raises the question of whether asymmetry is
-simply explained by a high total interaction influence in combination with sampling
+Indeed, all observed significant cases of asymmetry include at least one directional
+interaction effect with a magnitude exceeding $0.1$. This raises the question of whether asymmetry is
+explained by a high total interaction influence in combination with sampling
 error. However, this is disputed by `CC Action`, which has several strong interaction
 effects, with outbound effects typically larger than those of `Politics`, yet does
 not exhibit significant asymmetric influence over any other variables. On the contrary,
@@ -179,11 +177,11 @@ it is asymmetrically _influenced_ by `Politics`.
 //   - Two-pronged approach.
 //     + We first consider how intervention effects propagate from a single point of
 //       intervention for varying intervention strengths. We measure: (i) effect of
-//       intervention at each other belief, and (*maybe*) (ii) the effect of asymmetry at
+//       intervention at each other belief, and (*maybe*) (ii) the effect-of-asymmetry at
 //       each other belief.
 //     + We then consider targeted interventions, in which we wish to change the state of
 //       a particular belief or attitude, and want to know where is best to intervene. We
-//       measure: (i) the effect of intervention for each possible intervention point, and
+//       measure: (i) the effect-of-intervention for each possible intervention point, and
 //       (ii) the expected ranking of interventions, scored by collective effect.
 //
 // - $checkmark$ *Specific experimental details:*
@@ -197,17 +195,17 @@ it is asymmetrically _influenced_ by `Politics`.
 //
 // - *First set of results:*
 //   - Figures showing how intervention effects propagate from $X$ and $Y$.
-//   - Effect of asymmetry figure(s)
+//   - effect-of-asymmetry figure(s)
 //
 // - *Second set of results:*
 //   - Target variable: 'Climate Action'
-//   - Effect of interventions
+//   - effect-of-interventions
 //   - Ranked interventions
 //     - Explaining the occasional wider error bars in ranked interventions.
 
-We now investigate differences in belief system behaviour under intervention for
+We now investigate differences in belief system behaviour under intervention in
 symmetric and asymmetric models calibrated to the climate beliefs dataset. In this
-section we are concerned with _collective_ impacts (for instance, the proportion of
+section, we focus on _collective_ impacts (for instance, the proportion of
 individuals whose behaviour shifts due to an intervention). These reflect
 population-level intervention scenarios, such as media campaigns or policies which
 affect most individuals. We will return to _individual_ impacts of intervention in the
@@ -218,7 +216,7 @@ We consider both outbound and inbound interventions (defined in
 @sec:methods-inbound-outbound) to examine differences in how interventions
 propagate in general between the symmetric and asymmetric models, and to investigate
 how intervention strategy may differ between the two models. For outbound intervention
-experiments we examine the effects of intervening on the following beliefs:
+experiments, we examine the effects of intervening on the following beliefs:
 
 - `Weather worry`: Level of worry about future extreme weather events
 
@@ -226,60 +224,20 @@ experiments we examine the effects of intervening on the following beliefs:
 
 - `Politics`: General political party identification and ideology
 
-These choices are motivated by our findings in the previous section, in combination
-with the selection criteria for outbound intervention experiments outlined in
+These choices are informed by the results of the previous section and the selection
+criteria outlined in
 @subsec:methods-choice-of-pois-and-targets. All three variables have (at least some)
 nontrivial outbound influence, `CC Worry` and `Politics` both exhibit significant
 asymmetric influence over other beliefs, and `Weather worry` has no asymmetric
 interactions.
 
 For inbound intervention experiments, as discussed in
-@subsec:methods-choice-of-pois-and-targets, we consider interventions seeking to influence
+@subsec:methods-choice-of-pois-and-targets, we consider interventions aimed at
+influencing
 the `CC Action` belief, which captures individuals' general support for
-pro-environmental action on climate change (e.g., specific policies, support for
+pro-environmental action on climate change (e.g., support for specific policies and
 increased regulation, and affirmative attitudes toward individual responsibility on
 climate change).
-
-// We define two quantities of interest: the *effect of intervention*, and *effect of
-// asymmetry*. These are used, respectively, to assess an intervention's impact on a given
-// belief's behaviour with reference to our expectations in a no-intervention scenario
-// (@def:asymmetry-results-effect-of-intervention),
-// and the difference in a belief's behaviour in the asymmetric model, compared to our
-// expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
-// Note that the
-// effect of asymmetry is not inherently concerned with intervention, but is a general
-// measure for the difference between asymmetric and symmetry model dynamics.
-//
-// Both quantities compute a difference in effects between two distinct models: the
-// intervention and null models for the effect of intervention, and the asymmetric
-// and symmetric models for the effect of asymmetry. To ensure outcome
-// comparability, differences are computed between models with identical random number
-// generation contexts.
-//
-// #definition[Effect of Intervention][
-//   Let $cal(M)$ be a non-equilibrium belief system model, and denote the result of
-//   simulating the model for $t in NN$ timesteps with initial state $bold(s)_0$ as
-//   $cal(M)^t (bold(s)_0)$.
-//
-//   For an intervention model $cal(M)_delta$ with an arbitrary point-of-intervention, we
-//   define the *effect of intervention* for $cal(M)_delta$ as the change in outcome at
-//   time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
-//
-//   $
-//     f_"int" (cal(M)_delta) = cal(M)_delta^t (bold(s)_0) - cal(M)_0^t (bold(s)_0)
-//   $
-// ] <def:asymmetry-results-effect-of-intervention>
-//
-// #definition[Effect of Asymmetry][
-//   Let $cal(M)_"asym"$ be a calibrated asymmetric non-equilibrium belief system model
-//   with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
-//   symmetric model calibrated to the same dataset.
-//   We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
-//   in the effect of intervention with respect to the symmetric model:
-//   $
-//     f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
-//   $
-// ] <def:asymmetry-results-effect-of-asymmetry>
 
 #let timescale-footnote = footnote[
   Since the duration between waves in the climate beliefs dataset is approximately
@@ -290,10 +248,10 @@ In each of the intervention experiments described below, we use the models calib
 to the full climate beliefs dataset in @sec:calibration. For a given experiment, we
 initialise the associated model (symmetric/asymmetric; intervention/null) with the
 binarised observations from the final wave of the climate beliefs dataset. We then
-draw consecutive samples from the model using parallel glauber dynamics
-(@subsec:methods-glauber-dynamics) until $t=5$, before measuring the state of the
-target belief.#timescale-footnote To account for stochasticity in both the simulation
-procedure and binarisation of individuals' initial states we perform 500 repeats for
+draw consecutive samples from the model using parallel Glauber dynamics
+(@subsec:methods-glauber-dynamics) until $t=5$, before measuring the target belief
+state.#timescale-footnote To account for stochasticity in both the simulation
+procedure and binarisation of individuals' initial states, we perform 500 repeats for
 each intervention.
 
 #let see-intervention-strengths-sec-footnote = footnote[
@@ -304,30 +262,30 @@ each intervention.
 
 We first consider the impact of intervention strength on intervention effectiveness.
 Since, as discussed in @sec:methods-intervention-strength, the change in behaviour at the
-point-of-intervention is sensitive to intervention strength, it follows that intervention
-strength may also impact the absolute or relative effects of intervention elsewhere in a
-belief system. @fig:asymmetry-results-compare-strength compares the mean effect of
+point of intervention is sensitive to intervention strength, it follows that intervention
+strength may also affect the absolute or relative effects of an intervention, elsewhere in
+the belief system. @fig:asymmetry-results-compare-strength compares the mean effect of
 intervention on state (@def:asymmetry-results-effect-of-intervention) for each possible
 target belief, across 'weak' and
-'strong' interventions, $delta_h in {0.5, 2.5}$, for each of the outbound
-points-of-intervention listed above.
+'strong' interventions ($delta_h in {0.5, 2.5}$), for each of the outbound
+points of intervention listed above.
 
 // The
 // strength of an intervention affects the degree to which the intervention changes the
-// state of the point-of-intervention. However, this is also sensitive to the pre-existing
+// state of the point of intervention. However, this is also sensitive to the pre-existing
 // influence on that belief#see-intervention-strengths-sec-footnote. Since the climate
 // beliefs dataset comprises individuals with different states, it follows that
 // intervention strength may impact not only the degree to which the behaviour of
 // a target belief changes, but also the relative effects of different interventions.
 //
 // To understand the potential impacts of intervention strength, we compare the mean
-// effect of intervention across individuals for intervention strengths
+// effect-of-intervention across individuals for intervention strengths
 // $delta_h in {0.5, 2.5}$, for each of the outbound points of intervention listed above
 // @fig:asymmetry-results-compare-strength. The choice of intervention strengths is
 // motivated by our earlier analysis in
 // @sec:methods-modelling-interventions, with the two strengths
 // corresponding to 'weak' and 'strong' interventions respectively, as judged by their
-// direct impact on the behaviour of the point-of-intervention.
+// direct impact on the behaviour of the point of intervention.
 
 #figure(
   image("../results/figures/asymmetry_results/intervention_strength_compare.pdf"),
@@ -336,29 +294,29 @@ points-of-intervention listed above.
     long: [
       Weak ($delta_h = 0.5$) and strong ($delta_h = 2.5$) interventions exhibit strong
       positively correlated effects of intervention on belief state, consistently across
-      points-of-intervention (panels) and intervention targets (scatterplots). This
+      points of intervention (panels) and intervention targets (scatterplots). This
       finding holds for both symmetric and asymmetric models calibrated to the climate
       beliefs dataset.
     ],
   ),
 ) <fig:asymmetry-results-compare-strength>
 
-We observe a strong linear relationship between intervention effects under the two
-strengths for each point-of-intervention, indicating that---at the population-mean
-level---the impact of intervention strength on effect is mostly one of scale, that applies
-similarly to all target beliefs.
-For the purposes of the following experiments it then suffices to consider
+For each point of intervention, we observe a strong linear relationship between the
+intervention effects for the two strengths, indicating that---at the
+population-mean level---the impact of intervention strength on effect is largely
+a matter of scale, applying similarly across all target beliefs.
+For the following experiments, it then suffices to consider
 only a single intervention strength. As our current focus is on intervention
-propagation and the effects felt at beliefs other than the point-of-intervention, we take
-$delta_h = 2.5$, such that the interventions can be considered generally effective at
-shifting the behaviour at the point-of-intervention.
+propagation and the effects on beliefs beyond the point of intervention, we set
+$delta_h = 2.5$, so that the interventions are considered generally effective at
+shifting behaviour at the point of intervention.
 
 #figure(
   image("../results/figures/asymmetry_results/outbound_effects_5.pdf"),
   caption: caption(
     short: [Outbound intervention effects],
     long: [
-      Outbound effect of intervention on belief state (@def:asymmetry-results-effect-of-intervention)
+      Outbound effect-of-intervention on belief state (@def:asymmetry-results-effect-of-intervention)
       at each target belief for interventions targeting `Weather Worry`, `CC Worry`, and
       `Politics`, in symmetric and asymmetric belief system models calibrated to the
       climate beliefs dataset. Intervention strength: $delta_h = 2.5$. Confidence
@@ -371,13 +329,13 @@ shifting the behaviour at the point-of-intervention.
 #figure(
   image("../results/figures/asymmetry_results/outbound_effect_of_asymmetry.pdf"),
   caption: caption(
-    short: [Outbound effect of asymmetry],
+    short: [Outbound effect-of-asymmetry],
     long: [
-      Outbound effect of asymmetry (@def:asymmetry-results-effect-of-asymmetry) at each
+      Outbound effect-of-asymmetry (@def:asymmetry-results-effect-of-asymmetry) at each
       target belief for interventions on `Weather Worry`, `CC Worry`, and `Politics`, for
       models calibrated to the climate beliefs dataset. Intervention strength:
       $delta_h = 2.5$. Confidence intervals display 1.96 standard deviations around the
-      mean effect of asymmetry ($n=500$).
+      mean effect-of-asymmetry ($n=500$).
     ],
   ),
 ) <fig:asymmetry-results-outbound-effect-of-asymmetry>
@@ -385,23 +343,23 @@ shifting the behaviour at the point-of-intervention.
 
 Figures @fig:asymmetry-results-outbound-effect[] and
 @fig:asymmetry-results-outbound-effect-of-asymmetry[] show the mean effect of
-intervention on state (@def:asymmetry-results-effect-of-intervention) and mean effect of
-asymmetry (@def:asymmetry-results-effect-of-asymmetry), respectively, across individuals,
-for the points-of-intervention listed above. The confidence intervals show two standard
-deviations around the mean values, as calculated across repeats.
+intervention on state (@def:asymmetry-results-effect-of-intervention) and the mean effect
+of asymmetry (@def:asymmetry-results-effect-of-asymmetry), respectively, across
+individuals for the points of intervention listed above. The confidence intervals show
+two standard deviations around the mean values, as calculated across repeats.
 
-We observe, in @fig:asymmetry-results-outbound-effect, that different targets exhibit
+We observe in @fig:asymmetry-results-outbound-effect that different targets exhibit
 different effects of intervention. The effect generally decreases with the magnitude of
-the interaction from the point-of-intervention to the target belief; however, we also note
-that all effects appear to be nonzero #box[($p < 0.05$)]. This suggests that for the measurement time
+the interaction from the point of intervention to the target belief; however, we also note
+that all effects are nonzero #box[($p < 0.05$)]. This suggests that for the measurement time
 examined here, interventions act primarily through direct interactions with the target
 belief, with some indirect influence propagating through intermediary interactions. For
-instance, while `Weather Worry` has no direct influence on `CC Action`, we see nonzero
-effect of intervention as a result of indirect paths, e.g., through `CC Worry`. We see
-further evidence of this through comparison with measurements taken at time $t = 10$
-(approximately five years in the calibrated model;
+instance, while `Weather Worry` has no direct influence on `CC Action`, we observe a
+nonzero effect-of-intervention due to indirect propagation, e.g.,
+via `CC Worry`. We see further evidence of this through comparison with measurements
+taken at time $t = 10$ (approximately five years in the calibrated model;
 @fig:apdx-extra-results-outbound-effects-10 in @sec:appendix-extra-results), which show
-larger increases in the effect of intervention for variables with stronger incoming
+larger increases in the effect-of-intervention for variables with stronger incoming
 interactions from non-intervention beliefs.
 
 Note that @fig:asymmetry-results-outbound-effect does not provide an accurate reflection
@@ -409,8 +367,8 @@ of the difference in intervention effects between symmetric and asymmetric model
 overlapping confidence intervals around _mean values_ do not, in general, imply
 insignificant differences for individual repeats, particularly when using Common Random
 Numbers (@subsec:methods-common-random-numbers).
-The effects of asymmetry, displayed in @fig:asymmetry-results-outbound-effect-of-asymmetry,
-provide a cleaner comparison of the symmetric and asymmetric models. We observe no
+The effect-of-asymmetry, shown in @fig:asymmetry-results-outbound-effect-of-asymmetry,
+provides a cleaner comparison between the symmetric and asymmetric models. We observe no
 significant differences between the two models for the `Weather Worry` scenario. For the
 remaining two scenarios, however, we see several significant differences. In particular,
 all pairs of variables with asymmetric direct relations
@@ -422,7 +380,7 @@ Comparing `Politics` and `CC Worry`, we observe that while `CC Worry` exhibits g
 effects of intervention (@fig:asymmetry-results-outbound-effect), `Politics` exhibits
 larger mean effects of asymmetry (@fig:asymmetry-results-outbound-effect-of-asymmetry),
 although we note that the significance of the latter differences is inconclusive. In both
-cases we see that cross-interaction effect values, $J_(i j)$, in the symmetric model are
+cases, we see that cross-interaction effect values, $J_(i j)$, in the symmetric model are
 typically between the corresponding inbound and outbound interaction effects in the asymmetric
 model. We contrast this with `CC Impact`, which has mostly symmetric relations.
 While `CC Impact` and `Politics` have extremely similar outbound interaction strengths
@@ -435,15 +393,15 @@ in the symmetric model (i.e., it has higher average interaction effects).
 ]
 
 Notice that the asymmetric model includes outbound (but not inbound) interactions from
-`Politics` to both `CC Human` and `Weather Worry`, while symmetric model omits interactions
-with these beliefs entirely.#different-connectivity-footnote In contrast, `CC Worry` has
-inbound and outbound interactions with all other beliefs in both models. This explains the
-observed differences in the effects of intervention and asymmetry for `CC Worry` and
-`Politics`: `CC Worry` has higher effects of intervention in
-both models on account of its strong outbound interaction effects, which are also mostly
-retained in the symmetric model, while the removal of interactions for `Politics` in the
-symmetric model results in lower influence and fewer (direct and indirect) paths through
-which interventions can propagate, compared with the asymmetric model.
+`Politics` to both `CC Human` and `Weather Worry`, while the symmetric model omits
+interactions with these beliefs entirely.#different-connectivity-footnote In contrast,
+`CC Worry` has inbound and outbound interactions with all other beliefs in both models.
+This explains the observed differences in the effects of intervention and asymmetry for
+`CC Worry` and `Politics`: `CC Worry` has higher effects of intervention in both models
+on account of its strong outbound interaction effects, which are also mostly retained in
+the symmetric model, while the removal of interactions for `Politics` in the symmetric
+model results in lower influence and fewer (direct and indirect) paths through which
+interventions can propagate, compared with the asymmetric model.
 
 
 // Notice that while `CC Worry` exhibits greater intervention
@@ -466,7 +424,7 @@ which interventions can propagate, compared with the asymmetric model.
 //     `Weather worry`. The two points of intervention have similar direct influence on
 //     `CC Worry` in the asymmetric model (reflected in the similarity in intervention
 //     effects). However, in the symmetric model, the influence of `Politics` is diminished.
-//     As such we see a significant difference in the effect of intervention for the
+//     As such we see a significant difference in the effect-of-intervention for the
 //     `Politics` point of intervention.
 
 
@@ -476,11 +434,11 @@ which interventions can propagate, compared with the asymmetric model.
 //   - `Politics` includes significant effect on `CC Impact`, even though this pair is
 //     not asymmetric in the model. May reflect the indirect asymmetric impact through
 //     `CC Worry`.
-//   - The effect of asymmetry is greater for `Politics` on `CC Worry` than in the other
+//   - The effect-of-asymmetry is greater for `Politics` on `CC Worry` than in the other
 //     direction. Recall that `Politics` has a strong self-interaction term, and
 //     relatively small incoming interactions compared to `CC Worry`. So this finding is
-//     expected---the effect of asymmetry on the intervention behaviour of any single belief
-//     depends (in general) on the whole network, not only the point-of-intervention.
+//     expected---the effect-of-asymmetry on the intervention behaviour of any single belief
+//     depends (in general) on the whole network, not only the point of intervention.
 
 
 #let tiebreak-footnote = footnote[
@@ -489,10 +447,10 @@ which interventions can propagate, compared with the asymmetric model.
   be $op("Rank")(A,B,C,D,E) = [2,2,5,4,1]$. The variables $B$ and $C$ are both
   assigned the rank $2$. No variable is assigned rank $3$.
 ]
-Turning our attention toward inbound intervention dynamics, we now consider the effects
-of different interventions seeking to influence the state of `CC Action`.
+Turning our attention to inbound intervention dynamics, we now consider the effects
+of different interventions aimed at influencing the state of `CC Action`.
 The top panel of @fig:asymmetry-results-inbound-effect shows the mean effect of
-intervention on the state of `CC Action` for each possible point-of-intervention.
+intervention on the state of `CC Action` for each possible point of intervention.
 // Examining the mean effects allows us to gauge the expected absolute effect of each
 // intervention, but is limited for purposes of comparing the relative effects of
 // interventions.
@@ -500,11 +458,11 @@ intervention on the state of `CC Action` for each possible point-of-intervention
 #figure(
   image("../results/figures/asymmetry_results/inbound_effects.pdf"),
   caption: caption(
-    short: [Inbound effect of intervention on `CC Action`],
+    short: [Inbound effect-of-intervention on `CC Action`],
     long: [
-      Inbound mean effect of intervention on belief state (@def:asymmetry-results-effect-of-intervention)
+      Inbound mean effect-of-intervention on belief state (@def:asymmetry-results-effect-of-intervention)
       (_Top_) and mean rank (_Bottom_) for interventions targeting `CC Action`. Ranks are
-      calculated per-repeat with respect to the average effect of intervention---higher
+      calculated per-repeat with respect to the average effect-of-intervention. Higher
       values are assigned higher ranks. Confidence intervals display 1.96 standard
       deviations ($n=500$).
     ],
@@ -512,53 +470,52 @@ intervention on the state of `CC Action` for each possible point-of-intervention
 ) <fig:asymmetry-results-inbound-effect>
 
 #let rank-order-footnote = footnote[
-  We take ranks as being ordered by index, such that rank 1 is the lowest and (in this
-  model, with seven possible points-of-intervention) 7 is the highest.
+  We take ranks to be ordered by index, such that rank 1 is the lowest and (in this
+  model, with seven possible points of intervention) rank 7 is the highest.
 ]
-The mean effect of intervention, calculated separately for each point-of-intervention,
-erases information regarding the expected _relative_ effectiveness of different
-interventions. To assess relative effectiveness, we therefore also estimate the
-expected ranking over points-of-intervention (the bottom panel of
+The mean effect-of-intervention, calculated separately for each point of intervention,
+erases information about the expected _relative_ effectiveness of different
+interventions. To assess relative effectiveness, we also estimate the
+expected ranking over points of intervention (the bottom panel of
 @fig:asymmetry-results-inbound-effect). For each repeat, we order the
-points-of-intervention in increasing order of average collective effect of
+points of intervention in increasing order of the average collective effect of
 intervention. Higher values are assigned higher ranks.#rank-order-footnote In the case
-of a tie, we assign
-all tied beliefs the minimum rank which would have been assigned to the group, had they
-been distinct.#tiebreak-footnote
+of a tie, we assign all tied beliefs the minimum rank which would have been assigned to
+the group had they been distinct.#tiebreak-footnote
 
-As with the outbound case, we find that the effect of intervention on `CC Action` varies
-depending on where we intervene. Points-of-intervention (along the horizontal axes) are
-sorted in decreasing order of mean values. We observe identical orderings between the
-effect of intervention and ranking plots, showing good correspondence between the two
-measures. We observe a clear inversion in this ordering for the asymmetric model, with
-`Politics` exhibiting the second-highest rank, and (at least) second-highest mean effect
-of intervention ($p < 0.05$).
+As with the outbound experiments, we find that the effect-of-intervention on `CC Action`
+varies depending on where we intervene. Points of intervention (along the horizontal
+axes) are sorted in decreasing order of mean values. We observe identical orderings
+in the effect-of-intervention and ranking plots, indicating good correspondence
+between the two measures. We observe a clear inversion in this ordering for the
+asymmetric model, with `Politics` exhibiting the second-highest rank, and (at least)
+second-highest mean effect-of-intervention ($p < 0.05$).
 
-Unlike with the outbound effects, the order of effect sizes does not align well with the
-corresponding strengths of direct interactions strengths into the target variable. For
-instance, `CC Real` and `CC Human` have the second- and third-strongest cross-interactions
-into `CC Action` in the symmetric model, yet the fourth- and fifth-highest effect of
-intervention. This likely reflects the low outbound connectivity of these variables
-in comparison with `CC Impact` and `Politics`, despite the latter beliefs having relatively
-lower direct on the target. This suggests that indirect influence may play a critical
-role in intervention dynamics for some beliefs.
+Unlike in the outbound experiments, the order of effect sizes does not align well with the
+corresponding strengths of direct interactions into the target variable. For
+instance, `CC Real` and `CC Human` have the second- and third-strongest influence
+on `CC Action` in the symmetric model, yet the fourth- and fifth-highest
+effect-of-intervention. This likely reflects the low outbound connectivity of these variables
+compared with `CC Impact` and `Politics`, despite the latter two beliefs having
+a smaller direct influence on the target. This suggests that indirect influence may play
+a critical role in the dynamics of interventions for some beliefs.
 
 Most confidence intervals around the mean ranks are small, indicating negligible (if any)
 variation between simulations or possible binarisations of the dataset. However, we do
-observe three larger, overlapping confidence intervals for each model. These arise due
-to variation in the mean effect of intervention, causing occasional inversions of the
-ranking order. Note that we only observe inversions between points-of-intervention which
+observe three larger, overlapping confidence intervals for each model. These arise from
+variation in the mean effect-of-intervention, causing occasional inversions of the
+ranking order. Note that we only observe inversions between points of intervention which
 are adjacent in the sorted order.
 
 // - General observations:
-// - Similar situation to the outbound effects. Heterogeneous effect of intervention
+// - Similar situation to the outbound effects. Heterogeneous effect-of-intervention
 //   depending on where we intervene.
 // - Identical ordering for effect and ranking, for both symmetric and asymmetric models.
 // - Ordering of variables does not reflect the sorted order of incoming interaction
 //   effect sizes (for either model).
 // - Asymmetric model has different ordering in both effect and ranking. `Politics` is
 //   (significantly) second-highest.
-// - Model comparisons on effect of intervention:
+// - Model comparisons on effect-of-intervention:
 //   - Most consecutive differences in effect for the symmetric model are not significant
 //   - In asymmetric model, `CC Worry` and `Politics` are significantly higher than all
 //     others.
@@ -620,8 +577,8 @@ are adjacent in the sorted order.
 //       in effect, or is unaffected, while the other decreases), or (ii) variables whose
 //       collective effects are sufficiently close together so as to be ranked differently
 //       due to randomness.
-// - (Maybe) something with effect of asymmetry? e.g., for each intervention belief, plot
-//   the effect of asymmetry for varying intervention strengths.
+// - (Maybe) something with effect-of-asymmetry? e.g., for each intervention belief, plot
+//   the effect-of-asymmetry for varying intervention strengths.
 // - (Maybe) explore the above idea in ranked interventions. Look at the variables with
 //   large error bars in the strong/perfect ranked intervention plot. Can we determine
 //   which of the two cases they are?
@@ -660,8 +617,8 @@ are adjacent in the sorted order.
 // #figure(
 //   image("../results/figures/asymmetry_results/effect_of_asymmetry_politics.pdf"),
 //   caption: caption(
-//     short: [Outbound effect of asymmetry: Politics],
-//     long: [Outbound effect of asymmetry: Politics],
+//     short: [Outbound effect-of-asymmetry: Politics],
+//     long: [Outbound effect-of-asymmetry: Politics],
 //   ),
 // )
 
@@ -753,7 +710,7 @@ are adjacent in the sorted order.
 // we wish to affect), we simulate interventions of varying strengths#intervention-strength-footnote,
 // $delta_h in {0.5, 1.5, 2.5}$, on each other belief separately using the method described
 // in @subsec:asymmetric-belief-system-modelling-interventions. For each survey
-// participant we then measure the effect of intervention at the target belief after $t=5$
+// participant we then measure the effect-of-intervention at the target belief after $t=5$
 // samples#timeframe-footnote (*reference definition in methods section*). For each such
 // simulation we initialise the model using each participant's binarised observations from
 // the final wave of the climate beliefs dataset. Since both the binarisation process and

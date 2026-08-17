@@ -37,7 +37,7 @@ experimental approach and the key quantities measured in the following chapters.
 // The climate beliefs dataset describes a subset of beliefs relating to
 // climate change, collected in the United States in recent years.
 
-Note that our use of the climate beliefs dataset places a specific context of
+Note that our use of the climate beliefs dataset imposes a specific interpretive context of
 interpretation on our findings. In particular, we do not claim that the set of beliefs
 considered here comprehensively reflects the range of possible climate-related beliefs,
 and we expect that our results are likely to be sensitive to the (geographic and
@@ -63,9 +63,9 @@ situational) contexts underlying the climate beliefs dataset.
 == Assessing asymmetric influence using the KBS model <sec:methods-directional-differential>
 
 To investigate the prevalence of asymmetric relations in the asymmetric model calibrated
-to the climate beliefs dataset, we examine the differences in directional interaction
-effects for the asymmetric models calibrated using bootstrapping in the previous
-section.
+to the climate beliefs dataset, we examine differences in directional interaction
+effects between each pair of beliefs in the asymmetric models calibrated via
+bootstrapping in the previous chapter.
 
 For each bootstrapped model, $cal(M)_((i))$ with parameters
 $chevron bold(J)_((i)), bold(h)_((i)) chevron.r$, we obtain an estimate for
@@ -78,18 +78,18 @@ $ <eqn:methods-directional-differential-matrix>
 Recall that the $k$'th row of $bold(J)_((i))$, for #box[$k in [N]$],
 describes the strength and direction of influence _from_ the
 belief $S_k$ _toward_ each other belief. Hence for $k, ell in [N]$ we should
-interpret the element $Delta_(J)^((i))|_(k,ell)$ of the directional differential matrix
+interpret the element $(Delta_(J)^((i)))_(k,ell)$ of the directional differential matrix
 as the excess influence of belief $S_k$ on $S_ell$. A positive value indicates that
 $S_k$ exerts greater influence on $S_ell$ than $S_ell$ does on $S_k$.
 
-Note that while, in the previous chapter (#internal-link(<edge-existence-warning>)), we
+Note that, while in the previous chapter (#internal-link(<edge-existence-warning>)) we
 cautioned against using bootstrapped confidence intervals to test for the _existence_ of
 edges by comparison with zero in regularised models, this caution does not apply to
 the _comparison_ of edge weights via the mean difference
 @epskampEstimatingPsychologicalNetworks2018.
 
-Degree centrality and strength centrality are commonly used to assess a belief's
-_importance_ or _position_ within a belief system @brandtWhatCentralPolitical2019
+Degree centrality and strength centrality are commonly used to assess the _importance_
+or _position_ of a belief within a belief system @brandtWhatCentralPolitical2019
 @bringmannWhatCentralityMeasures2019 @chambonTailoredInterventionsBroad2022
 @brandtInterattitudeCentralityDoes2023. Degree centrality measures the number of
 edges adjacent to a node in a network. Strength centrality measures the sum of
@@ -97,7 +97,7 @@ absolute edge weights. In directed networks, however, these centrality indices c
 calculated using either incoming or outgoing edges, and the resulting values may differ.
 To understand the potential impact of symmetric-influence assumptions on judgements
 regarding belief importance, we therefore additionally compare the incoming and outgoing
-values for both centrality indices, for each belief that exhibits significant asymmetric
+values of both centrality indices for each belief that exhibits significant asymmetric
 influence.
 
 
@@ -105,11 +105,11 @@ influence.
 
 #let structural-intervention-footnote = footnote[
   Although not considered here, we implement such structural interventions in the
-  Ising Python package published alongside this study. We discuss this topic in
+  Ising Python package, which is published alongside this study. We discuss this topic in
   @sec:discussion.
 ]
 
-We now outline our approach to modelling interventions in the KBS model. In this study
+We now outline our approach to modelling interventions in the KBS model. In this study,
 we consider interventions which affect a belief system's _state_. Notably, this excludes
 interventions which affect the structure of a belief system, for instance, by changing
 the existence, sign, direction, or effect size of influence relations between
@@ -128,7 +128,7 @@ value and outgoing edges toward a subset of beliefs:
   image("../diagrams/modelling_interventions/intervention.svg", width: 45%),
 )
 
-In the diagram above, the intervention node $I$ exerts influence on the beliefs
+In the diagram above, the intervention node $I$ influences the beliefs
 $A$ and $B$. Consider the effective baseline activation for belief $A$ at
 time $t+1$, as defined in @eqn:model-effective-activation, given a previous configuration
 $bold(s)^t$:
@@ -139,7 +139,7 @@ $ <eqn:asymmetric-belief-system-int-example-eff-baseline>
 
 Since the state of $I$ is fixed (in this case, at $+1$), the intervention node's
 contribution to $A$'s effective activation baseline is simply $J_(I A)$.
-We can then re-write @eqn:asymmetric-belief-system-int-example-eff-baseline,
+We can then rewrite @eqn:asymmetric-belief-system-int-example-eff-baseline,
 interpreting the intervention effect as an adjustment to the baseline activation
 $h_A$:
 
@@ -147,7 +147,7 @@ $
   h_A^"eff" (bold(s)^t) = (h_A + J_(I A)) + sum_("node" j != I) J_(j A) s^t_j
 $
 
-It follows that we can then equivalently model interventions more simply as an adjustment
+It follows that we can equivalently model interventions more simply as adjustments
 to the baseline activations of particular beliefs:
 
 #figure(
@@ -157,7 +157,7 @@ to the baseline activations of particular beliefs:
 )
 
 Let us define this more formally. For a belief system model $cal(M)$ as defined above
-with $N in NN$ nodes, an *intervention* is the function
+with #box[$N in NN$] nodes, an *intervention* is the function
 $phi_cal(M): bold(delta)_h mapsto cal(M)'$, where $bold(delta)_h in RR^N$ is a vector of offsets to
 the baseline activations, and the model $cal(M)'$ has parameters
 $chevron bold(J), bold(h)' chevron.r$, where
@@ -174,25 +174,25 @@ simulated-intervention studies
 @berteroConsolidationChangeExploring2025 @wuSimulatingNodeManipulations2026.
 
 The principles underlying this approach can also be used to model other exogenous factors
-which influence, but are not influenced by, belief system dynamics. For instance,
+that influence belief system dynamics but are not influenced by them. For instance,
 #cite(<dalegeNetworksBeliefsIntegrative2025>, form: "prose") use an analogous mechanism
-in a social network context, to represent the influence of an individual's actual belief
-state on another individual's second-order belief regarding this state (i.e., their
-belief about what the other person believes).
+in a social network context, to represent how an individual's actual belief state infuences
+another individual's second-order belief about that state (i.e., their
+belief about what the first individual believes).
 
 === Intervention strength <sec:methods-intervention-strength>
 
-Recall that in @chp:kinetic-belief-system we defined the probability distribution over
+Recall that in @chp:kinetic-belief-system, we defined the probability distribution over
 states for a given belief as a non-linear (specifically, logistic) function of that
 belief's effective baseline activation (@eqn:model-activation-probability). Since
-interventions adjust the baseline activation linearly, it follows that an intervention
-with fixed strength $delta_h in RR$ will affect individuals differently, depending on
+interventions adjust the baseline activation linearly, an intervention
+with fixed strength $delta_h in RR$ will affect individuals differently depending on
 their pre-intervention states.
 
 @fig:methods-intervention-strengths-probability illustrates how the probability of
-activation for the intervention belief (@eqn:model-activation-probability) changes
-for different intervention scenarios, as a function of the effective baseline
-activation. Since interventions constitute offsets to the effective baseline activaton,
+activation of an intervention belief (@eqn:model-activation-probability) varies
+across different intervention scenarios as a function of the effective baseline
+activation. Since interventions constitute offsets to the effective baseline activation,
 they are reflected as horizontal shifts in the logistic curve.
 
 #figure(
@@ -217,10 +217,10 @@ two individuals, positioned at different locations on this base curve:
 To understand the impacts of intervention strength on each individual, we draw a
 vertical line upward from the solid curve at each location, and read off the activation
 probability at each intersection with the other intervention curves. Under the null
-scenario ($delta_h = 0$) the first individual exhibits an equal tendency toward each
+scenario ($delta_h = 0$), the first individual exhibits an equal tendency toward each
 state, while the second is almost certain to adopt the state $-1$.
 
-Notice that interventions are not experienced equivalently by the two individuals. For
+Notice that interventions are not experienced equally by the two individuals. For
 a weak intervention ($delta_h = 0.5$), the first individual sees a substantial jump in
 activation probability, while the corresponding increase for the second individual is
 negligible. The stakes are reversed under a strong intervention ($delta_h = 2.5$).
@@ -228,10 +228,9 @@ negligible. The stakes are reversed under a strong intervention ($delta_h = 2.5$
 Prior to intervention, the first's indifference makes them maximally
 susceptible to interventions, while the second's strong negative stance is only
 affected by large interventions. On the other hand, the second individual's state
-has the _potential_ to change more than that of the first individual. Consider that
+has the _potential_ to change more than the first individual's. Consider that
 the interventions can, at best, shift the first individual from indifference to support,
-in contrast to the potential shift from opposition to support in the case of the second
-individual.
+whereas the second individual could shift from opposition to support.
 
 // *TODO:* Quantitative explanation:
 // - Take derivative of the difference in activation probabilities between intervention
@@ -272,18 +271,17 @@ intervention experiments (left) examine how interventions on a particular belief
 to other beliefs. On the other hand, inbound intervention experiments
 (right) consider how a focal belief's behaviour is differently affected by interventions
 elsewhere in the network. We refer to the belief on which an intervention is applied as
-the *point-of-intervention* (marked 'P' in the diagram) and the belief whose
+the *point of intervention* (marked 'P' in the diagram) and the belief whose
 resulting state is measured as the *target* (marked 'T' in the diagram).
 
 == Choice of points-of-intervention and targets <subsec:methods-choice-of-pois-and-targets>
 
 Since our outbound intervention experiments are intended to assess differences in
-intervention propagation in symmetric and asymmetric belief systems, we select
-points-of-intervention which are likely to highlight the differences between these
-models. So that interventions can propagate, we prioritise beliefs which are reasonably
-influential in both belief system models. Additionally, we attempt to
-select beliefs with varying degrees of asymmetry, conditional on the models containing
-such beliefs.
+intervention propagation between symmetric and asymmetric belief systems, we select
+points of intervention that are likely to highlight these differences. So that
+interventions can propagate, we prioritise beliefs that are reasonably influential in
+both belief system models. Additionally, we attempt to select beliefs with varying
+degrees of asymmetry, conditional on the models featuring such beliefs.
 
 // Points of intervention:
 // - Want to understand difference in how interventions propagate in symmetric and
@@ -292,42 +290,42 @@ such beliefs.
 //   asymmetric influences (i.e., which are at the 'center' of the belief system asymmetry)
 //   and some which do now. If such variables exist.
 
-For the inbound experiments, on the other hand, our intention to assess differences
+For the inbound experiments, our intention is to assess differences
 in intervention strategy and the relative effectiveness of different interventions.
 In this case, ideal target beliefs are those which are reasonable targets in actual
 interventions. We select `CC Action` (attitudes toward climate action) for all inbound
-intervention experiments. In comparison with the other variables in the climate beliefs
+intervention experiments. Compared with the other variables in the climate beliefs
 dataset (for instance, beliefs about the existence of climate change or climate-related
-worry), we expect this to correlate most directly with climate-related behavioural
-choices, and hence a justifiable intervention target.
+worry), we expect this belief to correlate most directly with climate-related behavioural
+choices, and hence be a justifiable intervention target.
 
 == Counterfactual experiments with Common Random Numbers <subsec:methods-common-random-numbers>
 
 Most of our experiments involve comparing simulated behaviour across different KBS
-models, either to examine the impact of an intervention by comparison with a null
+models, either to examine the impact of an intervention by comparing with a null
 (i.e., no-intervention) model, or to assess the impact of interaction symmetry
-assumptions by comparing asymmetric and symmetric models. The KBS model
+assumptions by comparing symmetric and asymmetric models. The KBS model
 dynamics are inherently stochastic, with different trajectories reflecting differences
 in experimental conditions characterised by unmeasured, exogenous influencing factors.
 
-We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[p.~588--604] to
-ensure that measured differences in such experiments reflect differences in the compared
-models, as opposed to differences in the stochastic conditions under which they are
-simulated. Specifically, in any case where we compare observables between two models, we:
+We use Common Random Numbers (CRN) @lawSimulationModelingAnalysis2015[pp.~588--604] to
+ensure that measured differences in such experiments reflect differences between the compared
+models, rather than differences in the stochastic conditions under which they are
+simulated. Specifically, in every situation where we compare observables between two models, we:
 (i) initialise the models using identical random seeds, and (ii) for each stochastic
 operation, we use the same random numbers for each model. The second point follows
 directly from the first in the KBS model, since the number of stochastic operations per
 simulation timestep is fixed, and these occur in a pre-specified order.
 
-As an additional safeguard, we verify each use of CRN in our experiments by comparing
-final floating point samples drawn for each model, after each simulation. We write these
-to disk, and compare the sampled values after all simulations are complete. An error
+As a safeguard, we verify each use of CRN in our experiments by comparing
+final floating-point samples drawn for each model after each simulation. We write these
+to disk and compare the sampled values after all simulations are complete. An error
 is raised if any differences are found.
 
 == Measuring the effects of interventions and asymmetry  <sec:methods-qois>
 
-We now define three quantities of interest which we will use to assess the impacts
-of interventions, and assumptions regarding asymmetry. The first two are used in
+We now define three quantities of interest that we will use to assess the impacts
+of interventions and the impacts of assumptions about asymmetry. The first two are used in
 @sec:results-asymmetry-in-belief-systems to investigate population-level model
 behaviour, while the third is used in
 @sec:heterogeneity-in-belief-systems-and-intervention-effects to examine individual-level
@@ -341,15 +339,15 @@ $cal(M)^t (bold(s)_0)$. Also, we denote the activation probability (as defined i
 @eqn:model-activation-probability) for a belief $S_i$ following this simulation as
 $p_i^t (bold(s)_0, cal(M))$.
 
-The *effect of intervention (on state)* and *effect of asymmetry*, respectively, measure
+The *effect-of-intervention (on state)* and the *effect-of-asymmetry*, respectively, measure
 the impact of an intervention on observed belief system behaviour with reference to our
 expectations in a no-intervention scenario (@def:asymmetry-results-effect-of-intervention),
 and the difference in observed behaviour in the asymmetric KBS model, compared with our
 expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry).
 
-#definition[Effect of Intervention (on state)][
-  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point-of-intervention, we
-  define the *effect of intervention (on state)* for $cal(M)_delta$ as the change in outcome at
+#definition[Effect-of-intervention (on state)][
+  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
+  define the *effect-of-intervention (on state)* for $cal(M)_delta$ as the change in outcome at
   time $t in NN$, with respect to the null (no-intervention) model, $cal(M)_0$:
 
   $
@@ -357,28 +355,28 @@ expectations in the symmetric model (@def:asymmetry-results-effect-of-asymmetry)
   $
 ] <def:asymmetry-results-effect-of-intervention>
 
-#definition[Effect of Asymmetry][
+#definition[Effect-of-asymmetry][
   Let $cal(M)_"asym"$ be a calibrated asymmetric KBS model
   with an arbitrary intervention applied, and $cal(M)_"sym"$ be a corresponding
   symmetric KBS model calibrated to the same dataset.
-  We define the *effect of asymmetry* for $cal(M)_"asym"$ as the difference
-  in the effect of intervention with respect to the symmetric model:
+  We define the *effect-of-asymmetry* for $cal(M)_"asym"$ as the difference
+  in the effect-of-intervention (on state) with respect to the symmetric model:
   $
     f_"asym" (cal(M)_"asym") = f_"int" (cal(M)_"asym") - f_"int" (cal(M)_"sym")
   $
 ] <def:asymmetry-results-effect-of-asymmetry>
 
-Finally, the *effect of intervention (on influence)* measures the impact of an
+Finally, the *effect-of-intervention (on influence)* measures the impact of an
 intervention on the total influence experienced by a given belief, with reference
 to our expectations under the no-intervention scenario (@def:methods-effect-on-influence).
-Note that this is richer than the effect of intervention (on state), which derives
+Note that this is richer than the effect-of-intervention (on state), which derives
 from the activation probabilities. We can make use of this richness in individual-level
-experiments, while in population-level experiments
+experiments, while in population-level experiments,
 @def:asymmetry-results-effect-of-intervention is more straightforwardly applicable.
 
-#definition[Effect of Intervention (on influence)][
-  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point-of-intervention, we
-  define the *effect of intervention (on influence)* for $cal(M)_delta$ as the change in
+#definition[Effect-of-intervention (on influence)][
+  For an intervention (KBS) model $cal(M)_delta$ with an arbitrary point of intervention, we
+  define the *effect-of-intervention (on influence)* for $cal(M)_delta$ as the change in
   activation probability at time $t in NN$, with respect to the null (no-intervention)
   model, $cal(M)_0$:
 
@@ -393,14 +391,14 @@ In the simulated interventions described above, the only
 distinguishing factor between individuals is their pre-intervention state. It follows
 that any difference in belief system dynamics between distinct individuals---after
 accounting for simulation stochasticity---is the result of their different initial
-states. To identify the conditions under which an intervention is effective,
+states. Therefore, to identify the conditions under which an intervention is effective,
 it then suffices to characterise the set of _initial states_ which yield effective
-interventions, and distinguish them from those that do not.
+interventions and distinguish them from those that do not.
 
 Our goal is to find a function which maps from an intervention effect to
 sets of (unbinarised) states that yield that effect, $g: RR -> 2^X$, where
-#box[$X = [-1,+1]^N subset RR^N$]. We'll call $g$ the *effect characterisation function*.
-We measure intervention effects here using the effect of intervention on influence
+#box[$X = [-1,+1]^N subset RR^N$]. We will call $g$ the *effect characterisation function*.
+We measure intervention effects here using the effect-of-intervention on influence
 (@def:methods-effect-on-influence).
 
 Consider a function which does the opposite, mapping initial states to a measure of
@@ -416,23 +414,23 @@ characterisation function, such a function would likely be useless for qualitati
 determining the kinds of initial states which yield effective interventions.
 The elements of the codomain have (potentially) infinite cardinality, and are
 not immediately interpretable. For our purposes, we are less interested in the
-specific states that yield a given intervention effect, but more so in a
+specific states that yield a given intervention effect, and more interested in a
 _concise description_ of that set of states.
 
 === Method: Shallow regression decision tree <subsec:methods-effect-characterisation-function-decision-tree>
 
-Regression decision tree models can provide such descriptions, using inequality bounds
+Regression decision-tree models can provide such descriptions, using inequality bounds
 to partition the initial state space into regions, each of which is assigned a
 predicted effect. Given a parameterised regression decision tree, we
 may construct a concise approximation to the effect characterisation function by
 identifying, for each predicted effect, the combination of inequalities which define
 the corresponding infinite set of initial states. When the parameter estimation algorithm
-is restricted to shallow trees (e.g., depth 3 or 4, referring to the number of inequality
-bounds defining each region), these combinations can also be interpretable as rules or
-_personas_.
+is restricted to shallow trees (e.g., depth 3 or 4, where depth refers to the number of
+inequality bounds defining each region), these combinations can also be interpreted as
+rules or _personas_.
 
 Since the regression decision tree produces a full tree, all personas for a tree with
 depth $d in NN$ have size $d$ by default. However, these can often be compressed. When
-two personas differ only along one feature dimension, split at the same value, and both
-predict high-effect interventions, we can combine these into a single persona which omits
+two personas differ in only one feature dimension, split at the same value, and both
+predict high-effect interventions, we can combine them into a single persona that omits
 that feature (i.e., spans the entire feature dimension).

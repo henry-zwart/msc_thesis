@@ -14,18 +14,18 @@
 //   - If we could, this would simplify dataset. Wouldn't need to rely on repeating
 //     participants.
 
-In the previous chapter we introduced the Kinetic Belief System (KBS) as a model of
-belief system structure and dynamics which allows for asymmetric influence relations.
+In the previous chapter, we introduced the Kinetic Belief System (KBS) as a model of
+belief system structure and dynamics, that allows for asymmetric influence relations.
 While the KBS model is theoretically interesting, its _empirical_ value hinges on
-being able to infer the model from observational data.
+the ability to infer its parameters from observational data.
 
-In this chapter we provide a method for doing just this, based on maximum likelihood
-estimation---this turns out to be not-so-straightforward, due to the mismatch between the
+In this chapter, we provide a method for doing just this, based on maximum likelihood
+estimation---this turns out to be not so straightforward, due to the mismatch between the
 binary representation of beliefs assumed by the KBS model and typical approaches for
-assessing beliefs in surveys. We then use this method to calibrate symmetric and
-asymmetric KBS model to a longitudinal dataset comprising beliefs about climate
-change. These models are used for the experiments in the second half of this study.
-
+assessing beliefs in surveys.
+// We then use this method to calibrate symmetric and
+// asymmetric KBS models to a longitudinal dataset comprising beliefs about climate
+// change. These models are used for the experiments in the second half of this study.
 We omit derivation details in this chapter; however, the curious reader can find these
 in @sec:appendix-derivations.
 
@@ -44,12 +44,12 @@ MLE is often used for parameter estimation in similar modelling situations
 significant drawback, however, in that it assumes that the observations in the
 dataset $D$ are representable within the model. This poses a problem when calibrating
 binary belief system models---such as the KBS model---using survey data, which often
-assess belief states using multi-valued (e.g., Likert) scales. In order to use
-MLE in such situations, we must first binarise observations to the set ${-1, +1}$.
+describes belief states with multi-valued (e.g., Likert) scales. To use
+MLE in such situations, we must first binarise the observations to the set ${-1, +1}$.
 
-There are several approaches for binarising continuous values, the simplest of which,
-which we will call *sign-thresholding*, is to map values to ${-1, +1}$ in accordance
-with their sign. Zero must be handled separately, for instance using a deterministic
+There are several approaches to binarising continuous values; the simplest,
+which we will call *sign-thresholding*, is to map values to ${-1, +1}$ according to
+their sign. Zero must be handled separately, for instance, using a deterministic
 rule (e.g., $0 mapsto +1$) or a Bernoulli random variable. This produces discontinuous
 behaviour around the zero point, which may be unrealistic in this setting. If we are
 treating zero as an ambivalent or neutral belief state that can be mapped to either $-1$
@@ -70,7 +70,7 @@ similarly.
     We can improve on this using *soft thresholding*, in which each data value $x in RR$
     is perturbed by an independent noise term $epsilon ~ cal(N)(0, xi)$ prior to this
     mapping. @fig:methods-binarisation illustrates this process for a negative value of $x$
-    and given choice of $xi in RR_+$.#scale-choice-footnote <scale-choice-footnote>
+    and a specified $xi in RR_+$.#scale-choice-footnote <scale-choice-footnote>
   ]
 }
 <sec:parameter-estimation-soft-binarisation>
@@ -98,7 +98,7 @@ similarly.
 ]
 
 Observe that $x$ is mapped to $+1$ if, and only if, $epsilon$ is sufficiently large,
-such that #box[$x + epsilon > 0$] (region A), or equivalently when $epsilon < x$ (region B).
+such that #box[$x + epsilon > 0$] (region A), or equivalently, when $epsilon < x$ (region B).
 The probability that $x$ is mapped to $+1$ is then:#smooth-thresholding-derivation
 
 $
@@ -106,25 +106,26 @@ $
 $ <eqn:methods-dataset-binarisation-probability-map-to-1>
 
 where $Phi$ is the standardised normal cumulative distribution function. This
-probability is small when $x$ has large magnitude, or when $xi$ is small.
+probability is small when $x$ has a large magnitude or when $xi$ is small.
 With soft thresholding, small-magnitude values are mapped to $-1$ and $+1$ with
 nontrivial probability, while the binarisation of large values is effectively
 deterministic.
 
 #let likert7-footnote = footnote[
-  In this case, the Likert-7 scale has response options: $"strongly oppose" prec "oppose" prec "weakly oppose" prec "neither support nor oppose" prec "weakly support" prec "support" prec "strongly support"$.
+  In this case, the 7-point Likert scale has response options: $"strongly oppose" prec "oppose" prec "weakly oppose" prec "neither support nor oppose" prec "weakly support" prec "support" prec "strongly support"$.
 ]
 
-However, there remains a deeper issue with binarisation which is not resolved by soft
-thresholding, namely that _any_ form of binarisation necessarily erases information about
-the magnitude of the original data. For instance, consider a survey question which
-assesses an individual's attitude toward a particular policy using a Likert-7
-scale.#likert7-footnote <likert7-footnote-ref>After binarisation, we can no longer distinguish between weak
-and strong support for the policy, or neutrality which has been mapped to $+1$.
+However, there remains a deeper issue with binarisation, that soft thresholding does not
+resolve: _any_ form of binarisation necessarily erases information about
+the magnitude of the original data. For instance, consider a survey question that
+assesses an individual's attitude toward a particular policy using a 7-point Likert
+scale.#likert7-footnote <likert7-footnote-ref>After binarisation, if a value is mapped
+to $+1$, we can no longer determine whether this originally corresponded to weak or
+strong support, neutrality, or even opposition.
 
-In short, since it uses a single binary output for each observation, MLE is not capable
-of representing ambiguity or neutrality, and instead requires that such cases are made
-unambiguous or non-neutral through binarisation.
+In short, since it uses a single binary output for each observation, MLE cannot capture
+ambiguity or neutrality and instead requires that all data be made unambiguous and
+non-neutral through binarisation.
 
 // where 'Neutral' (i.e., zero) values may be mapped which
 // may be unnatural for values with very small magnitude---should a positive  . with
@@ -264,27 +265,27 @@ $
   bold(theta)^* = op("argmax", limits: #true)_(bold(theta) in RR^p) EE[P(b(D) | bold(theta))]
 $ <eqn:parameter-estimation-mele>
 
-If $b$ is the simple thresholding function described above, where we map each value
-to its sign (and we map zero deterministically), then @eqn:parameter-estimation-mele is
-equivalent to the MLE problem defined in @eqn:parameter-estimation-mle. But when $b$
+If $b$ is the simple thresholding function described above, that maps each value
+to its sign (and maps zero deterministically), then @eqn:parameter-estimation-mele is
+equivalent to the MLE problem defined in @eqn:parameter-estimation-mle. However, when $b$
 is a (non-constant) probabilistic binarisation function, @eqn:parameter-estimation-mele
 uses information regarding both binarisation possibilities.
 
-Consider the case where $b := b_xi$ is the soft thresholding function defined in the
-above section, for $xi in RR_+$. If $xi$ is chosen appropriately then data values which
-are considered somewhat neutral or ambivalent are mapped to both $-1$ and $+1$ with
-nontrivial probability.@scale-choice-footnote When using @eqn:parameter-estimation-mele,
+Consider the case where $b := b_xi$ is the soft-thresholding function defined in the
+above section, with $xi in RR_+$. If $xi$ is chosen appropriately,@scale-choice-footnote
+then data values which are considered somewhat neutral or ambivalent are mapped to both
+$-1$ and $+1$ with nontrivial probability. When using @eqn:parameter-estimation-mele,
 the contribution of such values to the objective function is an expectation over
-possible binarisations, and we obtain a parameterised model which explains both
-possibilities in accordance with their probability. Therefore, by avoiding explicit
-binarisation in this way, we can obtain binary models which incorporate the neutrality
+possible binarisations, yielding a parameterised model that explains both
+possibilities in accordance with their probabilities. Therefore, by avoiding explicit
+binarisation, we can obtain binary models that incorporate the neutrality
 and varying degrees of certainty present in non-binarised data.
 
-We note that this is far from the only approach which can be used to account for
+This is far from the only approach that can be used to account for
 neutrality in belief system models. For instance,
 #cite(<vandermaasStatisticalPhysicsPsychological2026>, form: "prose") suggest using
-three-valued models such as the Blume-Capel model (ibid.) which represent intermediate
-states explicitly using zero-valued spin states. Such approaches provide extra
+three-valued models, such as the Blume-Capel model (ibid.), that explicitly represent
+intermediate states using zero-valued spin states. Such approaches provide extra
 representational capacity---our approach cannot simulate neutral states---but raise the
 analytical complexity. For the purposes of this study, which has an exploratory nature,
 we prefer the relative simplicity of binary models.
@@ -292,7 +293,7 @@ we prefer the relative simplicity of binary models.
 == Parameter estimation for the KBS model <sec:parameter-estimation-method>
 
 We now adapt the maximum expected likelihood estimation approach described above to the
-context of the KBS model, explicitly defining the expected likelihood and its derivatives
+KBS model context, explicitly defining the expected likelihood and its derivatives,
 which are used for calibration.
 
 
@@ -301,7 +302,7 @@ comprising $N in NN$ beliefs.
 // for which the parameters (i.e., the baseline activations and interaction effects) are
 // unknown.
 Suppose that we have measured the belief system state of each individual, $m in [M]$,
-at each of $T in NN$ uniformly spaced timepoints:
+at each of $T in NN$ uniformly spaced times:
 $
   {bold(x)_((m))^t}_(t=1)^T, quad "where each" bold(x)_((m))^t in RR^N
 $
@@ -311,7 +312,7 @@ measurements across all individuals forms a dataset $D$, which is the particular
 observed value of the random variable $cal(D)$ representing possible datasets.
 
 To calibrate the (symmetric or asymmetric) KBS model, we identify the parameterisation
-which maximises the expected likelihood, marginalising over possible binarisations using
+that maximises the expected likelihood, marginalising over possible binarisations using
 a soft thresholding function, $b_xi$, as defined above.
 Following #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we also
 use regularisation to reduce the risk of overfitting.
@@ -319,9 +320,9 @@ use regularisation to reduce the risk of overfitting.
 // of a quadratically scaling number of parameters with a small sample size.
 
 #let log-likelihood-equivalence = footnote[
-  For numerical stability we typically maximise the log-likelihood instead of the
+  For numerical stability, we typically maximise the log-likelihood rather than the
   likelihood. Since the logarithm is a strictly increasing function, the two approaches
-  yield identical results (theoretically); however, the multiplication of small
+  yield identical results in principle; however, the multiplication of small
   probabilities when computing the likelihood can lead to numerical overflow.
 ]
 Let
@@ -358,7 +359,7 @@ the partial derivatives with respect to the interaction parameters.
 We omit derivation details here, but these can be found in @sec:appendix-derivations.
 
 Let $p_bold(s) (bold(x))$ denote the probability that an observation $bold(x) in RR^N$
-is binarised to the state $bold(s) in {-1, +1}^N$ under the binarisation function
+is binarised to the state $bold(s) in {-1, +1}^N$ using the binarisation function
 $b_xi$,
 
 $
@@ -369,7 +370,7 @@ $
   See expected log-likelihood derivation in @sec:appendix-derivations
   (#internal-link(<derivation:expected-log-likelihood>)).
 ]
-and, for an individual $m in [M]$ and timepoint $t <= T$, let $EE[bold(sigma)_((m))^t]$
+and, for an individual $m in [M]$ and time $t <= T$, let $EE[bold(sigma)_((m))^t]$
 denote the expected value of the binarised observation $bold(x)_((m))^t$. The expected
 log-likelihood for a KBS model parameterisation,
 $bold(theta) = chevron bold(J), bold(h) chevron.r$,
@@ -455,7 +456,7 @@ parameter $J_(i j)$, for $i < j$, in the symmetric variant is:
 
 Since the number of parameters in the KBS model scales quadratically with the
 number of modelled beliefs, parameter estimation is prone to overfitting---even
-for relatively small sets of beliefs---on account of the typically small size
+for relatively small sets of beliefs---due to the typically small size
 of psychological datasets. Following
 #cite(<epskampEstimatingPsychologicalNetworks2018>, form: "prose"), we apply a
 smooth variant of L1 regularisation (the second term in
@@ -515,11 +516,11 @@ $ <eqn:parameter-estimation-ebic>
 
 where $bold(theta)^* (lambda)$ denotes the solution to the optimisation problem defined
 in @eqn:parameter-estimation-optimisation-problem for regularisation strength $lambda$,
-$q in NN$ is the number of observations in the dataset, $p in NN$ is the number of model
+$q in NN$ is the number of observations in the dataset, #box[$p in NN$] is the number of model
 parameters, and $k$ is the number of (effectively) nonzero parameters with
 $|theta| < tau$ in the parameterisation $bold(theta)^* (lambda)$. Notice that $lambda$
 is both a parameter in the optimisation problem defined in
-@eqn:parameter-estimation-optimisation-problem, and is itself chosen using the solution
+@eqn:parameter-estimation-optimisation-problem, and is itself selected using the solution
 to this problem.
 
 
@@ -529,7 +530,7 @@ to this problem.
   within each class of models containing $k$ parameters.
 ]
 The point of difference between the EBIC and the standard Bayesian Information
-Criterion (BIC) is in their assumed priors over the space of possible models. While the
+Criterion (BIC) @schwarzEstimatingDimensionModel1978 is in their assumed priors over the space of possible models. While the
 BIC assumes a uniform prior, the EBIC penalises values of $k$ which permit a large number
 of models @foygelExtendedBayesianInformation2010 @barberHighdimensionalIsingModel2015.
 For instance, the class of models comprising eight spins (i.e., with 72 parameters)
