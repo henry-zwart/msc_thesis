@@ -34,9 +34,10 @@ def main(labels: npt.NDArray[np.str_], data_dir: Path):
     collective_effect = effect_of_asymmetry.mean(axis=1)
 
     fig, axes = plt.subplots(
-        ncols=3, figsize=(5.77, 2.75), constrained_layout=True, sharey=True
+        ncols=3, figsize=(5.77, 3), constrained_layout=True, sharey=True
     )
 
+    colours = ["tab:blue", "tab:orange", "tab:orange"]
     for i, ax in enumerate(axes.flatten()):
         mean_collective_effect = np.delete(
             collective_effect[:, i].mean(axis=0), point_of_intervention_idxes[i]
@@ -51,7 +52,7 @@ def main(labels: npt.NDArray[np.str_], data_dir: Path):
         ci = ci[sort_idx]
         plot_labels = np.delete(labels, point_of_intervention_idxes[i])[sort_idx]
 
-        sns.barplot(means, ax=ax)
+        sns.barplot(means, ax=ax, color=colours[i])
         ax.errorbar(
             np.arange(means.size),
             means,
@@ -73,13 +74,27 @@ def main(labels: npt.NDArray[np.str_], data_dir: Path):
         ax.spines.top.set_visible(False)
         ax.spines.right.set_visible(False)
 
-    fig.supylabel("Effect of asymmetry", fontsize=12, y=0.7)
+    fig.supylabel(
+        r"$\mathbb{E}[S_\text{asym} - S_\text{symm}]$",
+        fontsize=12,
+        y=0.7,
+        ha="center",
+    )
+    fig.supylabel(
+        "Increased effectiveness\nin asymmetric model",
+        fontsize=12,
+        x=-0.15,
+        y=0.7,
+        rotation=0,
+        ha="center",
+    )
     fig.supxlabel("Intervention target", fontsize=12, x=0.55)
 
     for ext in ("png", "pdf"):
         fig.savefig(
             f"reports/thesis/results/figures/asymmetry_results/outbound_effect_of_asymmetry.{ext}",
             bbox_inches="tight",
+            transparent=True,
         )
 
 

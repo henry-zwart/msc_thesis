@@ -56,6 +56,7 @@ def plot_ranked_differentials(
     ci_upper: npt.NDArray[np.float64],
     full_interactions: npt.NDArray[np.float64],
     labels: list[str],
+    slides: bool,
 ) -> Figure:
     fig, ax = plt.subplots(figsize=(5, 4), constrained_layout=True)
     n = mean_diff.shape[-1]
@@ -114,7 +115,11 @@ def plot_ranked_differentials(
     is_nonreciprocal_flat = is_nonreciprocal[positive_mean_idxes][sort_idxes]
     bar_color = np.array(["tab:grey"] * (n * (n - 1) // 2), dtype=object)
     bar_color[is_asymmetric_flat] = "tab:blue"
-    bar_color[is_nonreciprocal_flat] = "tab:orange"
+
+    if slides:
+        bar_color[is_nonreciprocal_flat] = "tab:blue"
+    else:
+        bar_color[is_nonreciprocal_flat] = "tab:orange"
     # print(bar_color)
     # bar_color[null] = "tab:grey"
     # bar_color[symmetric] = "tab:blue"
@@ -176,7 +181,10 @@ def plot_ranked_differentials(
     for i in range(len(ylabels)):
         ax.axhline(y=i, linewidth=0.1, color="k", linestyle="solid")
 
-    ax.set_xlabel(r"Directional differential ($\Delta_{i,j}$)")
+    if slides:
+        ax.set_xlabel("Difference in influence strengths")
+    else:
+        ax.set_xlabel(r"Directional differential ($\Delta_{j,k}$)")
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
 
@@ -310,6 +318,7 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
     output: Path | None = None
     kind: PlotKind
     z: float = 1.96
+    slides: bool = False
 
     def cli_cmd(self) -> None:
         configure_mpl()
@@ -357,12 +366,17 @@ class DirectionalDifferentialPlotCommand(BaseCommand):
                     ci_diff_upper,
                     full_model_interactions,
                     labels,
+                    self.slides,
                 )
             case PlotKind.PAIRWISE:
                 fig = plot_pairwise_differentials(mean_diff, ci_diff, labels)
 
         if self.output:
-            fig.savefig(self.output, bbox_inches="tight")
-            fig.savefig(str(self.output).replace(".pdf", ".png"), bbox_inches="tight")
+            fig.savefig(self.output, bbox_inches="tight", transparent=True)
+            fig.savefig(
+                str(self.output).replace(".pdf", ".png"),
+                bbox_inches="tight",
+                transparent=True,
+            )
         else:
             plt.show()

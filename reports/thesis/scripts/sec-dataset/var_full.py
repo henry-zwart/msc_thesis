@@ -131,6 +131,7 @@ def main(df: pl.DataFrame, labels: list[str]):
     fig.savefig(
         "reports/thesis/results/figures/dataset/full_subset_var.pdf",
         bbox_inches="tight",
+        transparent=True,
     )
 
 

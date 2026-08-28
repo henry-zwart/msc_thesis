@@ -84,7 +84,9 @@ def main(indicators: pl.DataFrame):
         "reports/thesis/results/figures/dataset/participation.png", bbox_inches="tight"
     )
     fig.savefig(
-        "reports/thesis/results/figures/dataset/participation.pdf", bbox_inches="tight"
+        "reports/thesis/results/figures/dataset/participation.pdf",
+        bbox_inches="tight",
+        transparent=True,
     )
 
 

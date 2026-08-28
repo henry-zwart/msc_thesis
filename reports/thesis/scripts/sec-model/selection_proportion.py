@@ -88,4 +88,5 @@ if __name__ == "__main__":
         fig.savefig(
             f"reports/thesis/results/figures/model_fit/selection_probability.{ext}",
             bbox_inches="tight",
+            transparent=True,
         )

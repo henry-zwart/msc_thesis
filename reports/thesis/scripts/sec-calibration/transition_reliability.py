@@ -132,6 +132,7 @@ def main(P: npt.NDArray[np.float64], λ: float):
         fig.savefig(
             f"reports/thesis/results/figures/model_fit/transition_reliability.{ext}",
             bbox_inches="tight",
+            transparent=True,
         )
 
 

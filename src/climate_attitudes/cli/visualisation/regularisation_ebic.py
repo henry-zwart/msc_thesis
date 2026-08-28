@@ -62,7 +62,7 @@ class RegularisationEBICPlotCommand(BaseCommand):
         )
 
         if self.output:
-            fig.savefig(self.output, bbox_inches="tight")
+            fig.savefig(self.output, bbox_inches="tight", transparent=True)
             fig.savefig(str(self.output).replace(".pdf", ".png"), bbox_inches="tight")
         else:
             plt.show()

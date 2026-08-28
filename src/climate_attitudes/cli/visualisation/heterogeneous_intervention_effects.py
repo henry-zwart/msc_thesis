@@ -529,7 +529,7 @@ def order_rule_columns(plot_data: list[PlotData]) -> list[PlotData]:
     return plot_data
 
 
-def make_figure(plot_data: list[PlotData]) -> Figure:
+def make_figure(plot_data: list[PlotData], slides: bool) -> Figure:
     # Determine max width of rule heatmap; trim matrices to size
     # n_heatmap_cols = max((~d.heatmap_mask.all(axis=0)).sum() for d in plot_data)
     # for d in plot_data:
@@ -548,18 +548,32 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
     # H = 1.3 * len(plot_data)
     # W = (H / len(plot_data)) * 5.5
     n_strength_cols = plot_data[0].prevalence.shape[-1]
-    fig, grid_axes = plt.subplots(
-        nrows=len(plot_data),
-        ncols=3,
-        figsize=(W, H),
-        constrained_layout=True,
-        gridspec_kw={
-            "width_ratios": [2.75, n_heatmap_cols, n_strength_cols * 2],
-            "height_ratios": [d.heatmap_vals.shape[0] for d in plot_data],
-            "wspace": 0.15,
-            "hspace": 0.01,
-        },
-    )
+    if slides:
+        fig, grid_axes = plt.subplots(
+            nrows=len(plot_data),
+            ncols=2,
+            figsize=(W * (2 / 3), H),
+            constrained_layout=True,
+            gridspec_kw={
+                "width_ratios": [n_heatmap_cols, n_strength_cols * 2],
+                "height_ratios": [d.heatmap_vals.shape[0] for d in plot_data],
+                "wspace": 0.15,
+                "hspace": 0.01,
+            },
+        )
+    else:
+        fig, grid_axes = plt.subplots(
+            nrows=len(plot_data),
+            ncols=3,
+            figsize=(W, H),
+            constrained_layout=True,
+            gridspec_kw={
+                "width_ratios": [2.75, n_heatmap_cols, n_strength_cols * 2],
+                "height_ratios": [d.heatmap_vals.shape[0] for d in plot_data],
+                "wspace": 0.15,
+                "hspace": 0.01,
+            },
+        )
 
     # Plot KDEs in first column
     KDE_COLOUR = "#BB5566"
@@ -569,47 +583,50 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         if strength in plot_data[0].high_effect_threshold:
             max_intervention_strength = strength
 
-    kde_xlims = [np.inf, -np.inf]
-    for di, d in enumerate(plot_data):
-        threshold = d.high_effect_threshold[max_intervention_strength]
-        effect = d.effect[-1]
-        colour = KDE_COLOUR
-        sns.kdeplot(
-            effect,
-            clip=(None, threshold),
-            color=colour,
-            fill=True,
-            alpha=0.3,
-            ax=grid_axes[di, 0],
-        )
-        sns.kdeplot(
-            effect,
-            clip=(threshold, None),
-            color=colour,
-            fill=True,
-            alpha=0.6,
-            ax=grid_axes[di, 0],
-        )
-        grid_axes[di, 0].set_box_aspect(d.heatmap_vals.shape[0] / 3)
+    if not slides:
+        kde_xlims = [np.inf, -np.inf]
+        for di, d in enumerate(plot_data):
+            threshold = d.high_effect_threshold[max_intervention_strength]
+            effect = d.effect[-1]
+            colour = KDE_COLOUR
+            sns.kdeplot(
+                effect,
+                clip=(None, threshold),
+                color=colour,
+                fill=True,
+                alpha=0.3,
+                ax=grid_axes[di, 0],
+            )
+            sns.kdeplot(
+                effect,
+                clip=(threshold, None),
+                color=colour,
+                fill=True,
+                alpha=0.6,
+                ax=grid_axes[di, 0],
+            )
+            grid_axes[di, 0].set_box_aspect(d.heatmap_vals.shape[0] / 3)
 
-        kde_xlims[0] = min(kde_xlims[0], d.effect[-1].min())
-        kde_xlims[1] = max(kde_xlims[1], d.effect[-1].max())
+            kde_xlims[0] = min(kde_xlims[0], d.effect[-1].min())
+            kde_xlims[1] = max(kde_xlims[1], d.effect[-1].max())
 
-    for i in range(len(plot_data)):
-        if i != (len(plot_data) - 1):
-            grid_axes[i, 0].set_xticks([])
-        else:
-            grid_axes[i, 0].set_xticks([0.15, 0.3])
-            # grid_axes[i, 0].set_xlabel("Int. Effect", fontsize=11)
-        grid_axes[i, 0].set_xlim(*kde_xlims)
-        grid_axes[i, 0].spines.top.set_visible(False)
-        grid_axes[i, 0].spines.right.set_visible(False)
-        grid_axes[i, 0].set_ylabel("")
-    fig.supylabel("Density", fontsize=11)
+        for i in range(len(plot_data)):
+            if i != (len(plot_data) - 1):
+                grid_axes[i, 0].set_xticks([])
+            else:
+                grid_axes[i, 0].set_xticks([0.15, 0.3])
+                # grid_axes[i, 0].set_xlabel("Int. Effect", fontsize=11)
+            grid_axes[i, 0].set_xlim(*kde_xlims)
+            grid_axes[i, 0].spines.top.set_visible(False)
+            grid_axes[i, 0].spines.right.set_visible(False)
+            grid_axes[i, 0].set_ylabel("")
+        fig.supylabel("Density", fontsize=11)
 
-    fig.align_ylabels(grid_axes[:, 0])
+        fig.align_ylabels(grid_axes[:, 0])
 
     # Display rules as heatmap
+    linecolor = "#fafafa" if slides else "#ffffff"
+    col_idx = 0 if slides else 1
     for di, d in enumerate(plot_data):
         sns.heatmap(
             d.heatmap_vals,
@@ -618,18 +635,19 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             center=0,
             annot=d.heatmap_annot,
             fmt="",
+            linecolor=linecolor,
             annot_kws={"fontsize": 10},
             mask=d.heatmap_mask,
             linewidths=1,
             cmap=DIVERGING_CMAP,
-            ax=grid_axes[di, 1],
+            ax=grid_axes[di, col_idx],
             square=True,
             cbar=False,
         )
-        grid_axes[di, 1].set_yticks([])
-        grid_axes[di, 1].set_xticks([])
+        grid_axes[di, col_idx].set_yticks([])
+        grid_axes[di, col_idx].set_xticks([])
 
-    grid_axes[-1, 1].set_xticks(
+    grid_axes[-1, col_idx].set_xticks(
         np.arange(n_heatmap_cols) + 0.5,
         d.labels,
         rotation=90,
@@ -637,6 +655,7 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
     )
 
     # Display prevalence in top percentile
+    col_idx = 1 if slides else 2
     for di, d in enumerate(plot_data):
         sns.heatmap(
             np.concat((d.prevalence_low_eff, d.prevalence), axis=1),
@@ -648,22 +667,23 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
             cmap="crest",
             cbar=False,
             linewidths=1,
-            ax=grid_axes[di, 2],
+            linecolor=linecolor,
+            ax=grid_axes[di, col_idx],
             square=True,
             mask=np.concat((d.prevalence_low_eff_mask, d.prevalence_mask), axis=1),
         )
-        grid_axes[di, 2].set_yticks([])
+        grid_axes[di, col_idx].set_yticks([])
         if len(d.high_effect_threshold) > 1:
             strengths = [s.title() for s in d.high_effect_threshold]
-            grid_axes[di, 2].set_xticks(
+            grid_axes[di, col_idx].set_xticks(
                 np.arange(len(strengths)) + 0.5,
                 strengths,
                 rotation=35,
                 horizontalalignment="right",
             )
         else:
-            grid_axes[di, 2].set_xticks([])
-    grid_axes[-1, 2].set_xticks(
+            grid_axes[di, col_idx].set_xticks([])
+    grid_axes[-1, col_idx].set_xticks(
         np.arange(2) + 0.5,
         ["Low effect", "High effect"],
         rotation=90,
@@ -679,13 +699,15 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         #     fontsize=11,
         # )
         # grid_axes[di, 2].yaxis.set_label_position("right")
-        grid_axes[di, 2].text(
+        grid_axes[di, col_idx].text(
             1.0
             + 40
-            / grid_axes[di, 2].get_window_extent().width,  # roughly mimics labelpad
+            / grid_axes[di, col_idx]
+            .get_window_extent()
+            .width,  # roughly mimics labelpad
             0.5,
             d.intervention_label,
-            transform=grid_axes[di, 2].transAxes,
+            transform=grid_axes[di, col_idx].transAxes,
             rotation=0,
             verticalalignment="center",
             horizontalalignment="left",
@@ -693,9 +715,13 @@ def make_figure(plot_data: list[PlotData]) -> Figure:
         )
 
     # Add titles to each column
-    grid_axes[0, 0].set_title(r"$\Delta P(S_i^5 = +1)$", pad=10, fontsize=12)
-    grid_axes[0, 1].set_title("Persona", pad=10, fontsize=12)
-    grid_axes[0, 2].set_title("Prevalence", pad=10, fontsize=12, clip_on=False)
+    if slides:
+        grid_axes[0, 0].set_title("Persona", pad=10, fontsize=12)
+        grid_axes[0, 1].set_title("Prevalence", pad=10, fontsize=12, clip_on=False)
+    else:
+        grid_axes[0, 0].set_title(r"$\Delta P(S_i^5 = +1)$", pad=10, fontsize=12)
+        grid_axes[0, 1].set_title("Persona", pad=10, fontsize=12)
+        grid_axes[0, 2].set_title("Prevalence", pad=10, fontsize=12, clip_on=False)
     # grid_axes[-1, 2].set_xticks(
     #     [0.5],
     #     ["Prevalence"],
@@ -717,6 +743,7 @@ class InterventionPersonasPlotCommand(BaseCommand):
     min_effect_threshold: float = 0.1
     seed: int = 20260622
     output: Path
+    slides: bool = False
 
     def cli_cmd(self) -> None:
         configure_mpl()
@@ -797,9 +824,11 @@ class InterventionPersonasPlotCommand(BaseCommand):
 
         plot_data = order_rule_columns(plot_data)
 
-        fig = make_figure(plot_data)
-        fig.savefig(self.output, bbox_inches="tight")
-        fig.savefig(self.output.with_suffix(".png"), bbox_inches="tight")
+        fig = make_figure(plot_data, self.slides)
+        fig.savefig(self.output, bbox_inches="tight", transparent=True)
+        fig.savefig(
+            self.output.with_suffix(".png"), bbox_inches="tight", transparent=True
+        )
 
         with self.output.with_suffix(".json").open("w") as f:
             json.dump(

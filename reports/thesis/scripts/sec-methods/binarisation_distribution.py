@@ -82,10 +82,12 @@ def main():
     fig.savefig(
         Path("reports/thesis/results/figures/methods/binarisation/distribution.pdf"),
         bbox_inches="tight",
+        transparent=True,
     )
     fig.savefig(
         Path("reports/thesis/results/figures/methods/binarisation/distribution.png"),
         bbox_inches="tight",
+        transparent=True,
     )
 
 

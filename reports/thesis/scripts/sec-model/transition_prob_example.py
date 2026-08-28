@@ -46,6 +46,7 @@ def main():
     fig.savefig(
         "reports/thesis/results/figures/model/transition_probability_example.pdf",
         bbox_inches="tight",
+        transparent=True,
     )
 
 

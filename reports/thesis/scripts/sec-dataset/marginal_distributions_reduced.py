@@ -45,6 +45,7 @@ def main(X: npt.NDArray[np.float64], labels: list[str]):
         fig.savefig(
             f"reports/thesis/results/figures/dataset/marginal_distributions.{ext}",
             bbox_inches="tight",
+            transparent=True,
         )
 
 

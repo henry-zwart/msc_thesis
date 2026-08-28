@@ -68,6 +68,7 @@ def main():
         fig.savefig(
             f"reports/thesis/results/figures/methods/intervention_strengths.{ext}",
             bbox_inches="tight",
+            transparent=True,
         )
 
 

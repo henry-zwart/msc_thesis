@@ -12,21 +12,21 @@ from climate_attitudes.visualisation import DIVERGING_CMAP, configure_mpl
 
 
 def plot_baseline_activations(model_path: Path, vlim: float, ax: Axes):
-    h = np.load(model_path)["params"][:, :7]
+    h = np.load(model_path)["params"][:, :8]
 
     h_mean = h.mean(axis=0)
     h_ci = np.percentile(h, (2.5, 97.5), axis=0)
 
-    ax.scatter(np.arange(7) + 0.5, h_mean, zorder=2, s=10)
+    ax.scatter(np.arange(8) + 0.5, h_mean, zorder=2, s=10)
     ax.errorbar(
-        np.arange(7) + 0.5,
+        np.arange(8) + 0.5,
         h_mean,
         yerr=[h_mean - h_ci[0], h_ci[1] - h_mean],
         linestyle="none",
     )
 
     ax.set_ylim(-vlim, vlim)
-    ax.set_xlim(0, 7)
+    ax.set_xlim(0, 8)
 
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
@@ -39,21 +39,22 @@ def plot_heatmap(
     params = np.load(model_path)["params"]
 
     if symmetric:
-        J = np.zeros((7, 7), dtype=np.float64)
-        J[np.triu_indices_from(J)] = params[7:]
+        J = np.zeros((8, 8), dtype=np.float64)
+        J[np.triu_indices_from(J)] = params[8:]
+        mask = np.tril(np.ones((8, 8), dtype=bool), k=-1)
     else:
-        J = params[7:].reshape((7, 7))
+        J = params[8:].reshape((8, 8))
+        mask = np.zeros((8, 8), dtype=bool)
 
     J[abs(J) < 1e-2] = 0
-    mask = np.zeros_like(J, dtype=np.bool)
-    mask[abs(J) < 1e-2] = True
 
     sns.heatmap(
         J,
         mask=mask,
         annot=True,
         fmt=".1f",
-        linewidth=1,
+        linewidths=1,
+        linecolor="#fafafa",
         cmap=DIVERGING_CMAP,
         center=0.0,
         vmin=-vlim,
@@ -74,13 +75,13 @@ def main():
         with_imputation=False,
         verbose=False,
     )
-    labels = np.delete(dataset.schema.get_short_names(kind="measurement"), 5)
+    labels = dataset.schema.get_short_names(kind="measurement")
 
     fig, axes = plt.subplots(
         ncols=2,
         nrows=2,
         figsize=(5, 4.25),
-        # sharey=True,
+        # sharex=True,
         constrained_layout=True,
         gridspec_kw=dict(wspace=0.1, hspace=0.0, height_ratios=(2, 4)),
     )
@@ -88,58 +89,51 @@ def main():
     # Plot baseline activations as scatterplot
     plot_baseline_activations(
         Path(
-            "reports/thesis/results/data/model/ideology_bootstrapped_fit/conservative.npz"
+            "reports/thesis/results/data/model/bootstrapped_fit/sym_ising_no_structure.npz"
         ),
-        1.0,
+        0.5,
         axes[0, 0],
     )
     plot_baseline_activations(
-        Path("reports/thesis/results/data/model/ideology_bootstrapped_fit/liberal.npz"),
-        1.0,
+        Path(
+            "reports/thesis/results/data/model/bootstrapped_fit/ising_no_structure.npz"
+        ),
+        0.5,
         axes[0, 1],
     )
 
     # Draw heatmaps
-    J_cons = plot_heatmap(
-        Path("reports/thesis/results/data/model/ideology_fit_conservative.npz"),
-        symmetric=False,
+    J_sym = plot_heatmap(
+        Path("reports/thesis/results/data/model/fit_full_sym_ising_no_structure.npz"),
+        symmetric=True,
         vlim=0.35,
         ax=axes[1, 0],
     )
-    J_lib = plot_heatmap(
-        Path("reports/thesis/results/data/model/ideology_fit_liberal.npz"),
+    J_asym = plot_heatmap(
+        Path("reports/thesis/results/data/model/fit_full_asym_ising_no_structure.npz"),
         symmetric=False,
         vlim=0.35,
         ax=axes[1, 1],
     )
 
-    nondiag_elts = ~np.eye(J_cons.shape[0], dtype=bool)
-    nondiag_J_cons = J_cons[nondiag_elts]
-    nondiag_J_lib = J_lib[nondiag_elts]
-    cons_is_nonzero = ~np.isclose(nondiag_J_cons, 0)
-    lib_is_nonzero = ~np.isclose(nondiag_J_lib, 0)
+    nondiag_elts = ~np.eye(J_sym.shape[0], dtype=bool)
+    nondiag_elts_symm = ~np.eye(J_sym.shape[0], dtype=bool) & ~np.tril(
+        np.ones(J_sym.shape, dtype=bool)
+    )
+    nondiag_J_sym = J_sym[nondiag_elts_symm]
+    nondiag_J_asym = J_asym[nondiag_elts]
+    sym_is_nonzero = ~np.isclose(nondiag_J_sym, 0)
+    asym_is_nonzero = ~np.isclose(nondiag_J_asym, 0)
 
-    cons_sparsity = np.isclose(nondiag_J_cons, 0).sum() / nondiag_J_cons.size
-    lib_sparsity = np.isclose(nondiag_J_lib, 0).sum() / nondiag_J_lib.size
-    # cons_sparsity = np.isclose(J_cons, 0).sum() / (7**2 - 7)
-    # lib_sparsity = np.isclose(J_lib, 0).sum() / (7**2 - 7)
-    print(f"Conservative sparsity: {cons_sparsity:.2f}")
-    print(f"Liberal sparsity: {lib_sparsity:.2f}")
+    sym_sparsity = np.isclose(nondiag_J_sym, 0).sum() / nondiag_J_sym.size
+    asym_sparsity = np.isclose(nondiag_J_asym, 0).sum() / nondiag_J_asym.size
+    print(f"Symmetric sparsity: {sym_sparsity:.2f}")
+    print(f"Asymmetric sparsity: {asym_sparsity:.2f}")
 
-    either_nonzero = ~np.isclose(nondiag_J_cons, 0) | ~np.isclose(nondiag_J_lib, 0)
-    both_nonzero = ~np.isclose(nondiag_J_cons, 0) & ~np.isclose(nondiag_J_lib, 0)
-    print(f"Overlap: {both_nonzero.sum() / either_nonzero.sum():.2f}")
-    overlap_cons = both_nonzero.sum() / (~np.isclose(nondiag_J_cons, 0)).sum()
-    overlap_lib = both_nonzero.sum() / (~np.isclose(nondiag_J_lib, 0)).sum()
-    print(f"Overlap (prop of Conservative): {overlap_cons:.2f}")
-    print(f"Overlap (prop of Liberal): {overlap_lib:.2f}")
-
-    # cons_mean = (J_cons.sum() - np.diag(J_cons).sum()) / (7**2 - 7)
-    # lib_mean = (J_lib.sum() - np.diag(J_lib).sum()) / (7**2 - 7)
-    cons_mean = nondiag_J_cons[cons_is_nonzero].sum() / cons_is_nonzero.sum()
-    lib_mean = nondiag_J_lib[lib_is_nonzero].sum() / lib_is_nonzero.sum()
-    print(f"Conservative mean effect: {cons_mean:.2f}")
-    print(f"Liberal mean effect: {lib_mean:.2f}")
+    sym_mean = nondiag_J_sym[sym_is_nonzero].sum() / sym_is_nonzero.sum()
+    asym_mean = nondiag_J_asym[asym_is_nonzero].sum() / asym_is_nonzero.sum()
+    print(f"Symmetric mean effect: {sym_mean:.2f}")
+    print(f"Asymmetric mean effect: {asym_mean:.2f}")
 
     axes[1, 0].set_yticks(np.arange(len(labels)) + 0.5, labels, rotation=0, fontsize=9)
     axes[1, 1].tick_params("y", length=0)
@@ -158,21 +152,23 @@ def main():
     for ax in axes[0]:
         ax.set_xticks([])
 
-    axes[0, 0].set_title("Conservative model")
-    axes[0, 1].set_title("Liberal model")
+    axes[0, 0].set_title("Symmetric model")
+    axes[0, 1].set_title("Asymmetric model")
 
     axes[0, 1].set_ylabel(
         "Baseline\nactivation", rotation=270, verticalalignment="bottom", labelpad=35
     )
     axes[1, 1].set_ylabel("Interaction source", rotation=270, labelpad=20)
-    axes[1, 0].set_xlabel("Interaction recipient")
-    axes[1, 1].set_xlabel("Interaction recipient")
+    axes[1, 0].set_xlabel(None)
+    axes[1, 1].set_xlabel(None)
     axes[0, 1].yaxis.set_label_position("right")
     axes[1, 1].yaxis.set_label_position("right")
 
+    # fig.align_ylabels(axes[:, 1])
+
     for ext in ("png", "pdf"):
         fig.savefig(
-            f"reports/thesis/results/figures/model_fit/ideology_interaction_heatmap.{ext}",
+            f"reports/thesis/results/figures/model_fit/interaction_heatmap_slides.{ext}",
             bbox_inches="tight",
             transparent=True,
         )

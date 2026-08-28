@@ -169,6 +169,6 @@ class ResponseEventPlotCommand(BaseCommand):
         ax.spines["left"].set_visible(False)
 
         if self.output:
-            fig.savefig(self.output, bbox_inches="tight")
+            fig.savefig(self.output, bbox_inches="tight", transparent=True)
         else:
             plt.show()

@@ -21,6 +21,7 @@ class InteractionHeatmapPlotCommand(BaseCommand):
     model: Path
     output: Path | None = None
     model_type: ModelType
+    slides: bool = False
 
     def cli_cmd(self) -> None:
         configure_mpl()
@@ -77,6 +78,7 @@ class InteractionHeatmapPlotCommand(BaseCommand):
             annot=True,
             fmt=".2f",
             linewidth=1,
+            linecolor="#fafafa" if self.slides else "#ffffff",
             cmap=DIVERGING_CMAP,
             center=0.0,
             vmin=-vlim,
@@ -141,7 +143,15 @@ class InteractionHeatmapPlotCommand(BaseCommand):
         # )
 
         if self.output:
-            fig.savefig(self.output, bbox_inches="tight")
-            fig.savefig(str(self.output).replace(".pdf", ".png"), bbox_inches="tight")
+            fig.savefig(
+                self.output,
+                bbox_inches="tight",
+                transparent=True,
+            )
+            fig.savefig(
+                str(self.output).replace(".pdf", ".png"),
+                bbox_inches="tight",
+                transparent=True,
+            )
         else:
             plt.show()

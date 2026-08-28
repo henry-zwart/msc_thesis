@@ -121,6 +121,7 @@ class CompareOutboundIntEffectsPlotCommand(BaseCommand):
             fig.savefig(
                 self.output_dir / f"outbound_effects_{self.measure_time}.{ext}",
                 bbox_inches="tight",
+                transparent=True,
             )
 
 

@@ -35,7 +35,7 @@ def main(labels: npt.NDArray[np.str_], data_dir: Path):
         collective_effect.append(effect_of_asymmetry.mean(axis=1))
     collective_effect = np.asarray(collective_effect)
 
-    fig, ax = plt.subplots(figsize=(4.5, 2.75), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(4.5, 3), constrained_layout=True)
 
     mean_collective_effect = collective_effect.mean(axis=1)
     sort_idx = np.argsort(mean_collective_effect[0])[::-1]
@@ -61,7 +61,7 @@ def main(labels: npt.NDArray[np.str_], data_dir: Path):
 
     ax.spines.top.set_visible(False)
     ax.spines.right.set_visible(False)
-    ax.set_ylabel("Effect of asymmetry")
+    ax.set_ylabel("Difference in effects\nAsym - Sym")
 
     # Replace seaborn legend with a prettier one
     old_leg = ax.get_legend()
